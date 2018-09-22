@@ -4,6 +4,8 @@ import pdb
 
 dbman = database.DatabaseManager("testdb")
 dennis = console.Console(dbman)
-dennis.command("register sei temp")
-pdb.set_trace()
+dennis.command("login sei temp")
+dennis.user.wizard = True
+dennis.command("list rooms")
+dennis.help("greater break item")
 

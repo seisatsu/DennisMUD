@@ -1,8 +1,10 @@
 import hashlib
 from datatype import Room, User, Item
 
-def COMMAND(database, args):
+def COMMAND(console, database, args):
         # args = [username, password]
+        if len(args) != 2:
+            return False
         
         # Register a new user.
         check = database.filter(

@@ -27,6 +27,7 @@ class DatabaseManager:
         self.database.commit()
     
     def filter(self, doctype, query):
+        # Perform a query on the database.
         return self.database.filter(doctype, query)
 
     def _init_room(self):
