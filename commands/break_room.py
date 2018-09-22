@@ -11,6 +11,7 @@ def COMMAND(console, database, args=[]):
             
         # Make sure we are logged in.
         if not console.user:
+            console.log("break room", "failure", "not logged in")
             return False
         
         # Check if the room exists.
@@ -22,8 +23,14 @@ def COMMAND(console, database, args=[]):
                 # Delete the room.
                 database.delete(r)
                 
+                console.log("break room", "success", "destroyed room", str(roomid))
                 return True
+             
+            # We don't own this room.
+            console.log("break room", "failure", "not the owner of room", str(roomid))
+            return False
             
-        # No room with that ID exists, or we do not own it.
+        # No room with that ID exists.
+        console.log("break room", "failure", "no such room", str(roomid))
         return False
 

@@ -59,4 +59,7 @@ class Console:
             print("Description: "+self._commands[line.replace(' ', '_')].DESCRIPTION)
             return True
         return False
-        
+     
+    def log(self, domain, result, *info):
+        print(domain+": "+result+": "+": ".join(info))
+
