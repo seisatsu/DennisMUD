@@ -11,8 +11,8 @@ def COMMAND(console, database, args=[]):
         if not console.user or not console.user.wizard:
             return False
         
-        items = database.filter(Item, {}).sort("id")
-        if len(items):
-            for i in items:
-                print(str(i.id)+": "+i.name)
+        users = database.filter(User, {}).sort("name")
+        if len(users):
+            for u in users:
+                print(u.name+": "+u.nick)
 

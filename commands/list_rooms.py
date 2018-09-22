@@ -1,5 +1,8 @@
 from datatype import Room, User, Item
 
+USAGE = "list rooms"
+DESCRIPTION = "List all rooms in the world."
+
 def COMMAND(console, database, args=[]):
         if len(args) != 0:
             return False

@@ -27,7 +27,7 @@ class Console:
                 mod = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(mod)
                 self._commands[command[:-3]] = mod
-                print("Registered command: "+command[:-3].replace('_', ' '))
+        print("Registered commands: "+str(list(self._commands.keys())))
     
     def command(self, line):
         """

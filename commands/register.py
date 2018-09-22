@@ -1,7 +1,7 @@
 import hashlib
 from datatype import Room, User, Item
 
-def COMMAND(console, database, args):
+def COMMAND(console, database, args=[]):
         # args = [username, password]
         if len(args) != 2:
             return False

@@ -4,7 +4,7 @@ from datatype import Room, User, Item
 USAGE = "login <username> <password>"
 DESCRIPTION = "Log in as the user <username> if not currently logged in, using <password>."
 
-def COMMAND(console, database, args):
+def COMMAND(console, database, args=[]):
         # args = [username, password]
         if len(args) != 2:
             return False

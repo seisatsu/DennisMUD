@@ -1,7 +1,8 @@
+import sys
 from datatype import Room, User, Item
 
-USAGE = "list items"
-DESCRIPTION = "List all items in the world."
+USAGE = "shutdown"
+DESCRIPTION = "Shut down the server."
 
 def COMMAND(console, database, args=[]):
         if len(args) != 0:
@@ -11,8 +12,6 @@ def COMMAND(console, database, args=[]):
         if not console.user or not console.user.wizard:
             return False
         
-        items = database.filter(Item, {}).sort("id")
-        if len(items):
-            for i in items:
-                print(str(i.id)+": "+i.name)
+        # TODO: Graceful shutdown.
+        sys.exit(0)
 
