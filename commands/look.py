@@ -21,6 +21,17 @@ def COMMAND(console, database, args):
         print(str(thisroom.id)+": "+thisroom.name)
         print("Owned by: "+thisroom.owner)
         print(thisroom.desc)
+        print("Occupants: "+", ".join(thisroom.users))
+        itemlist = []
+        for i in thisroom["items"]:
+            itemlookup = database.item_by_id(i)
+            if itemlookup:
+                itemlist.append(itemlookup["name"])
+        print("Items: " + ", ".join(itemlist))
+        exitlist = []
+        for e in thisroom.exits:
+            exitlist.append(e["name"])
+        print("Exits: " + ", ".join(exitlist))
         return True
 
     else:

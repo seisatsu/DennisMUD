@@ -5,8 +5,9 @@ COMMAND_DIR = "commands/"
 
 
 class Console:
-    def __init__(self, database):
+    def __init__(self, database, msgcallback):
         self.user = None
+        self.msgcallback = msgcallback
         self._database = database
         self._commands = {}
         
@@ -54,11 +55,15 @@ class Console:
         Retrieve the help for a command.
         """
         if line.replace(' ', '_') in self._commands.keys():
-            print("Usage: "+self._commands[line.replace(' ', '_')].USAGE)
-            print("Description: "+self._commands[line.replace(' ', '_')].DESCRIPTION)
-            return True
-        return False
-     
-    def log(self, domain, result, *info):
-        print(domain+": "+result+": "+": ".join(info))
+            usage = "Usage: "+self._commands[line.replace(' ', '_')].USAGE
+            desc = "Description: "+self._commands[line.replace(' ', '_')].DESCRIPTION
+            self.msg(usage)
+            print(usage)
+            self.msg(desc)
+            print(desc)
+        return None
 
+    def msg(self, message):
+        print(message)
+        self.msgcallback(message)
+        return True
