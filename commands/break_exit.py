@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "break exit <name>"
 DESCRIPTION = "Break the exit called <name> in the current room."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) == 0:
             return False
         

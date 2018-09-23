@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "logout"
 DESCRIPTION = "Log out if logged in."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) != 0:
             return False
         

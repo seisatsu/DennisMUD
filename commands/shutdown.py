@@ -4,7 +4,8 @@ from datatype import Room, User, Item
 USAGE = "shutdown"
 DESCRIPTION = "Shut down the server."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) != 0:
             return False
             

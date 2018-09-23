@@ -1,9 +1,8 @@
-import hashlib
 import importlib.util
 import os
-from datatype import Room, User, Item
 
 COMMAND_DIR = "commands/"
+
 
 class Console:
     def __init__(self, database):
@@ -43,7 +42,7 @@ class Console:
             if splitpos == 0:
                 if '_'.join(line) in self._commands.keys():
                     # Run the command with no arguments.
-                    return self._commands['_'.join(line)].COMMAND(self, self._database)
+                    return self._commands['_'.join(line)].COMMAND(self, self._database, [])
                 continue
             if '_'.join(line[:-splitpos]) in self._commands.keys():
                 # Run the command and pass arguments.

@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "break room <room>"
 DESCRIPTION = "Break the room with ID <room> if you are its owner."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) != 1:
             return False
         

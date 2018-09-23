@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "make item <name>"
 DESCRIPTION = "Create an item called <name> and place it in your inventory."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) == 0:
             return False
         

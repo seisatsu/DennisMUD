@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "make room <name>"
 DESCRIPTION = "Create a room called <name>."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) == 0:
             return False
         
@@ -31,6 +32,7 @@ def COMMAND(console, database, args=[]):
             "owner": console.user.name,
             "id": lastroom + 1,
             "name": name,
+            "desc": "",
             "users": [],
             "exits": [],
             "items": []

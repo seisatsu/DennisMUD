@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "demote [username]"
 DESCRIPTION = "Remove wizard status from yourself or the named user."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) > 1:
             return False
         

@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "greater break item <item>"
 DESCRIPTION = "Break the item with ID <item> even if you aren't holding it."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) != 1:
             return False
         

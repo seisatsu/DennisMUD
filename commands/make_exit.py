@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "make exit <destination> <name>"
 DESCRIPTION = "Create an exit called <name> in the current room, leading to the room with ID <destination>."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) < 2:
             return False
         
@@ -34,4 +35,3 @@ def COMMAND(console, database, args=[]):
         # Save.
         database.update(thisroom)
         return True
-

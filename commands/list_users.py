@@ -3,7 +3,8 @@ from datatype import Room, User, Item
 USAGE = "list items"
 DESCRIPTION = "List all items in the world."
 
-def COMMAND(console, database, args=[]):
+
+def COMMAND(console, database, args):
         if len(args) != 0:
             return False
             
