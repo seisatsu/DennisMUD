@@ -1,0 +1,11 @@
+{
+  "host": "irc.datnode.net",
+  "port": 6667,
+  "nickname": "Dennis",
+  "username": "Dennis",
+  "realname": "Dennis MUD",
+  "channels": [
+    "#dennis"
+  ],
+  "database": "db"
+}

@@ -2,13 +2,12 @@ import blitzdb
 
 
 class Room(blitzdb.Document):
-        pass
+    pass
 
 
 class User(blitzdb.Document):
-        pass
+    pass
 
 
 class Item(blitzdb.Document):
-        pass
-
+    pass

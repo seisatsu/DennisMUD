@@ -1,30 +1,32 @@
-from datatype import Room, User, Item
-
+NAME = "promote"
 USAGE = "promote [username]"
 DESCRIPTION = "Elevate yourself or the named user to wizard status."
 
 
 def COMMAND(console, database, args):
-        if len(args) > 1:
-            return False
-        
-        # Make sure we are logged in.
-        # TODO: Check if we have permission to do this.
-        if not console.user:
-            return False
+    if len(args) > 1:
+        console.msg("Usage: " + USAGE)
+        return False
 
-        if len(args) == 0:
-            # Upgrade ourselves to wizard.
-            console.user.wizard = True
-            database.update(console.user)
-        else:
-            # Upgrade the named user to wizard.
-            targetuser = database.filter(User, {"name": args[0]})
-            if len(targetuser) == 0:
-                # No such user.
-                return False
-            targetuser[0].wizard = True
-            database.update(targetuser[0])
-            
-        return True
+    # Make sure we are logged in, and a wizard.
+    if not console.user:
+        console.msg(NAME + ": must be logged in first")
+        return False
+    if not console.user.wizard:
+        console.msg(NAME + ": you do not have permission to use this command")
+        return False
 
+    if len(args) == 0:
+        # Upgrade ourselves to wizard.
+        console.user.wizard = True
+        database.update(console.user)
+    else:
+        # Upgrade the named user to wizard.
+        targetuser = database.user_by_name(args[0])
+        if not targetuser:
+            # No such user.
+            return False
+        targetuser.wizard = True
+        database.update(targetuser)
+
+    return True

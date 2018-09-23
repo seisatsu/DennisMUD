@@ -1,22 +1,19 @@
 import blackbox
 import console
 import database
+import json
 
 router = {}
-dbman = database.DatabaseManager("testdb")
 
-HOST = "irc.datnode.net"
-PORT = 6667
-NICKNAME = "Dennis"
-USERNAME = "Dennis"
-REALNAME = "Dennis"
-CHANNEL = "#dennis"
+with open("config.json") as f:
+    config = json.load(f)
 
+dbman = database.DatabaseManager(config["database"])
 irc = blackbox.IRC()
 parser = blackbox.Parser()
-irc.connect(HOST, PORT)
-irc.nickname(NICKNAME)
-irc.username(USERNAME, REALNAME)
+irc.connect(config["host"], config["port"])
+irc.nickname(config["nickname"])
+irc.username(config["username"], config["realname"])
 
 joined = False
 while True:
@@ -25,7 +22,8 @@ while True:
     user = event.user()
     nick = event.origin()[1:]
     if joined is False and event.command == "376":
-        irc.join(CHANNEL)
+        for channel in config["channels"]:
+            irc.join(channel)
     if user and event.command == "PRIVMSG":
         if user not in router:
             router[user] = console.Console(dbman, lambda msg: irc.say(nick, msg))

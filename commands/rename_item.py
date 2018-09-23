@@ -1,15 +1,16 @@
-from datatype import Room, User, Item
-
+NAME = "rename item"
 USAGE = "rename item <id> <name>"
 DESCRIPTION = "Set the name of the item <id> which you are holding."
 
 
 def COMMAND(console, database, args):
     if len(args) < 2:
+        console.msg("Usage: " + USAGE)
         return False
 
     # Make sure we are logged in.
     if not console.user:
+        console.msg(NAME + ": must be logged in first")
         return False
 
     itemid = int(args[0])

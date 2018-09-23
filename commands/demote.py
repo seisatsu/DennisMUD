@@ -1,30 +1,32 @@
-from datatype import Room, User, Item
-
+NAME = "demote"
 USAGE = "demote [username]"
 DESCRIPTION = "Remove wizard status from yourself or the named user."
 
 
 def COMMAND(console, database, args):
-        if len(args) > 1:
-            return False
-        
-        # Make sure we are logged in.
-        # TODO: Check if we have permission to do this.
-        if not console.user:
-            return False
+    if len(args) > 1:
+        console.msg("Usage: " + USAGE)
+        return False
 
-        if len(args) == 0:
-            # Demote ourselves.
-            console.user.wizard = False
-            database.update(console.user)
-        else:
-            # Demote the named user.
-            targetuser = database.filter(User, {"name": args[0]})
-            if len(targetuser) == 0:
-                # No such user.
-                return False
-            targetuser[0].wizard = False
-            database.update(targetuser[0])
-            
-        return True
+    # Make sure we are logged in, and a wizard.
+    if not console.user:
+        console.msg(NAME + ": must be logged in first")
+        return False
+    if not console.user.wizard:
+        console.msg(NAME + ": you do not have permission to use this command")
+        return False
 
+    if len(args) == 0:
+        # Demote ourselves.
+        console.user.wizard = False
+        database.update(console.user)
+    else:
+        # Demote the named user.
+        targetuser = database.user_by_name(args[0])
+        if not targetuser:
+            # No such user.
+            return False
+        targetuser.wizard = False
+        database.update(targetuser)
+
+    return True

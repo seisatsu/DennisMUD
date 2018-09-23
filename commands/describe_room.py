@@ -1,15 +1,16 @@
-from datatype import Room, User, Item
-
+NAME = "describe room"
 USAGE = "describe room <description>"
 DESCRIPTION = "Set the description of the room you are in."
 
 
 def COMMAND(console, database, args):
     if len(args) == 0:
+        console.msg("Usage: " + USAGE)
         return False
 
     # Make sure we are logged in.
     if not console.user:
+        console.msg(NAME + ": must be logged in first")
         return False
 
     roomid = console.user.room
