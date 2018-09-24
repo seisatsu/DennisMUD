@@ -25,8 +25,10 @@ def COMMAND(console, database, args):
         targetuser = database.user_by_name(args[0])
         if not targetuser:
             # No such user.
+            console.msg(NAME + ": no such user")
             return False
         targetuser.wizard = False
         database.update(targetuser)
 
+    console.msg(NAME + ": done")
     return True

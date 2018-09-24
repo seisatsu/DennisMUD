@@ -22,6 +22,7 @@ def COMMAND(console, database, args):
     if len(rooms):
         for r in rooms:
             if r["name"].lower() == name.lower():
+                console.msg(NAME + ": a room by this name already exists")
                 return False  # A room by this name already exists.
 
     # Find the highest numbered currently existing room ID.
@@ -43,4 +44,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.insert(newroom)
+    console.msg(NAME + ": done (id: " + str(newroom.id) + ")")
     return True

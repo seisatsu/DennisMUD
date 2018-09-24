@@ -28,6 +28,8 @@ def COMMAND(console, database, args):
             thisroom["items"].append(i.id)
             database.update(console.user)
             database.update(thisroom)
+            console.msg("dropped " + ' '.join(args))
             return True
 
+    console.msg(NAME + ": no such item")
     return False

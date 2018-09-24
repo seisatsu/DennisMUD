@@ -18,8 +18,10 @@ def COMMAND(console, database, args):
 
     # Make sure we are the room's owner.
     if r.owner.lower() != console.user.name.lower():
+        console.msg(NAME + ": you do not own this room")
         return False
 
     r.name = ' '.join(args)
     database.update(r)
+    console.msg(NAME + ": done")
     return True

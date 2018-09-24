@@ -23,7 +23,9 @@ def COMMAND(console, database, args):
     if r:
         # Delete the room.
         database.delete(r)
+        console.msg(NAME + ": done")
         return True
 
-    # No room with that ID exists, or we do not own it.
+    # No room with that ID exists.
+    console.msg(NAME + ": no such room")
     return False

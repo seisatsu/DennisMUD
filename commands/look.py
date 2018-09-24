@@ -17,21 +17,23 @@ def COMMAND(console, database, args):
 
     if len(args) == 0:
         # Look at the current room.
-        # TODO: Enumerate occupants, exits, and items.
-        print(str(thisroom.id) + ": " + thisroom.name)
-        print("Owned by: " + thisroom.owner)
-        print(thisroom.desc)
-        print("Occupants: " + ", ".join(thisroom.users))
+        console.msg(thisroom.name + " (" + str(thisroom.id) + ")")
+        console.msg("Owned by: " + thisroom.owner)
+        if thisroom.desc:
+            console.msg(thisroom.desc)
+        console.msg("Occupants: " + ", ".join(thisroom.users))
         itemlist = []
         for i in thisroom["items"]:
             itemlookup = database.item_by_id(i)
             if itemlookup:
                 itemlist.append(itemlookup["name"])
-        print("Items: " + ", ".join(itemlist))
+        if itemlist:
+            console.msg("Items: " + ", ".join(itemlist))
         exitlist = []
         for e in thisroom.exits:
             exitlist.append(e["name"])
-        print("Exits: " + ", ".join(exitlist))
+        if exitlist:
+            console.msg("Exits: " + ", ".join(exitlist))
         return True
 
     else:
@@ -41,16 +43,18 @@ def COMMAND(console, database, args):
             # Might be the name of a user.
             if args[0].lower() == "self":
                 # Looking at ourselves.
-                print(console.user.nick + " (" + console.user.name + ")")  # Print user nickname and real name.
-                print(console.user.desc)  # Print user description.
+                console.msg(console.user.nick + " (" + console.user.name + ")")  # Print user nickname and real name.
+                if console.user.desc:
+                    console.msg(console.user.desc)  # Print user description.
                 return True
 
             for uname in thisroom.users:
-                if uname.lower() == args.lower():
+                if uname.lower() == args[0].lower():
                     # We are looking at this user.
                     u = database.user_by_name(uname)
-                    print(u.nick + " (" + u.name + ")")  # Print user nickname and real name.
-                    print(u.desc)  # Print user description.
+                    console.msg(u.nick + " (" + u.name + ")")  # Print user nickname and real name.
+                    if u.desc:
+                        console.msg(u.desc)  # Print user description.
                     found_something = True
                     break
 
@@ -58,8 +62,9 @@ def COMMAND(console, database, args):
         for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.
             i = database.item_by_id(itemid)
             if i.name.lower() == ' '.join(args).lower():
-                print(str(i.id) + ": " + i.name)  # Print item ID and name.
-                print(i.desc)  # Print item description.
+                console.msg(str(i.id) + ": " + i.name)  # Print item ID and name.
+                if i.desc:
+                    console.msg(i.desc)  # Print item description.
                 found_something = True
                 break
 
@@ -67,19 +72,32 @@ def COMMAND(console, database, args):
         for itemid in console.user.inventory:
             i = database.item_by_id(itemid)
             if i.name.lower() == ' '.join(args).lower():
-                print(str(i.id) + ": " + i.name)  # Print item ID and name.
-                print(i.desc)  # Print item description.
+                console.msg(str(i.id) + ": " + i.name)  # Print item ID and name.
+                if i.desc:
+                    console.msg(i.desc)  # Print item description.
                 found_something = True
                 break
 
         # Might be an exit in the room.
         for e in thisroom.exits:
             if e["name"].lower() == ' '.join(args).lower():
-                print(e["name"] + " -> " + e["dest"])  # Print exit name and destination.
-                print(e["desc"])  # Print exit description.
+                console.msg(e["name"] + " -> " + e["dest"])  # Print exit name and destination.
+                if e["desc"]:
+                    console.msg(e["desc"])  # Print exit description.
+                found_something = True
+                break
+
+        # Might be the nickname of a user.
+        for uname in thisroom.users:
+            u = database.user_by_name(uname)
+            if u.nick.lower() == args[0].lower():
+                console.msg(u.nick + " (" + u.name + ")")  # Print user nickname and real name.
+                if u.desc:
+                    console.msg(u.desc)  # Print user description.
                 found_something = True
                 break
 
         if found_something:
             return True
+        console.msg(NAME + ": no such thing")
         return False

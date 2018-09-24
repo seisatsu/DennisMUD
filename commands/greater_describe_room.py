@@ -20,4 +20,5 @@ def COMMAND(console, database, args):
     r = database.room_by_id(roomid)
     r.desc = ' '.join(args)
     database.update(r)
+    console.msg(NAME + ": done")
     return True

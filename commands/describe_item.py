@@ -17,9 +17,11 @@ def COMMAND(console, database, args):
 
     # Make sure we are holding the item.
     if itemid not in console.user.inventory:
+        console.msg(NAME + ": no such item in inventory")
         return False
 
     i = database.item_by_id(itemid)
     i.desc = ' '.join(args[1:])
     database.update(i)
+    console.msg(NAME + ": done")
     return True

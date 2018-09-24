@@ -15,4 +15,5 @@ def COMMAND(console, database, args):
 
     console.user.desc = ' '.join(args)
     database.update(console.user)
+    console.msg(NAME + ": done")
     return True

@@ -1,12 +1,10 @@
-from datatype import User
-
-NAME = "list users"
-USAGE = "list users"
-DESCRIPTION = "List all users in the world."
+NAME = "announce"
+USAGE = "announce <message>"
+DESCRIPTION = "Send a message to all users."
 
 
 def COMMAND(console, database, args):
-    if len(args) != 0:
+    if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
 
@@ -18,9 +16,4 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    users = database.filter(User, {}).sort("name")
-    if len(users):
-        for u in users:
-            print(u.name + ": " + u.nick)
-
-    return True
+    console.broadcast("<<<" + console.user.nick + ">>>: " + ' '.join(args))

@@ -1,6 +1,6 @@
-NAME = "rename self"
-USAGE = "rename self <nickname>"
-DESCRIPTION = "Set your player nickname."
+NAME = "say"
+USAGE = "say <message>"
+DESCRIPTION = "Send a message to everyone in the same room as you."
 
 
 def COMMAND(console, database, args):
@@ -13,7 +13,4 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    console.user.nick = ' '.join(args)
-    database.update(console.user)
-    console.msg(NAME + ": done")
-    return True
+    console.broadcast_room("<" + console.user.nick + ">: " + ' '.join(args))

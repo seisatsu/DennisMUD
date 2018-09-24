@@ -30,6 +30,7 @@ def COMMAND(console, database, args):
     # Check if the destination room exists.
     destroom = database.room_by_id(dest)
     if not destroom:
+        console.msg(NAME + ": destination room does not exist")
         return False  # The destination room does not exist.
 
     # Create our new exit.
@@ -38,4 +39,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.update(thisroom)
+    console.msg(NAME + ": done")
     return True

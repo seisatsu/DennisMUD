@@ -42,8 +42,10 @@ def COMMAND(console, database, args):
                     u["inventory"].remove(itemid)
                     database.update(u)
 
+        console.msg(NAME + ": done")
         return True
 
     else:
         # No item with that ID exists.
+        console.msg(NAME + ": no such item")
         return False

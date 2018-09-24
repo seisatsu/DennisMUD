@@ -24,7 +24,9 @@ def COMMAND(console, database, args):
                 # Delete the exit.
                 del thisroom.exits[e]
                 database.update(thisroom)
+                console.msg(NAME + ": done")
                 return True
 
     # Couldn't find the current room, or the exit does not exist there.
+    console.msg(NAME + ": no such exit")
     return False

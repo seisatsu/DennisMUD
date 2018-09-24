@@ -19,6 +19,7 @@ def COMMAND(console, database, args):
         }
     )
     if len(check) != 0:  # User already exists.
+        console.msg(NAME + ": user already exists")
         return False
 
     # Create new user.
@@ -35,4 +36,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.insert(newuser)
+    console.msg("registered user \"" + args[0] + "\"")
     return True

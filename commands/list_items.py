@@ -22,3 +22,5 @@ def COMMAND(console, database, args):
     if len(items):
         for i in items:
             print(str(i.id) + ": " + i.name)
+
+    return True

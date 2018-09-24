@@ -26,5 +26,5 @@ def COMMAND(console, database, args):
         console.user = None
         console.msg("logged out")
         return True
-    console.msg("logout: not logged in")
+    console.msg(NAME + ": not logged in")
     return False

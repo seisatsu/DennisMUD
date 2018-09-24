@@ -28,6 +28,8 @@ def COMMAND(console, database, args):
             console.user.inventory.append(i.id)
             database.update(thisroom)
             database.update(console.user)
+            console.msg("picked up " + ' '.join(args))
             return True
 
+    console.msg(NAME + ": no such item")
     return False

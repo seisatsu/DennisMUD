@@ -22,6 +22,7 @@ def COMMAND(console, database, args):
     if len(items):
         for i in items:
             if i["name"].lower() == name.lower():
+                console.msg(NAME + ": an item by this name already exists")
                 return False  # An item by this name already exists.
 
     # Find the highest numbered currently existing item ID.
@@ -43,4 +44,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.insert(newitem)
+    console.msg(NAME + ": done (id: " + str(newitem.id) + ")")
     return True

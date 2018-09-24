@@ -5,9 +5,10 @@ COMMAND_DIR = "commands/"
 
 
 class Console:
-    def __init__(self, database, msgcallback):
+    def __init__(self, database, rname, router):
         self.user = None
-        self.msgcallback = msgcallback
+        self.rname = rname
+        self.router = router
         self._database = database
         self._commands = {}
 
@@ -63,11 +64,21 @@ class Console:
         else:
             self.msg("help: unknown command: " + line)
         if line == "help":
-            command_list = ', '.join(list(self._commands.keys())).replace('_', ' ')
+            command_list = ', '.join(sorted(list(self._commands.keys()))).replace('_', ' ')
             self.msg("Available commands: " + command_list)
         return None
 
     def msg(self, message):
         print(message)
-        self.msgcallback(message)
+        self.router.message(self.rname, message)
+        return True
+
+    def broadcast(self, message):
+        print(message)
+        self.router.broadcast_all(message)
+        return True
+
+    def broadcast_room(self, message):
+        print(message)
+        self.router.broadcast_room(self.user.room, message)
         return True

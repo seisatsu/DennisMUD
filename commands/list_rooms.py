@@ -22,3 +22,5 @@ def COMMAND(console, database, args):
     if len(rooms):
         for r in rooms:
             print(str(r.id) + ": " + r.name)
+
+    return True

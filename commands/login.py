@@ -13,7 +13,7 @@ def COMMAND(console, database, args):
         return False
 
     if console.user:
-        console.msg("login: already logged in")
+        console.msg(NAME + ": already logged in")
         return False
 
     thisuser = database.filter(
@@ -23,7 +23,7 @@ def COMMAND(console, database, args):
         }
     )
     if len(thisuser) == 0:
-        console.msg("login: bad credentials")
+        console.msg(NAME + ": bad credentials")
         return False  # Bad login.
     console.user = thisuser[0]
     console.user.online = True
@@ -40,5 +40,6 @@ def COMMAND(console, database, args):
         thisroom.users.append(console.user.name)
         database.update(thisroom)
 
-    console.msg("logged in as \"" + console.user.name + "\".")
+    console.msg("logged in as \"" + console.user.name + "\"")
+    console.command("look")
     return True

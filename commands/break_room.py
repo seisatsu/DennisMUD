@@ -23,13 +23,13 @@ def COMMAND(console, database, args):
             # Delete the room.
             database.delete(r)
 
-            console.log("break room", "success", "destroyed room", str(roomid))
+            console.msg(NAME + ": done")
             return True
 
         # We don't own this room.
-        console.log("break room", "failure", "not the owner of room", str(roomid))
+        console.msg(NAME + ": you do not own this room")
         return False
 
     # No room with that ID exists.
-    console.log("break room", "failure", "no such room", str(roomid))
+    console.msg(NAME + ": no such room")
     return False

@@ -24,8 +24,10 @@ def COMMAND(console, database, args):
             database.delete(i)
             console.user.inventory.remove(itemid)
             database.update(console.user)
+            console.msg(NAME + ": done")
             return True
 
     else:
         # No item with that ID exists, or we are not holding it.
+        console.msg(NAME + ": no such item in inventory")
         return False

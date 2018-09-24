@@ -15,6 +15,6 @@ def COMMAND(console, database, args):
 
     for itemid in console.user.inventory:
         i = database.item_by_id(itemid)
-        if len(i):
-            print(str(i[0].id) + ": " + i[0].name)
+        if i:
+            console.msg(str(i.id) + ": " + i.name)
     return True

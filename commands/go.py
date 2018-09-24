@@ -29,13 +29,17 @@ def COMMAND(console, database, args):
                     return False  # The destination room does not exist.
 
                 # Move us to the new room.
-                if console.user.name in thisroom:
+                if console.user.name in thisroom.users:
                     thisroom.users.remove(console.user.name)
-                destroom.users.append(console.user.name)
+                if console.user.name not in destroom.users:
+                    destroom.users.append(console.user.name)
                 console.user.room = destroom.id
                 database.update(thisroom)
                 database.update(destroom)
                 database.update(console.user)
+                console.msg("exited " + ' '.join(args))
+                console.command("look")
                 return True
 
+    console.msg(NAME + ": no such exit")
     return False
