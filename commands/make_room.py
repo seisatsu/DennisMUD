@@ -2,7 +2,7 @@ from datatype import Room
 
 NAME = "make room"
 USAGE = "make room <name>"
-DESCRIPTION = "Create a room called <name>."
+DESCRIPTION = "Create a new room called <name>."
 
 
 def COMMAND(console, database, args):

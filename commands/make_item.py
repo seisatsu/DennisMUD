@@ -2,7 +2,7 @@ from datatype import Item
 
 NAME = "make item"
 USAGE = "make item <name>"
-DESCRIPTION = "Create an item called <name> and place it in your inventory."
+DESCRIPTION = "Create a new item called <name> and place it in your inventory."
 
 
 def COMMAND(console, database, args):

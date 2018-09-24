@@ -1,6 +1,6 @@
 NAME = "make exit"
 USAGE = "make exit <destination> <name>"
-DESCRIPTION = "Create an exit called <name> in the current room, leading to the room with ID <destination>."
+DESCRIPTION = "Create a new exit called <name> in the current room, leading to the room with ID <destination>."
 
 
 def COMMAND(console, database, args):
@@ -39,5 +39,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.update(thisroom)
-    console.msg(NAME + ": done")
+    console.msg(NAME + ": done (id: " + str(len(thisroom.exits)) + ")")
     return True

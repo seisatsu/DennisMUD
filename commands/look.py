@@ -30,8 +30,8 @@ def COMMAND(console, database, args):
         if itemlist:
             console.msg("Items: " + ", ".join(itemlist))
         exitlist = []
-        for e in thisroom.exits:
-            exitlist.append(e["name"])
+        for e in range(len(thisroom.exits)):
+            exitlist.append(thisroom.exits[e]["name"])
         if exitlist:
             console.msg("Exits: " + ", ".join(exitlist))
         return True
@@ -79,11 +79,12 @@ def COMMAND(console, database, args):
                 break
 
         # Might be an exit in the room.
-        for e in thisroom.exits:
-            if e["name"].lower() == ' '.join(args).lower():
-                console.msg(e["name"] + " -> " + e["dest"])  # Print exit name and destination.
-                if e["desc"]:
-                    console.msg(e["desc"])  # Print exit description.
+        for e in range(len(thisroom.exits)):
+            if thisroom.exits[e]["name"].lower() == ' '.join(args).lower():
+                # Print exit name, ID, and destination.
+                console.msg(thisroom.exits[e]["name"] + " (" + str(e+1) + ") -> " + str(thisroom.exits[e]["dest"]))
+                if thisroom.exits[e]["desc"]:
+                    console.msg(thisroom.exits[e]["desc"])  # Print exit description.
                 found_something = True
                 break
 
