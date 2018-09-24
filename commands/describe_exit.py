@@ -1,10 +1,10 @@
-NAME = "break exit"
-USAGE = "break exit <exit>"
-DESCRIPTION = "Break the exit with ID <exit> in the current room."
+NAME = "describe exit"
+USAGE = "describe exit <id> <description>"
+DESCRIPTION = "Set the description of the exit <id> in this room."
 
 
 def COMMAND(console, database, args):
-    if len(args) != 1:
+    if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
 
@@ -15,18 +15,15 @@ def COMMAND(console, database, args):
 
     exitid = int(args[0])
 
-    # Find the current room.
+    # Make the exit is in this room.
     thisroom = database.room_by_id(console.user.room)
     if thisroom:
-        # Find out if the exit exists in this room.
         if exitid > len(thisroom.exits)-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
-        del thisroom.exits[exitid]
+        thisroom.exits[exitid]["desc"] = ' '.join(args[1:])
         database.update(thisroom)
         console.msg(NAME + ": done")
         return True
-
-    # Couldn't find the current room.
     console.msg("warning: current room does not exist")
     return False

@@ -39,5 +39,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.update(thisroom)
-    console.msg(NAME + ": done (id: " + str(len(thisroom.exits)) + ")")
+    console.msg(NAME + ": done (id: " + str(len(thisroom.exits)-1) + ")")
     return True

@@ -82,7 +82,7 @@ def COMMAND(console, database, args):
         for e in range(len(thisroom.exits)):
             if thisroom.exits[e]["name"].lower() == ' '.join(args).lower():
                 # Print exit name, ID, and destination.
-                console.msg(thisroom.exits[e]["name"] + " (" + str(e+1) + ") -> " + str(thisroom.exits[e]["dest"]))
+                console.msg(thisroom.exits[e]["name"] + " (" + str(e) + ") -> " + str(thisroom.exits[e]["dest"]))
                 if thisroom.exits[e]["desc"]:
                     console.msg(thisroom.exits[e]["desc"])  # Print exit description.
                 found_something = True
