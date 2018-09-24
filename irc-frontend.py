@@ -70,6 +70,7 @@ while True:
     if joined is False and event.command == "376":
         for channel in config["channels"]:
             irc.join(channel)
+            joined = True
     if user and event.command == "PRIVMSG":
         if user not in router:
             router.register(user, nick)
