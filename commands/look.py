@@ -39,24 +39,12 @@ def COMMAND(console, database, args):
     else:
         found_something = False
 
-        if len(args) == 1:
-            # Might be the name of a user.
-            if args[0].lower() == "self":
-                # Looking at ourselves.
-                console.msg(console.user["nick"] + " (" + console.user["name"] + ")")  # Print user nickname and real name.
+        if len(args) == 1 and args[0].lower() == "self":
+                # Looking at ourselves. Print user nickname and real name.
+                console.msg(console.user["nick"] + " (" + console.user["name"] + ")")
                 if console.user["desc"]:
                     console.msg(console.user["desc"])  # Print user description.
                 return True
-
-            for uname in thisroom["users"]:
-                if uname.lower() == args[0].lower():
-                    # We are looking at this user.
-                    u = database.user_by_name(uname)
-                    console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
-                    if u["desc"]:
-                        console.msg(u["desc"])  # Print user description.
-                    found_something = True
-                    break
 
         # Might be an item in the room.
         for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.

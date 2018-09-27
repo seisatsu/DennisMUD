@@ -28,7 +28,8 @@ def COMMAND(console, database, args):
             console.user["inventory"].append(i["id"])
             database.upsert_room(thisroom)
             database.upsert_user(console.user)
-            console.msg("picked up " + ' '.join(args))
+            #console.msg("picked up " + ' '.join(args))
+            console.broadcast_room(console.user["nick"] + " picked up " + ' '.join(args))
             return True
 
     console.msg(NAME + ": no such item in room")
