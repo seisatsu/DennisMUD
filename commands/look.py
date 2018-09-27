@@ -53,7 +53,7 @@ def COMMAND(console, database, args):
                     # We are looking at this user.
                     u = database.user_by_name(uname)
                     console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
-                    if u.desc:
+                    if u["desc"]:
                         console.msg(u["desc"])  # Print user description.
                     found_something = True
                     break
@@ -63,7 +63,7 @@ def COMMAND(console, database, args):
             i = database.item_by_id(itemid)
             if i["name"].lower() == ' '.join(args).lower():
                 console.msg(str(i["id"]) + ": " + i["name"])  # Print item ID and name.
-                if i.desc:
+                if i["desc"]:
                     console.msg(i["desc"])  # Print item description.
                 found_something = True
                 break
@@ -73,7 +73,7 @@ def COMMAND(console, database, args):
             i = database.item_by_id(itemid)
             if i["name"].lower() == ' '.join(args).lower():
                 console.msg(str(i["id"]) + ": " + i["name"])  # Print item ID and name.
-                if i.desc:
+                if i["desc"]:
                     console.msg(i["desc"])  # Print item description.
                 found_something = True
                 break
@@ -93,7 +93,7 @@ def COMMAND(console, database, args):
             u = database.user_by_name(uname)
             if u["nick"].lower() == args[0].lower():
                 console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
-                if u.desc:
+                if u["desc"]:
                     console.msg(u["desc"])  # Print user description.
                 found_something = True
                 break

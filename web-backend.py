@@ -1,9 +1,7 @@
-import blitzdb
 import console
 import database
 import json
 import time
-from datatype import Exchange
 
 
 # Read the config file.
@@ -11,12 +9,11 @@ with open("web.config.json") as f:
     config = json.load(f)
 
 # Open the Dennis main database.
-dbman = database.DatabaseManager(config["database"])
+dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 
 
 class Router:
-    def __init__(self, exchange):
-        self.exchange = exchange
+    def __init__(self):
         self.users = {}
 
     def __contains__(self, item):
@@ -33,62 +30,41 @@ class Router:
     def __iter__(self):
         return self.users.items()
 
-    def register(self, username, nickname):
-        self.users[username] = console.Console(dbman, nickname, self)
+    def register(self, username):
+        self.users[username] = console.Console(dbman, username, self)
 
-    def message(self, nickname, msg):
-        self.exchange.outbound[nickname].append(msg)
-        self.exchange.save()
-        database.commit()
+    def message(self, username, msg):
+        dbman.append_outbound(username, msg)
+        print(dbman.get_outbound(username))
 
     def broadcast_all(self, msg):
         for u in self.users:
             if not self.users[u].user:
                 continue
-            self.exchange.outbound[self.users[u].rname].append(msg)
+            dbman.append_outbound(self.users[u].rname, msg)
 
     def broadcast_room(self, room, msg):
         for u in self.users:
             if not self.users[u].user:
                 continue
             if self.users[u].user.room == room:
-                self.exchange.outbound[self.users[u].rname].append(msg)
+                dbman.append_outbound(self.users[u].rname, msg)
 
 
-# Open the BlitzDB data exchange database.
-database = blitzdb.FileBackend(config["exchange"])
+# Completely reset the inbound and outbound exchanges.
+dbman.inbound.remove({})
+dbman.outbound.remove({})
 
-# If the exchange document does not exist, make it, otherwise, reset it.
-exchange = database.filter(Exchange, {})
-if len(exchange) == 0:
-    exchange = Exchange({
-        "inbound": {},  # username = str: commands = list[str]
-        "outbound": {}  # username = str: messages = list[str]
-    })
-    database.save(exchange)
-    database.commit()
-
-else:
-    exchange = exchange[0]
-    exchange["inbound"] = {}
-    exchange["outbound"] = {}
-    exchange.save()
-    database.commit()
-
-router = Router(exchange)
+router = Router()
 
 while True:
-    exchange = database.filter(Exchange, {})
-    exchange = exchange[0]
-    for username in exchange["inbound"]:
-        if not username in exchange["outbound"]:
-            exchange["outbound"][username] = []
-        print(username)
-        if username not in router:
-            router.register(username, username)
-        for cmd in exchange["inbound"][username]:
-            router[username].command(cmd)
-        exchange["inbound"][username] = []
-        exchange.save()
-        database.commit()
+    for user in list(dbman.inbound.find()):
+        if not dbman.get_outbound(user["user"]):
+            dbman.reset_outbound(user["user"])
+        if user["user"] not in router:
+            router.register(user["user"])
+        if user["commands"]:
+            for cmd in user["commands"]:
+                router[user["user"]].command(cmd)
+            dbman.reset_inbound(user["user"])
         time.sleep(0.1)
