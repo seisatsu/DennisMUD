@@ -1,6 +1,6 @@
 NAME = "announce"
 USAGE = "announce <message>"
-DESCRIPTION = "Send a message to all users."
+DESCRIPTION = "(WIZARDS ONLY) Send a message to all users."
 
 
 def COMMAND(console, database, args):
