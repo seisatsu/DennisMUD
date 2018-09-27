@@ -53,8 +53,9 @@
 	        var input = document.getElementById("input");
 	        form[0].addEventListener("submit", function (e) {
 	            input_text = input.value;
+	            input.value = "";
 	            mySocket.send(input_text);
-	            e.preventDefault()
+	            e.preventDefault();
 	        })
 	    });
 	}
