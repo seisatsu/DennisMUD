@@ -16,13 +16,13 @@ def COMMAND(console, database, args):
     exitid = int(args[0])
 
     # Make the exit is in this room.
-    thisroom = database.room_by_id(console.user.room)
+    thisroom = database.room_by_id(console.user["room"])
     if thisroom:
-        if exitid > len(thisroom.exits)-1 or exitid < 0:
+        if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
-        thisroom.exits[exitid]["desc"] = ' '.join(args[1:])
-        database.update(thisroom)
+        thisroom["exits"][exitid]["desc"] = ' '.join(args[1:])
+        database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
     console.msg("warning: current room does not exist")

@@ -13,7 +13,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    console.user.desc = ' '.join(args)
-    database.update(console.user)
+    console.user["desc"] = ' '.join(args)
+    database.upsert_user(console.user)
     console.msg(NAME + ": done")
     return True

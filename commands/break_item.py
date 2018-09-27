@@ -19,11 +19,11 @@ def COMMAND(console, database, args):
     i = database.item_by_id(itemid)
     if i:
         # Make sure we are holding the item.
-        if itemid in console.user.inventory:
+        if itemid in console.user["inventory"]:
             # Delete the item and remove it from our inventory.
-            database.delete(i)
-            console.user.inventory.remove(itemid)
-            database.update(console.user)
+            database.delete_item(i)
+            console.user["inventory"].remove(itemid)
+            database.upsert_user(console.user)
             console.msg(NAME + ": done")
             return True
 

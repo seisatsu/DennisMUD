@@ -16,12 +16,12 @@ def COMMAND(console, database, args):
     itemid = int(args[0])
 
     # Make sure we are holding the item.
-    if itemid not in console.user.inventory:
+    if itemid not in console.user["inventory"]:
         console.msg(NAME + ": no such item in inventory")
         return False
 
     i = database.item_by_id(itemid)
-    i.desc = ' '.join(args[1:])
-    database.update(i)
+    i["desc"] = ' '.join(args[1:])
+    database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

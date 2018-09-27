@@ -14,7 +14,7 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg("shutdown: must be logged in first")
         return False
-    if not console.user.wizard:
+    if not console.user["wizard"]:
         console.msg("shutdown: you do not have permission to use this command")
         return False
 

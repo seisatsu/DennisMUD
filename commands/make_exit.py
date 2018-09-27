@@ -17,7 +17,7 @@ def COMMAND(console, database, args):
     name = ' '.join(args[1:])
 
     # Check if an exit by this name already exists. Case insensitive.
-    thisroom = database.room_by_id(console.user.room)
+    thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -35,9 +35,9 @@ def COMMAND(console, database, args):
 
     # Create our new exit.
     newexit = {"dest": dest, "name": name, "desc": ""}
-    thisroom.exits.append(newexit)
+    thisroom["exits"].append(newexit)
 
     # Save.
-    database.update(thisroom)
-    console.msg(NAME + ": done (id: " + str(len(thisroom.exits)-1) + ")")
+    database.upsert_room(thisroom)
+    console.msg(NAME + ": done (id: " + str(len(thisroom["exits"])-1) + ")")
     return True

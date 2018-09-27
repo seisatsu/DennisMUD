@@ -13,15 +13,15 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    roomid = console.user.room
+    roomid = console.user["room"]
     r = database.room_by_id(roomid)
 
     # Make sure we are the room's owner.
-    if r.owner.lower() != console.user.name.lower():
+    if r["owner"].lower() != console.user["name"].lower():
         console.msg(NAME + ": you do not own this room")
         return False
 
     r.name = ' '.join(args)
-    database.update(r)
+    database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

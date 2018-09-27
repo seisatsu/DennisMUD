@@ -2,6 +2,7 @@ import blackbox
 import console
 import database
 import json
+import time
 
 
 class Router:
@@ -48,7 +49,7 @@ router = Router()
 with open("irc.config.json") as f:
     config = json.load(f)
 
-dbman = database.DatabaseManager(config["database"])
+dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 irc = blackbox.IRC()
 parser = blackbox.Parser()
 irc.connect(config["host"], config["port"])
@@ -77,3 +78,5 @@ while True:
         if user in router:
             print(' '.join(event.params[1:]))
             router[user].command(' '.join(event.params[1:]))
+
+    time.sleep(0.1)  # Don't waste CPU cycles.

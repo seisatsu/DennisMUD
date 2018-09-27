@@ -12,7 +12,7 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
-    if not console.user.wizard:
+    if not console.user["wizard"]:
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
@@ -22,7 +22,7 @@ def COMMAND(console, database, args):
     r = database.room_by_id(roomid)
     if r:
         # Delete the room.
-        database.delete(r)
+        database.delete_room(r)
         console.msg(NAME + ": done")
         return True
 

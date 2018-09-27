@@ -12,13 +12,13 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
-    if not console.user.wizard:
+    if not console.user["wizard"]:
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    roomid = console.user.room
+    roomid = console.user["room"]
     r = database.room_by_id(roomid)
-    r.desc = ' '.join(args)
-    database.update(r)
+    r["desc"] = ' '.join(args)
+    database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

@@ -16,7 +16,7 @@ class Router:
         pass
 
 
-dbman = database.DatabaseManager("testdb")
+dbman = database.DatabaseManager("localhost", 27017, "dennis")
 dennis = console.Console(dbman, None, Router())
 while True:
     cmd = input("> ")

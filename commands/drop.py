@@ -14,20 +14,20 @@ def COMMAND(console, database, args):
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user.room)
+    thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
 
     # Find the item in our inventory.
-    for itemid in console.user.inventory:
+    for itemid in console.user["inventory"]:
         i = database.item_by_id(itemid)
-        if i.name.lower() == ' '.join(args).lower():
+        if i["name"].lower() == ' '.join(args).lower():
             # Remove the item from our inventory and place it in the room.
-            console.user.inventory.remove(i.id)
-            thisroom["items"].append(i.id)
-            database.update(console.user)
-            database.update(thisroom)
+            console.user["inventory"].remove(i["id"])
+            thisroom["items"].append(i["id"])
+            database.upsert_user(console.user)
+            database.upsert_room(thisroom)
             console.msg("dropped " + ' '.join(args))
             return True
 

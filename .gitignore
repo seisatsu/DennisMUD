@@ -1,9 +1,11 @@
 __pycache__/*
 *.pyc
 testdb/
-examples
 .idea/
 client.py
 server.py
 backup/
 db/
+discord.config.json
+discord-frontend.py
+index.html

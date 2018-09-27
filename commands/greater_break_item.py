@@ -1,5 +1,3 @@
-from datatype import Room, User
-
 NAME = "greater break item"
 USAGE = "greater break item <item>"
 DESCRIPTION = "Break the item with ID <item> even if you aren't holding it."
@@ -14,7 +12,7 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
-    if not console.user.wizard:
+    if not console.user["wizard"]:
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
@@ -24,23 +22,23 @@ def COMMAND(console, database, args):
     i = database.item_by_id(itemid)
     if i:
         # Delete the item.
-        database.delete(i)
+        database.delete_item(i)
 
         # If the item is in a room's item list, remove it.
-        rooms = database.filter(Room, {})
+        rooms = database.rooms.find()
         if len(rooms):
             for r in rooms:
                 if itemid in r["items"]:
                     r["items"].remove(itemid)
-                    database.update(r)
+                    database.upsert_room(r)
 
         # If the item is in someone's inventory, remove it.
-        users = database.filter(User, {})
+        users = database.users.find()
         if len(users):
             for u in users:
                 if itemid in u["inventory"]:
                     u["inventory"].remove(itemid)
-                    database.update(u)
+                    database.upsert_user(u)
 
         console.msg(NAME + ": done")
         return True

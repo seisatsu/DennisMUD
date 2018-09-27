@@ -1,5 +1,4 @@
 import hashlib
-from datatype import User
 
 NAME = "register"
 USAGE = "register <username> <password>"
@@ -13,17 +12,17 @@ def COMMAND(console, database, args):
         return False
 
     # Register a new user.
-    check = database.filter(
-        User, {
+    check = database.users.find_one(
+        {
             "name": args[0]
         }
     )
-    if len(check) != 0:  # User already exists.
+    if check:  # User already exists.
         console.msg(NAME + ": user already exists")
         return False
 
     # Create new user.
-    newuser = User({
+    newuser = {
         "name": args[0],
         "nick": args[0],
         "desc": "",
@@ -32,9 +31,9 @@ def COMMAND(console, database, args):
         "room": 0,
         "inventory": [],
         "wizard": False
-    })
+    }
 
     # Save.
-    database.insert(newuser)
+    database.upsert_user(newuser)
     console.msg("registered user \"" + args[0] + "\"")
     return True

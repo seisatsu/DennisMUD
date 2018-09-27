@@ -14,7 +14,7 @@ def COMMAND(console, database, args):
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user.room)
+    thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -29,14 +29,14 @@ def COMMAND(console, database, args):
                     return False  # The destination room does not exist.
 
                 # Move us to the new room.
-                if console.user.name in thisroom.users:
-                    thisroom.users.remove(console.user.name)
-                if console.user.name not in destroom.users:
-                    destroom.users.append(console.user.name)
-                console.user.room = destroom.id
-                database.update(thisroom)
-                database.update(destroom)
-                database.update(console.user)
+                if console.user["name"] in thisroom["users"]:
+                    thisroom["users"].remove(console.user["name"])
+                if console.user["name"] not in destroom["users"]:
+                    destroom["users"].append(console.user["name"])
+                console.user["room"] = destroom["id"]
+                database.upsert_room(thisroom)
+                database.upsert_room(destroom)
+                database.upsert_user(console.user)
                 console.msg("exited " + ' '.join(args))
                 console.command("look")
                 return True

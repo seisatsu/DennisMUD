@@ -12,14 +12,14 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
-    if not console.user.wizard:
+    if not console.user["wizard"]:
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
     if len(args) == 0:
         # Upgrade ourselves to wizard.
-        console.user.wizard = True
-        database.update(console.user)
+        console.user["wizard"] = True
+        database.upsert_user(console.user)
     else:
         # Upgrade the named user to wizard.
         targetuser = database.user_by_name(args[0])
@@ -27,8 +27,8 @@ def COMMAND(console, database, args):
             # No such user.
             console.msg(NAME + ": no such user")
             return False
-        targetuser.wizard = True
-        database.update(targetuser)
+        targetuser["wizard"] = True
+        database.upsert_user(targetuser)
 
     console.msg(NAME + ": done")
     return True

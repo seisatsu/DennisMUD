@@ -1,5 +1,5 @@
 {
-  "host": "irc.rizon.net",
+  "host": "irc.datnode.net",
   "port": 6667,
   "nickname": "Dennis",
   "username": "Dennis",
@@ -7,5 +7,9 @@
   "channels": [
     "#dennis"
   ],
-  "database": "db"
+  "database": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "dennis"
+  }
 }

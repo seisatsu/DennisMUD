@@ -13,8 +13,8 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    for itemid in console.user.inventory:
+    for itemid in console.user["inventory"]:
         i = database.item_by_id(itemid)
         if i:
-            console.msg(str(i.id) + ": " + i.name)
+            console.msg(str(i["id"]) + ": " + i["name"])
     return True

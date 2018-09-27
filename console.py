@@ -1,5 +1,7 @@
+import importlib.machinery
 import importlib.util
 import os
+import sys
 
 COMMAND_DIR = "commands/"
 
@@ -24,10 +26,16 @@ class Console:
             if command.endswith(".py"):
                 # Python files in this directory are command modules. Construct modules.
                 command_path = os.path.join(os.getcwd(), COMMAND_DIR, command)
-                spec = importlib.util.spec_from_file_location(command[:-3], command_path)
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)
-                self._commands[command[:-3]] = mod
+
+                # Different import code recommended for different Python versions.
+                if sys.version_info[1] < 5:
+                    self._commands[command[:-3]] = \
+                        importlib.machinery.SourceFileLoader(command[:-3], command_path).load_module()
+                else:
+                    spec = importlib.util.spec_from_file_location(command[:-3], command_path)
+                    mod = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(mod)
+                    self._commands[command[:-3]] = mod
         print("Registered commands: " + str(list(self._commands.keys())))
 
     def command(self, line):
@@ -80,5 +88,5 @@ class Console:
 
     def broadcast_room(self, message):
         print(message)
-        self.router.broadcast_room(self.user.room, message)
+        self.router.broadcast_room(self.user["room"], message)
         return True

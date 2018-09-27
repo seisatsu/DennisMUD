@@ -1,5 +1,3 @@
-from datatype import Room
-
 NAME = "list rooms"
 USAGE = "list rooms"
 DESCRIPTION = "List all rooms in the world."
@@ -14,13 +12,13 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
-    if not console.user.wizard:
+    if not console.user["wizard"]:
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    rooms = database.filter(Room, {}).sort("id")
+    rooms = database.rooms.find().sort("id", 1)
     if len(rooms):
         for r in rooms:
-            print(str(r.id) + ": " + r.name)
+            print(str(r["id"]) + ": " + r["name"])
 
     return True

@@ -1,53 +1,55 @@
-import blitzdb
-from datatype import Room, User, Item
+from pymongo import MongoClient
 
 
 class DatabaseManager:
-    def __init__(self, database):
-        self.database = blitzdb.FileBackend(database)
+    def __init__(self, host, port, dbname):
+        self.client = MongoClient(host, port)
+        self.database = self.client[dbname]
+        self.rooms = self.database["rooms"]
+        self.users = self.database["users"]
+        self.items = self.database["items"]
 
-        if len(self.database.filter(Room, {})) == 0:
+        if self.database.rooms.find().count() == 0:
             self._init_room()
 
-        if len(self.database.filter(User, {})) == 0:
+        if self.database.users.find().count() == 0:
             self._init_user()
 
-    def insert(self, document):
-        # Insert a new document.
-        self.database.save(document)
-        self.database.commit()
+    def upsert_room(self, document):
+        # Update or insert a room.
+        self.rooms.update_one({"id": document["id"]}, {"$set": document}, upsert=True)
 
-    def update(self, document):
-        # Update an existing document.
-        document.save()
-        self.database.commit()
+    def upsert_item(self, document):
+        # Update or insert an item.
+        self.items.update_one({"id": document["id"]}, {"$set": document}, upsert=True)
 
-    def delete(self, document):
-        # Delete an existing document.
-        self.database.delete(document)
-        self.database.commit()
+    def upsert_user(self, document):
+        # Update or insert a user.
+        self.users.update_one({"name": document["name"]}, {"$set": document}, upsert=True)
 
-    def filter(self, doctype, query):
-        # Perform a query on the database.
-        return self.database.filter(doctype, query)
+    def delete_room(self, document):
+        # Delete a room.
+        self.rooms.delete_one({"id": document["id"]},)
+
+    def delete_item(self, document):
+        # Delete an item.
+        self.items.delete_one({"id": document["id"]},)
+
+    def delete_user(self, document):
+        # Delete a user.
+        self.users.delete_one({"name": document["name"]},)
 
     def room_by_id(self, roomid):
         # Get a room by its ID
-        result = self.database.filter(Room, {"id": roomid})
-        if len(result):
-            return result[0]
-        return None
+        return self.rooms.find_one({"id": roomid})
 
     def item_by_id(self, itemid):
         # Get an item by its ID
-        result = self.database.filter(Item, {"id": itemid})
-        if len(result):
-            return result[0]
-        return None
+        return self.items.find_one({"id": itemid})
 
     def user_by_name(self, username):
-        # Get a user by their name. (Case insensitive.)
-        users = self.database.filter(User, {})
+        # Get a user by their name.
+        users = self.users.find()
         if len(users):
             for u in users:
                 if u["name"].lower() == username.lower():
@@ -55,7 +57,7 @@ class DatabaseManager:
         return None
 
     def _init_room(self):
-        newroom = Room({
+        newroom = {
             "owner": "<world>",
             "id": 0,
             "name": "Initial Room",
@@ -63,12 +65,12 @@ class DatabaseManager:
             "users": ["<world>"],
             "exits": [],
             "items": [],
-        })
-        self.insert(newroom)
+        }
+        self.rooms.insert_one(newroom)
         return True
 
     def _init_user(self):
-        newuser = User({
+        newuser = {
             "name": "<world>",
             "nick": "Root User",
             "desc": "The administrator.",
@@ -77,6 +79,6 @@ class DatabaseManager:
             "room": 0,
             "inventory": [],
             "wizard": True
-        })
-        self.insert(newuser)
+        }
+        self.users.insert_one(newuser)
         return True

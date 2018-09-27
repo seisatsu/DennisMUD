@@ -9,20 +9,20 @@ def COMMAND(console, database, args):
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user.room)
+    thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
 
     # If we are in the room, take us out.
-    if console.user.name in thisroom.users:
-        thisroom.users.remove(console.user.name)
-        database.update(thisroom)
+    if console.user["name"] in thisroom["users"]:
+        thisroom["users"].remove(console.user["name"])
+        database.upsert_room(thisroom)
 
     # Take us offline
-    if console.user.online:
-        console.user.online = False
-        database.update(console.user)
+    if console.user["online"]:
+        console.user["online"] = False
+        database.upsert_user(console.user)
         console.user = None
         console.msg("logged out")
         return True

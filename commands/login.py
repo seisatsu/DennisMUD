@@ -1,5 +1,4 @@
 import hashlib
-from datatype import User
 
 NAME = "login"
 USAGE = "login <username> <password>"
@@ -16,30 +15,30 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": already logged in")
         return False
 
-    thisuser = database.filter(
-        User, {
+    thisuser = database.users.find_one(
+        {
             "name": args[0],
             "passhash": hashlib.sha256(args[1].encode()).hexdigest()
         }
     )
-    if len(thisuser) == 0:
+    if not thisuser:
         console.msg(NAME + ": bad credentials")
         return False  # Bad login.
-    console.user = thisuser[0]
-    console.user.online = True
-    database.update(console.user)
+    console.user = thisuser
+    console.user["online"] = True
+    database.upsert_user(console.user)
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user.room)
+    thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
 
     # If we are not in the room, put us there.
-    if not console.user.name in thisroom.users:
-        thisroom.users.append(console.user.name)
-        database.update(thisroom)
+    if not console.user["name"] in thisroom["users"]:
+        thisroom["users"].append(console.user["name"])
+        database.upsert_room(thisroom)
 
-    console.msg("logged in as \"" + console.user.name + "\"")
+    console.msg("logged in as \"" + console.user["name"] + "\"")
     console.command("look")
     return True
