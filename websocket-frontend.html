@@ -10,24 +10,25 @@
     	margin-bottom:25px;
     	padding:5px;
     	background:#fff;
-    	height:270px;
-    	width:430px;
+    	height:400px;
+    	width:600px;
     	border:1px solid #ACD8F0;
-    	overflow:auto; }
+    	overflow:auto;
+    }
 </style>
 </head>
 <body>
 	<div id="supported"></div>
+    <div id="chat_box"></div>
     <form class="foo">
         <input id="input"></input>
         <input type="submit"></input>
     </form>
-    <div id="chat_box"></div>
 </body>
 <script type="text/javascript">
     if(window.WebSocket){
 	    window.addEventListener("load", function() {
-	        var mySocket = new WebSocket("ws://localhost:8080/ws");
+	        var mySocket = new WebSocket("ws://dream.uboachan.net:8080/ws");
 	        mySocket.onmessage = function (event) {
 	            var output = document.getElementById("chat_box");
 	            output.innerHTML = output.innerHTML + event.data + '<br/>'

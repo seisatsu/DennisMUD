@@ -113,8 +113,8 @@ if __name__ == "__main__":
 
     log.startLogging(sys.stdout)
 
-    factory = ChatFactory(router, u"ws://127.0.0.1:8080")
+    factory = ChatFactory(router, "ws://" + config["server"]["host"] + ":" + str(config["server"]["port"]))
     factory.protocol = ServerProtocol
 
-    reactor.listenTCP(8080, factory)
+    reactor.listenTCP(37379, factory)
     reactor.run()

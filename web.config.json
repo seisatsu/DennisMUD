@@ -3,5 +3,9 @@
     "host": "localhost",
     "port": 27017,
     "name": "dennis"
+  },
+  "server": {
+    "host": "dream.uboachan.net",
+    "port": 37379
   }
 }
