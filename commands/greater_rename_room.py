@@ -16,7 +16,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    roomid = console.user.room
+    roomid = console.user["room"]
     r = database.room_by_id(roomid)
     r["name"] = ' '.join(args)
     database.upsert_room(r)
