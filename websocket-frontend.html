@@ -3,27 +3,40 @@
 <html>
 <head>
 <style>
+    body {
+        background-color: #303030;
+    }
 	#chat_box {
-    	text-align:left;
-    	margin-left:0;
-    	margin-top:10px;
-    	margin-bottom:25px;
-    	padding:5px;
-    	background:#fff;
-    	height:400px;
-    	width:600px;
-    	border:1px solid #ACD8F0;
-    	overflow:auto;
+    	text-align: left;
+    	margin: auto;
+    	margin-top: 10px;
+    	margin-bottom: 25px;
+    	padding: 5px;
+    	background-color: #484848;
+    	height: 400px;
+    	width: 800px;
+    	border: 1px solid #301010;
+    	overflow: auto;
+    }
+    #container {
+        text-align: center;
+    }
+    #input {
+        background-color: #484848;
+        border: 1px solid #301010;
+        width: 400px;
     }
 </style>
 </head>
 <body>
-	<div id="supported"></div>
-    <div id="chat_box">Welcome to the Dream Beta.<br/>Try "help register", "help login", and "help".</div>
-    <form class="foo">
-        <input id="input"></input>
-        <input type="submit"></input>
-    </form>
+    <div id="container">
+        <div id="supported"></div>
+        <div id="chat_box">Welcome to the Dream Beta.<br/>Try "help register", "help login", and "help".<br/></div>
+        <form class="foo">
+            <input id="input"></input>
+            <input type="submit"></input>
+        </form>
+    </div>
 </body>
 <script type="text/javascript">
     if(window.WebSocket){
@@ -31,7 +44,7 @@
 	        var mySocket = new WebSocket("ws://dream.uboachan.net:37379/ws");
 	        mySocket.onmessage = function (event) {
 	            var output = document.getElementById("chat_box");
-	            output.innerHTML = output.innerHTML + event.data + '<br/>'
+	            output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
 	            output.scrollTop = output.scrollHeight;
 	        };
 	        var form = document.getElementsByClassName("foo");
