@@ -17,4 +17,6 @@ def COMMAND(console, database, args):
         i = database.item_by_id(itemid)
         if i:
             console.msg(str(i["id"]) + ": " + i["name"])
+        else:
+            console.msg(NAME + ": empty")
     return True

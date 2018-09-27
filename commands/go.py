@@ -26,6 +26,7 @@ def COMMAND(console, database, args):
                 # Check if the destination room exists.
                 destroom = database.room_by_id(e["dest"])
                 if not destroom:
+                    console.msg(NAME + ": destination room does not exist")
                     return False  # The destination room does not exist.
 
                 # Move us to the new room.

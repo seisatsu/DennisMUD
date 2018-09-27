@@ -1,0 +1,51 @@
+<!-- Codebase borrowed from https://github.com/TKeesh/WebSocketChat -->
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	#chat_box {
+    	text-align:left;
+    	margin-left:0;
+    	margin-top:10px;
+    	margin-bottom:25px;
+    	padding:5px;
+    	background:#fff;
+    	height:270px;
+    	width:430px;
+    	border:1px solid #ACD8F0;
+    	overflow:auto; }
+</style>
+</head>
+<body>
+	<div id="supported"></div>
+    <form class="foo">
+        <input id="input"></input>
+        <input type="submit"></input>
+    </form>
+    <div id="chat_box"></div>
+</body>
+<script type="text/javascript">
+    if(window.WebSocket){
+	    window.addEventListener("load", function() {
+	        var mySocket = new WebSocket("ws://localhost:8080/ws");
+	        mySocket.onmessage = function (event) {
+	            var output = document.getElementById("chat_box");
+	            output.innerHTML = output.innerHTML + event.data + '<br/>'
+	            output.scrollTop = output.scrollHeight;
+	        };
+	        var form = document.getElementsByClassName("foo");
+	        var input = document.getElementById("input");
+	        form[0].addEventListener("submit", function (e) {
+	            input_text = input.value;
+	            mySocket.send(input_text);
+	            e.preventDefault()
+	        })
+	    });
+	}
+	else{
+		document.getElementById('supported').innerHTML = "Error: WebSockets are NOT supported in current browser"
+		document.getElementsByClassName('foo')[0].style.visibility = 'hidden'
+	}
+</script>
+
+</html>

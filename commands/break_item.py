@@ -26,8 +26,12 @@ def COMMAND(console, database, args):
             database.upsert_user(console.user)
             console.msg(NAME + ": done")
             return True
+        else:
+            # We are not holding that item.
+            console.msg(NAME + ": not holding item")
+            return False
 
     else:
-        # No item with that ID exists, or we are not holding it.
-        console.msg(NAME + ": no such item in inventory")
+        # No item with that ID exists.
+        console.msg(NAME + ": no such item")
         return False

@@ -26,7 +26,7 @@ def COMMAND(console, database, args):
 
         # If the item is in a room's item list, remove it.
         rooms = database.rooms.find()
-        if len(rooms):
+        if rooms:
             for r in rooms:
                 if itemid in r["items"]:
                     r["items"].remove(itemid)
@@ -34,7 +34,7 @@ def COMMAND(console, database, args):
 
         # If the item is in someone's inventory, remove it.
         users = database.users.find()
-        if len(users):
+        if users:
             for u in users:
                 if itemid in u["inventory"]:
                     u["inventory"].remove(itemid)

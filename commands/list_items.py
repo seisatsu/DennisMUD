@@ -17,8 +17,10 @@ def COMMAND(console, database, args):
         return False
 
     items = database.items.find().sort("id", 1)
-    if len(items):
+    if items.count():
         for i in items:
-            print(str(i["id"]) + ": " + i["name"])
+            console.msg(str(i["id"]) + ": " + i["name"])
+    else:
+        console.msg(NAME + ": no items")
 
     return True

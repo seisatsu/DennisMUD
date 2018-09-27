@@ -17,8 +17,10 @@ def COMMAND(console, database, args):
         return False
 
     rooms = database.rooms.find().sort("id", 1)
-    if len(rooms):
+    if rooms.count():
         for r in rooms:
-            print(str(r["id"]) + ": " + r["name"])
+            console.msg(str(r["id"]) + ": " + r["name"])
+    else:
+        console.msg(NAME + ": no users")
 
     return True

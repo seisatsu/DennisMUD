@@ -17,8 +17,10 @@ def COMMAND(console, database, args):
         return False
 
     users = database.users.find().sort("name", 1)
-    if len(users):
+    if users.count():
         for u in users:
-            print(u["name"] + ": " + u["nick"])
+            console.msg(u["name"] + ": " + u["nick"])
+    else:
+        console.msg(NAME + ": no users?!")
 
     return True
