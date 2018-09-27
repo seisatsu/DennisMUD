@@ -20,6 +20,7 @@ def COMMAND(console, database, args):
         roomid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
+        return False
 
     # Check if the room exists.
     r = database.room_by_id(roomid)

@@ -17,6 +17,7 @@ def COMMAND(console, database, args):
         exitid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
+        return False
 
     # Find the current room.
     thisroom = database.room_by_id(console.user["room"])

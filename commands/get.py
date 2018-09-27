@@ -31,5 +31,5 @@ def COMMAND(console, database, args):
             console.msg("picked up " + ' '.join(args))
             return True
 
-    console.msg(NAME + ": no such item")
+    console.msg(NAME + ": no such item in room")
     return False

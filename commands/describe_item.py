@@ -17,6 +17,7 @@ def COMMAND(console, database, args):
         itemid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
+        return False
 
     # Make sure we are holding the item.
     if itemid not in console.user["inventory"]:

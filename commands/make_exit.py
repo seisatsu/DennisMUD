@@ -17,6 +17,7 @@ def COMMAND(console, database, args):
         dest = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
+        return False
     name = ' '.join(args[1:])
 
     # Check if an exit by this name already exists. Case insensitive.

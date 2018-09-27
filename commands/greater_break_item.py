@@ -20,6 +20,7 @@ def COMMAND(console, database, args):
         itemid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
+        return False
 
     # Check if the item exists.
     i = database.item_by_id(itemid)
