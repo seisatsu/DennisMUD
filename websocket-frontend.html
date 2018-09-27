@@ -19,7 +19,7 @@
 </head>
 <body>
 	<div id="supported"></div>
-    <div id="chat_box"></div>
+    <div id="chat_box">Welcome to the Dream Beta.<br/>Try "help register", "help login", and "help".</div>
     <form class="foo">
         <input id="input"></input>
         <input type="submit"></input>
@@ -28,7 +28,7 @@
 <script type="text/javascript">
     if(window.WebSocket){
 	    window.addEventListener("load", function() {
-	        var mySocket = new WebSocket("ws://dream.uboachan.net:8080/ws");
+	        var mySocket = new WebSocket("ws://dream.uboachan.net:37379/ws");
 	        mySocket.onmessage = function (event) {
 	            var output = document.getElementById("chat_box");
 	            output.innerHTML = output.innerHTML + event.data + '<br/>'
