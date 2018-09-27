@@ -13,7 +13,10 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    roomid = int(args[0])
+    try:
+        roomid = int(args[0])
+    except ValueError:
+        console.msg("Usage: " + USAGE)
 
     # Check if the room exists.
     r = database.room_by_id(roomid)

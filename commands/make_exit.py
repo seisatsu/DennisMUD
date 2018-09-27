@@ -13,7 +13,10 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    dest = int(args[0])
+    try:
+        dest = int(args[0])
+    except ValueError:
+        console.msg("Usage: " + USAGE)
     name = ' '.join(args[1:])
 
     # Check if an exit by this name already exists. Case insensitive.

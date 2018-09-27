@@ -13,7 +13,10 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    exitid = int(args[0])
+    try:
+        exitid = int(args[0])
+    except ValueError:
+        console.msg("Usage: " + USAGE)
 
     # Make the exit is in this room.
     thisroom = database.room_by_id(console.user["room"])

@@ -13,7 +13,10 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    itemid = int(args[0])
+    try:
+        itemid = int(args[0])
+    except ValueError:
+        console.msg("Usage: " + USAGE)
 
     # Check if the item exists.
     i = database.item_by_id(itemid)

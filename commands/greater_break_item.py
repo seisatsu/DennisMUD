@@ -16,7 +16,10 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    itemid = int(args[0])
+    try:
+        itemid = int(args[0])
+    except ValueError:
+        console.msg("Usage: " + USAGE)
 
     # Check if the item exists.
     i = database.item_by_id(itemid)
