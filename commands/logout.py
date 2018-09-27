@@ -16,6 +16,7 @@ def COMMAND(console, database, args):
 
     # If we are in the room, take us out.
     if console.user["name"] in thisroom["users"]:
+        console.broadcast_room(console.user["nick"] + " left the dream")
         thisroom["users"].remove(console.user["name"])
         database.upsert_room(thisroom)
 

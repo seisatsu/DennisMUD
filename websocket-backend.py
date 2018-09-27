@@ -18,6 +18,18 @@ with open("web.config.json") as f:
 # Open the Dennis main database.
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 
+# Reset users.
+rooms = dbman.rooms.find()
+if rooms.count():
+    for r in rooms:
+        r["users"] = []
+        dbman.upsert_room(r)
+users = dbman.users.find()
+if users.count():
+    for u in users:
+        u["online"] = False
+        dbman.upsert_user(u)
+
 
 class Router:
     def __init__(self):
@@ -115,8 +127,6 @@ if __name__ == "__main__":
 
     factory = ChatFactory(router, "ws://" + config["server"]["host"] + ":" + str(config["server"]["port"]))
     factory.protocol = ServerProtocol
-
-    reactor.addSystemEventTrigger('after', 'shutdown', sys.exit)
 
     reactor.listenTCP(37379, factory)
     reactor.run()
