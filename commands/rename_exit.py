@@ -1,6 +1,6 @@
-NAME = "describe exit"
-USAGE = "describe exit <id> <description>"
-DESCRIPTION = "Set the description of the exit <id> in this room."
+NAME = "rename exit"
+USAGE = "rename exit <id> <name>"
+DESCRIPTION = "Set the name of the exit <id> in this room."
 
 
 def COMMAND(console, database, args):
@@ -25,7 +25,7 @@ def COMMAND(console, database, args):
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
-        thisroom["exits"][exitid]["desc"] = ' '.join(args[1:])
+        thisroom["exits"][exitid]["name"] = ' '.join(args[1:])
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True

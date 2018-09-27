@@ -1,6 +1,6 @@
-NAME = "describe item"
-USAGE = "describe item <id> <description>"
-DESCRIPTION = "Set the description of the item <id>, even if you are not holding it."
+NAME = "greater describe item"
+USAGE = "greater describe item <id> <description>"
+DESCRIPTION = "(WIZARDS ONLY) Set the description of the item <id>, even if you are not holding it."
 
 
 def COMMAND(console, database, args):
