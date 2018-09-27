@@ -1,6 +1,6 @@
 NAME = "greater break item"
 USAGE = "greater break item <item>"
-DESCRIPTION = "Break the item with ID <item> even if you aren't holding it."
+DESCRIPTION = "(WIZARDS ONLY) Break the item with ID <item> even if you aren't holding it."
 
 
 def COMMAND(console, database, args):

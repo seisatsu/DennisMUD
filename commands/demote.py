@@ -1,6 +1,6 @@
 NAME = "demote"
 USAGE = "demote [username]"
-DESCRIPTION = "Remove wizard status from yourself or the named user."
+DESCRIPTION = "(WIZARDS ONLY) Remove wizard status from yourself or the named user."
 
 
 def COMMAND(console, database, args):

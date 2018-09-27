@@ -1,6 +1,6 @@
 NAME = "greater rename room"
 USAGE = "greater rename room <name>"
-DESCRIPTION = "Set the name of the room you are in, even if you are not its owner."
+DESCRIPTION = "(WIZARDS ONLY) Set the name of the room you are in, even if you are not its owner."
 
 
 def COMMAND(console, database, args):

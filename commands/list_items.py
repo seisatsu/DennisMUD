@@ -1,6 +1,6 @@
 NAME = "list items"
 USAGE = "list items"
-DESCRIPTION = "List all items in the world."
+DESCRIPTION = "(WIZARDS ONLY) List all items in the world."
 
 
 def COMMAND(console, database, args):

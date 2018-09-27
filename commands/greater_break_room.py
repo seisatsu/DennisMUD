@@ -1,6 +1,6 @@
 NAME = "greater break room"
 USAGE = "greater break room <room>"
-DESCRIPTION = "Break the room with ID <room> even if you aren't its owner."
+DESCRIPTION = "(WIZARDS ONLY) Break the room with ID <room> even if you aren't its owner."
 
 
 def COMMAND(console, database, args):

@@ -1,6 +1,6 @@
 NAME = "promote"
 USAGE = "promote [username]"
-DESCRIPTION = "Elevate yourself or the named user to wizard status."
+DESCRIPTION = "(WIZARDS ONLY) Elevate yourself or the named user to wizard status."
 
 
 def COMMAND(console, database, args):

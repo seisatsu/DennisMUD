@@ -1,6 +1,6 @@
 NAME = "list users"
 USAGE = "list users"
-DESCRIPTION = "List all users in the world."
+DESCRIPTION = "(WIZARDS ONLY) List all users in the world."
 
 
 def COMMAND(console, database, args):

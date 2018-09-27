@@ -2,7 +2,7 @@ import sys
 
 NAME = "shutdown"
 USAGE = "shutdown"
-DESCRIPTION = "Shut down the server."
+DESCRIPTION = "(WIZARDS ONLY) Shut down the server."
 
 
 def COMMAND(console, database, args):
