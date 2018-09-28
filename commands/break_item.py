@@ -23,15 +23,16 @@ def COMMAND(console, database, args):
     i = database.item_by_id(itemid)
     if i:
         # Make sure we are the item's owner.
-        if console.user["name"] not in i["owners"]:
+        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
             console.msg(NAME + ": you do not own this item")
             return False
         # Make sure we are holding the item.
-        if itemid in console.user["inventory"]:
+        if itemid in console.user["inventory"] or console.user["wizard"]:
             # Delete the item and remove it from our inventory.
             database.delete_item(i)
-            console.user["inventory"].remove(itemid)
-            database.upsert_user(console.user)
+            if itemid in console.user["inventory"]:
+                console.user["inventory"].remove(itemid)
+                database.upsert_user(console.user)
             console.msg(NAME + ": done")
             return True
         else:

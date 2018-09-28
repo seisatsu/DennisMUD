@@ -25,7 +25,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure we are the item's owner.
-    if console.user["name"] not in i["owners"]:
+    if console.user["name"] not in i["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this item")
         return False
 

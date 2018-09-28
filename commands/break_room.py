@@ -23,7 +23,7 @@ def COMMAND(console, database, args):
     r = database.room_by_id(roomid)
     if r:
         # Check that we own the room.
-        if console.user["name"] in r["owners"]:
+        if console.user["name"] in r["owners"] or console.user["wizard"]:
             # Delete the room.
             database.delete_room(r)
 

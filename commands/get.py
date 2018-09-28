@@ -23,7 +23,7 @@ def COMMAND(console, database, args):
     for itemid in thisroom["items"]:
         i = database.item_by_id(itemid)
         if i["name"].lower() == ' '.join(args).lower():
-            if i["glued"] and console.user["name"] not in i["owners"]:
+            if i["glued"] and console.user["name"] not in i["owners"] and not console.user["wizard"]:
                 # The item is glued down. Only the owner can pick it up.
                 console.msg(NAME + ": you cannot get this item")
                 return False

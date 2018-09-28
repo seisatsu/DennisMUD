@@ -28,7 +28,7 @@ def COMMAND(console, database, args):
         return False
 
     # Check if the named user is an owner.
-    if not args[0].lower() in r["owners"]:
+    if not args[0].lower() in r["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": user already not an owner of this room")
 
     r["owners"].remove(args[0].lower())

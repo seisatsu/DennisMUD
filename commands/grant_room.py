@@ -17,7 +17,7 @@ def COMMAND(console, database, args):
     r = database.room_by_id(roomid)
 
     # Make sure we are the room's owner.
-    if console.user["name"] not in r["owners"]:
+    if console.user["name"] not in r["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this room")
         return False
 
