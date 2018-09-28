@@ -56,7 +56,8 @@ class Console:
             if '_'.join(line[:-splitpos]) in self._commands.keys():
                 # Run the command and pass arguments.
                 return self._commands['_'.join(line[:-splitpos])].COMMAND(self, self._database, line[-splitpos:])
-        self.msg("unknown command: " + '_'.join(line))
+        if line:
+            self.msg("unknown command: " + '_'.join(line))
         return None
 
     def help(self, line):
