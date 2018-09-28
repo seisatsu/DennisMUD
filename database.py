@@ -58,7 +58,7 @@ class DatabaseManager:
 
     def _init_room(self):
         newroom = {
-            "owner": "<world>",
+            "owners": ["<world>"],
             "id": 0,
             "name": "Initial Room",
             "desc": "",

@@ -18,7 +18,7 @@ def COMMAND(console, database, args):
     if len(args) == 0:
         # Look at the current room.
         console.msg(thisroom["name"] + " (" + str(thisroom["id"]) + ")")
-        console.msg("Owned by: " + thisroom["owner"])
+        console.msg("Owned by: " + ', '.join(thisroom["owners"]))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
         console.msg("Occupants: " + ", ".join(thisroom["users"]))

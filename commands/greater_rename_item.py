@@ -1,6 +1,6 @@
-NAME = "rename item"
-USAGE = "rename item <id> <name>"
-DESCRIPTION = "Set the name of the item <id> which you are holding."
+NAME = "greater rename item"
+USAGE = "greater rename item <id> <name>"
+DESCRIPTION = "(WIZARDS ONLY) Set the name of the item <id>, even if you are not holding it or don't own it."
 
 
 def COMMAND(console, database, args):
@@ -8,9 +8,12 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    # Make sure we are logged in.
+    # Make sure we are logged in, and a wizard.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
+        return False
+    if not console.user["wizard"]:
+        console.msg(NAME + ": you do not have permission to use this command")
         return False
 
     try:
@@ -19,18 +22,10 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    # Make sure we are holding the item.
-    if itemid not in console.user["inventory"]:
-        console.msg(NAME + ": no such item in inventory")
-        return False
-
     i = database.item_by_id(itemid)
-
-    # Make sure we are the item's owner.
-    if console.user["name"] not in i["owners"]:
-        console.msg(NAME + ": you do not own this item")
+    if not i:
+        console.msg(NAME + ": no such item")
         return False
-
     i["name"] = ' '.join(args[1:])
     database.upsert_item(i)
     console.msg(NAME + ": done")

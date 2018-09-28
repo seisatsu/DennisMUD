@@ -25,6 +25,12 @@ def COMMAND(console, database, args):
         return False
 
     i = database.item_by_id(itemid)
+
+    # Make sure we are the item's owner.
+    if console.user["name"] not in i["owners"]:
+        console.msg(NAME + ": you do not own this item")
+        return False
+
     i["desc"] = ' '.join(args[1:])
     database.upsert_item(i)
     console.msg(NAME + ": done")

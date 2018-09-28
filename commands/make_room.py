@@ -31,7 +31,7 @@ def COMMAND(console, database, args):
 
     # Create our new room with an ID one higher.
     newroom = {
-        "owner": console.user["name"],
+        "owners": [console.user["name"]],
         "id": lastroom + 1,
         "name": name,
         "desc": "",

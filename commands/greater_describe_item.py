@@ -1,6 +1,6 @@
 NAME = "greater describe item"
 USAGE = "greater describe item <id> <description>"
-DESCRIPTION = "(WIZARDS ONLY) Set the description of the item <id>, even if you are not holding it."
+DESCRIPTION = "(WIZARDS ONLY) Set the description of the item <id>, even if you are not holding it or don't own it."
 
 
 def COMMAND(console, database, args):
