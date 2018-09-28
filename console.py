@@ -51,14 +51,14 @@ class Console:
             if splitpos == 0:
                 if '_'.join(line) in self._commands.keys():
                     # Run the command with no arguments.
-                    self.msg(' '.join(line))
+                    self.msg("> " + ' '.join(line))
                     self.msg('='*20)
                     return self._commands['_'.join(line)].COMMAND(self, self._database, [])
                 continue
             if '_'.join(line[:-splitpos]) in self._commands.keys():
                 # Run the command and pass arguments.
                 if line[0] != "login":
-                    self.msg(' '.join(line))
+                    self.msg("> " + ' '.join(line))
                     self.msg('=' * 20)
                 return self._commands['_'.join(line[:-splitpos])].COMMAND(self, self._database, line[-splitpos:])
         if line:
