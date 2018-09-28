@@ -83,7 +83,7 @@ def COMMAND(console, database, args):
 
         # Might be the username of a user.
         u = database.user_by_name(' '.join(args).lower())
-        if u["online"]:
+        if u and u["online"]:
             console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
             if u["desc"]:
                 console.msg(u["desc"])  # Print user description.
@@ -91,7 +91,7 @@ def COMMAND(console, database, args):
 
         # Might be the nickname of a user.
         u = database.user_by_nick(' '.join(args).lower())
-        if u["online"]:
+        if u and u["online"]:
             console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
             if u["desc"]:
                 console.msg(u["desc"])  # Print user description.
