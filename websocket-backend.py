@@ -107,10 +107,10 @@ class ChatFactory(WebSocketServerFactory):
         router.register(client.peer)
 
     def unregister(self, client):
+        router.unregister(client.peer)
         for c in self.clients:
             if c['client-peer'] == client.peer:
                 self.clients.remove(c)
-        router.unregister(client.peer)
 
     def communicate(self, peer, payload):
         client = None

@@ -13,9 +13,9 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    for c in console.router.users:
-        if c.user["name"].lower() == args[0].lower():
-            c.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
+    for u in console.router.users:
+        if console.router.users[u].user["name"].lower() == args[0].lower():
+            console.router.users[u].msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
             return True
 
     console.msg(NAME + ": no such user is logged in")
