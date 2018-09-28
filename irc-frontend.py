@@ -50,6 +50,19 @@ with open("irc.config.json") as f:
     config = json.load(f)
 
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
+
+# Reset users.
+rooms = dbman.rooms.find()
+if rooms.count():
+    for r in rooms:
+        r["users"] = []
+        dbman.upsert_room(r)
+users = dbman.users.find()
+if users.count():
+    for u in users:
+        u["online"] = False
+        dbman.upsert_user(u)
+
 irc = blackbox.IRC()
 parser = blackbox.Parser()
 irc.connect(config["host"], config["port"])
