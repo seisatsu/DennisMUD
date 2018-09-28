@@ -51,10 +51,12 @@ class Console:
             if splitpos == 0:
                 if '_'.join(line) in self._commands.keys():
                     # Run the command with no arguments.
+                    self.msg(' '.join(line) + '\n' + '='*20)
                     return self._commands['_'.join(line)].COMMAND(self, self._database, [])
                 continue
             if '_'.join(line[:-splitpos]) in self._commands.keys():
                 # Run the command and pass arguments.
+                self.msg(' '.join(line) + '\n' + '='*20)
                 return self._commands['_'.join(line[:-splitpos])].COMMAND(self, self._database, line[-splitpos:])
         if line:
             self.msg("unknown command: " + '_'.join(line))
