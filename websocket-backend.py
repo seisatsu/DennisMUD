@@ -55,6 +55,9 @@ class Router:
         self.users[peer] = console.Console(dbman, peer, self)
 
     def unregister(self, peer):
+        if self.users[peer].user:
+            self.users[peer].user["online"] = False
+            dbman.upsert_user(self.users[peer].user)
         del self.users[peer]
 
     def message(self, peer, msg):
