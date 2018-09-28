@@ -40,6 +40,7 @@ def COMMAND(console, database, args):
         database.upsert_room(thisroom)
 
     console.msg("logged in as \"" + console.user["name"] + "\"")
+    console.msg('=' * 20)
     console.broadcast_room(console.user["nick"] + " entered the dream")
     console.command("look", False)
     return True
