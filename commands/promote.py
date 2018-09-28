@@ -1,10 +1,10 @@
 NAME = "promote"
-USAGE = "promote [username]"
-DESCRIPTION = "(WIZARDS ONLY) Elevate yourself or the named user to wizard status."
+USAGE = "promote <username>"
+DESCRIPTION = "(WIZARDS ONLY) Elevate the named user to wizard status."
 
 
 def COMMAND(console, database, args):
-    if len(args) > 1:
+    if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
 
@@ -16,19 +16,14 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    if len(args) == 0:
-        # Upgrade ourselves to wizard.
-        console.user["wizard"] = True
-        database.upsert_user(console.user)
-    else:
-        # Upgrade the named user to wizard.
-        targetuser = database.user_by_name(args[0])
-        if not targetuser:
-            # No such user.
-            console.msg(NAME + ": no such user")
-            return False
-        targetuser["wizard"] = True
-        database.upsert_user(targetuser)
+    # Upgrade the named user to wizard.
+    targetuser = database.user_by_name(args[0])
+    if not targetuser:
+        # No such user.
+        console.msg(NAME + ": no such user")
+        return False
+    targetuser["wizard"] = True
+    database.upsert_user(targetuser)
 
     console.msg(NAME + ": done")
     return True
