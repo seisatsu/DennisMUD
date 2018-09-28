@@ -34,7 +34,8 @@ def COMMAND(console, database, args):
         "id": lastitem + 1,
         "name": name,
         "desc": "",
-        "owners": [console.user["name"]]
+        "owners": [console.user["name"]],
+        "glued": False
     }
 
     # Add the item to the creator's inventory.

@@ -16,7 +16,7 @@ def COMMAND(console, database, args):
     for itemid in console.user["inventory"]:
         i = database.item_by_id(itemid)
         if i:
-            console.msg(str(i["id"]) + ": " + i["name"])
+            console.msg(i["name"] + " (" + str(i["id"]) + ")")
         else:
             console.msg(NAME + ": empty")
     return True
