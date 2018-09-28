@@ -1,6 +1,6 @@
 NAME = "teleport"
 USAGE = "teleport <room>"
-DESCRIPTION = "(WIZARD COMMAND) Teleport to the room with ID <room>."
+DESCRIPTION = "(WIZARDS ONLY) Teleport to the room with ID <room>."
 
 
 def COMMAND(console, database, args):
