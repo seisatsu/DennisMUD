@@ -1,6 +1,6 @@
 NAME = "teleport"
 USAGE = "teleport <room>"
-DESCRIPTION = "(WIZARDS ONLY) Teleport to the room with ID <room>."
+DESCRIPTION = "Teleport to the room (which you own) with ID <room>, or to room 0."
 
 
 def COMMAND(console, database, args):
@@ -8,12 +8,9 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    # Make sure we are logged in, and a wizard.
+    # Make sure we are logged in.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
-        return False
-    if not console.user["wizard"]:
-        console.msg(NAME + ": you do not have permission to use this command")
         return False
 
     try:
@@ -29,6 +26,9 @@ def COMMAND(console, database, args):
     if not destroom:
         console.msg(NAME + ": destination room does not exist")
         return False  # The destination room does not exist.
+    if not console.user["name"] in destroom["owners"] and not console.user["wizard"] and not destroom["id"] == 0:
+        console.msg(NAME + ": you do not have permission to teleport to that room")
+        return False
     # Move us to the new room.
     if console.user["name"] in thisroom["users"]:
         thisroom["users"].remove(console.user["name"])
