@@ -1,6 +1,6 @@
 NAME = "requisition"
 USAGE = "requisition <item>"
-DESCRIPTION = "(WIZARDS ONLY) Obtain the item with id <item>, regardless of where it is."
+DESCRIPTION = "Obtain the item (which you own) with id <item>, regardless of where it is."
 
 
 def COMMAND(console, database, args):
@@ -8,12 +8,9 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    # Make sure we are logged in, and a wizard.
+    # Make sure we are logged in.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
-        return False
-    if not console.user["wizard"]:
-        console.msg(NAME + ": you do not have permission to use this command")
         return False
 
     try:
@@ -25,6 +22,10 @@ def COMMAND(console, database, args):
     # Check if the item exists.
     i = database.item_by_id(itemid)
     if i:
+        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
+            console.msg(NAME + ": you do not have permission to requisition that item")
+            return False
+
         # If the item is in a room's item list, remove it.
         rooms = database.rooms.find()
         if rooms:
