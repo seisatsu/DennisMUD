@@ -1,6 +1,6 @@
 NAME = "locate user"
 USAGE = "locate user <name>"
-DESCRIPTION = "Find out what room the user <name> is in."
+DESCRIPTION = "Find out what room the user with username <name> is in. Does not work with nicknames."
 
 
 def COMMAND(console, database, args):

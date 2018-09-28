@@ -13,6 +13,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    for u in database.users.find():
+        if ' '.join(args).lower() == u["nick"].lower():
+            console.msg(NAME + ": that nickname is already in use")
+            return False
+
     console.user["nick"] = ' '.join(args)
     database.upsert_user(console.user)
     console.msg(NAME + ": done")

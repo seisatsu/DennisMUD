@@ -21,7 +21,10 @@ def COMMAND(console, database, args):
         console.msg("Owned by: " + ', '.join(thisroom["owners"]))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
-        console.msg("Occupants: " + ", ".join(thisroom["users"]))
+        userlist = []
+        for u in thisroom["users"]:
+            userlist.append(database.user_by_name(u)["nick"])
+        console.msg("Occupants: " + ", ".join(userlist))
         itemlist = []
         for i in thisroom["items"]:
             itemlookup = database.item_by_id(i)
@@ -76,15 +79,21 @@ def COMMAND(console, database, args):
                 found_something = True
                 break
 
+        # Might be the username of a user.
+        u = database.user_by_name(args[0].lower())
+        if u:
+            console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
+            if u["desc"]:
+                console.msg(u["desc"])  # Print user description.
+            found_something = True
+
         # Might be the nickname of a user.
-        for uname in thisroom["users"]:
-            u = database.user_by_name(uname)
-            if u["nick"].lower() == args[0].lower():
-                console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
-                if u["desc"]:
-                    console.msg(u["desc"])  # Print user description.
-                found_something = True
-                break
+        u = database.user_by_nick(args[0].lower())
+        if u:
+            console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
+            if u["desc"]:
+                console.msg(u["desc"])  # Print user description.
+            found_something = True
 
         if found_something:
             return True

@@ -56,6 +56,15 @@ class DatabaseManager:
                     return u
         return None
 
+    def user_by_nick(self, nickname):
+        # Get a user by their nickname.
+        users = self.users.find()
+        if users.count():
+            for u in users:
+                if u["nick"].lower() == nickname.lower():
+                    return u
+        return None
+
     def _init_room(self):
         newroom = {
             "owners": ["<world>"],
@@ -72,7 +81,7 @@ class DatabaseManager:
     def _init_user(self):
         newuser = {
             "name": "<world>",
-            "nick": "Root User",
+            "nick": "<Root User>",
             "desc": "The administrator.",
             "passhash": "0",
             "online": False,
