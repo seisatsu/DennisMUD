@@ -53,7 +53,8 @@ def COMMAND(console, database, args):
         for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.
             i = database.item_by_id(itemid)
             if i["name"].lower() == ' '.join(args).lower():
-                console.msg(str(i["id"]) + ": " + i["name"])  # Print item ID and name.
+                console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
+                console.msg("Owned by: " + ', '.join(i["owners"]))
                 if i["desc"]:
                     console.msg(i["desc"])  # Print item description.
                 found_something = True
@@ -63,7 +64,8 @@ def COMMAND(console, database, args):
         for itemid in console.user["inventory"]:
             i = database.item_by_id(itemid)
             if i["name"].lower() == ' '.join(args).lower():
-                console.msg(str(i["id"]) + ": " + i["name"])  # Print item ID and name.
+                console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
+                console.msg("Owned by: " + ', '.join(i["owners"]))
                 if i["desc"]:
                     console.msg(i["desc"])  # Print item description.
                 found_something = True
@@ -80,7 +82,7 @@ def COMMAND(console, database, args):
                 break
 
         # Might be the username of a user.
-        u = database.user_by_name(args[0].lower())
+        u = database.user_by_name(' '.join(args).lower())
         if u:
             console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
             if u["desc"]:
@@ -88,7 +90,7 @@ def COMMAND(console, database, args):
             found_something = True
 
         # Might be the nickname of a user.
-        u = database.user_by_nick(args[0].lower())
+        u = database.user_by_nick(' '.join(args).lower())
         if u:
             console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
             if u["desc"]:
