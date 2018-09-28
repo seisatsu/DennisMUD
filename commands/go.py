@@ -36,7 +36,7 @@ def COMMAND(console, database, args):
                     destroom["users"].append(console.user["name"])
                 console.broadcast_room(console.user["nick"] + " left the room through " + e["name"])
                 console.user["room"] = destroom["id"]
-                console.broadcast_room(console.user["nick"] + " entered the room through " + e["name"])
+                console.broadcast_room(console.user["nick"] + " entered the room")
                 database.upsert_room(thisroom)
                 database.upsert_room(destroom)
                 database.upsert_user(console.user)

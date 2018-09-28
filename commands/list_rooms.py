@@ -1,6 +1,6 @@
 NAME = "list rooms"
 USAGE = "list rooms"
-DESCRIPTION = "(WIZARDS ONLY) List all rooms in the world."
+DESCRIPTION = "List all rooms in the world that you own."
 
 
 def COMMAND(console, database, args):
@@ -8,18 +8,17 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    # Make sure we are logged in, and a wizard.
+    # Make sure we are logged in.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
-        return False
-    if not console.user["wizard"]:
-        console.msg(NAME + ": you do not have permission to use this command")
         return False
 
     rooms = database.rooms.find().sort("id", 1)
     if rooms.count():
         for r in rooms:
-            console.msg(str(r["id"]) + ": " + r["name"])
+            if console.user["name"] in r["owners"] or console.user["wizard"]:
+                # We either own this room, or we are a wizard.
+                console.msg(str(r["id"]) + ": " + r["name"])
     else:
         console.msg(NAME + ": no users")
 
