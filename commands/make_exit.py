@@ -42,7 +42,7 @@ def COMMAND(console, database, args):
         return False
 
     # Create our new exit.
-    newexit = {"dest": dest, "name": name, "desc": ""}
+    newexit = {"dest": dest, "name": name, "desc": "", "action": ""}
     thisroom["exits"].append(newexit)
 
     # Save.
