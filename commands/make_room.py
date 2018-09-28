@@ -37,7 +37,8 @@ def COMMAND(console, database, args):
         "desc": "",
         "users": [],
         "exits": [],
-        "items": []
+        "items": [],
+        "locked": False
     }
 
     # Save.

@@ -26,6 +26,9 @@ def COMMAND(console, database, args):
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
+        if thisroom["locked"] and not console.user["wizard"] and console.user["name"].lower() not in thisroom["owners"]:
+            console.msg(NAME + ": the room is locked")
+            return False
         del thisroom["exits"][exitid]
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")

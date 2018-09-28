@@ -74,6 +74,7 @@ class DatabaseManager:
             "users": ["<world>"],
             "exits": [],
             "items": [],
+            "locked": False
         }
         self.rooms.insert_one(newroom)
         return True
