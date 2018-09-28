@@ -58,9 +58,12 @@
     </div>
 </body>
 <script type="text/javascript">
+    var host = "dream.uboachan.net";
+    var port = 37379;
+
     if(window.WebSocket){
 	    window.addEventListener("load", function() {
-	        var mySocket = new WebSocket("ws://dream.uboachan.net:37379/ws");
+	        var mySocket = new WebSocket("ws://"+host+":"+port+"/ws");
 	        mySocket.onmessage = function (event) {
 	            var output = document.getElementById("chat_box");
 	            output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
