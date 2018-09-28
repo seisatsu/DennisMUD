@@ -38,7 +38,7 @@ class Console:
                     self._commands[command[:-3]] = mod
         print("Registered commands: " + str(list(self._commands.keys())))
 
-    def command(self, line):
+    def command(self, line, show_command=True):
         """
         Parse and execute a command line, discerning which arguments are part of the command name
         and which arguments should be passed to the command.
@@ -51,15 +51,17 @@ class Console:
             if splitpos == 0:
                 if '_'.join(line) in self._commands.keys():
                     # Run the command with no arguments.
-                    self.msg("> " + ' '.join(line))
-                    self.msg('='*20)
+                    if show_command:
+                        self.msg("> " + ' '.join(line))
+                        self.msg('='*20)
                     return self._commands['_'.join(line)].COMMAND(self, self._database, [])
                 continue
             if '_'.join(line[:-splitpos]) in self._commands.keys():
                 # Run the command and pass arguments.
                 if line[0] != "login":
-                    self.msg("> " + ' '.join(line))
-                    self.msg('=' * 20)
+                    if show_command:
+                        self.msg("> " + ' '.join(line))
+                        self.msg('=' * 20)
                 return self._commands['_'.join(line[:-splitpos])].COMMAND(self, self._database, line[-splitpos:])
         if line:
             self.msg("unknown command: " + '_'.join(line))

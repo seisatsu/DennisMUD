@@ -41,5 +41,5 @@ def COMMAND(console, database, args):
 
     console.msg("logged in as \"" + console.user["name"] + "\"")
     console.broadcast_room(console.user["nick"] + " entered the dream")
-    console.command("look")
+    console.command("look", False)
     return True

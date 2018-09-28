@@ -43,7 +43,7 @@ def COMMAND(console, database, args):
                 database.upsert_room(thisroom)
                 database.upsert_room(destroom)
                 database.upsert_user(console.user)
-                console.command("look")
+                console.command("look", False)
                 return True
 
     console.msg(NAME + ": no such exit")
