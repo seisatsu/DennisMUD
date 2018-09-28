@@ -16,15 +16,10 @@ def COMMAND(console, database, args):
     users = database.users.find().sort("name", 1)
     if users.count():
         for u in users:
-            if console.user["wizard"]:
-                # List even offline users.
-                if u["online"]:
-                    console.msg(u["name"] + ": " + u["nick"] + " (online)")
-                else:
-                    console.msg(u["name"] + ": " + u["nick"] + " (offline)")
-            else:
-                if u["online"]:
-                    console.msg(u["name"] + ": " + u["nick"])
+            if u["online"]:
+                console.msg(u["name"] + ": " + u["nick"])
+            elif console.user["wizard"]:
+                console.msg(u["name"] + ": " + u["nick"] + " (offline)")
     else:
         console.msg(NAME + ": no users?!")
 
