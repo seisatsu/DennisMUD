@@ -12,7 +12,7 @@ from twisted.internet import reactor
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
 
 # Read the config file.
-with open("web.config.json") as f:
+with open("websocket.config.json") as f:
     config = json.load(f)
 
 # Open the Dennis main database.

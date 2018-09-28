@@ -9,3 +9,5 @@ db/
 discord.config.json
 discord-frontend.py
 index.html
+websocket.config.json
+irc.config.json
