@@ -1,6 +1,6 @@
 NAME = "look"
 USAGE = "look [name]"
-DESCRIPTION = "Look at the current room or the named object."
+DESCRIPTION = "Look at the current room or the named object or user."
 
 
 def COMMAND(console, database, args):
