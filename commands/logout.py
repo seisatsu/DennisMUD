@@ -8,6 +8,11 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
+    # Not logged in yet.
+    if not console.user or not console.user["online"]:
+        console.msg(NAME + ": not logged in")
+        return False
+
     # Look for the current room.
     thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
@@ -21,11 +26,8 @@ def COMMAND(console, database, args):
         database.upsert_room(thisroom)
 
     # Take us offline
-    if console.user["online"]:
-        console.user["online"] = False
-        database.upsert_user(console.user)
-        console.user = None
-        console.msg("logged out")
-        return True
-    console.msg(NAME + ": not logged in")
-    return False
+    console.user["online"] = False
+    database.upsert_user(console.user)
+    console.user = None
+    console.msg("logged out")
+    return True
