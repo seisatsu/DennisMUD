@@ -1,6 +1,7 @@
 import console
 import database
 import json
+import sys
 
 
 class Router:
@@ -42,6 +43,9 @@ if not dennis.user["wizard"]:
     dennis.user["wizard"] = True
 dbman.upsert_user(dennis.user)
 
+# Command loop.
 while True:
     cmd = input("> ")
+    if cmd in ["exit", "quit"]:
+        sys.exit(0)
     print(dennis.command(cmd))
