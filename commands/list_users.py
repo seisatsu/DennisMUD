@@ -18,8 +18,10 @@ def COMMAND(console, database, args):
         for u in users:
             if u["online"]:
                 console.msg(u["name"] + ": " + u["nick"])
-            elif console.user["wizard"]:
-                console.msg(u["name"] + ": " + u["nick"] + " (offline)")
+        if console.user["wizard"]:
+            for u in users:
+                if u["offline"]:
+                    console.msg(u["name"] + ": " + u["nick"] + " (offline)")
     else:
         console.msg(NAME + ": no users?!")
 
