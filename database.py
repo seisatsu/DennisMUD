@@ -74,7 +74,9 @@ class DatabaseManager:
             "users": ["<world>"],
             "exits": [],
             "items": [],
-            "locked": False
+            "keys": [],
+            "locked": False,
+            "sealed": False
         }
         self.rooms.insert_one(newroom)
         return True
@@ -88,6 +90,7 @@ class DatabaseManager:
             "online": False,
             "room": 0,
             "inventory": [],
+            "keys": [],
             "wizard": True
         }
         self.users.insert_one(newuser)

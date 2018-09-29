@@ -30,6 +30,7 @@ def COMMAND(console, database, args):
         "online": False,
         "room": 0,
         "inventory": [],
+        "keys": [],
         "wizard": False
     }
 

@@ -28,6 +28,10 @@ def COMMAND(console, database, args):
         if thisroom["locked"] and not console.user["wizard"] and console.user["name"].lower() not in thisroom["owners"]:
             console.msg(NAME + ": the room is locked")
             return False
+        if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+                and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
+            console.msg(NAME + ": you do not own this exit or this room")
+            return False
         thisroom["exits"][exitid]["action"] = ' '.join(args[1:])
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")

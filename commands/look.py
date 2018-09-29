@@ -76,6 +76,7 @@ def COMMAND(console, database, args):
             if thisroom["exits"][e]["name"].lower() == ' '.join(args).lower():
                 # Print exit name, ID, and destination.
                 console.msg(thisroom["exits"][e]["name"] + " (" + str(e) + ") -> " + str(thisroom["exits"][e]["dest"]))
+                console.msg("Owned by: " + ', '.join(thisroom["exits"][e]["owners"]))
                 if thisroom["exits"][e]["desc"]:
                     console.msg(thisroom["exits"][e]["desc"])  # Print exit description.
                 found_something = True
