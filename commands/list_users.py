@@ -21,7 +21,7 @@ def COMMAND(console, database, args):
         if console.user["wizard"]:
             users.rewind()
             for u in users:
-                if u["offline"]:
+                if not u["online"]:
                     console.msg(u["name"] + ": " + u["nick"] + " (offline)")
     else:
         console.msg(NAME + ": no users?!")
