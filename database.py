@@ -91,6 +91,10 @@ class DatabaseManager:
             "room": 0,
             "inventory": [],
             "keys": [],
+            "chat": {
+                "enabled": True,
+                "ignored": []
+            },
             "wizard": True
         }
         self.users.insert_one(newuser)

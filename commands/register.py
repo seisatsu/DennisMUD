@@ -11,6 +11,10 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
+    if console.user:
+        console.msg(NAME + ": logout first to register a user")
+        return False
+
     # Register a new user.
     check = database.users.find_one(
         {
@@ -31,6 +35,10 @@ def COMMAND(console, database, args):
         "room": 0,
         "inventory": [],
         "keys": [],
+        "chat": {
+            "enabled": True,
+            "ignored": []
+        },
         "wizard": False
     }
 
