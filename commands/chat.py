@@ -15,12 +15,12 @@ def COMMAND(console, database, args):
 
     # Make sure chat is enabled.
     if not console.user["chat"]["enabled"]:
-        console.msg(NAME + ": chat is disabled")
+        console.msg(NAME + ": enable chat first")
         return False
 
     for u in console.router.users:
         if console.router.users[u].user and console.router.users[u].user["chat"]["enabled"]:
             if not console.user["name"] in console.router.users[u].user["chat"]["ignored"]:
-                console.router.users[u].msg("# <<" + console.user["name"] + ">>: " + ' '.join(args))
+                console.router.users[u].msg("# <" + console.user["name"] + ">: " + ' '.join(args))
 
     return True
