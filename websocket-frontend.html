@@ -70,7 +70,7 @@
 
     if(window.WebSocket){
 	    window.addEventListener("load", function() {
-	        if secure
+	        if(secure)
 	            var mySocket = new WebSocket("wss://"+host+":"+port+"/ws");
 	        else
 	            var mySocket = new WebSocket("ws://"+host+":"+port+"/ws");
