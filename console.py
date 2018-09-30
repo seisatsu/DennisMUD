@@ -44,7 +44,7 @@ class Console:
         and which arguments should be passed to the command.
         """
         # Split the command line into a list of arguments.
-        line = line.split(' ')
+        line = line.rstrip().split(' ')
 
         # Find out which part of the line is the command, and which part are its arguments.
         for splitpos in range(len(line)):
