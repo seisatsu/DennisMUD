@@ -24,6 +24,11 @@ def COMMAND(console, database, args):
     if r:
         # Check that we own the room.
         if console.user["name"] in r["owners"] or console.user["wizard"]:
+            # Make sure the room is empty.
+            if r["users"]:
+                console.msg(NAME + ": you cannot break an occupied room")
+                return False
+
             # Delete the room.
             database.delete_room(r)
 

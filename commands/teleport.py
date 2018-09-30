@@ -30,14 +30,16 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not have permission to teleport to that room")
         return False
     # Move us to the new room.
-    if console.user["name"] in thisroom["users"]:
+    if thisroom and console.user["name"] in thisroom["users"]:
         thisroom["users"].remove(console.user["name"])
     if console.user["name"] not in destroom["users"]:
         destroom["users"].append(console.user["name"])
-    console.broadcast_room(console.user["nick"] + " vanished from the room")
+    if thisroom:
+        console.broadcast_room(console.user["nick"] + " vanished from the room")
     console.user["room"] = destroom["id"]
     console.broadcast_room(console.user["nick"] + " entered the room")
-    database.upsert_room(thisroom)
+    if thisroom:
+        database.upsert_room(thisroom)
     database.upsert_room(destroom)
     database.upsert_user(console.user)
     console.command("look", False)
