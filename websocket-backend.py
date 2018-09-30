@@ -126,7 +126,10 @@ if __name__ == "__main__":
 
     log.startLogging(sys.stdout)
 
-    factory = ChatFactory(router, "ws://" + config["server"]["host"] + ":" + str(config["server"]["port"]))
+    if config["server"]["secure"]:
+        factory = ChatFactory(router, "wss://" + config["server"]["host"] + ":" + str(config["server"]["port"]))
+    else:
+        factory = ChatFactory(router, "ws://" + config["server"]["host"] + ":" + str(config["server"]["port"]))
     factory.protocol = ServerProtocol
 
     reactor.listenTCP(37379, factory)

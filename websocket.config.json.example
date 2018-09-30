@@ -6,6 +6,7 @@
   },
   "server": {
     "host": "dream.uboachan.net",
-    "port": 37379
+    "port": 37379,
+    "secure": true
   }
 }
