@@ -31,7 +31,7 @@ def COMMAND(console, database, args):
         if not destroom:
             console.msg(NAME + ": destination room does not exist")
             return False  # The destination room does not exist.
-        if thisroom["locked"] and not console.user["wizard"] and console.user["name"].lower() not in thisroom["owners"]:
+        if thisroom["locked"] and not console.user["wizard"] and console.user["name"] not in thisroom["owners"]:
             console.msg(NAME + ": the room is locked")
             return False
         thisroom["exits"][exitid]["dest"] = dest

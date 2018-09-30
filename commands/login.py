@@ -17,7 +17,7 @@ def COMMAND(console, database, args):
 
     thisuser = database.users.find_one(
         {
-            "name": args[0],
+            "name": args[0].lower(),
             "passhash": hashlib.sha256(args[1].encode()).hexdigest()
         }
     )

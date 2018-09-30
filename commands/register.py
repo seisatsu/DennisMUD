@@ -23,7 +23,7 @@ def COMMAND(console, database, args):
 
     # Create new user.
     newuser = {
-        "name": args[0],
+        "name": args[0].lower(),
         "nick": args[0],
         "desc": "",
         "passhash": hashlib.sha256(args[1].encode()).hexdigest(),

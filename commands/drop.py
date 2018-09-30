@@ -28,7 +28,6 @@ def COMMAND(console, database, args):
             thisroom["items"].append(i["id"])
             database.upsert_user(console.user)
             database.upsert_room(thisroom)
-            #console.msg("dropped " + ' '.join(args))
             console.broadcast_room(console.user["nick"] + " dropped " + ' '.join(args))
             return True
 

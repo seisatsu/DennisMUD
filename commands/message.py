@@ -14,7 +14,7 @@ def COMMAND(console, database, args):
         return False
 
     for u in console.router.users:
-        if console.router.users[u].user["name"].lower() == args[0].lower():
+        if console.router.users[u].user["name"] == args[0].lower():
             console.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
             console.router.users[u].msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
             return True

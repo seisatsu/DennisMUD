@@ -24,7 +24,7 @@ def COMMAND(console, database, args):
 
     # Make sure we own the exit or the room.
     if console.user["name"] not in r["exits"][exitid]["owners"] \
-            and console.user["name"].lower() not in r["owners"] and not console.user["wizard"]:
+            and console.user["name"] not in r["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this exit or this room")
         return False
 

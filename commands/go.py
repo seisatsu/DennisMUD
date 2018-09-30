@@ -29,6 +29,12 @@ def COMMAND(console, database, args):
                     console.msg(NAME + ": destination room does not exist")
                     return False  # The destination room does not exist.
 
+                # Check if the exit is locked.
+                if e["locked"] and console.user["name"] not in e["owners"] \
+                        and console.user["name"] not in thisroom["owners"]:
+                    console.msg(NAME + ": that exit is locked.")
+                    return False
+
                 # Move us to the new room.
                 if console.user["name"] in thisroom["users"]:
                     thisroom["users"].remove(console.user["name"])
