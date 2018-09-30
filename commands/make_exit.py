@@ -38,11 +38,11 @@ def COMMAND(console, database, args):
         return False  # The destination room does not exist.
 
     if thisroom["locked"] and not console.user["wizard"] and console.user["name"] not in thisroom["owners"]:
-        console.msg(NAME + ": this room is locked")
+        console.msg(NAME + ": this room is outbound sealed")
         return False
 
     if destroom["sealed"] and not console.user["wizard"] and console.user["name"] not in destroom["owners"]:
-        console.msg(NAME + ": the destination room is sealed")
+        console.msg(NAME + ": the destination room is inbound sealed")
         return False
 
     # Create our new exit.

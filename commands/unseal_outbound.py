@@ -1,6 +1,6 @@
-NAME = "unlock room"
-USAGE = "unlock room"
-DESCRIPTION = "Allow exits to be added, removed, or modified in this room."
+NAME = "unseal outbound"
+USAGE = "unseal outbound"
+DESCRIPTION = "Allow exits to be added, removed, or modified in the current room."
 
 
 def COMMAND(console, database, args):
@@ -22,7 +22,7 @@ def COMMAND(console, database, args):
         return False
 
     if not r["locked"]:
-        console.msg(NAME + ": this room is already unlocked")
+        console.msg(NAME + ": this room is already outbound unsealed")
         return False
     r["locked"] = False
     database.upsert_room(r)

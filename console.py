@@ -1,9 +1,11 @@
 import importlib.machinery
 import importlib.util
 import os
+import string
 import sys
 
 COMMAND_DIR = "commands/"
+ALLOWED_CHARACTERS = string.ascii_letters + string.digits + string.punctuation + ' '
 
 
 class Console:
@@ -43,8 +45,17 @@ class Console:
         Parse and execute a command line, discerning which arguments are part of the command name
         and which arguments should be passed to the command.
         """
+        # Strip whitespace from the front and back.
+        line = line.strip()
+
+        # Check for illegal characters.
+        for c in line:
+            if c not in ALLOWED_CHARACTERS:
+                self.msg("command contains illegal characters")
+                return None
+
         # Split the command line into a list of arguments.
-        line = line.strip().split(' ')
+        line = line.split(' ')
 
         # Find out which part of the line is the command, and which part are its arguments.
         for splitpos in range(len(line)):
