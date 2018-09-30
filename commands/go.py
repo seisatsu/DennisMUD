@@ -30,8 +30,7 @@ def COMMAND(console, database, args):
                     return False  # The destination room does not exist.
 
                 # Check if the exit is locked.
-                if e["locked"] and console.user["name"] not in e["owners"] \
-                        and console.user["name"] not in thisroom["owners"]:
+                if e["locked"] and console.user["name"] not in e["owners"] and not console.user["wizard"]:
                     console.msg(NAME + ": that exit is locked.")
                     return False
 
