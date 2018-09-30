@@ -36,5 +36,5 @@ def COMMAND(console, database, args):
 
     # Save.
     database.upsert_user(newuser)
-    console.msg("registered user \"" + args[0] + "\"")
+    console.msg("registered user \"" + newuser["name"] + "\"")
     return True
