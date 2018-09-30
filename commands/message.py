@@ -15,10 +15,9 @@ def COMMAND(console, database, args):
 
     for u in console.router.users:
         if console.router.users[u].user and console.router.users[u].user["name"] == args[0].lower():
-            if not console.user["name"] in console.router.users[u].user["chat"]["ignored"] and \
-                    not console.user["wizard"]:
-                console.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
+            if not console.user["name"] in console.router.users[u].user["chat"]["ignored"] or console.user["wizard"]:
                 console.router.users[u].msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
+                console.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
             return True
 
     console.msg(NAME + ": no such user is logged in")
