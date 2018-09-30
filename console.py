@@ -48,11 +48,12 @@ class Console:
         # Strip whitespace from the front and back.
         line = line.strip()
 
-        # Check for illegal characters.
-        for c in line:
-            if c not in ALLOWED_CHARACTERS:
-                self.msg("command contains illegal characters")
-                return None
+        # Check for illegal characters, except in passwords.
+        if line.split(' ')[0] not in ["register", "login"]:
+            for c in line:
+                if c not in ALLOWED_CHARACTERS:
+                    self.msg("command contains illegal characters")
+                    return None
 
         # Split the command line into a list of arguments.
         line = line.split(' ')
