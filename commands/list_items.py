@@ -14,12 +14,17 @@ def COMMAND(console, database, args):
         return False
 
     items = database.items.find().sort("id", 1)
+    found_something = False
     if items.count():
         for i in items:
             if console.user["name"] in i["owners"] or console.user["wizard"]:
                 # We either own this one, or we are a wizard.
                 console.msg(str(i["id"]) + ": " + i["name"])
-    else:
-        console.msg(NAME + ": no items")
+                found_something = True
+    if not found_something:
+        if console.user["wizard"]:
+            console.msg(NAME + ": there are no items")
+        else:
+            console.msg(NAME + ": you do not own any items")
 
     return True

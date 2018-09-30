@@ -56,9 +56,9 @@
             please post in the discussion thread with your username, and the room id and exit id.<br/>
             <br/>
         </div>
-        <form class="foo">
-            <input id="input"></input>
-            <input type="submit"></input>
+        <form class="console">
+            <input id="input" autofocus="autofocus"/>
+            <input type="submit" value="Send Command"/>
         </form>
         <br/>
         <a href="https://uboachan.net/og/res/5214.html" target="_blank">Help / Discussion Thread</a>
@@ -80,7 +80,7 @@
 	            output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
 	            output.scrollTop = output.scrollHeight;
 	        };
-	        var form = document.getElementsByClassName("foo");
+	        var form = document.getElementsByClassName("console");
 	        var input = document.getElementById("input");
 	        form[0].addEventListener("submit", function (e) {
 	            input_text = input.value;
