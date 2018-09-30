@@ -21,7 +21,6 @@ def COMMAND(console, database, args):
     for u in console.router.users:
         if console.router.users[u].user and console.router.users[u].user["chat"]["enabled"]:
             if not console.user["name"] in console.router.users[u].user["chat"]["ignored"]:
-                console.router.users[u].msg("# <<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
+                console.router.users[u].msg("# <<" + console.user["name"] + ">>: " + ' '.join(args[]))
 
-    console.msg("# <<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
     return True
