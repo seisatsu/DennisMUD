@@ -1,42 +1,43 @@
 <!-- Codebase borrowed from https://github.com/TKeesh/WebSocketChat -->
 <!-- This is the frontend used for the instance at dream.uboachan.net. Modify as needed. -->
+
 <!DOCTYPE html>
 <html style="height: 98%;">
 <head>
-<meta charset="UTF-8">
-<style>
-    body {
-        background-color: #303030;
-        height: 100%;
-    }
-    a:link, a:visited {
-	    color: #050530;
-    }
-    a:hover, a:link:hover, a:visited:hover {
-	    color: #f33;
-    }
-	#chat_box {
-    	text-align: left;
-    	margin: auto;
-    	margin-top: 10px;
-    	margin-bottom: 25px;
-    	padding: 5px;
-    	background-color: #484848;
-    	height: 80%;
-    	width: 800px;
-    	border: 1px solid #301010;
-    	overflow: auto;
-    }
-    #container {
-        height: 100%;
-        text-align: center;
-    }
-    #input {
-        background-color: #484848;
-        border: 1px solid #301010;
-        width: 400px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #303030;
+            height: 100%;
+        }
+        a:link, a:visited {
+            color: #050530;
+        }
+        a:hover, a:link:hover, a:visited:hover {
+            color: #f33;
+        }
+        #chat_box {
+            text-align: left;
+            margin: auto;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            padding: 5px;
+            background-color: #484848;
+            height: 80%;
+            width: 800px;
+            border: 1px solid #301010;
+            overflow: auto;
+        }
+        #container {
+            height: 100%;
+            text-align: center;
+        }
+        #input {
+            background-color: #484848;
+            border: 1px solid #301010;
+            width: 400px;
+        }
+    </style>
 </head>
 <body>
     <div id="container">
@@ -96,6 +97,4 @@
 		document.getElementsByClassName('console')[0].style.visibility = 'hidden'
 	}
 </script>
-
 </html>
-
