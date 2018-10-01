@@ -1,4 +1,5 @@
 NAME = "lock exit <id>"
+CATEGORIES = ["exits"]
 USAGE = "lock exit <id>"
 DESCRIPTION = "Prevents anyone except the exit owner or a key holder from using the exit <id> in this room."
 

@@ -1,4 +1,5 @@
 NAME = "unseal outbound"
+CATEGORIES = ["exits", "rooms"]
 USAGE = "unseal outbound"
 DESCRIPTION = "Allow exits to be added, removed, or modified in the current room."
 

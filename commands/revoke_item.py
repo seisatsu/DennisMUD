@@ -1,4 +1,5 @@
 NAME = "revoke item"
+CATEGORIES = ["items"]
 USAGE = "revoke item <id> <username>"
 DESCRIPTION = "Remove user <username> from the owners of item <id>."
 

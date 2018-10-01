@@ -1,4 +1,5 @@
 NAME = "action"
+CATEGORIES = ["messaging"]
 USAGE = "action <message>"
 DESCRIPTION = "Send a message styled as performing an action."
 

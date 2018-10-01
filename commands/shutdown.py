@@ -1,6 +1,7 @@
 import sys
 
 NAME = "shutdown"
+CATEGORIES = ["wizard"]
 USAGE = "shutdown"
 DESCRIPTION = "(WIZARDS ONLY) Shut down the server."
 

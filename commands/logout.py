@@ -1,4 +1,5 @@
 NAME = "logout"
+CATEGORIES = ["users"]
 USAGE = "logout"
 DESCRIPTION = "Log out if logged in."
 

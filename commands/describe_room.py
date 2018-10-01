@@ -1,4 +1,5 @@
 NAME = "describe room"
+CATEGORIES = ["rooms"]
 USAGE = "describe room <description>"
 DESCRIPTION = "Set the description of the room you are in."
 

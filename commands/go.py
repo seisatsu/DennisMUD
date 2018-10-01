@@ -1,4 +1,5 @@
 NAME = "go"
+CATEGORIES = ["exploration"]
 USAGE = "go <exit>"
 DESCRIPTION = "Take the exit called <exit> to wherever it may lead."
 

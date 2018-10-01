@@ -1,6 +1,7 @@
 import hashlib
 
 NAME = "register"
+CATEGORIES = ["users"]
 USAGE = "register <username> <password>"
 DESCRIPTION = "Register a new user with <username> and <password>."
 

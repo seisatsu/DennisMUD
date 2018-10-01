@@ -1,4 +1,5 @@
 NAME = "lookup room"
+CATEGORIES = ["rooms"]
 USAGE = "lookup room <name>"
 DESCRIPTION = "Find the ID of the room <name>."
 

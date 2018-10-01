@@ -1,4 +1,5 @@
 NAME = "redirect exit"
+CATEGORIES = ["exits"]
 USAGE = "redirect exit <id> <destination>"
 DESCRIPTION = "Set the destination of the exit <id> in this room to <destination>."
 

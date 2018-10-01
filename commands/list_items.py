@@ -1,4 +1,5 @@
 NAME = "list items"
+CATEGORIES = ["items"]
 USAGE = "list items"
 DESCRIPTION = "List all items in the world that you own."
 

@@ -15,8 +15,10 @@ class Console:
         self.router = router
         self._database = database
         self._commands = {}
+        self._help = {}
 
         self._load_modules()
+        self._build_help()
 
     def _load_modules(self):
         """
@@ -39,6 +41,16 @@ class Console:
                     spec.loader.exec_module(mod)
                     self._commands[command[:-3]] = mod
         print("Registered commands: " + str(list(self._commands.keys())))
+
+    def _build_help(self):
+        self._help["all"] = []
+        for cmd in self._commands.keys():
+            if hasattr(self._commands[cmd], "CATEGORIES"):
+                for category in self._commands[cmd].CATEGORIES:
+                    if category not in self._help.keys():
+                        self._help[category] = []
+                    self._help[category].append(cmd)
+            self._help["all"].append(cmd)
 
     def command(self, line, show_command=True):
         """
@@ -85,16 +97,19 @@ class Console:
         """
         if not line:
             line = "help"
-        if line.replace(' ', '_') in self._commands.keys():
+        if line == "help":
+            print("Usage: help <command/category>")
+            print("Description: print the help for a command, or list the commands in a category.")
+            print("Available Categories: " + ', '.join(sorted(self._help.keys())))
+        elif line.replace(' ', '_') in self._commands.keys():
             usage = "Usage: " + self._commands[line.replace(' ', '_')].USAGE
             desc = "Description: " + self._commands[line.replace(' ', '_')].DESCRIPTION
             self.msg(usage)
             self.msg(desc)
+        elif line in self._help.keys():
+            self.msg("Available commands in category {0}: {1}".format(line, ', '.join(sorted(self._help[line]))))
         else:
-            self.msg("help: unknown command: " + line)
-        if line == "help":
-            command_list = ', '.join(sorted(list(self._commands.keys()))).replace('_', ' ')
-            self.msg("Available commands: " + command_list)
+            self.msg("help: unknown command or category: " + line)
         return None
 
     def msg(self, message):

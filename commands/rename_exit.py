@@ -1,4 +1,5 @@
 NAME = "rename exit"
+CATEGORIES = ["exits"]
 USAGE = "rename exit <id> <name>"
 DESCRIPTION = "Set the name of the exit <id> in this room."
 

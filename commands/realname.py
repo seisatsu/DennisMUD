@@ -1,4 +1,5 @@
 NAME = "realname"
+CATEGORIES = ["users"]
 USAGE = "realname <nickname>"
 DESCRIPTION = "Find the real username of the user <nickname>."
 

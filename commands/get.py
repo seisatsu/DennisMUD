@@ -1,4 +1,5 @@
 NAME = "get"
+CATEGORIES = ["items"]
 USAGE = "get <item>"
 DESCRIPTION = "Pick up the item called <item> from the current room."
 

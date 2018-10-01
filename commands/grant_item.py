@@ -1,4 +1,5 @@
 NAME = "grant item"
+CATEGORIES = ["items"]
 USAGE = "grant item <id> <username>"
 DESCRIPTION = "Add user <username> to the owners of item <id>."
 

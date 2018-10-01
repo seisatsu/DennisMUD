@@ -1,4 +1,5 @@
 NAME = "make room"
+CATEGORIES = ["rooms"]
 USAGE = "make room <name>"
 DESCRIPTION = "Create a new room called <name>."
 

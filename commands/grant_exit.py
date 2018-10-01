@@ -1,4 +1,5 @@
 NAME = "grant exit"
+CATEGORIES = ["exits"]
 USAGE = "grant exit <id> <username>"
 DESCRIPTION = "Add user <username> to the owners of the exit <id> in the current room."
 

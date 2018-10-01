@@ -1,4 +1,5 @@
 NAME = "inventory"
+CATEGORIES = ["items"]
 USAGE = "inventory"
 DESCRIPTION = "List all items in your inventory."
 

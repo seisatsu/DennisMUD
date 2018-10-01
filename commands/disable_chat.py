@@ -1,4 +1,5 @@
 NAME = "disable chat"
+CATEGORIES = ["messaging", "settings"]
 USAGE = "disable chat"
 DESCRIPTION = "Do not participate in and receive messages from the general chat."
 

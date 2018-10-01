@@ -1,4 +1,5 @@
 NAME = "grant room"
+CATEGORIES = ["rooms"]
 USAGE = "grant room <username>"
 DESCRIPTION = "Add user <username> to the owners of the current room."
 

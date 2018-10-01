@@ -1,4 +1,5 @@
 NAME = "unglue item"
+CATEGORIES = ["items"]
 USAGE = "unglue item <item>"
 DESCRIPTION = "Unglue the item in your inventory with ID <item>, so that once dropped, anyone can pick it up."
 

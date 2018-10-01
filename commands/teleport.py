@@ -1,4 +1,5 @@
 NAME = "teleport"
+CATEGORIES = ["exploration"]
 USAGE = "teleport <room>"
 DESCRIPTION = "Teleport to the room (which you own) with ID <room>, or to room 0."
 

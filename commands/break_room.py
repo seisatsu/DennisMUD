@@ -1,4 +1,5 @@
 NAME = "break room"
+CATEGORIES = ["rooms"]
 USAGE = "break room <room>"
 DESCRIPTION = "Break the room with ID <room> if you are its owner."
 

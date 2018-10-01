@@ -1,4 +1,5 @@
 NAME = "unseal inbound"
+CATEGORIES = ["exits", "rooms"]
 USAGE = "unseal inbound"
 DESCRIPTION = "Allow new exits to be made that lead to the current room."
 

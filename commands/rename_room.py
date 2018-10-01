@@ -1,4 +1,5 @@
 NAME = "rename room"
+CATEGORIES = ["rooms"]
 USAGE = "rename room <name>"
 DESCRIPTION = "Set the name of the room you are in."
 

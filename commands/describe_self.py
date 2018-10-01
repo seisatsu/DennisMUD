@@ -1,4 +1,5 @@
 NAME = "describe self"
+CATEGORIES = ["settings", "users"]
 USAGE = "describe self <description>"
 DESCRIPTION = "Set your player description."
 

@@ -1,4 +1,5 @@
 NAME = "revoke room"
+CATEGORIES = ["rooms"]
 USAGE = "revoke room <username>"
 DESCRIPTION = "Remove user <username> from the owners of the current room."
 

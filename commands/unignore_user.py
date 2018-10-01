@@ -1,4 +1,5 @@
 NAME = "unignore user"
+CATEGORIES = ["messaging", "settings", "users"]
 USAGE = "unignore user <username>"
 DESCRIPTION = "Unignore general chat messages and private messages from the user <username>."
 

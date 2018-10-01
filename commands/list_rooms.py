@@ -1,4 +1,5 @@
 NAME = "list rooms"
+CATEGORIES = ["rooms"]
 USAGE = "list rooms"
 DESCRIPTION = "List all rooms in the world that you own."
 

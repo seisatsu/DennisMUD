@@ -1,4 +1,5 @@
 NAME = "unlock exit <id>"
+CATEGORIES = ["exits"]
 USAGE = "unlock exit <id>"
 DESCRIPTION = "Allows anyone to use the exit <id> in this room."
 

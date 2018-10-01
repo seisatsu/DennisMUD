@@ -1,4 +1,5 @@
 NAME = "lookup item"
+CATEGORIES = ["items"]
 USAGE = "lookup item <name>"
 DESCRIPTION = "Find the ID of the item <name>."
 

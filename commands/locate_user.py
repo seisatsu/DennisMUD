@@ -1,4 +1,5 @@
 NAME = "locate user"
+CATEGORIES = ["users"]
 USAGE = "locate user <name>"
 DESCRIPTION = "Find out what room the user with username <name> is in. Does not work with nicknames."
 

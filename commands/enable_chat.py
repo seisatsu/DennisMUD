@@ -1,4 +1,5 @@
 NAME = "enable chat"
+CATEGORIES = ["messaging", "settings"]
 USAGE = "enable chat"
 DESCRIPTION = "Participate in and receive messages from the general chat."
 

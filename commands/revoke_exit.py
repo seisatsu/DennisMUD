@@ -1,4 +1,5 @@
 NAME = "revoke exit"
+CATEGORIES = ["exits"]
 USAGE = "revoke exit <id> <username>"
 DESCRIPTION = "Remove user <username> from the owners of the exit <id> in the current room."
 

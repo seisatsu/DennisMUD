@@ -1,4 +1,5 @@
 NAME = "rename self"
+CATEGORIES = ["settings", "users"]
 USAGE = "rename self <nickname>"
 DESCRIPTION = "Set your player nickname."
 

@@ -1,4 +1,5 @@
 NAME = "drop"
+CATEGORIES = ["items"]
 USAGE = "drop <item>"
 DESCRIPTION = "Drop the item called <item> into the current room."
 

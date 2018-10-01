@@ -1,4 +1,5 @@
 NAME = "chat"
+CATEGORIES = ["messaging"]
 USAGE = "chat <message>"
 DESCRIPTION = "Send a message to the general chat."
 

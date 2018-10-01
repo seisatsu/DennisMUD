@@ -1,4 +1,5 @@
 NAME = "requisition"
+CATEGORIES = ["items"]
 USAGE = "requisition <item>"
 DESCRIPTION = "Obtain the item (which you own) with id <item>, regardless of where it is."
 

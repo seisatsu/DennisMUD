@@ -1,4 +1,5 @@
 NAME = "locate item"
+CATEGORIES = ["items"]
 USAGE = "locate item <id>"
 DESCRIPTION = "Find out what room the item <id> (which we own) is in, or who is holding it."
 

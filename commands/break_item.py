@@ -1,4 +1,5 @@
 NAME = "break item"
+CATEGORIES = ["items"]
 USAGE = "break item <item>"
 DESCRIPTION = "Break the item in your inventory with ID <item>."
 

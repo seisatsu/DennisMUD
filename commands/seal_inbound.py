@@ -1,4 +1,5 @@
 NAME = "seal inbound"
+CATEGORIES = ["exits", "rooms"]
 USAGE = "seal inbound"
 DESCRIPTION = "Prevent new exits from being made that lead to the current room."
 

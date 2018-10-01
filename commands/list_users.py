@@ -1,4 +1,5 @@
 NAME = "list users"
+CATEGORIES = ["users"]
 USAGE = "list users"
 DESCRIPTION = "List all online users in the world."
 

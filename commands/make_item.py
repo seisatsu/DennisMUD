@@ -1,4 +1,5 @@
 NAME = "make item"
+CATEGORIES = ["items"]
 USAGE = "make item <name>"
 DESCRIPTION = "Create a new item called <name> and place it in your inventory."
 

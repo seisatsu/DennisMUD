@@ -1,4 +1,5 @@
 NAME = "make exit"
+CATEGORIES = ["exits"]
 USAGE = "make exit <destination> <name>"
 DESCRIPTION = "Create a new exit called <name> in the current room, leading to the room with ID <destination>."
 

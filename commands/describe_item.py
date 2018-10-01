@@ -1,4 +1,5 @@
 NAME = "describe item"
+CATEGORIES = ["items"]
 USAGE = "describe item <id> <description>"
 DESCRIPTION = "Set the description of the item <id> which you are holding."
 

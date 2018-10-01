@@ -1,4 +1,5 @@
 NAME = "ignore user"
+CATEGORIES = ["messaging", "settings", "users"]
 USAGE = "ignore user <username>"
 DESCRIPTION = "Ignore general chat messages and private messages from the user <username>."
 

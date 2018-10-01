@@ -1,4 +1,5 @@
 NAME = "announce"
+CATEGORIES = ["wizard"]
 USAGE = "announce <message>"
 DESCRIPTION = "(WIZARDS ONLY) Send a message to all users."
 

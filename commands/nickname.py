@@ -1,4 +1,5 @@
 NAME = "nickname"
+CATEGORIES = ["users"]
 USAGE = "nickname <username>"
 DESCRIPTION = "Find the nickname of the user <username>."
 

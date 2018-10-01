@@ -1,4 +1,5 @@
 NAME = "decorate exit"
+CATEGORIES = ["exits"]
 USAGE = "decorate exit <id> <action>"
 DESCRIPTION = "Set a custom <action> to display after the player's name when they use the exit <id>."
 

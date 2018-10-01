@@ -1,4 +1,5 @@
 NAME = "look"
+CATEGORIES = ["exploration"]
 USAGE = "look [name]"
 DESCRIPTION = "Look at the current room or the named object or user."
 

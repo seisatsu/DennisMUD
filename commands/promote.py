@@ -1,4 +1,5 @@
 NAME = "promote"
+CATEGORIES = ["wizard"]
 USAGE = "promote <username>"
 DESCRIPTION = "(WIZARDS ONLY) Elevate the named user to wizard status."
 
