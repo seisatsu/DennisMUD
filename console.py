@@ -99,7 +99,7 @@ class Console:
             line = "help"
         if line == "help":
             self.msg("Usage: help <command/category>")
-            self.msg("Description: print the help for a command, or list the commands in a category.")
+            self.msg("Description: Print the help for a command, or list the commands in a category.")
             self.msg("Available Categories: " + ', '.join(sorted(self._help.keys())))
         elif line.replace(' ', '_') in self._commands.keys():
             usage = "Usage: " + self._commands[line.replace(' ', '_')].USAGE
@@ -110,7 +110,24 @@ class Console:
             self.msg("Available commands in category {0}: {1}".format(line, ', '.join(sorted(self._help[line]))))
         else:
             self.msg("help: unknown command or category: " + line)
-        return None
+            return False
+        return True
+
+    def usage(self, line):
+        """
+        Retrieve the usage string for a command.
+        """
+        if not line:
+            line = "usage"
+        if line == "usage":
+            self.msg("Usage: usage <command>")
+        elif line.replace(' ', '_') in self._commands.keys():
+            usage = "Usage: " + self._commands[line.replace(' ', '_')].USAGE
+            self.msg(usage)
+        else:
+            self.msg("usage: unknown command: " + line)
+            return False
+        return True
 
     def msg(self, message):
         print(message)
