@@ -63,8 +63,8 @@ if users.count():
         dbman.upsert_user(u)
 
 # Log in as the root user.
-dennis = console.Console(dbman, "<world>", Router())
-dennis.user = dbman.user_by_name("<world>")
+dennis = console.Console(dbman, "root", Router())
+dennis.user = dbman.user_by_name("root")
 dennis.user["online"] = True
 if not dennis.user["wizard"]:
     dennis.user["wizard"] = True
