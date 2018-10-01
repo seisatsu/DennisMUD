@@ -98,9 +98,9 @@ class Console:
         if not line:
             line = "help"
         if line == "help":
-            print("Usage: help <command/category>")
-            print("Description: print the help for a command, or list the commands in a category.")
-            print("Available Categories: " + ', '.join(sorted(self._help.keys())))
+            self.msg("Usage: help <command/category>")
+            self.msg("Description: print the help for a command, or list the commands in a category.")
+            self.msg("Available Categories: " + ', '.join(sorted(self._help.keys())))
         elif line.replace(' ', '_') in self._commands.keys():
             usage = "Usage: " + self._commands[line.replace(' ', '_')].USAGE
             desc = "Description: " + self._commands[line.replace(' ', '_')].DESCRIPTION
