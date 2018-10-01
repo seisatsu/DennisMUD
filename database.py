@@ -94,11 +94,11 @@ class DatabaseManager:
 
     def _init_room(self):
         newroom = {
-            "owners": ["root"],
+            "owners": ["<world>"],
             "id": 0,
             "name": "Initial Room",
             "desc": "",
-            "users": ["root"],
+            "users": ["<world>"],
             "exits": [],
             "items": [],
             "keys": [],
@@ -110,7 +110,7 @@ class DatabaseManager:
 
     def _init_user(self):
         newuser = {
-            "name": "root",
+            "name": "<world>",
             "nick": "Root User",
             "desc": "The first user and administrator.",
             "passhash": "0",
