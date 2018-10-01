@@ -49,8 +49,8 @@ class Console:
                 for category in self._commands[cmd].CATEGORIES:
                     if category not in self._help.keys():
                         self._help[category] = []
-                    self._help[category].append(cmd)
-            self._help["all"].append(cmd)
+                    self._help[category].append(self._commands[cmd].NAME)
+            self._help["all"].append(self._commands[cmd].NAME)
 
     def command(self, line, show_command=True):
         """
