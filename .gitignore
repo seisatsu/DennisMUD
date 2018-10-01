@@ -10,5 +10,7 @@ discord.config.json
 discord-frontend.py
 index.html
 websocket.config.json
+websocket-frontend.html
 irc.config.json
 cli.config.json
+dennis.log

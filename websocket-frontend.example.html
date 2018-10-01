@@ -1,5 +1,4 @@
 <!-- Codebase borrowed from https://github.com/TKeesh/WebSocketChat -->
-<!-- This is the frontend used for the instance at dream.uboachan.net. Modify as needed. -->
 
 <!DOCTYPE html>
 <html style="height: 98%;">
@@ -42,7 +41,7 @@
 <body>
     <div id="container">
         <div id="supported"></div>
-        <div id="chat_box">Welcome to the Uboachan Dream World MUD Alpha, running <a href="https://github.com/seisatsu/Dennis">Dennis</a>.<br/>
+        <div id="chat_box">Welcome to the Dennis MUD public test instance, running <a href="https://github.com/seisatsu/Dennis">Dennis</a>.<br/>
             This is experimental software. If something goes wrong, try refreshing the page.<br/>
             <br/>
             In this game, you use in-game commands to create the content. All content is user-created.<br/>
@@ -53,22 +52,17 @@
             <br/>
             Please enjoy your stay!<br/>
             <br/>
-            <b>NOTICE:</b> A recent update added exit ownership. Ownership of all exits was defaulted to the user(s) who own the room.<br>
-            If you need edit access to an exit you made in a room you do not own,
-            please post in the discussion thread with your username, and the room id and exit id.<br/>
-            <br/>
         </div>
         <form class="console">
             <input id="input" autofocus="autofocus"/>
             <input type="submit" value="Send Command"/>
         </form>
         <br/>
-        <a href="https://uboachan.net/og/res/5214.html" target="_blank">Help / Discussion Thread</a>
     </div>
 </body>
 <script type="text/javascript">
-    var host = "dream.uboachan.net";
-    var port = 37379;
+    var host = "dennis.seisat.su";
+    var port = 37380;
     var secure = false;
 
     if(window.WebSocket){
