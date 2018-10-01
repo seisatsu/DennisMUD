@@ -159,5 +159,5 @@ if __name__ == "__main__":
         factory = ChatFactory(router, "ws://" + config["server"]["host"] + ":" + str(config["server"]["port"]))
     factory.protocol = ServerProtocol
 
-    reactor.listenTCP(37379, factory)
+    reactor.listenTCP(str(config["server"]["port"], factory)
     reactor.run()
