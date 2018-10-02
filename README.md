@@ -2,7 +2,7 @@
 
 Dennis is a MUD (Multi-User Dungeon) inspired by ifMUD in which all content is created by the users, by utilizing in-game commands.
 
-A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at `dennis.seisat.su:37381`.
+A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at `dennis.seisat.su:37381`. Currently, users accessing via different backends cannot see or interact with each other, though they can edit the same world.
 
 To try it out, make sure you have Python 3, PyMongo, and MongoDB, and then run `cli-frontend.py` for the single-user command-line interface. `irc-frontend.py` hosts the game using an IRC bot as a console that users can message. The IRC backend is not very usable in practice, as it will brush up against anti-flooding protections on most servers. `websocket-backend.py` and `websocket-frontend.html` allow you to set up a webpage as a console.
 
