@@ -28,7 +28,7 @@
 NAME = "describe room"
 CATEGORIES = ["rooms"]
 USAGE = "describe room <description>"
-DESCRIPTION = "Set the description of the room you are in."
+DESCRIPTION = "Set the description of the room you are in. A double backslash inserts a paragraph break."
 
 
 def COMMAND(console, database, args):
@@ -49,7 +49,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this room")
         return False
 
-    r["desc"] = ' '.join(args)
+    if "\\\\\\\\" in ' '.join(args):
+        console.msg(NAME + ": paragraph breaks may not be stacked")
+        return False
+
+    r["desc"] = ' '.join(args).replace("\\\\", "\n\n")
     database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

@@ -28,7 +28,7 @@
 NAME = "describe self"
 CATEGORIES = ["settings", "users"]
 USAGE = "describe self <description>"
-DESCRIPTION = "Set your player description."
+DESCRIPTION = "Set your player description. A double backslash inserts a paragraph break."
 
 
 def COMMAND(console, database, args):
@@ -41,7 +41,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    console.user["desc"] = ' '.join(args)
+    if "\\\\\\\\" in ' '.join(args):
+        console.msg(NAME + ": paragraph breaks may not be stacked")
+        return False
+
+    console.user["desc"] = ' '.join(args).replace("\\\\", "\n\n")
     database.upsert_user(console.user)
     console.msg(NAME + ": done")
     return True

@@ -28,7 +28,7 @@
 NAME = "describe exit"
 CATEGORIES = ["exits"]
 USAGE = "describe exit <id> <description>"
-DESCRIPTION = "Set the description of the exit <id> in this room."
+DESCRIPTION = "Set the description of the exit <id> in this room. A double backslash inserts a paragraph break."
 
 
 def COMMAND(console, database, args):
@@ -60,7 +60,10 @@ def COMMAND(console, database, args):
                 and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
             console.msg(NAME + ": you do not own this exit or this room")
             return False
-        thisroom["exits"][exitid]["desc"] = ' '.join(args[1:])
+        if "\\\\\\\\" in ' '.join(args[1:]):
+            console.msg(NAME + ": paragraph breaks may not be stacked")
+            return False
+        thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n\n")
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True

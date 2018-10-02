@@ -28,7 +28,7 @@
 NAME = "describe item"
 CATEGORIES = ["items"]
 USAGE = "describe item <id> <description>"
-DESCRIPTION = "Set the description of the item <id> which you are holding."
+DESCRIPTION = "Set the description of the item <id> which you are holding. A double backslash inserts a paragraph break."
 
 
 def COMMAND(console, database, args):
@@ -59,7 +59,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this item")
         return False
 
-    i["desc"] = ' '.join(args[1:])
+    if "\\\\\\\\" in ' '.join(args[1:]):
+        console.msg(NAME + ": paragraph breaks may not be stacked")
+        return False
+
+    i["desc"] = ' '.join(args[1:]).replace("\\\\", "\n\n")
     database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

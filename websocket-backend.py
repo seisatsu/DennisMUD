@@ -145,7 +145,7 @@ class ChatFactory(WebSocketServerFactory):
             if c['client-peer'] == peer:
                 client = c['client']
         if client:
-            client.sendMessage(payload)
+            client.sendMessage(payload.replace("\n", "<br/>"))
 
 
 if __name__ == "__main__":
