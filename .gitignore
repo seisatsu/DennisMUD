@@ -13,4 +13,5 @@ websocket.config.json
 websocket-frontend.html
 irc.config.json
 cli.config.json
+telnet.config.json
 dennis.log
