@@ -1,0 +1,10 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "dennis-telnet"
+  },
+  "server": {
+    "port": 37375
+  }
+}
