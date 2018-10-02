@@ -59,36 +59,36 @@
         </form>
         <br/>
     </div>
-</body>
-<script type="text/javascript">
-    var host = "dennis.seisat.su";
-    var port = 37380;
-    var secure = false;
+    <script type="text/javascript">
+        var host = "dennis.seisat.su";
+        var port = 37380;
+        var secure = false;
 
-    if(window.WebSocket){
-	    window.addEventListener("load", function() {
-	        if(secure)
-	            var mySocket = new WebSocket("wss://"+host+":"+port+"/ws");
-	        else
-	            var mySocket = new WebSocket("ws://"+host+":"+port+"/ws");
-	        mySocket.onmessage = function (event) {
-	            var output = document.getElementById("chat_box");
-	            output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
-	            output.scrollTop = output.scrollHeight;
-	        };
-	        var form = document.getElementsByClassName("console");
-	        var input = document.getElementById("input");
-	        form[0].addEventListener("submit", function (e) {
-	            input_text = input.value;
-	            input.value = "";
-	            mySocket.send(input_text);
-	            e.preventDefault();
-	        })
-	    });
-	}
-	else{
-		document.getElementById('supported').innerHTML = "Error: WebSockets are NOT supported in current browser"
-		document.getElementsByClassName('console')[0].style.visibility = 'hidden'
-	}
-</script>
+        if(window.WebSocket){
+            window.addEventListener("load", function() {
+                if(secure)
+                    var mySocket = new WebSocket("wss://"+host+":"+port+"/ws");
+                else
+                    var mySocket = new WebSocket("ws://"+host+":"+port+"/ws");
+                mySocket.onmessage = function (event) {
+                    var output = document.getElementById("chat_box");
+                    output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
+                    output.scrollTop = output.scrollHeight;
+                };
+                var form = document.getElementsByClassName("console");
+                var input = document.getElementById("input");
+                form[0].addEventListener("submit", function (e) {
+                    input_text = input.value;
+                    input.value = "";
+                    mySocket.send(input_text);
+                    e.preventDefault();
+                })
+            });
+        }
+        else{
+            document.getElementById('supported').innerHTML = "Error: WebSockets are NOT supported in current browser"
+            document.getElementsByClassName('console')[0].style.visibility = 'hidden'
+        }
+    </script>
+</body>
 </html>
