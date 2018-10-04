@@ -59,7 +59,7 @@ class ServerFactory(WebSocketServerFactory):
 
     def register(self, client):
         self.clients.append({'client-peer': client.peer, 'client': client})
-        self.router.register(client.peer)
+        self.router.register(client.peer, "websocket")
 
     def unregister(self, client):
         self.router.unregister(client.peer)

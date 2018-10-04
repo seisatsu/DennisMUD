@@ -66,7 +66,7 @@ class ServerFactory(protocol.Factory):
 
     def register(self, client):
         self.clients.append({'client-peer': client.peer, 'client': client})
-        self.router.register(client.peer)
+        self.router.register(client.peer, "telnet")
 
     def unregister(self, client):
         self.router.unregister(client.peer)
