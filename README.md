@@ -1,6 +1,6 @@
 # Dennis MUD
 
-Dennis is a MUD (Multi-User Dungeon) inspired by ifMUD in which all content is created by the users, by utilizing in-game commands.
+Dennis is a MUD (Multi-User Dungeon) and collaborative writing exercise inspired by ifMUD in which all content is created by the users, by utilizing in-game commands.
 
 A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at `dennis.seisat.su:37381`.
 
