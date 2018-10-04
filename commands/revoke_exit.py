@@ -50,15 +50,15 @@ def COMMAND(console, database, args):
     roomid = console.user["room"]
     r = database.room_by_id(roomid)
 
+    # Find out if the exit exists in this room.
+    if exitid > len(r["exits"]) - 1 or exitid < 0:
+        console.msg(NAME + ": no such exit")
+        return False
+
     # Make sure we own the exit or the room.
     if console.user["name"] not in r["exits"][exitid]["owners"] \
             and console.user["name"] not in r["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this exit or this room")
-        return False
-
-    # Find out if the exit exists in this room.
-    if exitid > len(r["exits"]) - 1 or exitid < 0:
-        console.msg(NAME + ": no such exit")
         return False
 
     # Make sure the named user exists.
