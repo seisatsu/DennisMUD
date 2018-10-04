@@ -1,6 +1,6 @@
 ########################
 # Dennis MUD           #
-# telnet-backend.py    #
+# server.py            #
 # Copyright 2018       #
 # Michael D. Reiley    #
 ########################

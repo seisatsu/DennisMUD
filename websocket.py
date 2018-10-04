@@ -1,6 +1,6 @@
 ########################
 # Dennis MUD           #
-# websocket-backend.py #
+# websocket.py         #
 # Copyright 2018       #
 # Michael D. Reiley    #
 ########################
