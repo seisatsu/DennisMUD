@@ -49,6 +49,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this room")
         return False
 
+    # Make sure the named user exists.
     u = database.user_by_name(args[0].lower())
     if not u:
         console.msg(NAME + ": no such user")

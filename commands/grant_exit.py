@@ -56,6 +56,12 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this exit or this room")
         return False
 
+    # Find out if the exit exists in this room.
+    if exitid > len(r["exits"]) - 1 or exitid < 0:
+        console.msg(NAME + ": no such exit")
+        return False
+
+    # Make sure the named user exists.
     u = database.user_by_name(args[1].lower())
     if not u:
         console.msg(NAME + ": no such user")
