@@ -7,7 +7,7 @@ A public test instance is generally kept running. Access it with the web client 
 Single-player
 =============
 
-To try out single-player mode on the command line, first make sure you have [Python 3](https://www.python.org/), [PyMongo](https://api.mongodb.com/python/current/), and [MongoDB](https://www.mongodb.com/). Then copy `cli.config.example.json` to `cli.config.json`, change any necessary settings, and  run `python3 cli-frontend.py` in the projet's top directory from your console.
+To try out single-player mode on the command line, first make sure you have [Python 3](https://www.python.org/), [PyMongo](https://api.mongodb.com/python/current/), and [MongoDB](https://www.mongodb.com/). Then copy `cli.config.example.json` to `cli.config.json`, change any necessary settings, and  run `python3 cli-frontend.py` in the project's top directory from your console.
 
 Multi-player
 ============
