@@ -46,7 +46,7 @@ class ServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         # self.factory.communicate(self, payload, isBinary)
         print("Client {0} sending message: {1}".format(self.peer, payload))
-        self.factory.router[self.peer].command(payload.decode('utf-8'))
+        self.factory.router[self.peer][1].command(payload.decode('utf-8'))
 
 
 class ServerFactory(WebSocketServerFactory):
