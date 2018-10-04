@@ -6,12 +6,12 @@
   },
   "telnet": {
     "enabled": true,
-    "port": 37375
+    "port": 37381
   },
   "websocket": {
     "enabled": true,
-    "host": "dream.uboachan.net",
-    "port": 37379,
+    "host": "dennis.seisat.su",
+    "port": 37380,
     "secure": false
   }
 }
