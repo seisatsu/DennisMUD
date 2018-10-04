@@ -64,6 +64,7 @@ def COMMAND(console, database, args):
     # Check if the named user is already an owner.
     if not args[1].lower() in r["exits"][exitid]["owners"]:
         console.msg(NAME + ": user already not an owner of this exit")
+        return False
 
     r["exits"][exitid]["owners"].remove(args[1].lower())
     database.upsert_room(r)

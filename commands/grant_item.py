@@ -67,6 +67,7 @@ def COMMAND(console, database, args):
     # Check if the named user is already an owner.
     if args[1].lower() in i["owners"]:
         console.msg(NAME + ": user already an owner of this item")
+        return False
 
     i["owners"].append(args[1].lower())
     database.upsert_item(i)

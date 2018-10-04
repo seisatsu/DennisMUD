@@ -58,6 +58,7 @@ def COMMAND(console, database, args):
     # Check if the named user is an owner.
     if not args[0].lower() in r["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": user already not an owner of this room")
+        return False
 
     r["owners"].remove(args[0].lower())
     database.upsert_room(r)

@@ -57,6 +57,7 @@ def COMMAND(console, database, args):
     # Check if the named user is already an owner.
     if args[0].lower() in r["owners"]:
         console.msg(NAME + ": user already an owner of this room")
+        return False
 
     r["owners"].append(args[0].lower())
     database.upsert_room(r)

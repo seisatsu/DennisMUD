@@ -68,6 +68,7 @@ def COMMAND(console, database, args):
     # Check if the named user is an owner.
     if not args[1].lower() in i["owners"]:
         console.msg(NAME + ": user already not an owner of this item")
+        return False
 
     i["owners"].remove(args[1].lower())
     database.upsert_item(i)
