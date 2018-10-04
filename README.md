@@ -4,6 +4,12 @@ Dennis is a MUD (Multi-User Dungeon) and collaborative writing exercise inspired
 
 A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at `dennis.seisat.su:37381`.
 
-To try it out, make sure you have Python 3, PyMongo, and MongoDB, and then copy `cli.config.example.json` to `cli.config.json` and  run `cli-frontend.py` for the single-user command-line interface.
+Single-player
+=============
 
-To run as a server, you can run `server.py`, which supports telnet and websocket. `websocket-frontend.example.html` provides an example client for the websocket service. You will also have to copy `server.config.example.json` to `server.config.json`.
+To try out single-player mode on the command line, make sure you have Python 3, PyMongo, and MongoDB, and then copy `cli.config.example.json` to `cli.config.json`, change any necessary settings, and  run `cli-frontend.py`.
+
+Multi-player
+============
+
+To run a multi-player server, you can run `server.py`, which will start a websocket and a telnet service by default. `websocket-frontend.example.html` provides an example in-browser client for the websocket service. You will also have to copy `server.config.example.json` to `server.config.json` and change any necessary settings. To run the services, you will need Twisted and Autobahn for Python 3.
