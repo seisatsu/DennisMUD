@@ -13,4 +13,5 @@ irc.config.json
 cli.config.json
 server.config.json
 telnet.config.json
+motd.telnet.example.txt
 dennis.log

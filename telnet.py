@@ -30,6 +30,13 @@
 from twisted.internet import protocol
 from twisted.protocols.basic import LineReceiver
 
+# Read the motd file.
+try:
+    with open("motd.telnet.txt") as f:
+        motd = f.read()
+except:
+    motd = None
+
 
 class ServerProtocol(LineReceiver):
     def __init__(self, factory):
@@ -42,6 +49,8 @@ class ServerProtocol(LineReceiver):
         print("Client connecting: {0}".format(self.peer))
         self.factory.register(self)
         print("Client connected: {0}".format(self.peer))
+        if motd:
+            self.factory.communicate(self.peer, motd)
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
