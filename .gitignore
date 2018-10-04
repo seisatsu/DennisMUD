@@ -2,8 +2,6 @@ __pycache__/*
 *.pyc
 testdb/
 .idea/
-client.py
-server.py
 backup/
 db/
 discord.config.json
