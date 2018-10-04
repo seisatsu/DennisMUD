@@ -3,5 +3,5 @@ Welcome to Dennis MUD.
 In this game, you use in-game commands to create the content. All content is user-created.
 
 Try "help register", "help login", and "help" for starters.
-Other important commands for the casual player include "look", "go", and "say".
+Other important commands for the casual player include "look", "go", "say", and "chat".
 Read the help pages for the other commands listed by "help" to get started making content.
