@@ -4,7 +4,12 @@
     "port": 27017,
     "name": "dennis"
   },
-  "server": {
+  "telnet": {
+    "enabled": true,
+    "port": 37375
+  },
+  "websocket": {
+    "enabled": true,
     "host": "dream.uboachan.net",
     "port": 37379,
     "secure": false
