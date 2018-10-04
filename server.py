@@ -87,9 +87,9 @@ class Router:
         del self.users[peer]
 
     def message(self, peer, msg):
-        if users[peer][0] == "telnet":
+        if self.users[peer][0] == "telnet":
             self.telnet_factory.communicate(peer, msg.encode())
-        if users[peer][0] == "websocket":
+        if self.users[peer][0] == "websocket":
             self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"))
 
     def broadcast_all(self, msg):
