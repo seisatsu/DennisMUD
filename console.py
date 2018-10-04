@@ -124,17 +124,19 @@ class Console:
 
         # Setup some aliases.
         if line.startswith('\"'):
-            line.replace('\"', "say ", 1)
+            line = line.replace('\"', "say ", 1)
         elif line.startswith('#'):
-            line.replace('#', "chat ", 1)
+            line = line.replace('#', "chat ", 1)
         elif line.startswith('.'):
-            line.replace('.', "message ", 1)
+            line = line.replace('.', "message ", 1)
         elif line.startswith('msg '):
-            line.replace('msg ', "message ", 1)
+            line = line.replace('msg ', "message ", 1)
         elif line.startswith(':'):
-            line.replace(':', "action ", 1)
+            line = line.replace(':', "action ", 1)
         elif line.startswith('emote '):
-            line.replace('emote ', "action ", 1)
+            line = line.replace('emote ', "action ", 1)
+
+        print(line)
 
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login"]:
