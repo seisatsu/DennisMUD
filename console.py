@@ -136,8 +136,6 @@ class Console:
         elif line.startswith('emote '):
             line = line.replace('emote ', "action ", 1)
 
-        print(line)
-
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login"]:
             for c in line:
