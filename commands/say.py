@@ -28,7 +28,7 @@
 NAME = "say"
 CATEGORIES = ["messaging"]
 USAGE = "say <message>"
-DESCRIPTION = "Send a message to everyone in the same room as you."
+DESCRIPTION = "Send a message to everyone in the same room as you. Alias: \""
 
 
 def COMMAND(console, database, args):

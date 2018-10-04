@@ -122,6 +122,20 @@ class Console:
         # Strip whitespace from the front and back.
         line = line.strip()
 
+        # Setup some aliases.
+        if line.startswith('\"'):
+            line.replace('\"', "say ", 1)
+        elif line.startswith('#'):
+            line.replace('#', "chat ", 1)
+        elif line.startswith('.'):
+            line.replace('.', "message ", 1)
+        elif line.startswith('msg '):
+            line.replace('msg ', "message ", 1)
+        elif line.startswith(':'):
+            line.replace(':', "action ", 1)
+        elif line.startswith('emote '):
+            line.replace('emote ', "action ", 1)
+
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login"]:
             for c in line:

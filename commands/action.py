@@ -28,7 +28,7 @@
 NAME = "action"
 CATEGORIES = ["messaging"]
 USAGE = "action <message>"
-DESCRIPTION = "Send a message styled as performing an action."
+DESCRIPTION = "Send a message styled as performing an action. Aliases: emote and :"
 
 
 def COMMAND(console, database, args):

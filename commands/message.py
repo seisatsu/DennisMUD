@@ -28,7 +28,7 @@
 NAME = "message"
 CATEGORIES = ["messaging"]
 USAGE = "message <username> <message>"
-DESCRIPTION = "Send a message to the user <username>. Does not use nicknames."
+DESCRIPTION = "Send a message to the user <username>. Does not use nicknames. Aliases: msg and ."
 
 
 def COMMAND(console, database, args):
