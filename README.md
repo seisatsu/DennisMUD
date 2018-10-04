@@ -12,4 +12,4 @@ To try out single-player mode on the command line, first make sure you have [Pyt
 Multi-player
 ============
 
-To run a multi-player server, you can run `server.py`, which will start a websocket and a telnet service by default. `websocket-frontend.example.html` provides an example in-browser client for the websocket service. You will also have to copy `server.config.example.json` to `server.config.json` and change any necessary settings. To run the services, you will need [Twisted](https://twistedmatrix.com/trac/) and [Autobahn](https://crossbar.io/autobahn/) for Python 3.
+To run a multi-player server, you can run `server.py`, which will start a websocket service and a telnet service by default. `websocket-frontend.example.html` provides an example in-browser client for the websocket service. You will also have to copy `server.config.example.json` to `server.config.json` and change any necessary settings. To run the services, you will need [Twisted](https://twistedmatrix.com/trac/) and [Autobahn](https://crossbar.io/autobahn/) for Python 3.
