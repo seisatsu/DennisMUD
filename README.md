@@ -2,7 +2,7 @@
 
 Dennis is a MUD (Multi-User Dungeon) inspired by ifMUD in which all content is created by the users, by utilizing in-game commands.
 
-A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at `dennis.seisat.su:37381`. Currently, users accessing via different backends cannot see or interact with each other, though they can edit the same world.
+A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at `dennis.seisat.su:37381`.
 
 To try it out, make sure you have Python 3, PyMongo, and MongoDB, and then copy `cli.config.example.json` to `cli.config.json` and  run `cli-frontend.py` for the single-user command-line interface.
 
