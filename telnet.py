@@ -59,10 +59,10 @@ class ServerProtocol(LineReceiver):
     def lineReceived(self, line):
         # self.factory.communicate(self, payload, isBinary)
         print("Client {0} sending message: {1}".format(self.peer, line))
-        try:
-            self.factory.router[self.peer][1].command(line.decode())
-        except:
-            print("discarded garbage line from telnet")
+        #try:
+        self.factory.router[self.peer][1].command(line.decode())
+        #except:
+        #    print("discarded garbage line from telnet")
 
 
 class ServerFactory(protocol.Factory):
