@@ -83,7 +83,7 @@ class Router:
         self.users[peer] = [service, console.Console(dbman, peer, self)]
 
     def unregister(self, peer):
-        self.users[peer].command("logout")
+        self.users[peer][1].command("logout")
         del self.users[peer]
 
     def message(self, peer, msg):
