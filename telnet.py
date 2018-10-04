@@ -50,7 +50,7 @@ class ServerProtocol(LineReceiver):
         self.factory.register(self)
         print("Client connected: {0}".format(self.peer))
         if motd:
-            self.factory.communicate(self.peer, motd)
+            self.factory.communicate(self.peer, motd.encode())
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
