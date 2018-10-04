@@ -29,53 +29,117 @@ from pymongo import MongoClient
 
 
 class DatabaseManager:
+    """The Database Manager
+
+    This manager handles interactions with a MongoDB database corresponding to the current game world.
+
+    Attributes:
+        client: The MongoClient which will be used to connect to the database.
+        database: The database to use for game data.
+        rooms: The collection of all rooms in the database.
+        users: The collection of all users in the database.
+        items: The collection of all items in the database.
+    """
     def __init__(self, host, port, dbname):
+        """Database Manager Initializer
+
+        :param host: The hostname of the MongoDB database.
+        :param port: The port of the MongoDB database.
+        :param dbname: The name of the MongoDB database.
+        """
         self.client = MongoClient(host, port)
         self.database = self.client[dbname]
         self.rooms = self.database["rooms"]
         self.users = self.database["users"]
         self.items = self.database["items"]
 
+        # If there are no rooms, make the initial room.
         if self.database.rooms.find().count() == 0:
             self._init_room()
 
+        # If there are no users, make the root user.
         if self.database.users.find().count() == 0:
             self._init_user()
 
     def upsert_room(self, document):
-        # Update or insert a room.
+        """Update or insert a room.
+
+        :param document: The room document to update or insert.
+        :return: True
+        """
         self.rooms.update_one({"id": document["id"]}, {"$set": document}, upsert=True)
+        return True
 
     def upsert_item(self, document):
-        # Update or insert an item.
+        """Update or insert an item.
+
+        :param document: The item document to update or insert.
+        :return: True
+        """
         self.items.update_one({"id": document["id"]}, {"$set": document}, upsert=True)
+        return True
 
     def upsert_user(self, document):
-        # Update or insert a user.
+        """Update or insert a user.
+
+        :param document: The user document to update or insert.
+        :return: True
+        """
         self.users.update_one({"name": document["name"]}, {"$set": document}, upsert=True)
+        return True
 
     def delete_room(self, document):
-        # Delete a room.
+        """Delete a room.
+
+        :param document: The room document to delete.
+        :return: True
+        """
         self.rooms.delete_one({"id": document["id"]})
+        return True
 
     def delete_item(self, document):
-        # Delete an item.
+        """Delete an item.
+
+        :param document: The item document to delete.
+        :return: True
+        """
         self.items.delete_one({"id": document["id"]})
+        return True
 
     def delete_user(self, document):
-        # Delete a user.
+        """Delete a user.
+
+        :param document: The user document to delete.
+        :return: True
+        """
         self.users.delete_one({"name": document["name"]})
+        return True
 
     def room_by_id(self, roomid):
-        # Get a room by its ID
+        """
+        Get a room by its id.
+
+        :param roomid: The id of the room to retrieve from the database.
+        :return: Room document or None.
+        """
         return self.rooms.find_one({"id": roomid})
 
     def item_by_id(self, itemid):
-        # Get an item by its ID
+        """
+        Get an item by its id.
+
+        :param itemid: The id of the item to retrieve from the database.
+        :return: Room document or None.
+        """
         return self.items.find_one({"id": itemid})
 
     def user_by_name(self, username):
-        # Get a user by their name.
+        """
+        Get a user by their name.
+
+        :param username: The name of the user to retrieve from the database.
+        :return: User document or None.
+        """
         users = self.users.find()
         if users.count():
             for u in users:
@@ -84,7 +148,12 @@ class DatabaseManager:
         return None
 
     def user_by_nick(self, nickname):
-        # Get a user by their nickname.
+        """
+        Get a user by their nickname.
+
+        :param nickname: The nickname of the user to retrieve from the database.
+        :return: User document or None.
+        """
         users = self.users.find()
         if users.count():
             for u in users:
@@ -93,6 +162,10 @@ class DatabaseManager:
         return None
 
     def _init_room(self):
+        """Initialize the world with the first room.
+
+        :return: True
+        """
         newroom = {
             "owners": ["<world>"],
             "id": 0,
@@ -109,6 +182,10 @@ class DatabaseManager:
         return True
 
     def _init_user(self):
+        """Initialize the world with the root user.
+
+        :return: True
+        """
         newuser = {
             "name": "<world>",
             "nick": "Root User",
