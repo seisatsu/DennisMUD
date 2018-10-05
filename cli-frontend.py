@@ -73,6 +73,6 @@ dbman.upsert_user(dennis.user)
 # Command loop.
 while True:
     cmd = input("> ")
-    if cmd in ["exit", "quit"]:
+    if cmd == "quit":
         sys.exit(0)
     print(dennis.command(cmd))
