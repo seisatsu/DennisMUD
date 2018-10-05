@@ -116,30 +116,30 @@ class Console:
         :return: Processed command line.
         """
         # Setup some aliases.
-        if line.startswith('\"'):
-            line = line.replace('\"', "say ", 1)
-        elif line.startswith('\" '):
+        if line.startswith('\" '):
             line = line.replace('\" ', "say ", 1)
-        elif line.startswith('#'):
-            line = line.replace('#', "chat ", 1)
+        elif line.startswith('\"'):
+            line = line.replace('\"', "say ", 1)
         elif line.startswith('# '):
             line = line.replace('# ', "chat ", 1)
-        elif line.startswith('.'):
-            line = line.replace('.', "message ", 1)
+        elif line.startswith('#'):
+            line = line.replace('#', "chat ", 1)
         elif line.startswith('. '):
             line = line.replace('. ', "message ", 1)
+        elif line.startswith('.'):
+            line = line.replace('.', "message ", 1)
         elif line.startswith('msg '):
             line = line.replace('msg ', "message ", 1)
-        elif line.startswith(':'):
-            line = line.replace(':', "action ", 1)
         elif line.startswith(': '):
             line = line.replace(': ', "action ", 1)
+        elif line.startswith(':'):
+            line = line.replace(':', "action ", 1)
         elif line.startswith('emote '):
             line = line.replace('emote ', "action ", 1)
-        elif line.startswith('>'):
-            line = line.replace('>', "go ", 1)
         elif line.startswith('> '):
             line = line.replace('> ', "go ", 1)
+        elif line.startswith('>'):
+            line = line.replace('>', "go ", 1)
         elif line.startswith('exit '):
             line = line.replace('exit ', "go ", 1)
 
