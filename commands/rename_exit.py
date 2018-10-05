@@ -41,11 +41,22 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Make sure the id is an integer.
     try:
         exitid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
         return False
+
+    # Make sure the name is not an integer, as this would be confusing.
+    if len(args) == 2:
+        try:
+            test = int(args[1])
+            console.msg(NAME + ": exit name cannot be an integer")
+            return False
+        except ValueError:
+            # Not an integer.
+            pass
 
     # Make sure the exit is in this room.
     thisroom = database.room_by_id(console.user["room"])

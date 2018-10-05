@@ -41,12 +41,23 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Make sure an integer was passed as the destination.
     try:
         dest = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
         return False
     name = ' '.join(args[1:])
+
+    # Make sure the name is not an integer, as this would be confusing.
+    if len(args) == 2:
+        try:
+            test = int(args[1])
+            console.msg(NAME + ": exit name cannot be an integer")
+            return False
+        except ValueError:
+            # Not an integer.
+            pass
 
     # Check if an exit by this name already exists. Case insensitive.
     thisroom = database.room_by_id(console.user["room"])

@@ -41,11 +41,24 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Make sure the id is an integer.
     try:
         itemid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
         return False
+
+    # Get name.
+    name = ' '.join(args[1:])
+
+    # Make sure the name is not an integer, as this would be confusing.
+    try:
+        test = int(name)
+        console.msg(NAME + ": item name cannot be an integer")
+        return False
+    except ValueError:
+        # Not an integer.
+        pass
 
     # Make sure we are holding the item.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
@@ -59,7 +72,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this item")
         return False
 
-    i["name"] = ' '.join(args[1:])
+    i["name"] = name
     database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

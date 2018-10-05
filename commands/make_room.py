@@ -41,7 +41,17 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Get name.
     name = ' '.join(args)
+
+    # Make sure the name is not an integer, as this would be confusing.
+    try:
+        test = int(name)
+        console.msg(NAME + ": room name cannot be an integer")
+        return False
+    except ValueError:
+        # Not an integer.
+        pass
 
     # Check if a room by this name already exists. Case insensitive.
     rooms = list(database.rooms.find().sort("id", -1))

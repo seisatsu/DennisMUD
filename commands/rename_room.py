@@ -41,6 +41,19 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Get name.
+    name = ' '.join(args)
+
+    # Make sure the name is not an integer, as this would be confusing.
+    try:
+        test = int(name)
+        console.msg(NAME + ": room name cannot be an integer")
+        return False
+    except ValueError:
+        # Not an integer.
+        pass
+
+    # Get the current room.
     roomid = console.user["room"]
     r = database.room_by_id(roomid)
 
@@ -49,7 +62,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this room")
         return False
 
-    r["name"] = ' '.join(args)
+    r["name"] = name
     database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

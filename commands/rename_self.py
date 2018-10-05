@@ -41,12 +41,25 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Get name.
+    name = ' '.join(args)
+
+    # Make sure the name is not an integer, as this would be confusing.
+    try:
+        test = int(name)
+        console.msg(NAME + ": nickname cannot be an integer")
+        return False
+    except ValueError:
+        # Not an integer.
+        pass
+
+    # Check if nickname is already in use.
     for u in database.users.find():
-        if ' '.join(args).lower() == u["nick"].lower():
+        if name.lower() == u["nick"].lower():
             console.msg(NAME + ": that nickname is already in use")
             return False
 
-    console.user["nick"] = ' '.join(args)
+    console.user["nick"] = name
     database.upsert_user(console.user)
     console.msg(NAME + ": done")
     return True
