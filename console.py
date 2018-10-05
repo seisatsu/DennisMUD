@@ -135,6 +135,10 @@ class Console:
             line = line.replace(':', "action ", 1)
         elif line.startswith('emote '):
             line = line.replace('emote ', "action ", 1)
+        elif line.startswith('>'):
+            line = line.replace('>', "go ", 1)
+        elif line.startswith('exit '):
+            line = line.replace('exit ', "go ", 1)
 
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login"]:
