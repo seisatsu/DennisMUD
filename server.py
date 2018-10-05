@@ -27,11 +27,17 @@
 
 # Parts of codebase borrowed from https://github.com/TKeesh/WebSocketChat
 
+import sys
+
+# Check Python version.
+if sys.version_info[0] != 3:
+    print("exiting: Dennis requires Python 3")
+    sys.exit(1)
+
 import console
 import database
 import html
 import json
-import sys
 import telnet
 import websocket
 

@@ -25,10 +25,16 @@
 # IN THE SOFTWARE.
 # **********
 
+import sys
+
+# Check Python version.
+if sys.version_info[0] != 3:
+    print("exiting: Dennis requires Python 3")
+    sys.exit(1)
+
 import console
 import database
 import json
-import sys
 
 
 class Router:
