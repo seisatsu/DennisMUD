@@ -28,7 +28,7 @@
 NAME = "go"
 CATEGORIES = ["exploration"]
 USAGE = "go <exit>"
-DESCRIPTION = "Take the exit called <exit> to wherever it may lead."
+DESCRIPTION = "Take the exit called <exit> to wherever it may lead. Also works by exit ID."
 
 
 def COMMAND(console, database, args):
@@ -47,18 +47,23 @@ def COMMAND(console, database, args):
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
 
+    # Get exit name/id.
+    name = ' '.join(args)
+
+    # Try to find the exit.
     exits = thisroom["exits"]
     if len(exits):
-        for e in exits:
-            if e["name"].lower() == ' '.join(args).lower():
+        for e in range(len(exits)):
+            # Check for name or id match.
+            if exits[e]["name"].lower() == name.lower() or str(e) == name:
                 # Check if the destination room exists.
-                destroom = database.room_by_id(e["dest"])
+                destroom = database.room_by_id(exits[e]["dest"])
                 if not destroom:
                     console.msg(NAME + ": destination room does not exist")
                     return False  # The destination room does not exist.
 
                 # Check if the exit is locked.
-                if e["locked"] and console.user["name"] not in e["owners"] and not console.user["wizard"]:
+                if exits[e]["locked"] and console.user["name"] not in exits[e]["owners"] and not console.user["wizard"]:
                     console.msg(NAME + ": this exit is locked.")
                     return False
 
@@ -67,10 +72,10 @@ def COMMAND(console, database, args):
                     thisroom["users"].remove(console.user["name"])
                 if console.user["name"] not in destroom["users"]:
                     destroom["users"].append(console.user["name"])
-                if e["action"]:
-                    console.broadcast_room(console.user["nick"] + " " + e["action"])
+                if exits[e]["action"]:
+                    console.broadcast_room(console.user["nick"] + " " + exits[e]["action"])
                 else:
-                    console.broadcast_room(console.user["nick"] + " left the room through " + e["name"])
+                    console.broadcast_room(console.user["nick"] + " left the room through " + exits[e]["name"])
                 console.user["room"] = destroom["id"]
                 console.broadcast_room(console.user["nick"] + " entered the room")
                 database.upsert_room(thisroom)
