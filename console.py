@@ -116,28 +116,18 @@ class Console:
         :return: Processed command line.
         """
         # Setup some aliases.
-        if line.startswith('\" '):
-            line = line.replace('\" ', "say ", 1)
-        elif line.startswith('\"'):
+        if line.startswith('\"'):
             line = line.replace('\"', "say ", 1)
-        elif line.startswith('# '):
-            line = line.replace('# ', "chat ", 1)
         elif line.startswith('#'):
             line = line.replace('#', "chat ", 1)
-        elif line.startswith('. '):
-            line = line.replace('. ', "message ", 1)
         elif line.startswith('.'):
             line = line.replace('.', "message ", 1)
         elif line.startswith('msg '):
             line = line.replace('msg ', "message ", 1)
-        elif line.startswith(': '):
-            line = line.replace(': ', "action ", 1)
         elif line.startswith(':'):
             line = line.replace(':', "action ", 1)
         elif line.startswith('emote '):
             line = line.replace('emote ', "action ", 1)
-        elif line.startswith('> '):
-            line = line.replace('> ', "go ", 1)
         elif line.startswith('>'):
             line = line.replace('>', "go ", 1)
         elif line.startswith('exit '):
@@ -170,6 +160,9 @@ class Console:
 
         # Split the command line into a list of arguments.
         line = line.split(' ')
+
+        # Remove extraneous spaces.
+        line = [elem for elem in line if elem != '']
 
         # Find out which part of the line is the command, and which part are its arguments.
         for splitpos in range(len(line)):
