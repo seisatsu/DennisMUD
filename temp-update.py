@@ -25,7 +25,10 @@
 # IN THE SOFTWARE.
 # **********
 
-# DO NOT USE
+# DO NOT USE!
+# This file is modified and used once for updating the database of my test instance every time a change is made to the
+# database structure. It is not expected to be safe or useful for whatever particular version you happen to be running
+# at the moment. Once Dennis starts having alpha releases with version numbers, there will be safe upgrade scripts.
 
 import database
 import json
