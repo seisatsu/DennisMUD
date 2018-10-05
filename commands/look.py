@@ -62,7 +62,7 @@ def COMMAND(console, database, args):
             console.msg("Items: " + ", ".join(itemlist))
         exitlist = []
         for e in range(len(thisroom["exits"])):
-            exitlist.append(thisroom["exits"][e]["name"] + " (" + str(thisroom["exits"][e]["id"]) + ")")
+            exitlist.append(thisroom["exits"][e]["name"] + " (" + str(e) + ")")
         if exitlist:
             console.msg("Exits: " + ", ".join(exitlist))
         return True
