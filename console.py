@@ -109,6 +109,42 @@ class Console:
 
         return True
 
+    def _process_aliases(self, line):
+        """Replace any command aliases in the line with their corresponding command.
+
+        :param line: The command line to process.
+        :return: Processed command line.
+        """
+        # Setup some aliases.
+        if line.startswith('\"'):
+            line = line.replace('\"', "say ", 1)
+        elif line.startswith('\" '):
+            line = line.replace('\" ', "say ", 1)
+        elif line.startswith('#'):
+            line = line.replace('#', "chat ", 1)
+        elif line.startswith('# '):
+            line = line.replace('# ', "chat ", 1)
+        elif line.startswith('.'):
+            line = line.replace('.', "message ", 1)
+        elif line.startswith('. '):
+            line = line.replace('. ', "message ", 1)
+        elif line.startswith('msg '):
+            line = line.replace('msg ', "message ", 1)
+        elif line.startswith(':'):
+            line = line.replace(':', "action ", 1)
+        elif line.startswith(': '):
+            line = line.replace(': ', "action ", 1)
+        elif line.startswith('emote '):
+            line = line.replace('emote ', "action ", 1)
+        elif line.startswith('>'):
+            line = line.replace('>', "go ", 1)
+        elif line.startswith('> '):
+            line = line.replace('> ', "go ", 1)
+        elif line.startswith('exit '):
+            line = line.replace('exit ', "go ", 1)
+
+        return line
+
     def command(self, line, show_command=True):
         """Command Handler
 
@@ -122,23 +158,8 @@ class Console:
         # Strip whitespace from the front and back.
         line = line.strip()
 
-        # Setup some aliases.
-        if line.startswith('\"'):
-            line = line.replace('\"', "say ", 1)
-        elif line.startswith('#'):
-            line = line.replace('#', "chat ", 1)
-        elif line.startswith('.'):
-            line = line.replace('.', "message ", 1)
-        elif line.startswith('msg '):
-            line = line.replace('msg ', "message ", 1)
-        elif line.startswith(':'):
-            line = line.replace(':', "action ", 1)
-        elif line.startswith('emote '):
-            line = line.replace('emote ', "action ", 1)
-        elif line.startswith('>'):
-            line = line.replace('>', "go ", 1)
-        elif line.startswith('exit '):
-            line = line.replace('exit ', "go ", 1)
+        # Process any aliases.
+        line = self._process_aliases(line)
 
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login"]:
