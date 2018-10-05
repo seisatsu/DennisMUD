@@ -57,12 +57,12 @@ def COMMAND(console, database, args):
         for i in thisroom["items"]:
             itemlookup = database.item_by_id(i)
             if itemlookup:
-                itemlist.append(itemlookup["name"])
+                itemlist.append(itemlookup["name"] + " (" + str(itemlookup["id"]) + ")")
         if itemlist:
             console.msg("Items: " + ", ".join(itemlist))
         exitlist = []
         for e in range(len(thisroom["exits"])):
-            exitlist.append(thisroom["exits"][e]["name"])
+            exitlist.append(thisroom["exits"][e]["name"] + " (" + str(thisroom["exits"][e]["id"]) + ")")
         if exitlist:
             console.msg("Exits: " + ", ".join(exitlist))
         return True
