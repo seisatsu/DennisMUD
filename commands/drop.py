@@ -47,16 +47,20 @@ def COMMAND(console, database, args):
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
 
+    # Get item name/id.
+    name = ' '.join(args)
+
     # Find the item in our inventory.
     for itemid in console.user["inventory"]:
         i = database.item_by_id(itemid)
-        if i["name"].lower() == ' '.join(args).lower():
+        # Check for name or id match.
+        if i["name"].lower() == name.lower() or str(i["id"]) == name:
             # Remove the item from our inventory and place it in the room.
             console.user["inventory"].remove(i["id"])
             thisroom["items"].append(i["id"])
             database.upsert_user(console.user)
             database.upsert_room(thisroom)
-            console.broadcast_room(console.user["nick"] + " dropped " + ' '.join(args))
+            console.broadcast_room(console.user["nick"] + " dropped " + i["name"])
             return True
 
     console.msg(NAME + ": no such item in inventory")

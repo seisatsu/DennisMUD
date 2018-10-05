@@ -47,10 +47,14 @@ def COMMAND(console, database, args):
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
 
+    # Get item name/id.
+    name = ' '.join(args)
+
     # Find the item in the current room.
     for itemid in thisroom["items"]:
         i = database.item_by_id(itemid)
-        if i["name"].lower() == ' '.join(args).lower():
+        # Check for name or id match.
+        if i["name"].lower() == name.lower() or str(i["id"]) == name:
             if i["glued"] and console.user["name"] not in i["owners"] and not console.user["wizard"]:
                 # The item is glued down. Only the owner can pick it up.
                 console.msg(NAME + ": you cannot get this item")
@@ -60,7 +64,7 @@ def COMMAND(console, database, args):
             console.user["inventory"].append(i["id"])
             database.upsert_room(thisroom)
             database.upsert_user(console.user)
-            console.broadcast_room(console.user["nick"] + " picked up " + ' '.join(args))
+            console.broadcast_room(console.user["nick"] + " picked up " + i["name"])
             return True
 
     console.msg(NAME + ": no such item in room")
