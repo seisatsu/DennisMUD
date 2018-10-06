@@ -4,6 +4,11 @@ Dennis is a MUD (Multi-User Dungeon, aka a multi-player text adventure) and coll
 
 A public test instance is generally kept running. Access it with the web client at http://dennis.seisat.su/ or via telnet at the same host on port 37381.
 
+Defaults Configuration
+======================
+
+There is a configuration file `defaults.config.example.json` which contains a number of default values to use when creating new in-game rooms, items, and users. It is necessary before running Dennis to copy this file to `defaults.config.json`, and make changes if desired.
+
 Single-player
 =============
 
