@@ -38,9 +38,14 @@ with open("cli.config.json") as f:
 
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 
-# Reset users.
-users = dbman.users.find()
-if users.count():
-    for u in users:
-        u["chat"] = {"enabled": True, "ignored": []}
-        dbman.upsert_user(u)
+# Update rooms.
+rooms = dbman.rooms.find()
+if rooms.count():
+    for r in rooms:
+        sealed_inbound = r["sealed"]
+        sealed_outbound = r["locked"]
+        r["sealed"] = {}
+        del r["locked"]
+        r["sealed"]["inbound"] = sealed_inbound
+        r["sealed"]["outbound"] = sealed_outbound
+        dbman.upsert_room(r)

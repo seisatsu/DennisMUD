@@ -11,6 +11,7 @@ websocket.config.json
 websocket-frontend.html
 irc.config.json
 cli.config.json
+defaults.config.json
 server.config.json
 telnet.config.json
 motd.telnet.example.txt

@@ -49,10 +49,10 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this room")
         return False
 
-    if not r["sealed"]:
+    if not r["sealed"]["inbound"]:
         console.msg(NAME + ": this room is already inbound unsealed")
         return False
-    r["sealed"] = False
+    r["sealed"]["inbound"] = False
     database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

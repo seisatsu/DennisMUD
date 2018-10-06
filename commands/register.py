@@ -64,7 +64,7 @@ def COMMAND(console, database, args):
         "inventory": [],
         "keys": [],
         "chat": {
-            "enabled": True,
+            "enabled": database.defaults["users"]["chat"]["enabled"],
             "ignored": []
         },
         "wizard": False

@@ -53,8 +53,9 @@ def COMMAND(console, database, args):
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
-        if thisroom["locked"] and not console.user["wizard"] and console.user["name"].lower() not in thisroom["owners"]:
-            console.msg(NAME + ": the room is locked")
+        if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
+                console.user["name"].lower() not in thisroom["owners"]:
+            console.msg(NAME + ": this room is outbound sealed")
             return False
         if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
                 and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:

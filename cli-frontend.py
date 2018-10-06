@@ -51,8 +51,13 @@ class Router:
         pass
 
 
-with open("cli.config.json") as f:
-    config = json.load(f)
+# Try to open the cli config file.
+try:
+    with open("cli.config.json") as f:
+        config = json.load(f)
+except:
+    print("exiting: could not open cli.config.json")
+    sys.exit(1)
 
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 

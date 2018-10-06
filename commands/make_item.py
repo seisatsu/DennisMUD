@@ -73,7 +73,7 @@ def COMMAND(console, database, args):
         "name": name,
         "desc": "",
         "owners": [console.user["name"]],
-        "glued": False
+        "glued": database.defaults["items"]["glued"]
     }
 
     # Add the item to the creator's inventory.

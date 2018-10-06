@@ -44,9 +44,13 @@ import websocket
 from twisted.python import log
 from twisted.internet import reactor
 
-# Read the config file.
-with open("server.config.json") as f:
-    config = json.load(f)
+# Try to read the server config file.
+try:
+    with open("server.config.json") as f:
+        config = json.load(f)
+except:
+    print("exiting: could not open server.config.json")
+    sys.exit(1)
 
 # Open the Dennis main database.
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])

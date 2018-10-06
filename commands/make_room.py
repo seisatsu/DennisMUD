@@ -77,8 +77,10 @@ def COMMAND(console, database, args):
         "exits": [],
         "items": [],
         "keys": [],
-        "locked": False,
-        "sealed": False
+        "sealed": {
+            "inbound": database.defaults["rooms"]["sealed"]["inbound"],
+            "outbound": database.defaults["rooms"]["sealed"]["outbound"]
+        }
     }
 
     # Save.

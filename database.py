@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+import json
+import sys
 from pymongo import MongoClient
 
 
@@ -52,6 +54,14 @@ class DatabaseManager:
         self.rooms = self.database["rooms"]
         self.users = self.database["users"]
         self.items = self.database["items"]
+
+        # Try to load the defaults config file.
+        try:
+            with open("defaults.config.json") as f:
+                self.defaults = json.load(f)
+        except:
+            print("exiting: could not open defaults file")
+            sys.exit(1)
 
         # If there are no rooms, make the initial room.
         if self.database.rooms.find().count() == 0:
@@ -169,14 +179,16 @@ class DatabaseManager:
         newroom = {
             "owners": ["<world>"],
             "id": 0,
-            "name": "Initial Room",
-            "desc": "",
-            "users": ["<world>"],
+            "name": self.defaults["first_room"]["name"],
+            "desc": self.defaults["first_room"]["desc"],
+            "users": [self.defaults["first_user"]["name"]],
             "exits": [],
             "items": [],
             "keys": [],
-            "locked": False,
-            "sealed": False
+            "sealed": {
+                "inbound": self.defaults["first_room"]["sealed"]["inbound"],
+                "outbound": self.defaults["first_room"]["sealed"]["outbound"]
+            }
         }
         self.rooms.insert_one(newroom)
         return True
@@ -187,16 +199,16 @@ class DatabaseManager:
         :return: True
         """
         newuser = {
-            "name": "<world>",
-            "nick": "Root User",
-            "desc": "The first user and administrator.",
+            "name": self.defaults["first_user"]["name"],
+            "nick": self.defaults["first_user"]["nick"],
+            "desc": self.defaults["first_user"]["desc"],
             "passhash": "0",
             "online": False,
             "room": 0,
             "inventory": [],
             "keys": [],
             "chat": {
-                "enabled": True,
+                "enabled": self.defaults["first_user"]["chat"]["enabled"],
                 "ignored": []
             },
             "wizard": True
