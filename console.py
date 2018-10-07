@@ -128,6 +128,8 @@ class Console:
             line = line.replace(':', "action ", 1)
         elif line.startswith('emote '):
             line = line.replace('emote ', "action ", 1)
+        elif line.startswith('me '):
+            line = line.replace('me ', "action ", 1)
         elif line.startswith('>'):
             line = line.replace('>', "go ", 1)
         elif line.startswith('exit '):
