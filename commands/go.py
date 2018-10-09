@@ -65,6 +65,8 @@ def COMMAND(console, database, args):
                 # Check if the exit is locked.
                 if exits[e]["locked"] and console.user["name"] not in exits[e]["owners"] and not console.user["wizard"]:
                     console.msg(NAME + ": this exit is locked.")
+                    if exits[e]["action"]["locked"]:
+                        console.broadcast_room(console.user["nick"] + " " + exits[e]["action"]["locked"])
                     return False
 
                 # Move us to the new room.
