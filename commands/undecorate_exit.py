@@ -61,10 +61,10 @@ def COMMAND(console, database, args):
                 and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
             console.msg(NAME + ": you do not own this exit or this room")
             return False
-        if not thisroom["exits"][exitid]["action"]:
+        if not thisroom["exits"][exitid]["action"]["go"]:
             console.msg(NAME + ": the exit already has no custom action")
             return False
-        thisroom["exits"][exitid]["action"] = ""
+        thisroom["exits"][exitid]["action"]["go"] = ""
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True

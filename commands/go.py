@@ -72,8 +72,8 @@ def COMMAND(console, database, args):
                     thisroom["users"].remove(console.user["name"])
                 if console.user["name"] not in destroom["users"]:
                     destroom["users"].append(console.user["name"])
-                if exits[e]["action"]:
-                    console.broadcast_room(console.user["nick"] + " " + exits[e]["action"])
+                if exits[e]["action"]["go"]:
+                    console.broadcast_room(console.user["nick"] + " " + exits[e]["action"]["go"])
                 else:
                     console.broadcast_room(console.user["nick"] + " left the room through " + exits[e]["name"])
                 console.user["room"] = destroom["id"]

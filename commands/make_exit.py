@@ -85,7 +85,17 @@ def COMMAND(console, database, args):
         return False
 
     # Create our new exit.
-    newexit = {"dest": dest, "name": name, "owners": [console.user["name"]], "desc": "", "action": "", "locked": False}
+    newexit = {
+        "dest": dest,
+        "name": name,
+        "owners": [console.user["name"]],
+        "desc": "",
+        "action": {
+            "go": "",
+            "locked": ""
+        },
+        "locked": False
+    }
     thisroom["exits"].append(newexit)
 
     # Save.

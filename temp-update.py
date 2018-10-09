@@ -42,10 +42,11 @@ dbman = database.DatabaseManager(config["database"]["host"], config["database"][
 rooms = dbman.rooms.find()
 if rooms.count():
     for r in rooms:
-        sealed_inbound = r["sealed"]
-        sealed_outbound = r["locked"]
-        r["sealed"] = {}
-        del r["locked"]
-        r["sealed"]["inbound"] = sealed_inbound
-        r["sealed"]["outbound"] = sealed_outbound
+        exits = r["exits"]
+        for e in exits:
+            action = e["action"]
+            e["action"] = {
+                "go": action,
+                "locked": ""
+            }
         dbman.upsert_room(r)
