@@ -66,7 +66,7 @@ def COMMAND(console, database, args):
                 if exits[e]["locked"] and console.user["name"] not in exits[e]["owners"] and not console.user["wizard"]:
                     console.msg(NAME + ": this exit is locked.")
                     # Check whether the user has the key, if any.
-                    if not exits[e]["key"] in console.user["items"]:
+                    if not exits[e]["key"] in console.user["inventory"]:
                         if exits[e]["action"]["locked"]:
                             console.broadcast_room(console.user["nick"] + " " + exits[e]["action"]["locked"])
                         return False

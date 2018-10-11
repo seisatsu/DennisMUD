@@ -49,6 +49,12 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
+    # Make sure the item exists.
+    i = database.item_by_id(itemid)
+    if not i:
+        console.msg(NAME + ": no such item")
+        return False
+
     # Make sure the exit is in this room.
     thisroom = database.room_by_id(console.user["room"])
     if thisroom:
@@ -64,6 +70,9 @@ def COMMAND(console, database, args):
             return False
         if thisroom["exits"][exitid]["key"]:
             console.msg(NAME + ": this exit is already paired to a key")
+            return False
+        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
+            console.msg(NAME + ": you do not own this item")
             return False
         if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
                 and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:

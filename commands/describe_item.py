@@ -53,6 +53,9 @@ def COMMAND(console, database, args):
         return False
 
     i = database.item_by_id(itemid)
+    if not i:
+        console.msg(NAME + ": no such item")
+        return False
 
     # Make sure we are the item's owner.
     if console.user["name"] not in i["owners"] and not console.user["wizard"]:
