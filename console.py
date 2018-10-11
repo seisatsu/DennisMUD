@@ -184,7 +184,7 @@ class Console:
                         self.msg('=' * 20)
                 return self._commands['_'.join(line[:-splitpos])].COMMAND(self, self._database, line[-splitpos:])
         if line:
-            self.msg("unknown command: " + '_'.join(line))
+            self.msg("unknown command: " + ' '.join(line))
         return None
 
     def help(self, line):

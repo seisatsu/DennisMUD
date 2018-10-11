@@ -107,7 +107,7 @@ def COMMAND(console, database, args):
                 console.msg("Owned by: " + ', '.join(thisroom["exits"][e]["owners"]))
                 if thisroom["exits"][e]["desc"]:
                     console.msg(thisroom["exits"][e]["desc"])  # Print exit description.
-                if thisroom["exits"][e]["key"] and not thisroom["exits"][e]["key"]["hidden"]:
+                if thisroom["exits"][e]["key"] and not thisroom["exits"][e]["key_hidden"]:
                     i = database.item_by_id(thisroom["exits"][e]["key"])
                     console.msg("Unlocked with: " + i["name"] + " (" + str(i["id"]) + ")")  # Print key information.
                 found_something = True
