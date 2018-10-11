@@ -52,7 +52,7 @@ class ServerProtocol(LineReceiver):
         self.factory.register(self)
         print("Client connected: {0}".format(self.peer))
         if motd:
-            self.factory.communicate(self.peer, motd.encode())
+            self.factory.communicate(self.peer, motd.encode('utf-8'))
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
@@ -62,14 +62,14 @@ class ServerProtocol(LineReceiver):
         # self.factory.communicate(self, payload, isBinary)
         print("Client {0} sending message: {1}".format(self.peer, line))
         try:
-            line = line.decode()
+            line = line.decode('utf-8')
         except:
             print("discarded garbage line from telnet")
         # Error handling and reporting.
         try:
             self.factory.router[self.peer][1].command(line)
         except:
-            self.factory.communicate(self.peer, traceback.format_exc(1))
+            self.factory.communicate(self.peer, traceback.format_exc(1).encode('utf-8'))
 
 
 class ServerFactory(protocol.Factory):
