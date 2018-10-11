@@ -55,6 +55,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": no such item")
         return False
 
+    # Make sure we are holding the item.
+    if itemid not in console.user["inventory"] and not console.user["wizard"]:
+        console.msg(NAME + ": no such item in inventory")
+        return False
+
     # Make sure the exit is in this room.
     thisroom = database.room_by_id(console.user["room"])
     if thisroom:
