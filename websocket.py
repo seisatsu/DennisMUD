@@ -52,7 +52,7 @@ class ServerProtocol(WebSocketServerProtocol):
         try:
             self.factory.router[self.peer][1].command(payload.decode('utf-8'))
         except:
-            self.factory.communicate(self.peer, traceback.format_exc(1).encode('utf-8'))
+            self.factory.communicate(self.peer, traceback.format_exc().encode('utf-8'))
 
 
 class ServerFactory(WebSocketServerFactory):
