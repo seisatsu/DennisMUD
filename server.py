@@ -200,7 +200,6 @@ if __name__ == "__main__":
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
         telnet_factory = telnet.ServerFactory(router)
-        telnet_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20)
         reactor.listenTCP(config["telnet"]["port"], telnet_factory)
         any_enabled = True
 
