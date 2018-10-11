@@ -27,6 +27,8 @@
 
 # Parts of codebase borrowed from https://github.com/TKeesh/WebSocketChat
 
+import traceback
+
 from twisted.internet import protocol
 from twisted.protocols.basic import LineReceiver
 
@@ -63,7 +65,11 @@ class ServerProtocol(LineReceiver):
             line = line.decode()
         except:
             print("discarded garbage line from telnet")
-        self.factory.router[self.peer][1].command(line)
+        # Error handling and reporting.
+        try:
+            self.factory.router[self.peer][1].command(line)
+        except:
+            self.factory.communicate(self.peer, traceback.format_exc(1))
 
 
 class ServerFactory(protocol.Factory):

@@ -27,6 +27,8 @@
 
 # Parts of codebase borrowed from https://github.com/TKeesh/WebSocketChat
 
+import traceback
+
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
 
 
@@ -46,7 +48,11 @@ class ServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         # self.factory.communicate(self, payload, isBinary)
         print("Client {0} sending message: {1}".format(self.peer, payload))
-        self.factory.router[self.peer][1].command(payload.decode('utf-8'))
+        # Error handling and reporting.
+        try:
+            self.factory.router[self.peer][1].command(payload.decode('utf-8'))
+        except:
+            self.factory.communicate(self.peer, traceback.format_exc(1))
 
 
 class ServerFactory(WebSocketServerFactory):
