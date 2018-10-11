@@ -76,6 +76,11 @@
                     output.innerHTML = output.innerHTML + event.data + '<br/><br/>'
                     output.scrollTop = output.scrollHeight;
                 };
+                mySocket.onclose = function (event) {
+                    var output = document.getElementById("chat_box");
+                    output.innerHTML = output.innerHTML + "Connection closed." + '<br/><br/>'
+                    output.scrollTop = output.scrollHeight;
+                }
                 var form = document.getElementsByClassName("console");
                 var input = document.getElementById("input");
                 form[0].addEventListener("submit", function (e) {

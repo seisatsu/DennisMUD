@@ -200,6 +200,7 @@ if __name__ == "__main__":
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
         telnet_factory = telnet.ServerFactory(router)
+        telnet_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20)
         reactor.listenTCP(config["telnet"]["port"], telnet_factory)
         any_enabled = True
 
@@ -214,6 +215,7 @@ if __name__ == "__main__":
             websocket_factory = websocket.ServerFactory(router, "ws://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
         websocket_factory.protocol = websocket.ServerProtocol
+        websocket_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20)
         reactor.listenTCP(config["websocket"]["port"], websocket_factory)
         any_enabled = True
 
