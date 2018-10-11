@@ -42,8 +42,7 @@ dbman = database.DatabaseManager(config["database"]["host"], config["database"][
 rooms = dbman.rooms.find()
 if rooms.count():
     for r in rooms:
-        del r["keys"]
         exits = r["exits"]
         for e in exits:
-            e["key"] = None
+            e["key_hidden"] = False
         dbman.upsert_room(r)

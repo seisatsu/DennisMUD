@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# unpair_key.py     #
+# unhide_key.py     #
 # Copyright 2018    #
 # Michael D. Reiley #
 #####################
@@ -25,14 +25,14 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "unpair key"
+NAME = "unhide key"
 CATEGORIES = ["exits"]
-USAGE = "unpair key <exit>"
-DESCRIPTION = "Remove the key pairing from <exit>."
+USAGE = "unhide key <exit>"
+DESCRIPTION = "Allow looking at the locked <exit> to reveal its key."
 
 
 def COMMAND(console, database, args):
-    if len(args) != 1:
+    if len(args) < 1:
         console.msg("Usage: " + USAGE)
         return False
 
@@ -41,7 +41,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    # Make sure the exit and item IDs are both integers.
+    # Make sure the id is an integer.
     try:
         exitid = int(args[0])
     except ValueError:
@@ -54,14 +54,17 @@ def COMMAND(console, database, args):
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
-        if not thisroom["exits"][exitid]["key"]:
-            console.msg(NAME + ": this exit already has no key")
-            return False
         if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
                 and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
             console.msg(NAME + ": you do not own this exit or this room")
             return False
-        thisroom["exits"][exitid]["key"] = None
+        if not thisroom["exits"][exitid]["key"]:
+            console.msg(NAME + ": there is no key paired to this exit")
+            return False
+        if not thisroom["exits"][exitid]["key_hidden"]:
+            console.msg(NAME + ": the key for this exit is already not hidden")
+            return False
+        thisroom["exits"][exitid]["key_hidden"] = False
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True

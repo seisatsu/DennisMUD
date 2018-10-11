@@ -95,6 +95,7 @@ def COMMAND(console, database, args):
             "locked": ""
         },
         "key": None,
+        "key_hidden": False,
         "locked": False
     }
     thisroom["exits"].append(newexit)
