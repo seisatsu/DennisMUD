@@ -184,7 +184,6 @@ class DatabaseManager:
             "users": [self.defaults["first_user"]["name"]],
             "exits": [],
             "items": [],
-            "keys": [],
             "sealed": {
                 "inbound": self.defaults["first_room"]["sealed"]["inbound"],
                 "outbound": self.defaults["first_room"]["sealed"]["outbound"]
@@ -206,7 +205,6 @@ class DatabaseManager:
             "online": False,
             "room": 0,
             "inventory": [],
-            "keys": [],
             "chat": {
                 "enabled": self.defaults["first_user"]["chat"]["enabled"],
                 "ignored": []

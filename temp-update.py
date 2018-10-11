@@ -42,11 +42,5 @@ dbman = database.DatabaseManager(config["database"]["host"], config["database"][
 rooms = dbman.rooms.find()
 if rooms.count():
     for r in rooms:
-        exits = r["exits"]
-        for e in exits:
-            action = e["action"]
-            e["action"] = {
-                "go": action,
-                "locked": ""
-            }
+        del r["keys"]
         dbman.upsert_room(r)

@@ -76,7 +76,6 @@ def COMMAND(console, database, args):
         "users": [],
         "exits": [],
         "items": [],
-        "keys": [],
         "sealed": {
             "inbound": database.defaults["rooms"]["sealed"]["inbound"],
             "outbound": database.defaults["rooms"]["sealed"]["outbound"]

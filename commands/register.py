@@ -62,7 +62,6 @@ def COMMAND(console, database, args):
         "online": False,
         "room": 0,
         "inventory": [],
-        "keys": [],
         "chat": {
             "enabled": database.defaults["users"]["chat"]["enabled"],
             "ignored": []
