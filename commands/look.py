@@ -102,11 +102,14 @@ def COMMAND(console, database, args):
         # Might be an exit in the room.
         for e in range(len(thisroom["exits"])):
             if thisroom["exits"][e]["name"].lower() == ' '.join(args).lower():
-                # Print exit name, ID, and destination.
+                # Print exit name, ID, destination, and any key information.
                 console.msg(thisroom["exits"][e]["name"] + " (" + str(e) + ") -> " + str(thisroom["exits"][e]["dest"]))
                 console.msg("Owned by: " + ', '.join(thisroom["exits"][e]["owners"]))
                 if thisroom["exits"][e]["desc"]:
                     console.msg(thisroom["exits"][e]["desc"])  # Print exit description.
+                if thisroom["exits"][e]["key"]:
+                    i = database.item_by_id(thisroom["exits"][e]["key"])
+                    console.msg("Unlocked with: " + i["name"] + " (" + str(i["id"]) + ")")  # Print key information.
                 found_something = True
                 break
 

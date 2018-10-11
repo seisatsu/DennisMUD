@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# unlock_exit.py    #
+# unpair_key.py     #
 # Copyright 2018    #
 # Michael D. Reiley #
 #####################
@@ -25,10 +25,10 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "unlock exit"
+NAME = "unpair key"
 CATEGORIES = ["exits"]
-USAGE = "unlock exit <id>"
-DESCRIPTION = "Allows anyone to use the exit <id> in this room."
+USAGE = "unpair key <exit>"
+DESCRIPTION = "Remove the key pairing from <exit>."
 
 
 def COMMAND(console, database, args):
@@ -41,31 +41,33 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
+    # Make sure the exit and item IDs are both integers.
     try:
         exitid = int(args[0])
     except ValueError:
         console.msg("Usage: " + USAGE)
         return False
 
-    roomid = console.user["room"]
-    r = database.room_by_id(roomid)
-
-    # Make sure the exit exists.
-    if exitid > len(r["exits"]) - 1 or exitid < 0:
-        console.msg(NAME + ": no such exit")
-        return False
-
-    # Make sure we own the exit or the room.
-    if console.user["name"] not in r["exits"][exitid]["owners"] \
-            and console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
-        return False
-
-    if not r["exits"][exitid]["locked"]:
-        console.msg(NAME + ": this exit is already unlocked")
-        return False
-    r["exits"][exitid]["locked"] = False
-    r["exits"][exitid]["key"] = None
-    database.upsert_room(r)
-    console.msg(NAME + ": done")
-    return True
+    # Make sure the exit is in this room.
+    thisroom = database.room_by_id(console.user["room"])
+    if thisroom:
+        if exitid > len(thisroom["exits"])-1 or exitid < 0:
+            console.msg(NAME + ": no such exit")
+            return False
+        if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
+                console.user["name"] not in thisroom["owners"]:
+            console.msg(NAME + ": the room is locked")
+            return False
+        if not thisroom["exits"][exitid]["key"]:
+            console.msg(NAME + ": this exit already has no key")
+            return False
+        if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+                and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
+            console.msg(NAME + ": you do not own this exit or this room")
+            return False
+        thisroom["exits"][exitid]["key"] = None
+        database.upsert_room(thisroom)
+        console.msg(NAME + ": done")
+        return True
+    console.msg("warning: current room does not exist")
+    return False
