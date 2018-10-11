@@ -69,7 +69,7 @@ class ServerProtocol(LineReceiver):
         try:
             self.factory.router[self.peer][1].command(line)
         except:
-            self.factory.communicate(self.peer, traceback.format_exc(1))
+            self.factory.communicate(self.peer, traceback.format_exc(2))
 
 
 class ServerFactory(protocol.Factory):
