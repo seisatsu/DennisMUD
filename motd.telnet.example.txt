@@ -2,6 +2,8 @@ Welcome to Dennis MUD.
 
 In this game, you use in-game commands to create the content. All content is user-created.
 
-Try "help register", "help login", and "help" for starters.
-Other important commands for the casual player include "look", "go", "say", "action", and "chat".
+To get started, type "register username password", substituting the username and password you want to use.
+Then type "login username password" with the username and password you chose to log in.
+
+Important commands for the casual player include "look", "go", "say", "action", and "chat".
 Read the help pages for the other commands listed by "help" to get started making content.
