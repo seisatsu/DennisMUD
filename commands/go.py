@@ -68,7 +68,11 @@ def COMMAND(console, database, args):
                     if not exits[e]["key"] in console.user["inventory"]:
                         console.msg(NAME + ": this exit is locked.")
                         if exits[e]["action"]["locked"]:
-                            console.broadcast_room(console.user["nick"] + " " + exits[e]["action"]["locked"])
+                            if "%player%" in exits[e]["action"]["locked"]:
+                                action = exits[e]["action"]["locked"].replace("%player%", console.user["nick"])
+                            else:
+                                action = console.user["nick"] + " " + exits[e]["action"]["locked"]
+                            console.broadcast_room(action)
                         return False
 
                 # Move us to the new room.
@@ -77,7 +81,11 @@ def COMMAND(console, database, args):
                 if console.user["name"] not in destroom["users"]:
                     destroom["users"].append(console.user["name"])
                 if exits[e]["action"]["go"]:
-                    console.broadcast_room(console.user["nick"] + " " + exits[e]["action"]["go"])
+                    if "%player%" in exits[e]["action"]["go"]:
+                        action = exits[e]["action"]["go"].replace("%player%", console.user["nick"])
+                    else:
+                        action = console.user["nick"] + " " + exits[e]["action"]["go"]
+                    console.broadcast_room(action)
                 else:
                     console.broadcast_room(console.user["nick"] + " left the room through " + exits[e]["name"])
                 console.user["room"] = destroom["id"]

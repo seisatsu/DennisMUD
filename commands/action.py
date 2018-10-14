@@ -28,7 +28,12 @@
 NAME = "action"
 CATEGORIES = ["messaging"]
 USAGE = "action <message>"
-DESCRIPTION = "Send a message styled as performing an action. Aliases: emote, me, and :"
+DESCRIPTION = """Send a message styled as performing an action. Aliases: emote, me, and :
+
+By default, the action text is shown following your nickname and one space.
+To place your name elsewhere in the text, use the %player% marker.
+
+Ex. action A coconut falls on %player%'s head."""
 
 
 def COMMAND(console, database, args):
@@ -41,6 +46,12 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    console.broadcast_room(console.user["nick"] + " " + ' '.join(args))
+    # Construct and broadcast the action text.
+    action = ' '.join(args)
+    if "%player%" in action:
+        action = action.replace("%player%", console.user["nick"])
+    else:
+        action = console.user["nick"] + " " + ' '.join(args)
+    console.broadcast_room(action)
 
     return True

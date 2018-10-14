@@ -28,7 +28,12 @@
 NAME = "decorate exit"
 CATEGORIES = ["exits"]
 USAGE = "decorate exit <id> <action>"
-DESCRIPTION = "Set a custom <action> to display after the player's name when they use the exit <id>."
+DESCRIPTION = """Set a custom <action> to display when a player uses the exit <id>.
+
+By default, the action text is shown following the player's nickname and one space.
+To place the player's name elsewhere in the text, use the %player% marker.
+
+Ex. The floor opens up under %player%."""
 
 
 def COMMAND(console, database, args):

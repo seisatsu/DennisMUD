@@ -28,8 +28,12 @@
 NAME = "decorate lock"
 CATEGORIES = ["exits"]
 USAGE = "decorate lock <id> <action>"
-DESCRIPTION = "Set a custom <action> to display after the player's name when they fail to use the locked exit <id>."
+DESCRIPTION = """Set a custom <action> to display when a player fails to use the locked exit <id>.
 
+By default, the action text is shown following the player's nickname and one space.
+To place the player's name elsewhere in the text, use the %player% marker.
+
+Ex. The door refuses %player%'s attempt to open it."""
 
 def COMMAND(console, database, args):
     if len(args) < 2:
