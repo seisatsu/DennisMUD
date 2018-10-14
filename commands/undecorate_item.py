@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# describe_item.py  #
-# Copyright 2018    #
-# Michael D. Reiley #
-#####################
+######################
+# Dennis MUD         #
+# undecorate_item.py #
+# Copyright 2018     #
+# Michael D. Reiley  #
+######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,10 +25,10 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "describe item"
+NAME = "undecorate item"
 CATEGORIES = ["items"]
-USAGE = "describe item <id> <description>"
-DESCRIPTION = "Set the description of the item <id> which you are holding. A double backslash inserts a paragraph break."
+USAGE = "undecorate item <id>"
+DESCRIPTION = "Remove the custom action displayed when a player uses the item <id>."
 
 
 def COMMAND(console, database, args):
@@ -63,11 +63,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this item")
         return False
 
-    if "\\\\\\\\" in ' '.join(args[1:]):
-        console.msg(NAME + ": paragraph breaks may not be stacked")
-        return False
-
-    i["desc"] = ' '.join(args[1:]).replace("\\\\", "\n\n")
+    i["action"] = ""
     database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

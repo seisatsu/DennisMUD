@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# describe_item.py  #
+# decorate_item.py  #
 # Copyright 2018    #
 # Michael D. Reiley #
 #####################
@@ -25,10 +25,15 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "describe item"
+NAME = "decorate item"
 CATEGORIES = ["items"]
-USAGE = "describe item <id> <description>"
-DESCRIPTION = "Set the description of the item <id> which you are holding. A double backslash inserts a paragraph break."
+USAGE = "decorate item <id> <action>"
+DESCRIPTION = """Set a custom <action> to display when a player uses the item <id>.
+
+By default, the action text is shown following the player's nickname and one space.
+To place the player's name elsewhere in the text, use the %player% marker.
+
+Ex. The green orb glows in %player%'s hand."""
 
 
 def COMMAND(console, database, args):
@@ -63,11 +68,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this item")
         return False
 
-    if "\\\\\\\\" in ' '.join(args[1:]):
-        console.msg(NAME + ": paragraph breaks may not be stacked")
-        return False
-
-    i["desc"] = ' '.join(args[1:]).replace("\\\\", "\n\n")
+    i["action"] = ' '.join(args[1:])
     database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

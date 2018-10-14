@@ -33,7 +33,7 @@ DESCRIPTION = """Set a custom <action> to display when a player uses the exit <i
 By default, the action text is shown following the player's nickname and one space.
 To place the player's name elsewhere in the text, use the %player% marker.
 
-Ex. The floor opens up under %player%."""
+Ex. The floor opens up under %player%'s feet."""
 
 
 def COMMAND(console, database, args):

@@ -38,11 +38,10 @@ with open("cli.config.json") as f:
 
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 
-# Update rooms.
-rooms = dbman.rooms.find()
-if rooms.count():
-    for r in rooms:
-        exits = r["exits"]
-        for e in exits:
-            e["key_hidden"] = False
-        dbman.upsert_room(r)
+# Update items.
+items = dbman.items.find()
+if items.count():
+    for i in items:
+        i["action"] = ""
+        i["duplified"] = False
+        dbman.upsert_item(i)

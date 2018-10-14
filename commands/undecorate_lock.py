@@ -28,7 +28,7 @@
 NAME = "undecorate lock"
 CATEGORIES = ["exits"]
 USAGE = "undecorate lock <id>"
-DESCRIPTION = "Remove the custom action displayed after the player's name when they fail to use the locked exit <id>."
+DESCRIPTION = "Remove the custom action displayed when a player fails to use the locked exit <id>."
 
 
 def COMMAND(console, database, args):

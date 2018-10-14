@@ -74,6 +74,18 @@ def COMMAND(console, database, args):
                                 action = console.user["nick"] + " " + exits[e]["action"]["locked"]
                             console.broadcast_room(action)
                         return False
+                    else:
+                        # Broadcast the action for the key item.
+                        i = database.item_by_id(exits[e]["key"])
+                        if i["action"]:
+                            if "%player%" in i["action"]:
+                                action = i["action"].replace("%player%", console.user["nick"])
+                            else:
+                                action = console.user["nick"] + " " + i["action"]
+                            console.broadcast_room(action)
+                        else:
+                            action = console.user["nick"] + " used " + i["name"]
+                            console.broadcast_room(action)
 
                 # Move us to the new room.
                 if console.user["name"] in thisroom["users"]:
