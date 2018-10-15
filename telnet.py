@@ -65,7 +65,13 @@ class ServerProtocol(LineReceiver):
             line = line.decode('utf-8')
         except:
             print("discarded garbage line from telnet")
-        # Error handling and reporting.
+
+        # Did we receive the quit pseudo-command?
+        if line == "quit":
+            self.transport.loseConnection()
+            return
+
+        # Run the command while handling errors.
         try:
             self.factory.router[self.peer][1].command(line)
         except:
