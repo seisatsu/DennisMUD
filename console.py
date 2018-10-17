@@ -214,7 +214,7 @@ class Console:
             # Thanks to:
             # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
             # https://stackoverflow.com/questions/9989334/create-nice-column-output-in-python
-            cols = [sorted(self._help[line])[i:i + 4] for i in range(0, len(sorted(self._help[line])), 4)]
+            cols = [sorted(self._help[line])[i:i + 6] for i in range(0, len(sorted(self._help[line])), 6)]
             col_width = max(len(word) for row in cols for word in row) + 2  # padding
             self.msg("Available commands in category {0}:".format(line))
             for row in cols:

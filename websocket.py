@@ -79,4 +79,5 @@ class ServerFactory(WebSocketServerFactory):
             if c['client-peer'] == peer:
                 client = c['client']
         if client:
-            client.sendMessage(payload.decode('utf-8').replace("\n", "<br/>").encode('utf-8'))
+            client.sendMessage(payload.decode('utf-8').replace("\n", "<br/>").replace(" ", "&nbsp;").encode('utf-8'))
+
