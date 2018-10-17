@@ -28,7 +28,15 @@
 NAME = "chat"
 CATEGORIES = ["messaging"]
 USAGE = "chat <message>"
-DESCRIPTION = "Send a message to the general chat. Alias: #"
+DESCRIPTION = """Send a message to the general chat. Alias: #
+
+General chat messages are seen by all online users who have chat enabled and are not ignoring you.
+You must also have chat enabled to send a message.
+
+Ex. `chat Hello everyone!`
+Ex2. `#Hello everyone!`
+
+Related: `enable chat`, `disable chat`, `ignore user`, `unignore user`"""
 
 
 def COMMAND(console, database, args):

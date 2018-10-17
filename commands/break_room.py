@@ -28,7 +28,11 @@
 NAME = "break room"
 CATEGORIES = ["rooms"]
 USAGE = "break room <room>"
-DESCRIPTION = "Break the room with ID <room> if you are its owner."
+DESCRIPTION = """Break the room with ID <room> if you are its owner.
+
+You must be an owner of the room, and no one can be in the room, including yourself.
+
+Ex. `break room 5` to break the room with ID 5."""
 
 
 def COMMAND(console, database, args):

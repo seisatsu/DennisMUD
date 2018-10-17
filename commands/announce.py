@@ -28,7 +28,9 @@
 NAME = "announce"
 CATEGORIES = ["wizard"]
 USAGE = "announce <message>"
-DESCRIPTION = "(WIZARDS ONLY) Send a message to all users."
+DESCRIPTION = """(WIZARDS ONLY) Broadcast a message to all online users.
+
+Ex. `announce This is an announcement.`"""
 
 
 def COMMAND(console, database, args):

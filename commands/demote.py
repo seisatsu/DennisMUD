@@ -28,7 +28,9 @@
 NAME = "demote"
 CATEGORIES = ["wizard"]
 USAGE = "demote [username]"
-DESCRIPTION = "(WIZARDS ONLY) Remove wizard status from the named user."
+DESCRIPTION = """(WIZARDS ONLY) Remove wizard status from the named user.
+
+Ex. `demote doofus`"""
 
 
 def COMMAND(console, database, args):

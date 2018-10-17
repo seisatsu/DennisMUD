@@ -28,7 +28,9 @@
 NAME = "break exit"
 CATEGORIES = ["exits"]
 USAGE = "break exit <exit>"
-DESCRIPTION = "Break the exit with ID <exit> in the current room."
+DESCRIPTION = """Break the exit with ID <exit> in the current room.
+
+Ex. `break exit 3` to break the exit with ID 3 in the current room."""
 
 
 def COMMAND(console, database, args):

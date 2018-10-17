@@ -28,12 +28,14 @@
 NAME = "decorate exit"
 CATEGORIES = ["exits"]
 USAGE = "decorate exit <id> <action>"
-DESCRIPTION = """Set a custom <action> to display when a player uses the exit <id>.
+DESCRIPTION = """Set a custom <action> to display when a player uses the exit <id> in the current room.
 
 By default, the action text is shown following the player's nickname and one space.
 To place the player's name elsewhere in the text, use the %player% marker.
+You must own the exit or its room in order to decorate it. These conditions do not apply to Wizards.
 
-Ex. The floor opens up under %player%'s feet."""
+Ex. `decorate exit 3 falls through the floor.`
+Ex2. `decorate exit 3 The floor opens up under %player%'s feet.`"""
 
 
 def COMMAND(console, database, args):

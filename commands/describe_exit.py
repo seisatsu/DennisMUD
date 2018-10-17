@@ -28,7 +28,14 @@
 NAME = "describe exit"
 CATEGORIES = ["exits"]
 USAGE = "describe exit <id> <description>"
-DESCRIPTION = "Set the description of the exit <id> in this room. A double backslash inserts a paragraph break."
+DESCRIPTION = """Set the description of the exit <id> in this room.
+
+A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+You must own the exit or its room in order to describe it. These conditions do not apply to wizards.
+
+Ex. `decorate exit 3 You see a lovely wooden door.`
+Ex2. `decorate exit 3 You see a lovely wooden door.\\\\The handle is made of brass.`"""
+
 
 
 def COMMAND(console, database, args):

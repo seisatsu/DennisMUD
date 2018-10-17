@@ -28,7 +28,13 @@
 NAME = "describe item"
 CATEGORIES = ["items"]
 USAGE = "describe item <id> <description>"
-DESCRIPTION = "Set the description of the item <id> which you are holding. A double backslash inserts a paragraph break."
+DESCRIPTION = """Set the description of the item <id> which you are holding.
+
+A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+You must own the item and be holding it in order to describe it. These conditions do not apply to Wizards.
+
+Ex. `decorate item 4 A small music box made of ivory.`
+Ex2. `decorate item 4 A small music box made of ivory.\\\\The bottom edge of the lid is lined with silver trim.`"""
 
 
 def COMMAND(console, database, args):

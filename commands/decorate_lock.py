@@ -28,12 +28,15 @@
 NAME = "decorate lock"
 CATEGORIES = ["exits"]
 USAGE = "decorate lock <id> <action>"
-DESCRIPTION = """Set a custom <action> to display when a player fails to use the locked exit <id>.
+DESCRIPTION = """Set a custom <action> to display when a player fails to use the locked exit <id> in the current room.
 
 By default, the action text is shown following the player's nickname and one space.
 To place the player's name elsewhere in the text, use the %player% marker.
+You must own the locked exit or its room in order to decorate it. These conditions do not apply to Wizards.
 
-Ex. The door refuses %player%'s attempt to open it."""
+Ex. `decorate lock 3 can't seem to get the door open.`
+Ex2. `decorate lock 3 The door refuses %player%'s attempt to open it.`"""
+
 
 def COMMAND(console, database, args):
     if len(args) < 2:
