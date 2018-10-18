@@ -28,7 +28,10 @@
 NAME = "get"
 CATEGORIES = ["items"]
 USAGE = "get <item>"
-DESCRIPTION = "Pick up the item called <item> from the current room. Also works by item ID."
+DESCRIPTION = """Pick up the item called <item> from the current room. Also works by item ID.
+
+Ex. `get item crystal ball`
+Ex2. `get item 4`"""
 
 
 def COMMAND(console, database, args):

@@ -28,7 +28,13 @@
 NAME = "describe room"
 CATEGORIES = ["rooms"]
 USAGE = "describe room <description>"
-DESCRIPTION = "Set the description of the room you are in. A double backslash inserts a paragraph break."
+DESCRIPTION = """Set the description of the room you are in.
+
+A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+You must own the room in order to describe it.
+
+Ex. `describe room 5 You are standing in a long, dark hallway.`
+Ex2. `describe room 5 You are standing in a long, dark hallway.\\\\You cannot see the end.`"""
 
 
 def COMMAND(console, database, args):

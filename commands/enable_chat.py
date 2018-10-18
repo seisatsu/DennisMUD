@@ -28,7 +28,9 @@
 NAME = "enable chat"
 CATEGORIES = ["messaging", "settings"]
 USAGE = "enable chat"
-DESCRIPTION = "Participate in and receive messages from the general chat."
+DESCRIPTION = """Enable the general chat. You will be able to send and receive chat messages.
+
+Chat messages are separate from private messages and same-room communication."""
 
 
 def COMMAND(console, database, args):

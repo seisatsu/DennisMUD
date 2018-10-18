@@ -32,7 +32,7 @@ DESCRIPTION = """Set a custom <action> to display when a player fails to use the
 
 By default, the action text is shown following the player's nickname and one space.
 To place the player's name elsewhere in the text, use the %player% marker.
-You must own the locked exit or its room in order to decorate it. These conditions do not apply to Wizards.
+You must own the locked exit or its room in order to decorate it.
 
 Ex. `decorate lock 3 can't seem to get the door open.`
 Ex2. `decorate lock 3 The door refuses %player%'s attempt to open it.`"""

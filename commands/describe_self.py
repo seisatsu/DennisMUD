@@ -28,7 +28,12 @@
 NAME = "describe self"
 CATEGORIES = ["settings", "users"]
 USAGE = "describe self <description>"
-DESCRIPTION = "Set your player description. A double backslash inserts a paragraph break."
+DESCRIPTION = """Set your player description, shown when someone looks at you.
+
+A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+
+Ex. `describe self This guy is obviously some kind of badass.`
+Ex2. `describe self This guy is obviously some kind of badass.\\\\You should probably keep some distance."""
 
 
 def COMMAND(console, database, args):

@@ -30,6 +30,8 @@ CATEGORIES = ["exits"]
 USAGE = "break exit <exit>"
 DESCRIPTION = """Break the exit with ID <exit> in the current room.
 
+You must own the exit or its room in order to break it.
+
 Ex. `break exit 3` to break the exit with ID 3 in the current room."""
 
 

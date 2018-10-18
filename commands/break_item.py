@@ -30,7 +30,7 @@ CATEGORIES = ["items"]
 USAGE = "break item <item>"
 DESCRIPTION = """Break the item in your inventory with ID <item>.
 
-You must an owner of the item, and it must be in your inventory. These conditions do not apply to Wizards.
+You must an owner of the item, and it must be in your inventory.
 
 Ex. `break item 4` to break the item with ID 4."""
 

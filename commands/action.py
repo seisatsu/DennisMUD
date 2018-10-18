@@ -33,7 +33,8 @@ DESCRIPTION = """Send a message styled as performing an action. Aliases: emote, 
 By default, the action text is shown following your nickname and one space.
 To place your name elsewhere in the text, use the %player% marker.
 
-Ex. `action A coconut falls on %player%'s head.`"""
+Ex. `action trips and falls over.`
+Ex2. `action A coconut falls on %player%'s head.`"""
 
 
 def COMMAND(console, database, args):

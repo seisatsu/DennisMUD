@@ -28,7 +28,9 @@
 NAME = "disable chat"
 CATEGORIES = ["messaging", "settings"]
 USAGE = "disable chat"
-DESCRIPTION = "Do not participate in and receive messages from the general chat."
+DESCRIPTION = """Disable the general chat. You will not be able to receive or send chat messages.
+
+Chat messages are separate from private messages and same-room communication."""
 
 
 def COMMAND(console, database, args):

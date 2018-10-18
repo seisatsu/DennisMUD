@@ -34,9 +34,7 @@ General chat messages are seen by all online users who have chat enabled and are
 You must also have chat enabled to send a message.
 
 Ex. `chat Hello everyone!`
-Ex2. `#Hello everyone!`
-
-Related: `enable chat`, `disable chat`, `ignore user`, `unignore user`"""
+Ex2. `#Hello everyone!`"""
 
 
 def COMMAND(console, database, args):
