@@ -34,7 +34,9 @@ By default, the action text is shown following your nickname and one space.
 To place your name elsewhere in the text, use the %player% marker.
 
 Ex. `action trips and falls over.`
-Ex2. `action A coconut falls on %player%'s head.`"""
+Ex2. `action A coconut falls on %player%'s head.`
+Ex3. `me trips and falls over.`
+Ex4. `:trips and falls over.`"""
 
 
 def COMMAND(console, database, args):

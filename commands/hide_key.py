@@ -28,7 +28,12 @@
 NAME = "hide key"
 CATEGORIES = ["exits"]
 USAGE = "hide key <exit>"
-DESCRIPTION = "Prevent looking at the locked <exit> from revealing its key."
+DESCRIPTION = """Prevent looking at the locked <exit> from revealing its key.
+
+If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
+You must own the exit or its room to hide the key.
+
+Ex. `hide key 3`"""
 
 
 def COMMAND(console, database, args):

@@ -28,7 +28,9 @@
 NAME = "list items"
 CATEGORIES = ["items"]
 USAGE = "list items"
-DESCRIPTION = "List all items in the world that you own."
+DESCRIPTION = """List all items in the world that you own.
+
+If you are a wizard, you will see a list of all items that exist."""
 
 
 def COMMAND(console, database, args):

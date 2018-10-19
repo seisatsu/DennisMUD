@@ -28,7 +28,12 @@
 NAME = "locate user"
 CATEGORIES = ["users"]
 USAGE = "locate user <name>"
-DESCRIPTION = "Find out what room the user with username <name> is in. Does not work with nicknames."
+DESCRIPTION = """Find out what room the user with username <name> is in.
+
+This only works with usernames, not with nicknames.
+See the `realname` command to derive a user's username from their nickname.
+
+Ex. `locate user seisatsu`"""
 
 
 def COMMAND(console, database, args):

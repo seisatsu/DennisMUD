@@ -32,7 +32,7 @@ DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works
 
 Ex. `go blue door`
 Ex2. `go 2`
-ex3. `>blue door`"""
+Ex3. `>blue door`"""
 
 
 def COMMAND(console, database, args):

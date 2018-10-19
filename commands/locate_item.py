@@ -28,7 +28,11 @@
 NAME = "locate item"
 CATEGORIES = ["items"]
 USAGE = "locate item <id>"
-DESCRIPTION = "Find out what room the item <id> (which we own) is in, or who is holding it."
+DESCRIPTION = """Find out what room the item <id> is in, or who is holding it.
+
+You can only locate an item that you own.
+
+Ex. `locate item 4`"""
 
 
 def COMMAND(console, database, args):

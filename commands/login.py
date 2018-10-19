@@ -30,7 +30,9 @@ import hashlib
 NAME = "login"
 CATEGORIES = ["users"]
 USAGE = "login <username> <password>"
-DESCRIPTION = "Log in as the user <username> if not currently logged in, using <password>."
+DESCRIPTION = """Log in as the user <username> if not currently logged in, using <password>.
+
+Ex. `login myusername mypassword`"""
 
 
 def COMMAND(console, database, args):

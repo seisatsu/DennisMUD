@@ -28,7 +28,9 @@
 NAME = "list users"
 CATEGORIES = ["users"]
 USAGE = "list users"
-DESCRIPTION = "List all online users in the world."
+DESCRIPTION = """List all online users in the world.
+
+If you are a wizard, you will see a list of all registered users, including offline users."""
 
 
 def COMMAND(console, database, args):

@@ -28,7 +28,13 @@
 NAME = "ignore user"
 CATEGORIES = ["messaging", "settings", "users"]
 USAGE = "ignore user <username>"
-DESCRIPTION = "Ignore general chat messages and private messages from the user <username>."
+DESCRIPTION = """Ignore general chat messages and private messages from the user <username>.
+
+If you ignore a user, you will not see their messages in chat, or any private messages they attempt to send you.
+An ignored user will not be informed that you have ignored them. Wizards cannot be ignored.
+If the ignored user is in the same room as you, you will still hear what they `say`.
+
+Ex. `ignore user seisatsu`"""
 
 
 def COMMAND(console, database, args):

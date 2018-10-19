@@ -28,7 +28,9 @@
 NAME = "list rooms"
 CATEGORIES = ["rooms"]
 USAGE = "list rooms"
-DESCRIPTION = "List all rooms in the world that you own."
+DESCRIPTION = """List all rooms in the world that you own.
+
+If you are a wizard, you will see a list of all rooms that exist."""
 
 
 def COMMAND(console, database, args):
