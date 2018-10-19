@@ -28,7 +28,11 @@
 NAME = "go"
 CATEGORIES = ["exploration"]
 USAGE = "go <exit>"
-DESCRIPTION = "Take the exit called <exit> to wherever it may lead. Also works by exit ID. Aliases: exit and >"
+DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works by exit ID. Aliases: exit and >
+
+Ex. `go blue door`
+Ex2. `go 2`
+ex3. `>blue door`"""
 
 
 def COMMAND(console, database, args):

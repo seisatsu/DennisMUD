@@ -28,7 +28,11 @@
 NAME = "glue item"
 CATEGORIES = ["items"]
 USAGE = "glue item <item>"
-DESCRIPTION = "Glue the item in your inventory with ID <item>, so that once dropped, only owners can pick it up."
+DESCRIPTION = """Glue the item with ID <item>, so that once dropped, only owners can pick it up.
+
+You must own the item and it must be in your inventory.
+
+Ex. `glue item 4`"""
 
 
 def COMMAND(console, database, args):
