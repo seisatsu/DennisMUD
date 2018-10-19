@@ -73,11 +73,15 @@ class ServerFactory(WebSocketServerFactory):
             if c['client-peer'] == client.peer:
                 self.clients.remove(c)
 
-    def communicate(self, peer, payload):
+    def communicate(self, peer, payload, _nbsp=False):
         client = None
         for c in self.clients:
             if c['client-peer'] == peer:
                 client = c['client']
         if client:
-            client.sendMessage(payload.decode('utf-8').replace("\n", "<br/>").replace(" ", "&nbsp;").encode('utf-8'))
+            message = payload.decode('utf-8').replace("\n", "<br/>")
+            if _nbsp:
+                message = message.replace(" ", "&nbsp;")
+            message = message.encode('utf-8')
+            client.sendMessage(message)
 

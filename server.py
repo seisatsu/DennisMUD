@@ -136,19 +136,20 @@ class Router:
         del self.users[peer]
         return True
 
-    def message(self, peer, msg):
+    def message(self, peer, msg, _nbsp=False):
         """Message Peer
 
         Message a user by their internal peer name.
 
         :param peer: Internal peer name.
         :param msg: Message to send.
+        :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
         :return: True
         """
         if self.users[peer][0] == "telnet":
             self.telnet_factory.communicate(peer, msg.encode())
         if self.users[peer][0] == "websocket":
-            self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"))
+            self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
 
     def broadcast_all(self, msg):
         """Broadcast All

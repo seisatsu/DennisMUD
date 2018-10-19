@@ -219,7 +219,7 @@ class Console:
             col_width = max(len(word) for row in cols for word in row) + 2  # padding
             self.msg("Available commands in category {0}:".format(line))
             for row in cols:
-                self.msg("".join(word.ljust(col_width) for word in row))
+                self.msg("".join(word.ljust(col_width) for word in row), True)
         else:
             # Couldn't find anything.
             self.msg("help: unknown command or category: " + line)
@@ -252,16 +252,17 @@ class Console:
 
         return True
 
-    def msg(self, message):
+    def msg(self, message, _nbsp=False):
         """Send Message
 
         Send a message to the user connected to this console.
 
         :param message: The message to send.
+        :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
         :return: True
         """
         print(message)
-        self.router.message(self.rname, message)
+        self.router.message(self.rname, message, _nbsp)
         return True
 
     def broadcast(self, message):

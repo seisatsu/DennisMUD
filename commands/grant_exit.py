@@ -28,7 +28,11 @@
 NAME = "grant exit"
 CATEGORIES = ["exits"]
 USAGE = "grant exit <id> <username>"
-DESCRIPTION = "Add user <username> to the owners of the exit <id> in the current room."
+DESCRIPTION = """Add user <username> to the owners of the exit <id> in the current room.
+
+You must own the exit in order to grant it to another user. You will also retain ownership.
+
+Ex. `grant exit 3 seisatsu`"""
 
 
 def COMMAND(console, database, args):

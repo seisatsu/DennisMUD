@@ -28,7 +28,11 @@
 NAME = "grant item"
 CATEGORIES = ["items"]
 USAGE = "grant item <id> <username>"
-DESCRIPTION = "Add user <username> to the owners of item <id>."
+DESCRIPTION = """Add user <username> to the owners of item <id>.
+
+You must own the item in order to grant it to another user. You will also retain ownership.
+
+Ex. `grant item 4 seisatsu`"""
 
 
 def COMMAND(console, database, args):
