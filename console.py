@@ -88,7 +88,6 @@ class Console:
                     spec.loader.exec_module(mod)
                     self._commands[command[:-3]] = mod
 
-        print("Registered commands: " + str(list(self._commands.keys())))
         return True
 
     def _build_help(self):
