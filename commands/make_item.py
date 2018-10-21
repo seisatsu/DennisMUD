@@ -28,7 +28,11 @@
 NAME = "make item"
 CATEGORIES = ["items"]
 USAGE = "make item <name>"
-DESCRIPTION = "Create a new item called <name> and place it in your inventory."
+DESCRIPTION = """Create a new item called <name> and place it in your inventory.
+
+You will be added as an owner of the new item.
+
+Ex. `make item Crystal Ball`"""
 
 
 def COMMAND(console, database, args):

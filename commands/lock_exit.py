@@ -31,6 +31,8 @@ USAGE = "lock exit <id>"
 DESCRIPTION = """Prevents anyone except the exit owner or a key holder from using the exit <id> in this room.
 
 Any player who is not holding the key to the exit and does not own the exit will be unable to pass.
+You must own the exit or its room in order to lock it.
+You can unlock a locked exit with the `unlock exit` command.
 
 Ex. `lock exit 3`"""
 

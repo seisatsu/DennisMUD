@@ -28,7 +28,11 @@
 NAME = "make room"
 CATEGORIES = ["rooms"]
 USAGE = "make room <name>"
-DESCRIPTION = "Create a new room called <name>."
+DESCRIPTION = """Create a new room called <name>.
+
+You will be added as an owner of the new room.
+
+Ex. `make room Small Bedroom`"""
 
 
 def COMMAND(console, database, args):

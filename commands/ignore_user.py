@@ -33,6 +33,7 @@ DESCRIPTION = """Ignore general chat messages and private messages from the user
 If you ignore a user, you will not see their messages in chat, or any private messages they attempt to send you.
 An ignored user will not be informed that you have ignored them. Wizards cannot be ignored.
 If the ignored user is in the same room as you, you will still hear what they `say`.
+You can unignore an ignored user with the `unignore user` command.
 
 Ex. `ignore user seisatsu`"""
 

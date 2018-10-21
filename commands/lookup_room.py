@@ -28,7 +28,9 @@
 NAME = "lookup room"
 CATEGORIES = ["rooms"]
 USAGE = "lookup room <name>"
-DESCRIPTION = "Find the ID of the room <name>."
+DESCRIPTION = """Lookup the ID of the room <name>.
+
+Ex. `lookup room Small Bedroom`"""
 
 
 def COMMAND(console, database, args):

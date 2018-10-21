@@ -31,6 +31,7 @@ USAGE = "grant exit <id> <username>"
 DESCRIPTION = """Add user <username> to the owners of the exit <id> in the current room.
 
 You must own the exit in order to grant it to another user. You will also retain ownership.
+You can revoke ownership with the `revoke exit` command, provided you are an owner.
 
 Ex. `grant exit 3 seisatsu`"""
 

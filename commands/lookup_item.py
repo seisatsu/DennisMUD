@@ -28,7 +28,9 @@
 NAME = "lookup item"
 CATEGORIES = ["items"]
 USAGE = "lookup item <name>"
-DESCRIPTION = "Find the ID of the item <name>."
+DESCRIPTION = """Lookup the ID of the item <name>.
+
+Ex. `lookup item crystal ball`"""
 
 
 def COMMAND(console, database, args):

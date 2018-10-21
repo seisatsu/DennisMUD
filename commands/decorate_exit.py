@@ -33,6 +33,7 @@ DESCRIPTION = """Set a custom <action> to display when a player uses the exit <i
 By default, the action text is shown following the player's nickname and one space.
 To place the player's name elsewhere in the text, use the %player% marker.
 You must own the exit or its room in order to decorate it.
+You can remove the custom action from an exit with the `undecorate exit` command.
 
 Ex. `decorate exit 3 falls through the floor.`
 Ex2. `decorate exit 3 The floor opens up under %player%'s feet.`"""

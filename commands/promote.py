@@ -28,7 +28,9 @@
 NAME = "promote"
 CATEGORIES = ["wizard"]
 USAGE = "promote <username>"
-DESCRIPTION = "(WIZARDS ONLY) Elevate the named user to wizard status."
+DESCRIPTION = """(WIZARDS ONLY) Elevate the named user to wizard status.
+
+Ex. `promote seisatsu`"""
 
 
 def COMMAND(console, database, args):

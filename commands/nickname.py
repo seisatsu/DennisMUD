@@ -28,7 +28,11 @@
 NAME = "nickname"
 CATEGORIES = ["users"]
 USAGE = "nickname <username>"
-DESCRIPTION = "Find the nickname of the user <username>."
+DESCRIPTION = """Lookup the nickname of a user by their <username>.
+
+You can also lookup a user's username by their nickname with the `realname` command.
+
+Ex. `nickname seisatsu`"""
 
 
 def COMMAND(console, database, args):

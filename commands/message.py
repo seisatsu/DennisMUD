@@ -28,7 +28,13 @@
 NAME = "message"
 CATEGORIES = ["messaging"]
 USAGE = "message <username> <message>"
-DESCRIPTION = "Send a message to the user <username>. Does not use nicknames. Aliases: msg and ."
+DESCRIPTION = """Send a message to the user <username>. Does not use nicknames. Aliases: msg and .
+
+If you don't know a player's username, you can look it up using their nickname with the `realname` command.
+
+Ex. `message seisatsu Hello there!`
+Ex2. `msg seisatsu Hello there!`
+Ex3. `.seisatsu Hello there!`"""
 
 
 def COMMAND(console, database, args):

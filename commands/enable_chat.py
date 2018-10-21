@@ -30,6 +30,8 @@ CATEGORIES = ["messaging", "settings"]
 USAGE = "enable chat"
 DESCRIPTION = """Enable the general chat. You will be able to send and receive chat messages.
 
+You can disable the general chat with the `disable chat` command.
+
 Chat messages are separate from private messages and same-room communication."""
 
 
