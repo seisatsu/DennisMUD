@@ -25,6 +25,7 @@
 # IN THE SOFTWARE.
 # **********
 
+import pdb
 import sys
 
 # Check Python version.
@@ -41,7 +42,7 @@ class Router:
     def __init__(self):
         pass
 
-    def message(self, nickname, msg):
+    def message(self, nickname, msg, _nbsp=None):
         pass
 
     def broadcast_all(self, msg):
@@ -86,4 +87,7 @@ while True:
     cmd = input("> ")
     if cmd == "quit":
         sys.exit(0)
+    if cmd == "debug":
+        pdb.set_trace()
+        continue
     print(dennis.command(cmd))
