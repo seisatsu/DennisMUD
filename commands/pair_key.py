@@ -28,7 +28,12 @@
 NAME = "pair key"
 CATEGORIES = ["exits", "items"]
 USAGE = "pair key <exit> <item>"
-DESCRIPTION = "Make the locked <exit> in this room passable by anyone holding <item>."
+DESCRIPTION = """Make the locked <exit> in this room passable by anyone holding <item>.
+
+You must own and be holding the item, and you must also own the exit or its room.
+Any user who holds the item will be able to pass through the locked exit as if it is unlocked.
+
+Ex. `pair key 4 3` to make exit 4 unlock with item 3."""
 
 
 def COMMAND(console, database, args):

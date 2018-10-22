@@ -32,6 +32,8 @@ CATEGORIES = ["users"]
 USAGE = "login <username> <password>"
 DESCRIPTION = """Log in as the user <username> if not currently logged in, using <password>.
 
+First you must have registered a user with the `register` command.
+
 Ex. `login myusername mypassword`"""
 
 

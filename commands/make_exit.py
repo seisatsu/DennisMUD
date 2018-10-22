@@ -31,7 +31,7 @@ USAGE = "make exit <destination> <name>"
 DESCRIPTION = """Create a new exit called <name> in the current room, leading to the room with ID <destination>.
 
 The current room must not be outbound sealed, and the destination room must not be inbound sealed.
-These restrictions to not apply to the owner of the current room and the owner of the destination room, respectively.
+These restrictions do not apply to the owner of the current room and the owner of the destination room, respectively.
 You will be added as an owner of the new exit.
 
 Ex. `make exit 12 Iron Door` to make an exit in the current room called "Iron Door" leading to room 12."""

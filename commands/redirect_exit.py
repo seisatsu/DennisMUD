@@ -28,7 +28,13 @@
 NAME = "redirect exit"
 CATEGORIES = ["exits"]
 USAGE = "redirect exit <id> <destination>"
-DESCRIPTION = "Set the destination of the exit <id> in this room to <destination>."
+DESCRIPTION = """Set the destination room of the exit <id> in the current room to <destination>.
+
+The current room must not be outbound sealed, and the destination room must not be inbound sealed.
+These restrictions do not apply to the owner of the current room and the owner of the destination room, respectively.
+You must own the exit or its room.
+
+Ex. `redirect exit 3 27` to redirect exit 3 to room 27."""
 
 
 def COMMAND(console, database, args):
@@ -62,6 +68,10 @@ def COMMAND(console, database, args):
         if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
                 console.user["name"] not in thisroom["owners"]:
             console.msg(NAME + ": this room is outbound sealed")
+            return False
+        if destroom["sealed"]["inbound"] and not console.user["wizard"] and \
+                console.user["name"] not in destroom["owners"]:
+            console.msg(NAME + ": the destination room is inbound sealed")
             return False
         thisroom["exits"][exitid]["dest"] = dest
         database.upsert_room(thisroom)

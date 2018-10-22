@@ -30,7 +30,11 @@ import hashlib
 NAME = "register"
 CATEGORIES = ["users"]
 USAGE = "register <username> <password>"
-DESCRIPTION = "Register a new user with <username> and <password>."
+DESCRIPTION = """Register a new user with <username> and <password>.
+
+Afterwards, you can join the game with the `login` command.
+
+Ex. `register seisatsu mypassword`"""
 
 
 def COMMAND(console, database, args):

@@ -84,7 +84,7 @@ dbman.upsert_user(dennis.user)
 
 print("Welcome to Dennis MUD single-user mode.")
 print("Connected to database at \"{0}:{1}/{2}\".".format(config["database"]["host"], config["database"]["port"],
-                                                    config["database"]["name"]))
+                                                         config["database"]["name"]))
 print("You are now logged in as the administrative user \"<world>\".")
 
 # Command loop.
