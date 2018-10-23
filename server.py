@@ -130,8 +130,10 @@ class Router:
         """Unregister and Logout User
 
         :param peer: Internal peer name.
-        :return: True
+        :return: True if succeeded, False if no such user.
         """
+        if peer not in self.users:
+            return False
         self.users[peer][1].command("logout")
         del self.users[peer]
         return True
