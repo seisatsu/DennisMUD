@@ -44,7 +44,7 @@ def COMMAND(console, database, args):
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
-    
+
     # Look for the current room.
     thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
