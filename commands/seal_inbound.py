@@ -28,7 +28,10 @@
 NAME = "seal inbound"
 CATEGORIES = ["exits", "rooms"]
 USAGE = "seal inbound"
-DESCRIPTION = "Prevent new exits from being made that lead to the current room."
+DESCRIPTION = """Prevent new exits from being made that lead to the current room.
+
+Only an owner of this room will be able to make an exit leading here.
+You can reverse this with the `unseal inbound` command."""
 
 
 def COMMAND(console, database, args):

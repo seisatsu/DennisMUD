@@ -28,7 +28,12 @@
 NAME = "teleport"
 CATEGORIES = ["exploration"]
 USAGE = "teleport <room>"
-DESCRIPTION = "Teleport to the room (which you own) with ID <room>, or to room 0."
+DESCRIPTION = """Teleport to the room with ID <room>.
+
+Anyone can teleport to room 0, but otherwise you can only teleport to a room that you own.
+
+Ex. `teleport 0` to go to the first room.
+Ex2. `teleport 17` to go to room 17."""
 
 
 def COMMAND(console, database, args):
