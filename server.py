@@ -134,6 +134,8 @@ class Router:
         """
         if peer not in self.users:
             return False
+        if not self.users[peer][1].user:
+            return False
         self.users[peer][1].command("logout")
         del self.users[peer]
         return True
