@@ -28,7 +28,12 @@
 NAME = "revoke room"
 CATEGORIES = ["rooms"]
 USAGE = "revoke room <username>"
-DESCRIPTION = "Remove user <username> from the owners of the current room."
+DESCRIPTION = """Remove user <username> from the owners of the current room.
+
+You must be an owner of the room in order to revoke ownership from another user.
+You can grant ownership with the `grant room` command, provided you are an owner.
+
+Ex. `grant room seisatsu`"""
 
 
 def COMMAND(console, database, args):

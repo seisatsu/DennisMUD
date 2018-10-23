@@ -28,7 +28,12 @@
 NAME = "revoke exit"
 CATEGORIES = ["exits"]
 USAGE = "revoke exit <id> <username>"
-DESCRIPTION = "Remove user <username> from the owners of the exit <id> in the current room."
+DESCRIPTION = """Remove user <username> from the owners of the exit <id> in the current room.
+
+You must be an owner of the exit in order to revoke ownership from another user.
+You can grant ownership with the `grant exit` command, provided you are an owner.
+
+Ex. `revoke exit 3 seisatsu`"""
 
 
 def COMMAND(console, database, args):

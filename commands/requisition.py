@@ -28,7 +28,12 @@
 NAME = "requisition"
 CATEGORIES = ["items"]
 USAGE = "requisition <item>"
-DESCRIPTION = "Obtain the item (which you own) with id <item>, regardless of where it is."
+DESCRIPTION = """Obtain the item with id <item>, regardless of where it is.
+
+Whether the item is in another room or someone else's inventory, it will be moved to your inventory.
+You can only requisition an item that you own.
+
+Ex. `requisition 14`"""
 
 
 def COMMAND(console, database, args):

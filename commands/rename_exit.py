@@ -28,7 +28,11 @@
 NAME = "rename exit"
 CATEGORIES = ["exits"]
 USAGE = "rename exit <id> <name>"
-DESCRIPTION = "Set the name of the exit <id> in this room."
+DESCRIPTION = """Set the name of the exit <id> in this room to <name>.
+
+You must own the exit or its room.
+
+Ex. `rename exit 3 Iron Door`"""
 
 
 def COMMAND(console, database, args):

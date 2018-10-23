@@ -28,7 +28,12 @@
 NAME = "revoke item"
 CATEGORIES = ["items"]
 USAGE = "revoke item <id> <username>"
-DESCRIPTION = "Remove user <username> from the owners of item <id>."
+DESCRIPTION = """Remove user <username> from the owners of item <id>.
+
+You must be an owner of the item in order to revoke ownership from another user.
+You can grant ownership with the `grant item` command, provided you are an owner.
+
+Ex. `revoke item 4 seisatsu`"""
 
 
 def COMMAND(console, database, args):

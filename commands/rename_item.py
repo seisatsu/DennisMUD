@@ -28,7 +28,11 @@
 NAME = "rename item"
 CATEGORIES = ["items"]
 USAGE = "rename item <id> <name>"
-DESCRIPTION = "Set the name of the item <id> which you are holding."
+DESCRIPTION = """Set the name of the item <id> which you are holding to <name>.
+
+You must own the item and it must be in your inventory.
+
+Ex. `rename item 4 Blue Shard`"""
 
 
 def COMMAND(console, database, args):

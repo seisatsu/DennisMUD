@@ -28,7 +28,11 @@
 NAME = "rename self"
 CATEGORIES = ["settings", "users"]
 USAGE = "rename self <nickname>"
-DESCRIPTION = "Set your player nickname."
+DESCRIPTION = """Set your player nickname to <nickname>.
+
+Your nickname is separate from your username. People will see it instead of your username in most cases.
+
+Ex. `rename self Overlord Seisatsu`"""
 
 
 def COMMAND(console, database, args):

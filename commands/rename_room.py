@@ -28,7 +28,11 @@
 NAME = "rename room"
 CATEGORIES = ["rooms"]
 USAGE = "rename room <name>"
-DESCRIPTION = "Set the name of the room you are in."
+DESCRIPTION = """Set the name of the room you are in to <name>.
+
+You must own the room in order to rename it.
+
+Ex. `rename room Small Bedroom`"""
 
 
 def COMMAND(console, database, args):
