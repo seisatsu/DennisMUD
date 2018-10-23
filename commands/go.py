@@ -40,16 +40,16 @@ Ex5. `go` to list exits."""
 
 
 def COMMAND(console, database, args):
+    # Make sure we are logged in.
+    if not console.user:
+        console.msg(NAME + ": must be logged in first")
+        return False
+    
     # Look for the current room.
     thisroom = database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
 
     if len(args) == 0:
         # Just list exits.
