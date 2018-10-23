@@ -27,29 +27,40 @@
 
 NAME = "go"
 CATEGORIES = ["exploration"]
-USAGE = "go <exit>"
+USAGE = "go [exit]"
 DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works by exit ID. Aliases: exit and >
+
+If no argument is given, list the exits in the current room instead.
 
 Ex. `go blue door`
 Ex2. `go 2`
-Ex3. `>blue door`"""
+Ex3. `exit blue door`
+Ex4. `>blue door`
+Ex5. `go` to list exits."""
 
 
 def COMMAND(console, database, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
-        return False
+    # Look for the current room.
+    thisroom = database.room_by_id(console.user["room"])
+    if not thisroom:
+        console.msg("warning: current room does not exist")
+        return False  # The current room does not exist?!
 
     # Make sure we are logged in.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
 
-    # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
-    if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+    if len(args) == 0:
+        # Just list exits.
+        exitlist = []
+        for e in range(len(thisroom["exits"])):
+            exitlist.append(thisroom["exits"][e]["name"] + " (" + str(e) + ")")
+        if exitlist:
+            console.msg("Exits: " + ", ".join(exitlist))
+        else:
+            console.msg(NAME + ": no exits in this room")
+        return True
 
     # Get exit name/id.
     name = ' '.join(args)
