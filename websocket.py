@@ -35,7 +35,7 @@ from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerPr
 class ServerProtocol(WebSocketServerProtocol):
 
     def onConnect(self, request):
-        print("Client connecting: {0}".format(request.peer))
+        pass
 
     def onOpen(self):
         self.factory.register(self)

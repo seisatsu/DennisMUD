@@ -48,7 +48,6 @@ class ServerProtocol(LineReceiver):
     def connectionMade(self):
         p = self.transport.getPeer()
         self.peer = p.host + ':' + str(p.port)
-        print("Client connecting: {0}".format(self.peer))
         self.factory.register(self)
         print("Client connected: {0}".format(self.peer))
         if motd:
