@@ -28,7 +28,11 @@
 NAME = "undecorate exit"
 CATEGORIES = ["exits"]
 USAGE = "undecorate exit <id>"
-DESCRIPTION = "Remove the custom action displayed when a player uses the exit <id>."
+DESCRIPTION = """Remove the custom action displayed when a player uses the exit <id>.
+
+You must own the exit or its room in order to undecorate it.
+
+Ex. `undecorate exit 3`"""
 
 
 def COMMAND(console, database, args):

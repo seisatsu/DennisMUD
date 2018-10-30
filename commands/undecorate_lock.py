@@ -28,7 +28,11 @@
 NAME = "undecorate lock"
 CATEGORIES = ["exits"]
 USAGE = "undecorate lock <id>"
-DESCRIPTION = "Remove the custom action displayed when a player fails to use the locked exit <id>."
+DESCRIPTION = """Remove the custom action displayed when a player fails to use the locked exit <id>.
+
+You must own the locked exit or its room in order to undecorate it.
+
+Ex. `undecorate lock 3`"""
 
 
 def COMMAND(console, database, args):
@@ -52,10 +56,6 @@ def COMMAND(console, database, args):
     if thisroom:
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
-            return False
-        if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
-                console.user["name"] not in thisroom["owners"]:
-            console.msg(NAME + ": this room is outbound sealed")
             return False
         if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
                 and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:

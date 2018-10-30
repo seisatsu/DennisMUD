@@ -28,7 +28,11 @@
 NAME = "undecorate item"
 CATEGORIES = ["items"]
 USAGE = "undecorate item <id>"
-DESCRIPTION = "Remove the custom action displayed when a player uses the item <id>."
+DESCRIPTION = """Remove the custom action displayed when a player uses the item <id>.
+
+You must own the item and be holding it in order to undecorate it.
+
+Ex. `undecorate item 4`"""
 
 
 def COMMAND(console, database, args):

@@ -28,7 +28,11 @@
 NAME = "unglue item"
 CATEGORIES = ["items"]
 USAGE = "unglue item <item>"
-DESCRIPTION = "Unglue the item in your inventory with ID <item>, so that once dropped, anyone can pick it up."
+DESCRIPTION = """Unglue the item in your inventory with ID <item>, so that once dropped, anyone can pick it up.
+
+You must own the item and be holding it in order to unglue it.
+
+Ex. `unglue item 4`"""
 
 
 def COMMAND(console, database, args):

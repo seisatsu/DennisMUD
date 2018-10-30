@@ -28,7 +28,12 @@
 NAME = "unhide key"
 CATEGORIES = ["exits"]
 USAGE = "unhide key <exit>"
-DESCRIPTION = "Allow looking at the locked <exit> to reveal its key."
+DESCRIPTION = """Allow looking at the locked <exit> to reveal its key.
+
+If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
+You must own the exit or its room to unhide the key.
+
+Ex. `unhide key 3`"""
 
 
 def COMMAND(console, database, args):
