@@ -168,20 +168,21 @@ class Console:
         # Find out which part of the line is the command, and which part are its arguments.
         for splitpos in range(len(line)):
             if splitpos == 0:
-                if '_'.join(line) in self._commands.keys():
+                if '_'.join(line).lower() in self._commands.keys():
                     # Run the command with no arguments.
                     if show_command:
-                        self.msg("> " + ' '.join(line))
+                        self.msg("> " + ' '.join(line).lower())
                         self.msg('='*20)
-                    return self._commands['_'.join(line)].COMMAND(self, self._database, [])
+                    return self._commands['_'.join(line).lower()].COMMAND(self, self._database, [])
                 continue
-            if '_'.join(line[:-splitpos]) in self._commands.keys():
+            if '_'.join(line[:-splitpos]).lower() in self._commands.keys():
                 # Run the command and pass arguments.
                 if line[0] != "login":
                     if show_command:
-                        self.msg("> " + ' '.join(line))
+                        self.msg("> " + ' '.join(line).lower())
                         self.msg('=' * 20)
-                return self._commands['_'.join(line[:-splitpos])].COMMAND(self, self._database, line[-splitpos:])
+                return self._commands['_'.join(line[:-splitpos]).lower()].COMMAND(self, self._database,
+                                                                                  line[-splitpos:])
         if line:
             self.msg("unknown command: " + ' '.join(line))
         return None
@@ -197,6 +198,7 @@ class Console:
         if not line:
             # If help was called by itself, assume we want the help for help itself.
             line = "help"
+        line = line.lower()
         if line == "help":
             # Return a help message for the help command, and list available categories.
             self.msg("Usage: help <command/category>")
@@ -237,6 +239,7 @@ class Console:
         if not line:
             # If usage was called by itself, assume we want the usage string for usage itself.
             line = "usage"
+        line = line.lower()
         if line == "usage":
             # Return a usage string for the usage command.
             self.msg("Usage: usage <command>")
