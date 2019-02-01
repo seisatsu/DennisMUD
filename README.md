@@ -2,7 +2,7 @@
 
 Dennis is a MUD (Multi-User Dungeon, aka a multi-player text adventure) and collaborative writing exercise inspired by [ifMUD](http://ifmud.port4000.com/), in which all content is created by the users, by utilizing in-game commands. The game starts with a single empty room, and one or more players build a world from that point by adding rooms, exits, and items, and describing them. The in-game `help` command provides a categorized listing and usage instructions for every command in the game. This is an experimental project in early-to-mid alpha, and new features are added frequently.
 
-A public test instance is generally kept running. Access it with the web client at http://dream.uboachan.net/ or via telnet at the same host on port 37378.
+A public test instance is generally kept running. Access it with the web client at https://dream.uboachan.net/ or via telnet at the same host on port 37378.
 
 Defaults Configuration
 ======================
