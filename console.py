@@ -171,7 +171,7 @@ class Console:
                 if '_'.join(line).lower() in self._commands.keys():
                     # Run the command with no arguments.
                     if show_command:
-                        self.msg("> " + ' '.join(line).lower())
+                        self.msg("> " + ' '.join(line))
                         self.msg('='*20)
                     return self._commands['_'.join(line).lower()].COMMAND(self, self._database, [])
                 continue
@@ -179,7 +179,7 @@ class Console:
                 # Run the command and pass arguments.
                 if line[0] != "login":
                     if show_command:
-                        self.msg("> " + ' '.join(line).lower())
+                        self.msg("> " + ' '.join(line))
                         self.msg('=' * 20)
                 return self._commands['_'.join(line[:-splitpos]).lower()].COMMAND(self, self._database,
                                                                                   line[-splitpos:])
