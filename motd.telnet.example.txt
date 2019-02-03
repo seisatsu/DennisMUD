@@ -7,3 +7,12 @@ Then type "login username password" with the username and password you chose to 
 
 Important commands for the casual player include "look", "go", "say", "action", and "chat".
 Read the help pages for the other commands listed by "help" to get started making content.
+
+Using the "help" command by itself will list command categories.
+Using "help" on a category will list the commands in that category.
+For example, "help exploration" will list commands related to exploration.
+You can also use help on a particular command to see a manual entry for that command.
+For example, "help make item" will show the manual entry for the "make item" command.
+
+Please enjoy your stay!
+
