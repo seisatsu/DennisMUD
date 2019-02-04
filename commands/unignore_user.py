@@ -28,7 +28,11 @@
 NAME = "unignore user"
 CATEGORIES = ["messaging", "settings", "users"]
 USAGE = "unignore user <username>"
-DESCRIPTION = "Unignore general chat messages and private messages from the user <username>."
+DESCRIPTION = """Unignore general chat messages and private messages from the user <username>.
+
+Undoes ignoring a user via the `ignore user` command.
+
+Ex. `unignore user seisatsu`"""
 
 
 def COMMAND(console, database, args):

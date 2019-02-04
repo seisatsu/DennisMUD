@@ -28,7 +28,12 @@
 NAME = "unlock exit"
 CATEGORIES = ["exits"]
 USAGE = "unlock exit <id>"
-DESCRIPTION = "Allows anyone to use the exit <id> in this room."
+DESCRIPTION = """Allows anyone to use the exit <id> in this room.
+
+Undoes locking an exit via the `lock exit` command.
+You must own the exit or its room in order to unlock it.
+
+Ex. `unlock exit 3`"""
 
 
 def COMMAND(console, database, args):

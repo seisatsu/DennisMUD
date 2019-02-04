@@ -28,7 +28,12 @@
 NAME = "unpair key"
 CATEGORIES = ["exits"]
 USAGE = "unpair key <exit>"
-DESCRIPTION = "Remove the key pairing from <exit>."
+DESCRIPTION = """Remove the key pairing from <exit>.
+
+Undoes pairing a key to an exit via the `pair key` command.
+You must own the exit or its room in order to unpair its key.
+
+Ex. `unpair key 4` to remove the key pairing from exit 4."""
 
 
 def COMMAND(console, database, args):
