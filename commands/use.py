@@ -28,7 +28,7 @@
 NAME = "use"
 CATEGORIES = ["items"]
 USAGE = "use <item>"
-DESCRIPTION = "Show the custom action, if any, for the <item> in the room or your inventory."
+DESCRIPTION = "Show the custom action, if any, for the <item> in the current room or your inventory."
 
 
 def COMMAND(console, database, args):
