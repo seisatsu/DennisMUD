@@ -44,15 +44,22 @@ def COMMAND(console, database, args):
         return False
 
     users = database.users.find().sort("name", 1)
+    online_count = 0
+    offline_count = 0
     if users.count():
         for u in users:
             if u["online"]:
                 console.msg(u["name"] + ": " + u["nick"])
+                online_count += 1
         if console.user["wizard"]:
             users.rewind()
             for u in users:
                 if not u["online"]:
                     console.msg(u["name"] + ": " + u["nick"] + " (offline)")
+                    offline_count += 1
+            console.msg("total users online: {0}; offline: {1}".format(online_count, offline_count))
+        else:
+            console.msg("total users online: {0}".format(online_count))
     else:
         console.msg(NAME + ": no users?!")
 

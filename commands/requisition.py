@@ -33,7 +33,7 @@ DESCRIPTION = """Obtain the item with id <item>, regardless of where it is.
 Whether the item is in another room or someone else's inventory, it will be moved to your inventory.
 You can only requisition an item that you own.
 
-Ex. `requisition 14`"""
+Ex. `requisition 14` to move item 14 to your inventory."""
 
 
 def COMMAND(console, database, args):
