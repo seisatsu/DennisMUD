@@ -27,6 +27,7 @@
 
 import json
 import sys
+import traceback
 from pymongo import MongoClient
 from pymongo.errors import ConfigurationError, OperationFailure
 
@@ -65,6 +66,7 @@ class DatabaseManager:
                 self.client = MongoClient(host, port)
         except ConfigurationError:
             print("exiting: mongo configuration failed; your pymongo may be outdated")
+            print(traceback.format_exc(1))
             sys.exit(1)
 
         self.database = self.client[dbname]
@@ -85,7 +87,8 @@ class DatabaseManager:
             if self.database.rooms.find().count() == 0:
                 self._init_room()
         except OperationFailure:
-            print("exiting: failed to access database; authentication may be required")
+            print("exiting: mongodb operation failed; possibly incorrect authentication")
+            print(traceback.format_exc(1))
             sys.exit(1)
 
         # If there are no users, make the root user.
