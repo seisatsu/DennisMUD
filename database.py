@@ -28,7 +28,7 @@
 import json
 import sys
 from pymongo import MongoClient
-from pymongo.errors import ConfigurationError
+from pymongo.errors import ConfigurationError, OperationFailure
 
 
 class DatabaseManager:
@@ -80,9 +80,13 @@ class DatabaseManager:
             print("exiting: could not open defaults file")
             sys.exit(1)
 
-        # If there are no rooms, make the initial room.
-        if self.database.rooms.find().count() == 0:
-            self._init_room()
+        # If there are no rooms, make the initial room. Also tests authentication.
+        try:
+            if self.database.rooms.find().count() == 0:
+                self._init_room()
+        except OperationFailure:
+            print("exiting: failed to access database; authentication may be required")
+            sys.exit(1)
 
         # If there are no users, make the root user.
         if self.database.users.find().count() == 0:
