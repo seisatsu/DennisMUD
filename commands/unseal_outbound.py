@@ -28,7 +28,10 @@
 NAME = "unseal outbound"
 CATEGORIES = ["exits", "rooms"]
 USAGE = "unseal outbound"
-DESCRIPTION = "Allow exits to be added, removed, or modified in the current room."
+DESCRIPTION = """Allow exits to be added, removed, or modified in the current room.
+
+You must own the current room in order to unseal it.
+Undoes outbound sealing the room via the `seal outbound` command."""
 
 
 def COMMAND(console, database, args):

@@ -30,6 +30,7 @@ CATEGORIES = ["exits", "rooms"]
 USAGE = "seal outbound"
 DESCRIPTION = """Prevent exits from being added, removed, or redirected in the current room.
 
+You must own the current room in order to seal it.
 Only an owner of the room will be able to add, remove, or redirect the exits here.
 It will still be possible for an exit owner to rename, describe, or decorate an exit.
 You can reverse this with the `unseal outbound` command."""
