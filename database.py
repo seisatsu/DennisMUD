@@ -28,6 +28,7 @@
 import json
 import sys
 from pymongo import MongoClient
+from pymongo.errors import ConfigurationError
 
 
 class DatabaseManager:
@@ -55,11 +56,17 @@ class DatabaseManager:
         :param mechanism: The mechanism for MongoDB authentication. Can be either "SCRAM-SHA-1" or "SCRAM-SHA-256".
             (required if auth is True)
         """
-        if auth:
-            self.client = MongoClient(host, port, username=user, password=password, authSource=source,
-                                      authMechanism=mechanism)
-        else:
-            self.client = MongoClient(host, port)
+        # Try to connect. This could fail with authentication enabled on old versions of PyMongo that ship with Debian.
+        try:
+            if auth:
+                self.client = MongoClient(host, port, username=user, password=password, authSource=source,
+                                          authMechanism=mechanism)
+            else:
+                self.client = MongoClient(host, port)
+        except ConfigurationError:
+            print("exiting: mongo configuration failed; your pymongo may be outdated")
+            sys.exit(1)
+
         self.database = self.client[dbname]
         self.rooms = self.database["rooms"]
         self.users = self.database["users"]
