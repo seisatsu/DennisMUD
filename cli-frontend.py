@@ -60,8 +60,10 @@ except:
     print("exiting: could not open cli.config.json")
     sys.exit(1)
 
-dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
-
+dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"],
+                                 config["database"]["name"], config["database"]["auth"]["enabled"],
+                                 config["database"]["auth"]["user"], config["database"]["auth"]["password"],
+                                 config["database"]["auth"]["source"], config["database"]["auth"]["mechanism"])
 # Reset users.
 rooms = dbman.rooms.find()
 if rooms.count():

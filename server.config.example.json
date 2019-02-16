@@ -2,7 +2,14 @@
   "database": {
     "host": "localhost",
     "port": 27017,
-    "name": "dennis"
+    "name": "dennis",
+    "auth": {
+      "enabled": false,
+      "user": "admin",
+      "password": "changeme",
+      "source": "admin",
+      "mechanism": "SCRAM-SHA-1"
+    }
   },
   "telnet": {
     "enabled": true,

@@ -42,14 +42,24 @@ class DatabaseManager:
         users: The collection of all users in the database.
         items: The collection of all items in the database.
     """
-    def __init__(self, host, port, dbname):
+    def __init__(self, host, port, dbname, auth=False, user=None, password=None, source=None, mechanism=None):
         """Database Manager Initializer
 
         :param host: The hostname of the MongoDB database.
         :param port: The port of the MongoDB database.
         :param dbname: The name of the MongoDB database.
+        :param auth: Whether to use MongoDB authentication. (optional, default False.)
+        :param user: The username for MongoDB authentication. (required if auth is True)
+        :param password: The password for MongoDB authentication. (required if auth is True)
+        :param source: The auth source for MongoDB authentication. (required if auth is True)
+        :param mechanism: The mechanism for MongoDB authentication. Can be either "SCRAM-SHA-1" or "SCRAM-SHA-256".
+            (required if auth is True)
         """
-        self.client = MongoClient(host, port)
+        if auth:
+            self.client = MongoClient(host, port, username=user, password=password, authSource=source,
+                                      authMechanism=mechanism)
+        else:
+            self.client = MongoClient(host, port)
         self.database = self.client[dbname]
         self.rooms = self.database["rooms"]
         self.users = self.database["users"]
