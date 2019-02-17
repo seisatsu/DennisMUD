@@ -66,7 +66,9 @@ def COMMAND(console, database, args):
             if console.user["name"] in i["owners"] or not i["duplified"]:
                 # Don't remove duplified items when picking them up, unless we are the owner.
                 thisroom["items"].remove(i["id"])
-            console.user["inventory"].append(i["id"])
+            if i["id"] not in console.user["inventory"]:
+                # Account for duplified items.
+                console.user["inventory"].append(i["id"])
             database.upsert_room(thisroom)
             database.upsert_user(console.user)
             console.broadcast_room(console.user["nick"] + " picked up " + i["name"])
