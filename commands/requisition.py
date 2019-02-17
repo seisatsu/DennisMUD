@@ -72,13 +72,16 @@ def COMMAND(console, database, args):
         for u in console.router.users.values():
             if itemid in u[1].user["inventory"]:
                 u[1].user["inventory"].remove(itemid)
-                u[1].msg("{0} vanished from your inventory".format(i["name"]))
+                if u[1].user["name"] is not console.user["name"]:
+                    # Don't notify us when we are requisitioning from our own inventory.
+                    u[1].msg("{0} vanished from your inventory".format(i["name"]))
                 database.upsert_user(u[1].user)
 
         # Place the item in our inventory.
         console.user["inventory"].append(itemid)
         database.upsert_user(console.user)
         console.msg("requisitioned item " + i["name"] + " (" + str(i["id"]) + ")")
+        console.msg("{0} appeared in your inventory".format(i["name"]))
         return True
 
     else:
