@@ -68,7 +68,9 @@ def COMMAND(console, database, args):
                     console.broadcast_room(i["name"] + " vanished")
             if not i["duplified"] or (i["duplified"] and console.user["name"] in i["owners"]):
                 # Only put unduplified items into the room unless we own them.
-                thisroom["items"].append(i["id"])
+                if i["id"] not in thisroom["items"]:
+                    # Account for duplified items.
+                    thisroom["items"].append(i["id"])
                 database.upsert_room(thisroom)
             database.upsert_user(console.user)
             return True
