@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# requisition.py    #
+# duplify_item.py   #
 # Copyright 2018    #
 # Michael D. Reiley #
 #####################
@@ -25,15 +25,20 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "requisition"
+NAME = "duplify item"
 CATEGORIES = ["items"]
-USAGE = "requisition <item>"
-DESCRIPTION = """Obtain the item with id <item>, regardless of where it is.
+USAGE = "duplify item <item>"
+DESCRIPTION = """Duplify the item with ID <item>, so that any number of people can pick it up.
 
-Whether the item is in another room or someone else's inventory, it will be moved to your inventory.
-You can only requisition an item that you own.
+When a user besides the owner `get`s a duplified item, it doesn't disappear from the room it is in.
+Any number of users may be holding the duplified item.
+When the owner uses `break item` on a duplified item, all copies will break.
+When a user besides the owner drops a duplified item, it will vanish.
+This feature is particularly useful for keys.
+You can undo this with the `unduplify item` command.
+You must own the item and it must be in your inventory in order to duplify it.
 
-Ex. `requisition 14` to move item 14 to your inventory."""
+Ex. `duplify item 4`"""
 
 
 def COMMAND(console, database, args):
@@ -55,30 +60,24 @@ def COMMAND(console, database, args):
     # Check if the item exists.
     i = database.item_by_id(itemid)
     if i:
+        # Make sure we are the item's owner.
         if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not have permission to requisition that item")
+            console.msg(NAME + ": you do not own this item")
             return False
-
-        # If the item is in a room's item list, remove it.
-        rooms = database.rooms.find()
-        if rooms:
-            for r in rooms:
-                if itemid in r["items"]:
-                    r["items"].remove(itemid)
-                    database.upsert_room(r)
-
-        # If the item is in someone's inventory, remove it.
-        for u in console.router.users:
-            if itemid in u[1].user["inventory"]:
-                u[1].user["inventory"].remove(itemid)
-                u[1].msg("{0} vanished from your inventory".format(i["name"]))
-                database.upsert_user(u[1].user)
-
-        # Place the item in our inventory.
-        console.user["inventory"].append(itemid)
-        database.upsert_user(console.user)
-        console.msg("requisitioned item " + i["name"] + " (" + str(i["id"]) + ")")
-        return True
+        # Make sure we are holding the item.
+        if itemid in console.user["inventory"] or console.user["wizard"]:
+            # Duplify the item.
+            if i["duplified"]:
+                console.msg(NAME + ": item is already duplified")
+                return False
+            i["duplified"] = True
+            database.upsert_item(i)
+            console.msg(NAME + ": done")
+            return True
+        else:
+            # We are not holding that item.
+            console.msg(NAME + ": not holding item")
+            return False
 
     else:
         # No item with that ID exists.

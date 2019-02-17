@@ -63,7 +63,9 @@ def COMMAND(console, database, args):
                 console.msg(NAME + ": you cannot get this item")
                 return False
             # Remove the item from the room and place it in our inventory.
-            thisroom["items"].remove(i["id"])
+            if console.user["name"] in i["owners"] or not i["duplified"]:
+                # Don't remove duplified items when picking them up, unless we are the owner.
+                thisroom["items"].remove(i["id"])
             console.user["inventory"].append(i["id"])
             database.upsert_room(thisroom)
             database.upsert_user(console.user)

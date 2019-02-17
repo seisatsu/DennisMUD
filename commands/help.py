@@ -28,7 +28,10 @@
 NAME = "help"
 CATEGORIES = ["info"]
 USAGE = "help <command/category>"
-DESCRIPTION = "Print the help for a command, or list the commands in a category."
+DESCRIPTION = """Print the help for a command, or list the commands in a category.
+
+Ex. `help make room` to show the help message for `make room`.
+Ex2. `help exploration` to list the commands in the exploration category."""
 
 
 def COMMAND(console, database, args):

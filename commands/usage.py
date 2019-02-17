@@ -28,7 +28,12 @@
 NAME = "usage"
 CATEGORIES = ["info"]
 USAGE = "usage <command>"
-DESCRIPTION = "Print the usage info for a command."
+DESCRIPTION = """Print the usage info for a command.
+
+This shows a short form help message for the given command.
+For a long form help message, use the `help` command.
+
+Ex. `usage make exit` to show the short form help message for `make exit`."""
 
 
 def COMMAND(console, database, args):

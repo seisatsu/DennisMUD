@@ -40,6 +40,7 @@ import json
 
 class Router:
     def __init__(self):
+        self.users = {}
         pass
 
     def message(self, nickname, msg, _nbsp=None):
