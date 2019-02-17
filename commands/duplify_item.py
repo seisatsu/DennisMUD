@@ -34,6 +34,7 @@ When a user besides the owner `get`s a duplified item, it doesn't disappear from
 Any number of users may be holding the duplified item.
 When the owner uses `break item` on a duplified item, all copies will break.
 When a user besides the owner drops a duplified item, it will vanish.
+Duplified items exist permanently in the owner's inventory until broken, and can be dropped in multiple places.
 This feature is particularly useful for keys.
 You can undo this with the `unduplify item` command.
 You must own the item and it must be in your inventory in order to duplify it.

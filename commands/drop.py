@@ -59,13 +59,16 @@ def COMMAND(console, database, args):
         # Check for name or id match.
         if i["name"].lower() == name.lower() or str(i["id"]) == name:
             # Remove the item from our inventory and place it in the room.
-            console.user["inventory"].remove(i["id"])
+            if not i["duplified"] or not console.user["name"] in i["owners"]:
+                # Only non-owners lose duplified items when dropping them.
+                console.user["inventory"].remove(i["id"])
+            console.broadcast_room(console.user["nick"] + " dropped " + i["name"])
             if not i["duplified"] or console.user["name"] in i["owners"]:
                 # Only put unduplified items into the room unless we own them.
                 thisroom["items"].append(i["id"])
                 database.upsert_room(thisroom)
+                console.broadcast_room(i["name"] + " vanished")
             database.upsert_user(console.user)
-            console.broadcast_room(console.user["nick"] + " dropped " + i["name"])
             return True
 
     console.msg(NAME + ": no such item in inventory")
