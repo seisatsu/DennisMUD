@@ -70,7 +70,7 @@ def COMMAND(console, database, args):
             database.upsert_item(i)
             console.msg(NAME + ": done")
 
-            # Delete item from all user inventories except ours.
+            # Delete item from all user inventories except ours, and all rooms.
             for u in console.router.users.values():
                 if u[1]["name"] == console.user["name"]:
                     # Not this user, this is us.
@@ -78,6 +78,9 @@ def COMMAND(console, database, args):
                 if itemid in u[1].user["inventory"]:
                     u[1].user["inventory"].remove(itemid)
                     u[1].msg("{0} vanished from your inventory".format(i["name"]))
+            for r in database.rooms:
+                if itemid in r["items"]:
+                    r["items"].remove(itemid)
 
             return True
         else:
