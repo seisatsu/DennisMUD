@@ -64,7 +64,14 @@ def COMMAND(console, database, args):
             database.delete_item(i)
             if itemid in console.user["inventory"]:
                 console.user["inventory"].remove(itemid)
+                console.msg("{0} vanished from your inventory".format(i["name"]))
                 database.upsert_user(console.user)
+            if i["duplified"]:
+                # Duplified items disappear from everyone's inventory when broken.
+                for u in console.router.users.values():
+                    if itemid in u[1].user["inventory"]:
+                        u[1].user["inventory"].remove(itemid)
+                        u[1].msg("{0} vanished from your inventory".format(i["name"]))
             console.msg(NAME + ": done")
             return True
         else:

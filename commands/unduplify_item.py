@@ -76,7 +76,7 @@ def COMMAND(console, database, args):
                     # Not this user, this is us.
                     continue
                 if itemid in u[1].user["inventory"]:
-                    del u[1].user["inventory"][itemid]
+                    u[1].user["inventory"].remove(itemid)
                     u[1].msg("{0} vanished from your inventory".format(i["name"]))
 
             return True

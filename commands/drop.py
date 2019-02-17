@@ -60,9 +60,11 @@ def COMMAND(console, database, args):
         if i["name"].lower() == name.lower() or str(i["id"]) == name:
             # Remove the item from our inventory and place it in the room.
             console.user["inventory"].remove(i["id"])
-            thisroom["items"].append(i["id"])
+            if not i["duplified"] or console.user["name"] in i["owners"]:
+                # Only put unduplified items into the room unless we own them.
+                thisroom["items"].append(i["id"])
+                database.upsert_room(thisroom)
             database.upsert_user(console.user)
-            database.upsert_room(thisroom)
             console.broadcast_room(console.user["nick"] + " dropped " + i["name"])
             return True
 
