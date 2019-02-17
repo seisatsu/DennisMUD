@@ -63,7 +63,8 @@ def COMMAND(console, database, args):
         rooms = database.rooms.find()
         if rooms:
             for r in rooms:
-                if itemid in r["items"]:
+                if itemid in r["items"] and not i["duplified"]:
+                    # Don't remove duplified items from their rooms.
                     r["items"].remove(itemid)
                     database.upsert_room(r)
 
