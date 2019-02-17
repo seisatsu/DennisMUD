@@ -68,7 +68,7 @@ def COMMAND(console, database, args):
                     database.upsert_room(r)
 
         # If the item is in someone's inventory, remove it.
-        for u in console.router.users:
+        for u in console.router.users.values():
             if itemid in u[1].user["inventory"]:
                 u[1].user["inventory"].remove(itemid)
                 u[1].msg("{0} vanished from your inventory".format(i["name"]))

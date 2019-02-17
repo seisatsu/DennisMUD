@@ -71,7 +71,7 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": done")
 
             # Delete item from all user inventories except ours.
-            for u in console.router.users:
+            for u in console.router.users.values():
                 if u[1]["name"] == console.user["name"]:
                     # Not this user, this is us.
                     continue
