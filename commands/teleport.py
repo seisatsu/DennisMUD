@@ -28,7 +28,7 @@
 NAME = "teleport"
 CATEGORIES = ["exploration"]
 USAGE = "teleport <room>"
-DESCRIPTION = """Teleport to the room with ID <room>.
+DESCRIPTION = """Teleport to the room with ID <room>. Alias: tp
 
 Anyone can teleport to room 0, but otherwise you can only teleport to a room that you own.
 

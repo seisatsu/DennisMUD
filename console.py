@@ -133,6 +133,10 @@ class Console:
             line = line.replace('>', "go ", 1)
         elif line.startswith('exit '):
             line = line.replace('exit ', "go ", 1)
+        elif line.startswith('tp '):
+            line = line.replace('tp ', "teleport ", 1)
+        elif line == 'inv':
+            line = "inventory"
 
         return line
 
