@@ -68,6 +68,7 @@ def COMMAND(console, database, args):
                     if itemid in u[1].user["inventory"]:
                         u[1].user["inventory"].remove(itemid)
                         u[1].msg("{0} vanished from your inventory".format(i["name"]))
+                        database.upsert_user(u[1].user)
                 for r in database.rooms.find():
                     if itemid in r["items"]:
                         r["items"].remove(itemid)
@@ -75,7 +76,7 @@ def COMMAND(console, database, args):
                 # It's not duplified, so we only have to worry about our own inventory.
                 console.user["inventory"].remove(itemid)
                 console.msg("{0} vanished from your inventory".format(i["name"]))
-            database.upsert_user(console.user)
+                database.upsert_user(console.user)
             console.msg(NAME + ": done")
             return True
         else:
