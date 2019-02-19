@@ -62,10 +62,6 @@ def COMMAND(console, database, args):
         if itemid in console.user["inventory"] or console.user["wizard"]:
             # Delete the item and remove it from our inventory.
             database.delete_item(i)
-            if itemid in console.user["inventory"]:
-                console.user["inventory"].remove(itemid)
-                console.msg("{0} vanished from your inventory".format(i["name"]))
-                database.upsert_user(console.user)
             if i["duplified"]:
                 # Duplified items disappear from everyone's inventory and every room when broken.
                 for u in console.router.users.values():
@@ -75,6 +71,11 @@ def COMMAND(console, database, args):
                 for r in database.rooms.find():
                     if itemid in r["items"]:
                         r["items"].remove(itemid)
+            else:
+                # It's not duplified, so we only have to worry about our own inventory.
+                console.user["inventory"].remove(itemid)
+                console.msg("{0} vanished from your inventory".format(i["name"]))
+            database.upsert_user(console.user)
             console.msg(NAME + ": done")
             return True
         else:
