@@ -36,7 +36,10 @@ import json
 with open("cli.config.json") as f:
     config = json.load(f)
 
-dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
+dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"],
+                                 config["database"]["name"], config["database"]["auth"]["enabled"],
+                                 config["database"]["auth"]["user"], config["database"]["auth"]["password"],
+                                 config["database"]["auth"]["source"], config["database"]["auth"]["mechanism"])
 
 # Update items.
 users = dbman.users.find()
