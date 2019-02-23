@@ -229,6 +229,9 @@ class DatabaseManager:
             "online": False,
             "room": 0,
             "inventory": [],
+            "autolook": {
+                "enabled": self.defaults["first_user"]["autolook"]["enabled"]
+            },
             "chat": {
                 "enabled": self.defaults["first_user"]["chat"]["enabled"],
                 "ignored": []

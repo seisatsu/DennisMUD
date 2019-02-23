@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# disable_chat.py   #
-# Copyright 2018    #
-# Michael D. Reiley #
-#####################
+######################
+# Dennis MUD         #
+# enable_autolook.py #
+# Copyright 2019     #
+# Michael D. Reiley  #
+######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,14 +25,12 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "disable chat"
-CATEGORIES = ["messaging", "settings"]
-USAGE = "disable chat"
-DESCRIPTION = """Disable the general chat. You will not be able to receive or send chat messages.
+NAME = "enable autolook"
+CATEGORIES = ["exploration", "settings"]
+USAGE = "enable autolook"
+DESCRIPTION = """Enable autolook. You will automatically look upon entering a room.
 
-You can enable the general chat with the `enable chat` command.
-
-Chat messages are separate from private messages and same-room communication."""
+You can disable autolook with the `disable autolook` command."""
 
 
 def COMMAND(console, database, args):
@@ -45,12 +43,12 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    # Check if chat is already disabled.
-    if not console.user["chat"]["enabled"]:
-        console.msg(NAME + ": chat is already disabled")
+    # Check if autolook is already enabled.
+    if console.user["autolook"]["enabled"]:
+        console.msg(NAME + ": autolook is already enabled")
         return False
 
-    console.user["chat"]["enabled"] = False
+    console.user["chat"]["autolook"] = True
     database.upsert_user(console.user)
 
     console.msg(NAME + ": done")

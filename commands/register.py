@@ -66,6 +66,9 @@ def COMMAND(console, database, args):
         "online": False,
         "room": 0,
         "inventory": [],
+        "autolook": {
+            "enabled": database.defaults["users"]["autolook"]["enabled"]
+        },
         "chat": {
             "enabled": database.defaults["users"]["chat"]["enabled"],
             "ignored": []

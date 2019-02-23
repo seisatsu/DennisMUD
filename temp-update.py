@@ -39,9 +39,8 @@ with open("cli.config.json") as f:
 dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"], config["database"]["name"])
 
 # Update items.
-items = dbman.items.find()
-if items.count():
-    for i in items:
-        i["action"] = ""
-        i["duplified"] = False
-        dbman.upsert_item(i)
+users = dbman.users.find()
+if users.count():
+    for u in users:
+        u["autolook"] = {"enabled": True}
+        dbman.upsert_user(u)

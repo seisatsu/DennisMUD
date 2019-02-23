@@ -11,6 +11,9 @@
     "name": "<world>",
     "nick": "Root User",
     "desc": "The first user and administrator.",
+    "autolook": {
+      "enabled": true
+    },
     "chat": {
       "enabled": true
     }
@@ -25,6 +28,9 @@
     }
   },
   "users": {
+    "autolook": {
+      "enabled": true
+    },
     "chat": {
       "enabled": true
     }
