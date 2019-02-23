@@ -222,8 +222,7 @@ if __name__ == "__main__":
             websocket_factory = websocket.ServerFactory(router, "ws://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
         websocket_factory.protocol = websocket.ServerProtocol
-        websocket_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20,
-                                             allowNullOrigin=config["websocket"]["allowNullOrigin"])
+        websocket_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20)
         reactor.listenTCP(config["websocket"]["port"], websocket_factory)
         any_enabled = True
 
