@@ -48,7 +48,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": autolook is already enabled")
         return False
 
-    console.user["chat"]["autolook"] = True
+    console.user["autolook"]["enabled"] = True
     database.upsert_user(console.user)
 
     console.msg(NAME + ": done")
