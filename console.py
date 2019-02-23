@@ -135,6 +135,8 @@ class Console:
             line = line.replace('exit ', "go ", 1)
         elif line.startswith('tp '):
             line = line.replace('tp ', "teleport ", 1)
+        elif line.startswith('look at '):
+            line = line.replace('look at ', "look ", 1)
         elif line == 'inv':
             line = "inventory"
 

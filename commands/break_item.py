@@ -65,10 +65,10 @@ def COMMAND(console, database, args):
             if i["duplified"]:
                 # Duplified items disappear from everyone's inventory and every room when broken.
                 for u in console.router.users.values():
-                    if itemid in u[1].user["inventory"]:
-                        u[1].user["inventory"].remove(itemid)
-                        u[1].msg("{0} vanished from your inventory".format(i["name"]))
-                        database.upsert_user(u[1].user)
+                    if itemid in u["console"].user["inventory"]:
+                        u["console"].user["inventory"].remove(itemid)
+                        u["console"].msg("{0} vanished from your inventory".format(i["name"]))
+                        database.upsert_user(u["console"].user)
                 for r in database.rooms.find():
                     if itemid in r["items"]:
                         r["items"].remove(itemid)

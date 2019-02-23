@@ -53,8 +53,8 @@ def COMMAND(console, database, args):
         return False
 
     for u in console.router.users:
-        if console.router.users[u][1].user and console.router.users[u][1].user["chat"]["enabled"]:
-            if not console.user["name"] in console.router.users[u][1].user["chat"]["ignored"]:
-                console.router.users[u][1].msg("# <" + console.user["name"] + ">: " + ' '.join(args))
+        if console.router.users[u]["console"].user and console.router.users[u]["console"].user["chat"]["enabled"]:
+            if not console.user["name"] in console.router.users[u]["console"].user["chat"]["ignored"]:
+                console.router.users[u]["console"].msg("# <" + console.user["name"] + ">: " + ' '.join(args))
 
     return True

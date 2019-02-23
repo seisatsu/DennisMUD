@@ -126,7 +126,7 @@ class Router:
         :param service: Service type. "telnet" or "websocket".
         :return: True
         """
-        self.users[peer] = [service, console.Console(dbman, peer, self)]
+        self.users[peer] = {"service": service, "console": console.Console(dbman, peer, self)}
         return True
 
     def unregister(self, peer):
@@ -137,9 +137,9 @@ class Router:
         """
         if peer not in self.users:
             return False
-        if not self.users[peer][1].user:
+        if not self.users[peer]["console"].user:
             return False
-        self.users[peer][1].command("logout")
+        self.users[peer]["console"].command("logout")
         del self.users[peer]
         return True
 
@@ -167,12 +167,12 @@ class Router:
         :return: True
         """
         for u in self.users:
-            if not self.users[u][1].user:
+            if not self.users[u]["console"].user:
                 continue
-            if self.users[u][0] == "telnet":
-                self.telnet_factory.communicate(self.users[u][1].rname, msg.encode())
-            if self.users[u][0] == "websocket":
-                self.websocket_factory.communicate(self.users[u][1].rname, html.escape(msg).encode("utf-8"))
+            if self.users[u]["service"] == "telnet":
+                self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
+            if self.users[u]["service"] == "websocket":
+                self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
     def broadcast_room(self, room, msg):
         """Broadcast Room
@@ -184,13 +184,13 @@ class Router:
         :return: True
         """
         for u in self.users:
-            if not self.users[u][1].user:
+            if not self.users[u]["console"].user:
                 continue
-            if self.users[u][1].user["room"] == room:
-                if self.users[u][0] == "telnet":
-                    self.telnet_factory.communicate(self.users[u][1].rname, msg.encode())
-                if self.users[u][0] == "websocket":
-                    self.websocket_factory.communicate(self.users[u][1].rname, html.escape(msg).encode("utf-8"))
+            if self.users[u]["console"].user["room"] == room:
+                if self.users[u]["service"] == "telnet":
+                    self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
+                if self.users[u]["service"] == "websocket":
+                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
 if __name__ == "__main__":

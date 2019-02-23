@@ -70,10 +70,10 @@ def COMMAND(console, database, args):
 
         # If the item is in someone's inventory, remove it.
         for u in console.router.users.values():
-            if itemid in u[1].user["inventory"]:
-                u[1].user["inventory"].remove(itemid)
-                u[1].msg("{0} vanished from your inventory".format(i["name"]))
-                database.upsert_user(u[1].user)
+            if itemid in u["console"].user["inventory"]:
+                u["console"].user["inventory"].remove(itemid)
+                u["console"].msg("{0} vanished from your inventory".format(i["name"]))
+                database.upsert_user(u["console"].user)
 
         # Place the item in our inventory.
         console.user["inventory"].append(itemid)
