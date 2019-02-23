@@ -19,6 +19,7 @@
     "enabled": true,
     "host": "dennis.seisat.su",
     "port": 37380,
-    "secure": false
+    "secure": false,
+    "allowNullOrigin": false
   }
 }
