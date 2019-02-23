@@ -124,6 +124,8 @@ def COMMAND(console, database, args):
                 # If autolook is enabled, look.
                 if console.user["autolook"]["enabled"]:
                     console.command("look", False)
+                else:
+                    console.msg(thisroom["name"] + " (" + str(thisroom["id"]) + ")")
 
                 return True
 
