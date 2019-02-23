@@ -72,7 +72,7 @@ def COMMAND(console, database, args):
 
             # Delete item from all user inventories except ours, and all rooms.
             for u in console.router.users.values():
-                if u["console"]["name"] == console.user["name"]:
+                if u["console"].user["name"] == console.user["name"]:
                     # Not this user, this is us.
                     continue
                 if itemid in u["console"].user["inventory"]:
