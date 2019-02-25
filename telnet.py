@@ -72,7 +72,7 @@ class ServerProtocol(LineReceiver):
 
         # Run the command while handling errors.
         try:
-            self.factory.router[self.peer][1].command(line)
+            self.factory.router[self.peer]["console"].command(line)
         except:
             self.factory.communicate(self.peer, traceback.format_exc().encode('utf-8'))
 
