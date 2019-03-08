@@ -16,3 +16,4 @@ server.config.json
 telnet.config.json
 motd.telnet.example.txt
 dennis.log
+websocket-frontend.example_v2.html

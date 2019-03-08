@@ -163,7 +163,7 @@ class DatabaseManager:
         Get an item by its id.
 
         :param itemid: The id of the item to retrieve from the database.
-        :return: Room document or None.
+        :return: Item document or None.
         """
         return self.items.find_one({"id": itemid})
 

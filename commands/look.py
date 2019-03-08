@@ -88,7 +88,7 @@ def COMMAND(console, database, args):
         # Might be an item in the room.
         for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.
             i = database.item_by_id(itemid)
-            if i["name"].lower() == ' '.join(args).lower():
+            if i and i["name"].lower() == ' '.join(args).lower():
                 console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
                 console.msg("Owned by: " + ', '.join(i["owners"]))
                 if i["desc"]:
@@ -99,7 +99,7 @@ def COMMAND(console, database, args):
         # Might be an item in your inventory.
         for itemid in console.user["inventory"]:
             i = database.item_by_id(itemid)
-            if i["name"].lower() == ' '.join(args).lower():
+            if i and i["name"].lower() == ' '.join(args).lower():
                 console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
                 console.msg("Owned by: " + ', '.join(i["owners"]))
                 if i["desc"]:
