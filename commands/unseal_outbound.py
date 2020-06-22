@@ -1,7 +1,7 @@
 ######################
 # Dennis MUD         #
 # unseal_outbound.py #
-# Copyright 2018     #
+# Copyright 2019     #
 # Michael D. Reiley  #
 ######################
 
