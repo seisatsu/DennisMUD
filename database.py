@@ -184,6 +184,21 @@ class DatabaseManager:
                     return u
         return None
 
+    def auth_user(self, username, passhash):
+        """
+        Check if a username and password match an existing user.
+
+        :param username: The name of the user to authenticate.
+        :param passhash: The hashed password of the user to authenticate.
+        :return: User document or None.
+        """
+        u = self.user_by_name(username)
+        if not u:
+            return None
+        if u["passhash"] != passhash:
+            return None
+        return u
+
     def _init_room(self):
         """Initialize the world with the first room.
 

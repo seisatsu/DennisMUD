@@ -26,6 +26,7 @@
 # **********
 
 import hashlib
+import string
 
 NAME = "register"
 CATEGORIES = ["users"]
@@ -35,6 +36,9 @@ DESCRIPTION = """Register a new user with <username> and <password>.
 Afterwards, you can join the game with the `login` command.
 
 Ex. `register seisatsu mypassword`"""
+
+# Allowed characters for new username registrations.
+ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_'
 
 
 def COMMAND(console, database, args):
@@ -47,13 +51,14 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": logout first to register a user")
         return False
 
+    # Check allowed characters.
+    for c in args[0]:
+        if c not in ALLOWED_CHARACTERS:
+            console.msg(NAME + ": usernames may contain alphanumerics and underscores only")
+            return False
+
     # Register a new user.
-    check = database.users.find(
-        {
-            "name": args[0]
-        }
-    )
-    if check:  # User already exists.
+    if database.user_by_name(args[0]):  # User already exists.
         console.msg(NAME + ": user already exists")
         return False
 
