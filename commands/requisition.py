@@ -60,7 +60,7 @@ def COMMAND(console, database, args):
             return False
 
         # If the item is in a room's item list, remove it.
-        rooms = database.rooms.find()
+        rooms = database.rooms.all()
         if rooms:
             for r in rooms:
                 if itemid in r["items"] and not i["duplified"]:

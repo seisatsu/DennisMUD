@@ -58,7 +58,7 @@ def COMMAND(console, database, args):
         pass
 
     # Check if an item by this name already exists. Case insensitive.
-    items = list(database.items.find().sort("id", -1))
+    items = sorted(database.items.all(), reverse=True, key=lambda k: k["id"])
     if items:
         for i in items:
             if i["name"].lower() == name.lower():

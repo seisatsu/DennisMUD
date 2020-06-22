@@ -28,51 +28,37 @@
 import json
 import sys
 import traceback
-from pymongo import MongoClient
-from pymongo.errors import ConfigurationError, OperationFailure
+from tinydb import TinyDB, Query
 
 
 class DatabaseManager:
     """The Database Manager
 
-    This manager handles interactions with a MongoDB database corresponding to the current game world.
+    This manager handles interactions with a TinyDB database corresponding to the current game world.
 
     Attributes:
-        client: The MongoClient which will be used to connect to the database.
         database: The database to use for game data.
-        rooms: The collection of all rooms in the database.
-        users: The collection of all users in the database.
-        items: The collection of all items in the database.
+        rooms: The table of all rooms in the database.
+        users: The table of all users in the database.
+        items: The table of all items in the database.
     """
-    def __init__(self, host, port, dbname, auth=False, user=None, password=None, source=None, mechanism=None):
+    def __init__(self, filename):
         """Database Manager Initializer
 
-        :param host: The hostname of the MongoDB database.
-        :param port: The port of the MongoDB database.
-        :param dbname: The name of the MongoDB database.
-        :param auth: Whether to use MongoDB authentication. (optional, default False.)
-        :param user: The username for MongoDB authentication. (required if auth is True)
-        :param password: The password for MongoDB authentication. (required if auth is True)
-        :param source: The auth source for MongoDB authentication. (required if auth is True)
-        :param mechanism: The mechanism for MongoDB authentication. Can be either "SCRAM-SHA-1" or "SCRAM-SHA-256".
-            (required if auth is True)
+        :param filename: The relative or absolute filename of the TinyDB database file.
         """
-        # Try to connect. This could fail with authentication enabled on old versions of PyMongo that ship with Debian.
+        # Try to open the database file.
         try:
-            if auth:
-                self.client = MongoClient(host, port, username=user, password=password, authSource=source,
-                                          authMechanism=mechanism)
-            else:
-                self.client = MongoClient(host, port)
-        except ConfigurationError:
-            print("exiting: mongo configuration failed; your pymongo may be outdated")
-            print(traceback.format_exc(1))
+            with open(filename) as f:
+                config = json.load(f)
+        except:
+            print("exiting: could not open database file: ", filename)
             sys.exit(1)
 
-        self.database = self.client[dbname]
-        self.rooms = self.database["rooms"]
-        self.users = self.database["users"]
-        self.items = self.database["items"]
+        self.database = TinyDB(filename)
+        self.rooms = self.database.table("rooms")
+        self.users = self.database.table("users")
+        self.items = self.database.table("items")
 
         # Try to load the defaults config file.
         try:
@@ -82,17 +68,12 @@ class DatabaseManager:
             print("exiting: could not open defaults file")
             sys.exit(1)
 
-        # If there are no rooms, make the initial room. Also tests authentication.
-        try:
-            if self.database.rooms.find().count() == 0:
-                self._init_room()
-        except OperationFailure:
-            print("exiting: mongodb operation failed; possibly incorrect authentication")
-            print(traceback.format_exc(1))
-            sys.exit(1)
+        # If there are no rooms, make the initial room.
+        if len(self.rooms.all()) == 0:
+            self._init_room()
 
         # If there are no users, make the root user.
-        if self.database.users.find().count() == 0:
+        if len(self.users.all()) == 0:
             self._init_user()
 
     def upsert_room(self, document):
@@ -101,7 +82,8 @@ class DatabaseManager:
         :param document: The room document to update or insert.
         :return: True
         """
-        self.rooms.update_one({"id": document["id"]}, {"$set": document}, upsert=True)
+        q = Query()
+        self.rooms.upsert(document, q.id == document["id"])
         return True
 
     def upsert_item(self, document):
@@ -110,7 +92,8 @@ class DatabaseManager:
         :param document: The item document to update or insert.
         :return: True
         """
-        self.items.update_one({"id": document["id"]}, {"$set": document}, upsert=True)
+        q = Query()
+        self.items.upsert(document, q.id == document["id"])
         return True
 
     def upsert_user(self, document):
@@ -119,7 +102,8 @@ class DatabaseManager:
         :param document: The user document to update or insert.
         :return: True
         """
-        self.users.update_one({"name": document["name"]}, {"$set": document}, upsert=True)
+        q = Query()
+        self.users.upsert(document, q.name == document["name"])
         return True
 
     def delete_room(self, document):
@@ -128,7 +112,8 @@ class DatabaseManager:
         :param document: The room document to delete.
         :return: True
         """
-        self.rooms.delete_one({"id": document["id"]})
+        q = Query()
+        self.rooms.remove(q.id == document["id"])
         return True
 
     def delete_item(self, document):
@@ -137,7 +122,8 @@ class DatabaseManager:
         :param document: The item document to delete.
         :return: True
         """
-        self.items.delete_one({"id": document["id"]})
+        q = Query()
+        self.items.remove(q.id == document["id"])
         return True
 
     def delete_user(self, document):
@@ -146,7 +132,8 @@ class DatabaseManager:
         :param document: The user document to delete.
         :return: True
         """
-        self.users.delete_one({"name": document["name"]})
+        q = Query()
+        self.users.remove(q.name == document["name"])
         return True
 
     def room_by_id(self, roomid):
@@ -156,7 +143,8 @@ class DatabaseManager:
         :param roomid: The id of the room to retrieve from the database.
         :return: Room document or None.
         """
-        return self.rooms.find_one({"id": roomid})
+        q = Query()
+        return self.rooms.search(q.id == roomid)[0]
 
     def item_by_id(self, itemid):
         """
@@ -165,7 +153,8 @@ class DatabaseManager:
         :param itemid: The id of the item to retrieve from the database.
         :return: Item document or None.
         """
-        return self.items.find_one({"id": itemid})
+        q = Query()
+        return self.items.search(q.id == itemid)[0]
 
     def user_by_name(self, username):
         """
@@ -174,8 +163,8 @@ class DatabaseManager:
         :param username: The name of the user to retrieve from the database.
         :return: User document or None.
         """
-        users = self.users.find()
-        if users.count():
+        users = self.users.all()
+        if len(users):
             for u in users:
                 if u["name"].lower() == username.lower():
                     return u
@@ -188,8 +177,8 @@ class DatabaseManager:
         :param nickname: The nickname of the user to retrieve from the database.
         :return: User document or None.
         """
-        users = self.users.find()
-        if users.count():
+        users = self.users.all()
+        if len(users):
             for u in users:
                 if u["nick"].lower() == nickname.lower():
                     return u
@@ -213,7 +202,7 @@ class DatabaseManager:
                 "outbound": self.defaults["first_room"]["sealed"]["outbound"]
             }
         }
-        self.rooms.insert_one(newroom)
+        self.rooms.insert(newroom)
         return True
 
     def _init_user(self):
@@ -238,5 +227,5 @@ class DatabaseManager:
             },
             "wizard": True
         }
-        self.users.insert_one(newuser)
+        self.users.insert(newuser)
         return True

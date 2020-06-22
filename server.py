@@ -53,19 +53,16 @@ except:
     sys.exit(1)
 
 # Open the Dennis main database.
-dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"],
-                                 config["database"]["name"], config["database"]["auth"]["enabled"],
-                                 config["database"]["auth"]["user"], config["database"]["auth"]["password"],
-                                 config["database"]["auth"]["source"], config["database"]["auth"]["mechanism"])
+dbman = database.DatabaseManager(config["database"]["filename"])
 
 # Reset users.
-rooms = dbman.rooms.find()
-if rooms.count():
+rooms = dbman.rooms.all()
+if len(rooms):
     for r in rooms:
         r["users"] = []
         dbman.upsert_room(r)
-users = dbman.users.find()
-if users.count():
+users = dbman.users.all()
+if len(users):
     for u in users:
         u["online"] = False
         dbman.upsert_user(u)

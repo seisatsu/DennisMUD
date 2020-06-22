@@ -61,18 +61,16 @@ except:
     print("exiting: could not open cli.config.json")
     sys.exit(1)
 
-dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"],
-                                 config["database"]["name"], config["database"]["auth"]["enabled"],
-                                 config["database"]["auth"]["user"], config["database"]["auth"]["password"],
-                                 config["database"]["auth"]["source"], config["database"]["auth"]["mechanism"])
+dbman = database.DatabaseManager(config["database"]["filename"])
+
 # Reset users.
-rooms = dbman.rooms.find()
-if rooms.count():
+rooms = dbman.rooms.all()
+if len(rooms):
     for r in rooms:
         r["users"] = []
         dbman.upsert_room(r)
-users = dbman.users.find()
-if users.count():
+users = dbman.users.all()
+if len(users):
     for u in users:
         u["online"] = False
         dbman.upsert_user(u)
@@ -86,8 +84,7 @@ if not dennis.user["wizard"]:
 dbman.upsert_user(dennis.user)
 
 print("Welcome to Dennis MUD single-user mode.")
-print("Connected to database at \"{0}:{1}/{2}\".".format(config["database"]["host"], config["database"]["port"],
-                                                         config["database"]["name"]))
+print("Loaded database at \"{0}\".".format(config["database"]["filename"]))
 print("You are now logged in as the administrative user \"<world>\".")
 
 # Command loop.

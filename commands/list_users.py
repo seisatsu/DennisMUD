@@ -43,16 +43,15 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    users = database.users.find().sort("name", 1)
+    users = sorted(database.users.all(), key=lambda k: k["name"])
     online_count = 0
     offline_count = 0
-    if users.count():
+    if len(users):
         for u in users:
             if u["online"]:
                 console.msg(u["name"] + ": " + u["nick"])
                 online_count += 1
         if console.user["wizard"]:
-            users.rewind()
             for u in users:
                 if not u["online"]:
                     console.msg(u["name"] + ": " + u["nick"] + " (offline)")

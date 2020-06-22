@@ -58,7 +58,7 @@ def COMMAND(console, database, args):
         pass
 
     # Check if a room by this name already exists. Case insensitive.
-    rooms = list(database.rooms.find().sort("id", -1))
+    rooms = sorted(database.rooms.all(), reverse=True, key=lambda k: k["id"])
     if rooms:
         for r in rooms:
             if r["name"].lower() == name.lower():

@@ -47,7 +47,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": already logged in")
         return False
 
-    thisuser = database.users.find_one(
+    thisuser = database.users.find(
         {
             "name": args[0].lower(),
             "passhash": hashlib.sha256(args[1].encode()).hexdigest()
@@ -56,7 +56,7 @@ def COMMAND(console, database, args):
     if not thisuser:
         console.msg(NAME + ": bad credentials")
         return False  # Bad login.
-    console.user = thisuser
+    console.user = thisuser[0]
     console.user["online"] = True
     database.upsert_user(console.user)
 

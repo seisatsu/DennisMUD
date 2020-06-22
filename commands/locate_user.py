@@ -56,7 +56,7 @@ def COMMAND(console, database, args):
         console.msg("User " + u["name"] + " is offline")
         return True
     else:
-        for r in database.rooms.find():
+        for r in database.rooms.all():
             if u["name"] in r["users"]:
                 console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")
                 return True

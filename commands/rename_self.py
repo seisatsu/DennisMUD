@@ -58,7 +58,7 @@ def COMMAND(console, database, args):
         pass
 
     # Check if nickname is already in use.
-    for u in database.users.find():
+    for u in database.users.all():
         if name.lower() == u["nick"].lower():
             console.msg(NAME + ": that nickname is already in use")
             return False

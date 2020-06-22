@@ -43,7 +43,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    items = database.items.find()
+    items = database.items.all()
     for i in items:
         if i["name"].lower() == ' '.join(args).lower():
             console.msg(i["name"] + ": " + str(i["id"]))

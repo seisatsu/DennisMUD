@@ -67,13 +67,13 @@ def COMMAND(console, database, args):
         return True
 
     # check if someone else is holding the item.
-    for u in database.users.find():
+    for u in database.users.all():
         if itemid in u["inventory"]:
             console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in " + u["name"] + "'s your inventory")
             return True
 
     # check if the item is in a room.
-    for r in database.rooms.find():
+    for r in database.rooms.all():
         if itemid in r["items"]:
             console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in room " +
                         r["name"] + " (" + str(r["id"]) + ")")

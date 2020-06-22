@@ -48,7 +48,7 @@ def COMMAND(console, database, args):
         return False
 
     # Register a new user.
-    check = database.users.find_one(
+    check = database.users.find(
         {
             "name": args[0]
         }

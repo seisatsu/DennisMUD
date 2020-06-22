@@ -43,9 +43,9 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    rooms = database.rooms.find().sort("id", 1)
+    rooms = sorted(database.rooms.all(), key=lambda k: k["id"])
     found_something = False
-    if rooms.count():
+    if len(rooms):
         for r in rooms:
             if console.user["name"] in r["owners"] or console.user["wizard"]:
                 # We either own this room, or we are a wizard.

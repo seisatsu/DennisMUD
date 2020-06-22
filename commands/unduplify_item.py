@@ -79,7 +79,7 @@ def COMMAND(console, database, args):
                     u["console"].user["inventory"].remove(itemid)
                     u["console"].msg("{0} vanished from your inventory".format(i["name"]))
                     database.upsert_user(u["console"].user)
-            for r in database.rooms.find():
+            for r in database.rooms.all():
                 if itemid in r["items"]:
                     r["items"].remove(itemid)
 
