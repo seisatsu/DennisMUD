@@ -27,7 +27,6 @@
 
 import json
 import sys
-import traceback
 from tinydb import TinyDB, Query
 
 
