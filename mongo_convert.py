@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# tinydb_convert.py #
+# mongo_convert.py  #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
