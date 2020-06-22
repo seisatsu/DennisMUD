@@ -39,6 +39,8 @@ pidfile="run.sh.pid"                   # File for storing this script's PID, rel
 lckfile="dennis.lock"                  # Lock file so we don't run twice, relative or absolute.
 
 cd $syspath
+trap "rm -f $lckfile && echo '\nScript exiting.' && exit 0" 2
+trap "rm -f $lckfile && echo '\nScript exiting.' && exit 0" 15
 
 # Check user.
 if [ "$(whoami)" != "$sysuser" ]; then
@@ -81,7 +83,7 @@ if [ "$1" = "stop" ]; then
     kill $dnnspid
     sleep 2
     kill $currpid
-    rm $lckfile
+    rm -f $lckfile
     exit 0
 fi
 
