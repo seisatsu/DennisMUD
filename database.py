@@ -46,10 +46,10 @@ class DatabaseManager:
 
         :param filename: The relative or absolute filename of the TinyDB database file.
         """
-        # Try to open the database file.
+        # See if we can access the database file.
         try:
-            with open(filename) as f:
-                config = json.load(f)
+            with open(filename, "a") as f:
+                pass
         except:
             print("exiting: could not open database file: ", filename)
             sys.exit(1)
