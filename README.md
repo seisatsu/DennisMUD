@@ -12,7 +12,7 @@ There is a configuration file `defaults.config.example.json` which contains a nu
 Single-player
 =============
 
-To try out single-player mode on the command line, first make sure you have [Python 3](https://www.python.org/), [PyMongo](https://api.mongodb.com/python/current/), and [MongoDB](https://www.mongodb.com/) (v3.2). Then copy `cli.config.example.json` to `cli.config.json`, change any necessary settings, and  run `python3 cli-frontend.py` in the project's top directory from your console.
+To try out single-player mode on the command line, first make sure you have [Python 3](https://www.python.org/) and [TinyDB](https://tinydb.readthedocs.io/en/latest/). (Previous versions used MongoDB.) Then copy `cli.config.example.json` to `cli.config.json`, change any necessary settings, and  run `python3 cli-frontend.py` in the project's top directory from your console.
 
 Multi-player
 ============

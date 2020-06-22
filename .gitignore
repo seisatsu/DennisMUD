@@ -15,5 +15,9 @@ defaults.config.json
 server.config.json
 telnet.config.json
 motd.telnet.example.txt
-dennis.log
 websocket-frontend.example_v2.html
+*.log
+*.lock
+*.pid
+nohup.out
+world.json
