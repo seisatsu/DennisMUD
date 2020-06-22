@@ -65,10 +65,16 @@ def COMMAND(console, database, args):
             if i["duplified"]:
                 # Duplified items disappear from everyone's inventory and every room when broken.
                 for u in console.router.users.values():
-                    if itemid in u["console"].user["inventory"]:
-                        u["console"].user["inventory"].remove(itemid)
-                        u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                        database.upsert_user(u["console"].user)
+                    try: # Trap to catch rare crash
+                        if itemid in u["console"].user["inventory"]:
+                            u["console"].user["inventory"].remove(itemid)
+                            u["console"].msg("{0} vanished from your inventory".format(i["name"]))
+                            database.upsert_user(u["console"].user)
+                    except:
+                        with open('break_item_trap.txt', 'w') as file:
+                            file.write("itemid: {0}, u: {1}".format(str(itemid), u))
+                            file.write("console: {0}".format(u["console"]))
+                            file.write("user: {0}".format(u["console"].user))
                 for r in database.rooms.all():
                     if itemid in r["items"]:
                         r["items"].remove(itemid)
