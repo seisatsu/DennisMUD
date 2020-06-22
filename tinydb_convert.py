@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # tinydb_convert.py #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -30,7 +30,8 @@
 import database
 import json
 from tinydb import TinyDB, Query
-tdb = TinyDB("testdb.json")
+
+tdb = TinyDB("tinydb_out.json")
 
 
 with open("cli.config.json") as f:
@@ -43,8 +44,8 @@ dbman = database.DatabaseManager(config["database"]["host"], config["database"][
 
 
 # Stops eval() from whining.
-def ObjectId(null):
-    return None
+def ObjectId(whocares):
+    pass
 
 
 # Terrible and unsafe and I feel bad about it but I only have to do it once.
