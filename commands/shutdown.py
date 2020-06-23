@@ -25,7 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
-import sys
+import os
+import signal
 
 NAME = "shutdown"
 CATEGORIES = ["wizard"]
@@ -46,5 +47,5 @@ def COMMAND(console, database, args):
         console.msg("shutdown: you do not have permission to use this command")
         return False
 
-    # TODO: Graceful shutdown.
-    sys.exit(0)
+    # Send ourselves the TERM signal.
+    os.kill(os.getpid(), signal.SIGTERM)
