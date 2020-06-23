@@ -46,7 +46,7 @@ if [ "$(whoami)" != "$sysuser" ]; then
 fi
 
 # Change to Dennis directory, or exit if impossible.
-cd "$syspath" || (echo "Could not cd to Dennis folder." && exit 1)
+cd "$syspath" || exit 1
 
 # Trap SIGINT and SIGTERM to clean up lock file and pid file.
 trap 'rm -f $lckfile $pidfile && echo "\nRun script terminating." && exit 0' 2 15
