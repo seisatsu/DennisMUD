@@ -32,6 +32,7 @@ DESCRIPTION = """Obtain the item with id <item>, regardless of where it is.
 
 Whether the item is in another room or someone else's inventory, it will be moved to your inventory.
 You can only requisition an item that you own.
+Duplified items will just copy to your inventory if not there already.
 
 Ex. `requisition 14` to move item 14 to your inventory."""
 
@@ -59,21 +60,27 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": you do not have permission to requisition that item")
             return False
 
-        # If the item is in a room's item list, remove it.
-        rooms = database.rooms.all()
-        if rooms:
-            for r in rooms:
-                if itemid in r["items"] and not i["duplified"]:
-                    # Don't remove duplified items from their rooms.
-                    r["items"].remove(itemid)
-                    database.upsert_room(r)
+        # Do nothing if we are already holding the item.
+        if itemid in console.user["inventory"]:
+            console.msg(NAME + ": that item is already in your inventory")
+            return False
 
-        # If the item is in someone's inventory, remove it.
-        for u in console.router.users.values():
-            if itemid in u["console"].user["inventory"]:
-                u["console"].user["inventory"].remove(itemid)
-                u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                database.upsert_user(u["console"].user)
+        # Don't remove duplified items.
+        if not i["duplified"]:
+            # If the item is in a room's item list, remove it.
+            rooms = database.rooms.all()
+            if rooms:
+                for r in rooms:
+                    if itemid in r["items"]:
+                        r["items"].remove(itemid)
+                        database.upsert_room(r)
+
+            # If the item is in someone's inventory, remove it.
+            for u in console.router.users.values():
+                if itemid in u["console"].user["inventory"]:
+                    u["console"].user["inventory"].remove(itemid)
+                    u["console"].msg("{0} vanished from your inventory".format(i["name"]))
+                    database.upsert_user(u["console"].user)
 
         # Place the item in our inventory.
         console.user["inventory"].append(itemid)
