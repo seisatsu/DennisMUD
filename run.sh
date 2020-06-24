@@ -32,7 +32,7 @@
 # Usage: ./run.sh <start/restart/stop>
 # Background Start: nohup ./run.sh start &
 
-python3="python3"                      # Python3 executable name.
+python3="python3.7"                    # Python3 executable name.
 syspath="/home/seisatsu/Source/Dennis" # The absolute path to the Dennis folder.
 sysuser="seisatsu"                     # Make sure we are running as this user, or else exit.
 logname="dennis.log"                   # The name of the log file, relative or absolute.
@@ -49,7 +49,7 @@ fi
 cd "$syspath" || exit 1
 
 # Trap SIGINT and SIGTERM to clean up lock file and pid file.
-trap 'rm -f $lckfile $pidfile && echo "\nRun script terminating." && exit 0' 2 15
+trap 'rm -f $lckfile $pidfile && echo "Run script terminating." && exit 0' 2 15
 
 # Save PID of this script, enter infinite loop of starting Dennis if it exits,
 # and send the output to the log file. Make a lock file.
@@ -71,6 +71,10 @@ fi
 
 # Restart Dennis by stopping it while leaving the parent script running.
 if [ "$1" = "restart" ]; then
+    if [ ! -f "$pidfile" ]; then
+        echo "Dennis does not appear to be running."
+        exit 1
+    fi
     echo "Restarting Dennis..."
     currpid=$(cat "$pidfile")
     dnnspid=$(pgrep -x -P "$currpid" "$python3")
@@ -80,6 +84,10 @@ fi
 
 # Stop Dennis by stopping it and the parent script. Remove the lockfile.
 if [ "$1" = "stop" ]; then
+    if [ ! -f "$pidfile" ]; then
+        echo "Dennis does not appear to be running."
+        exit 1
+    fi
     echo "Stopping Dennis..."
     currpid=$(cat "$pidfile")
     dnnspid=$(pgrep -x -P "$currpid" "$python3")
