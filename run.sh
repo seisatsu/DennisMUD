@@ -49,7 +49,7 @@ fi
 cd "$syspath" || exit 1
 
 # Trap SIGINT and SIGTERM to clean up lock file and pid file.
-trap 'rm -f $lckfile $pidfile && echo "Run script terminating." && exit 0' 2 15
+trap 'rm -f $lckfile $pidfile; echo "Run script terminating."; exit 0' 2 15
 
 # Save PID of this script, enter infinite loop of starting Dennis if it exits,
 # and send the output to the log file. Make a lock file.
