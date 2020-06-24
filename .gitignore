@@ -14,7 +14,7 @@ cli.config.json
 defaults.config.json
 server.config.json
 telnet.config.json
-motd.telnet.example.txt
+motd.telnet.txt
 websocket-frontend.example_v2.html
 *.log
 *.lock
