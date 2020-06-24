@@ -32,6 +32,7 @@ DESCRIPTION = """Find out what room the user with username <name> is in.
 
 This only works with usernames, not with nicknames.
 See the `realname` command to derive a user's username from their nickname.
+If a user is offline, only wizards can see their location.
 
 Ex. `locate user seisatsu`"""
 
@@ -51,15 +52,18 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": no such user")
         return False
 
-    # check the user is offline.
-    if not u["online"]:
-        console.msg("User " + u["name"] + " is offline")
-        return True
-    else:
+    # If the user is offline or we are a wizard, show their location.
+    if u["online"] or console.user["wizard"]:
         for r in database.rooms.all():
             if u["name"] in r["users"]:
-                console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")
+                if u["online"]:
+                    console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")
+                elif console.user["wizard"]:
+                    console.msg("User " + u["name"] + " (offline) is in room " + r["name"] + " (" + str(r["id"]) + ")")
                 return True
+    else:
+        console.msg("User " + u["name"] + " is offline")
+        return True
 
     # Couldn't find the user.
     console.msg(NAME + ": Warning: user is online but could not be found")
