@@ -59,7 +59,7 @@ def COMMAND(console, database, args):
                 console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")
                 return True
     elif console.user["wizard"]:
-        console.msg("User " + u["name"] + " (offline) is in room " + u["room"] + " (" + str(r["id"]) + ")")
+        console.msg("User " + u["name"] + " (offline) is in room " + str(u["room"]) + " (" + str(r["id"]) + ")")
         return True
 
     # User is not online and we are not a wizard.
