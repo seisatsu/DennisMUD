@@ -44,7 +44,7 @@ class Console:
     Each instance of the console corresponds to a single user session. The console handles user-command interaction.
 
     Attributes:
-        user: PyMongo user document for the currently logged in user, if any.
+        user: TinyDB user document for the currently logged in user, if any.
         rname: The name used by the router for this console.
         router: The Router instance, which handles interfacing between the server backend and the user consoles.
     """
@@ -63,6 +63,7 @@ class Console:
         self._commands = {}
         self._help = {}
         self._special_aliases = {}
+        self._disabled_commands = []
 
         self._load_modules()
         self._build_help()
@@ -79,7 +80,7 @@ class Console:
             if command.endswith(".py"):
                 # Python files in this directory are command modules. Construct modules.
                 command_path = os.path.join(os.getcwd(), COMMAND_DIR, command)
-                cname = command[:-3]
+                cname = command[:-3].replace('_', ' ')
 
                 # Different import code recommended for different Python versions.
                 if sys.version_info[1] < 5:
@@ -95,7 +96,7 @@ class Console:
                 # Aliases are alternative names for a command.
                 if hasattr(self._commands[cname], "ALIASES"):
                     for alias in self._commands[cname].ALIASES:
-                        self._commands[alias.replace(' ', '_')] = self._commands[cname]
+                        self._commands[alias] = self._commands[cname]
 
                 # Set up Special Aliases for this command.
                 # Special Aliases are single character aliases that don't need a space after them.
@@ -158,21 +159,20 @@ class Console:
         # Find out which part of the line is the command, and which part are its arguments.
         for splitpos in range(len(line)):
             if splitpos == 0:
-                if '_'.join(line).lower() in self._commands.keys():
+                if ' '.join(line).lower() in self._commands.keys():
                     # Run the command with no arguments.
                     if show_command:
                         self.msg("> " + ' '.join(line))
                         self.msg('='*20)
-                    return self._commands['_'.join(line).lower()].COMMAND(self, self._database, [])
+                    return self._call(' '.join(line).lower(), [])
                 continue
-            if '_'.join(line[:-splitpos]).lower() in self._commands.keys():
+            if ' '.join(line[:-splitpos]).lower() in self._commands.keys():
                 # Run the command and pass arguments.
                 if line[0] != "login":
                     if show_command:
                         self.msg("> " + ' '.join(line))
                         self.msg('=' * 20)
-                return self._commands['_'.join(line[:-splitpos]).lower()].COMMAND(self, self._database,
-                                                                                  line[-splitpos:])
+                return self._call(' '.join(line[:-splitpos]), line[-splitpos:])
         if line:
             self.msg("unknown command: " + ' '.join(line))
         return None
@@ -194,10 +194,10 @@ class Console:
             self.msg("Usage: help <command/category>")
             self.msg("Description: Print the help for a command, or list the commands in a category.")
             self.msg("Available Categories: " + ', '.join(sorted(self._help.keys())))
-        elif line.replace(' ', '_') in self._commands.keys():
+        elif line in self._commands.keys():
             # Return a help message for the named command.
-            usage = "Usage: " + self._commands[line.replace(' ', '_')].USAGE
-            desc = "Description: " + self._commands[line.replace(' ', '_')].DESCRIPTION
+            usage = "Usage: " + self._commands[line].USAGE
+            desc = "Description: " + self._commands[line].DESCRIPTION
             self.msg(usage)
             self.msg(desc)
         elif line in self._help.keys():
@@ -233,9 +233,9 @@ class Console:
         if line == "usage":
             # Return a usage string for the usage command.
             self.msg("Usage: usage <command>")
-        elif line.replace(' ', '_') in self._commands.keys():
+        elif line in self._commands.keys():
             # Return a usage string for the named command.
-            usage = "Usage: " + self._commands[line.replace(' ', '_')].USAGE
+            usage = "Usage: " + self._commands[line].USAGE
             self.msg(usage)
         else:
             # Couldn't find anything.
@@ -312,3 +312,13 @@ class Console:
                     self.router.users[u]["console"].user["nick"] == nickname.lower():
                 return self.router.users[u]["console"].user
         return self._database.user_by_nick(nickname.lower())
+
+    def _call(self, command, args):
+        """Call a command, making sure it isn't disabled. (Unless we're a wizard, then it doesn't matter.)
+
+        :return: True if succeeded, False if failed
+        """
+        if command in self._disabled_commands and not self.user["wizard"]:
+            self.msg(command + ": command disabled")
+            return False
+        return self._commands[command].COMMAND(self, self._database, args)

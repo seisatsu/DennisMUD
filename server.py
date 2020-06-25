@@ -76,6 +76,7 @@ class Router:
 
     Attributes:
         users: Dictionary of connected users and their consoles, as well as the protocols they are connected by.
+        single_user: Whether we are running in single-user mode. Hard-coded here to False.
         telnet_factory: The active telnet server factory.
         websocket_factory: The active websocket server factory.
     """
@@ -83,6 +84,7 @@ class Router:
         """Router Initializer
         """
         self.users = {}
+        self.single_user = False
         self.telnet_factory = None
         self.websocket_factory = None
 
@@ -124,6 +126,7 @@ class Router:
         :return: True
         """
         self.users[peer] = {"service": service, "console": console.Console(dbman, peer, self)}
+        self.users[peer]["console"]._disabled_commands = config["disabled"]
         return True
 
     def unregister(self, peer):

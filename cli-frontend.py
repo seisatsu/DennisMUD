@@ -41,7 +41,7 @@ import json
 class Router:
     def __init__(self):
         self.users = {}
-        pass
+        self.single_user = True
 
     def message(self, nickname, msg, _nbsp=None):
         pass

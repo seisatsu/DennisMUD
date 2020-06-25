@@ -11,5 +11,6 @@
     "host": "dennis.seisat.su",
     "port": 37380,
     "secure": false
-  }
+  },
+  "disabled": ["purge_exits", "purge_entrances"]
 }
