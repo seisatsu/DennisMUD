@@ -35,7 +35,8 @@ DESCRIPTION = """Change your password.
 You must be logged in. The username argument is optional.
 Only wizards can change the passwords of other users.
 
-Ex. `change password n3wp4ss`"""
+Ex. `change password n3wp4ss`
+Ex2. `change password seisatsu n3wp4ss`"""
 
 
 def COMMAND(console, database, args):

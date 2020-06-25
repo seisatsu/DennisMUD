@@ -29,6 +29,8 @@ import json
 import sys
 from tinydb import TinyDB, Query
 
+DB_VERSION = 1
+
 
 class DatabaseManager:
     """The Database Manager
@@ -40,6 +42,7 @@ class DatabaseManager:
         rooms: The table of all rooms in the database.
         users: The table of all users in the database.
         items: The table of all items in the database.
+        _info: The table of database meta info.
     """
     def __init__(self, filename):
         """Database Manager Initializer
@@ -58,6 +61,7 @@ class DatabaseManager:
         self.rooms = self.database.table("rooms")
         self.users = self.database.table("users")
         self.items = self.database.table("items")
+        self._info = self.database.table("_info")
 
         # Try to load the defaults config file.
         try:
@@ -66,6 +70,15 @@ class DatabaseManager:
         except:
             print("exiting: could not open defaults file")
             sys.exit(1)
+
+        # If the info table is empty, add a version record. Otherwise, compare versions.
+        if len(self._info.all()) == 0:
+            self._info.insert({"version": DB_VERSION})
+        else:
+            q = Query()
+            if not self._info.search(q.version == DB_VERSION):
+                print("exiting: database version mismatch, update first")
+                sys.exit(1)
 
         # If there are no rooms, make the initial room.
         if len(self.rooms.all()) == 0:
