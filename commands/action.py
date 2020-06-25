@@ -27,6 +27,8 @@
 
 NAME = "action"
 CATEGORIES = ["messaging"]
+ALIASES = ["emote", "me"]
+SPECIAL_ALIASES = [':']
 USAGE = "action <message>"
 DESCRIPTION = """Send a message styled as performing an action. Aliases: emote, me, and :
 

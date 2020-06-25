@@ -27,8 +27,9 @@
 
 NAME = "message"
 CATEGORIES = ["messaging"]
+ALIASES = ["msg", "tell"]
 USAGE = "message <username> <message>"
-DESCRIPTION = """Send a message to the user <username>. Does not use nicknames. Aliases: msg and .
+DESCRIPTION = """Send a message to the user <username>. Does not use nicknames. Aliases: msg, tell, and .
 
 If you don't know a player's username, you can look it up using their nickname with the `realname` command.
 

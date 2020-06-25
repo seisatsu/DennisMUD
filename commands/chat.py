@@ -27,6 +27,7 @@
 
 NAME = "chat"
 CATEGORIES = ["messaging"]
+SPECIAL_ALIASES = ['#']
 USAGE = "chat <message>"
 DESCRIPTION = """Send a message to the general chat. Alias: #
 

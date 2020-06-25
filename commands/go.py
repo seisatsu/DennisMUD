@@ -27,6 +27,8 @@
 
 NAME = "go"
 CATEGORIES = ["exploration"]
+ALIASES = ["exit"]
+SPECIAL_ALIASES = ['>']
 USAGE = "go [exit]"
 DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works by exit ID. Aliases: exit and >
 

@@ -27,6 +27,7 @@
 
 NAME = "say"
 CATEGORIES = ["messaging"]
+SPECIAL_ALIASES = ['\"']
 USAGE = "say <message>"
 DESCRIPTION = """Send a message to everyone in the same room as you. Alias: \"
 

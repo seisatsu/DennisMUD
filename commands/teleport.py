@@ -27,6 +27,7 @@
 
 NAME = "teleport"
 CATEGORIES = ["exploration"]
+ALIASES = ["tp"]
 USAGE = "teleport <room>"
 DESCRIPTION = """Teleport to the room with ID <room>. Alias: tp
 

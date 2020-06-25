@@ -27,6 +27,7 @@
 
 NAME = "inventory"
 CATEGORIES = ["items"]
+ALIASES = ["inv"]
 USAGE = "inventory"
 DESCRIPTION = "List all items in your inventory. Alias: inv"
 

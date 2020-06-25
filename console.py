@@ -58,9 +58,11 @@ class Console:
         self.user = None
         self.rname = rname
         self.router = router
+
         self._database = database
         self._commands = {}
         self._help = {}
+        self._special_aliases = {}
 
         self._load_modules()
         self._build_help()
@@ -77,16 +79,29 @@ class Console:
             if command.endswith(".py"):
                 # Python files in this directory are command modules. Construct modules.
                 command_path = os.path.join(os.getcwd(), COMMAND_DIR, command)
+                cname = command[:-3]
 
                 # Different import code recommended for different Python versions.
                 if sys.version_info[1] < 5:
-                    self._commands[command[:-3]] = \
-                        importlib.machinery.SourceFileLoader(command[:-3], command_path).load_module()
+                    self._commands[cname] = \
+                        importlib.machinery.SourceFileLoader(cname, command_path).load_module()
                 else:
-                    spec = importlib.util.spec_from_file_location(command[:-3], command_path)
+                    spec = importlib.util.spec_from_file_location(cname, command_path)
                     mod = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(mod)
-                    self._commands[command[:-3]] = mod
+                    self._commands[cname] = mod
+
+                # Set up Aliases for this command.
+                # Aliases are alternative names for a command.
+                if hasattr(self._commands[cname], "ALIASES"):
+                    for alias in self._commands[cname].ALIASES:
+                        self._commands[alias.replace(' ', '_')] = self._commands[cname]
+
+                # Set up Special Aliases for this command.
+                # Special Aliases are single character aliases that don't need a space after them.
+                if hasattr(self._commands[cname], "SPECIAL_ALIASES"):
+                    for special_alias in self._commands[cname].SPECIAL_ALIASES:
+                        self._special_aliases[special_alias] = cname
 
         return True
 
@@ -103,44 +118,12 @@ class Console:
                 for category in self._commands[cmd].CATEGORIES:
                     if category not in self._help.keys():
                         self._help[category] = []
-                    self._help[category].append(self._commands[cmd].NAME)
-            self._help["all"].append(self._commands[cmd].NAME)
+                    if not self._commands[cmd].NAME in self._help[category]:
+                        self._help[category].append(self._commands[cmd].NAME)
+            if not self._commands[cmd].NAME in self._help["all"]:
+                self._help["all"].append(self._commands[cmd].NAME)
 
         return True
-
-    def _process_aliases(self, line):
-        """Replace any command aliases in the line with their corresponding command.
-
-        :param line: The command line to process.
-        :return: Processed command line.
-        """
-        # Setup some aliases.
-        if line.startswith('\"'):
-            line = line.replace('\"', "say ", 1)
-        elif line.startswith('#'):
-            line = line.replace('#', "chat ", 1)
-        elif line.startswith('.'):
-            line = line.replace('.', "message ", 1)
-        elif line.startswith('msg '):
-            line = line.replace('msg ', "message ", 1)
-        elif line.startswith(':'):
-            line = line.replace(':', "action ", 1)
-        elif line.startswith('emote '):
-            line = line.replace('emote ', "action ", 1)
-        elif line.startswith('me '):
-            line = line.replace('me ', "action ", 1)
-        elif line.startswith('>'):
-            line = line.replace('>', "go ", 1)
-        elif line.startswith('exit '):
-            line = line.replace('exit ', "go ", 1)
-        elif line.startswith('tp '):
-            line = line.replace('tp ', "teleport ", 1)
-        elif line.startswith('look at '):
-            line = line.replace('look at ', "look ", 1)
-        elif line == 'inv':
-            line = "inventory"
-
-        return line
 
     def command(self, line, show_command=True):
         """Command Handler
@@ -155,8 +138,9 @@ class Console:
         # Strip whitespace from the front and back.
         line = line.strip()
 
-        # Process any aliases.
-        line = self._process_aliases(line)
+        # Process any special aliases.
+        if line[0] in self._special_aliases:
+            line = line.replace(line[0], self._special_aliases[line[0]]+' ', 1)
 
         # Check for illegal characters, except in passwords.
         if line.split(' ')[0] not in ["register", "login"]:
