@@ -26,6 +26,7 @@
 # **********
 
 import json
+import os
 import sys
 from tinydb import TinyDB, Query
 
@@ -36,6 +37,7 @@ class DatabaseManager:
     """The Database Manager
 
     This manager handles interactions with a TinyDB database corresponding to the current game world.
+    After documents are pulled from a table and modified, they need to be upserted for the changes to save.
 
     Attributes:
         database: The database to use for game data.
@@ -49,12 +51,27 @@ class DatabaseManager:
 
         :param filename: The relative or absolute filename of the TinyDB database file.
         """
+        self._filename = filename
+
+        # Check if a lockfile exists for this database. If so, exit.
+        if os.path.exists(filename + ".lock"):
+            print("exiting: lockfile exists for database:", filename)
+            sys.exit(1)
+
         # See if we can access the database file.
         try:
             with open(filename, "a") as f:
                 pass
         except:
-            print("exiting: could not open database file: ", filename)
+            print("exiting: could not open database file:", filename)
+            sys.exit(1)
+
+        # Create the lockfile.
+        try:
+            with open(filename + ".lock", "a") as f:
+                pass
+        except:
+            print("exiting: could not create lockfile for database:", filename)
             sys.exit(1)
 
         self.database = TinyDB(filename)
@@ -69,6 +86,7 @@ class DatabaseManager:
                 self.defaults = json.load(f)
         except:
             print("exiting: could not open defaults file")
+            self._unlock()
             sys.exit(1)
 
         # If the info table is empty, add a version record. Otherwise, compare versions.
@@ -78,6 +96,7 @@ class DatabaseManager:
             q = Query()
             if not self._info.search(q.version == DB_VERSION):
                 print("exiting: database version mismatch, update first")
+                self._unlock()
                 sys.exit(1)
 
         # If there are no rooms, make the initial room.
@@ -257,3 +276,18 @@ class DatabaseManager:
         }
         self.users.insert(newuser)
         return True
+
+    def _unlock(self):
+        """Clean up the lockfile before exiting.
+
+        :return: None
+        """
+        if not os.path.exists(self._filename + ".lock"):
+            print("warning: lockfile disappeared while running for database:", self._filename)
+            sys.stdout.flush()
+        else:
+            try:
+                os.remove(self._filename + ".lock")
+            except:
+                print("warning: could not delete lockfile for database:", self._filename)
+                sys.stdout.flush()

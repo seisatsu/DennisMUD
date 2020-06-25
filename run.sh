@@ -29,6 +29,8 @@
 
 # This is a quick and dirty script to run Dennis and restart in a couple seconds if it crashes,
 # while also keeping a log and PID file. It should work on any sane Linux/Unix system.
+# Note that while using this script, some messages during Dennis shutdown won't make it to STDOUT.
+# Check the log.
 # Usage: ./run.sh <start/restart/stop>
 # Background Start: nohup ./run.sh start &
 

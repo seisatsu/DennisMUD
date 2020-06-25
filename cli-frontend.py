@@ -96,3 +96,7 @@ while True:
         pdb.set_trace()
         continue
     print(dennis.command(cmd))
+
+# Just before shutdown.
+dbman._unlock()
+print("end program")

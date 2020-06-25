@@ -226,7 +226,12 @@ if __name__ == "__main__":
     if not any_enabled:
         # No services were enabled.
         print("exiting: no services enabled")
+        dbman._unlock()
         sys.exit(1)
 
     # Start the Twisted Reactor.
     reactor.run()
+
+    # Just before shutdown.
+    dbman._unlock()
+    print("end program")
