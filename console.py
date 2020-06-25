@@ -280,3 +280,35 @@ class Console:
         print(message)
         self.router.broadcast_room(self.user["room"], message)
         return True
+
+    def user_by_name(self, username):
+        """Get a user by their name.
+
+        It is necessary to modify user records through the console before updating the database, if they are logged in.
+        Otherwise their database record will be overwritten next time something is changed in their console record.
+        If the user is logged in, return their console record.
+        Otherwise, return their record directly from the database.
+
+        :return: Console or Database User Document, or None
+        """
+        for u in self.router.users:
+            if self.router.users[u]["console"].user and \
+                    self.router.users[u]["console"].user["name"] == username.lower():
+                return self.router.users[u]["console"].user
+        return self._database.user_by_name(username.lower())
+
+    def user_by_nick(self, nickname):
+        """Get a user by their nickname.
+
+        It is necessary to modify user records through the console before updating the database, if they are logged in.
+        Otherwise their database record will be overwritten next time something is changed in their console record.
+        If the user is logged in, return their console record.
+        Otherwise, return their record directly from the database.
+
+        :return: Console or Database User Document, or None
+        """
+        for u in self.router.users:
+            if self.router.users[u]["console"].user and \
+                    self.router.users[u]["console"].user["nick"] == nickname.lower():
+                return self.router.users[u]["console"].user
+        return self._database.user_by_nick(nickname.lower())

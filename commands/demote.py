@@ -47,10 +47,13 @@ def COMMAND(console, database, args):
         return False
 
     # Demote the named user.
-    targetuser = database.user_by_name(args[0])
+    targetuser = console.user_by_name(args[0])
     if not targetuser:
         # No such user.
         console.msg(NAME + ": no such user")
+        return False
+    if not targetuser["wizard"]:
+        console.msg(NAME + ": user is already not a wizard")
         return False
     targetuser["wizard"] = False
     database.upsert_user(targetuser)

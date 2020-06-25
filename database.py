@@ -136,8 +136,7 @@ class DatabaseManager:
         return True
 
     def room_by_id(self, roomid):
-        """
-        Get a room by its id.
+        """Get a room by its id.
 
         :param roomid: The id of the room to retrieve from the database.
         :return: Room document or None.
@@ -146,8 +145,7 @@ class DatabaseManager:
         return self.rooms.search(q.id == roomid)[0]
 
     def item_by_id(self, itemid):
-        """
-        Get an item by its id.
+        """Get an item by its id.
 
         :param itemid: The id of the item to retrieve from the database.
         :return: Item document or None.
@@ -156,8 +154,10 @@ class DatabaseManager:
         return self.items.search(q.id == itemid)[0]
 
     def user_by_name(self, username):
-        """
-        Get a user by their name.
+        """Get a user by their name.
+
+        If there is any chance the user could be logged in, and the record needs to be altered,
+        you should use the equivalent Console method. This method is faster but unsafe for logged in users.
 
         :param username: The name of the user to retrieve from the database.
         :return: User document or None.
@@ -170,8 +170,10 @@ class DatabaseManager:
         return None
 
     def user_by_nick(self, nickname):
-        """
-        Get a user by their nickname.
+        """Get a user by their nickname.
+
+        If there is any chance the user could be logged in, and the record needs to be altered,
+        you should use the equivalent Console method. This method is faster but unsafe for logged in users.
 
         :param nickname: The nickname of the user to retrieve from the database.
         :return: User document or None.
@@ -184,8 +186,7 @@ class DatabaseManager:
         return None
 
     def auth_user(self, username, passhash):
-        """
-        Check if a username and password match an existing user.
+        """Check if a username and password match an existing user.
 
         :param username: The name of the user to authenticate.
         :param passhash: The hashed password of the user to authenticate.
