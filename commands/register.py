@@ -68,7 +68,6 @@ def COMMAND(console, database, args):
         "nick": args[0],
         "desc": "",
         "passhash": hashlib.sha256(args[1].encode()).hexdigest(),
-        "online": False,
         "room": 0,
         "inventory": [],
         "autolook": {

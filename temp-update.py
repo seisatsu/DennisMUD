@@ -33,17 +33,44 @@
 import database
 import json
 
+from tinydb import Query
+from tinydb.operations import delete
+
+
+class Log:
+    """Stand-in for Twisted's logger.
+    """
+    def debug(self, msg, **kwargs):
+        print("[debug]", msg.format(**kwargs))
+
+    def info(self, msg, **kwargs):
+        print(msg.format(**kwargs))
+
+    def warn(self, msg, **kwargs):
+        print("[warn]", msg.format(**kwargs))
+
+    def error(self, msg, **kwargs):
+        print("[error]", msg.format(**kwargs))
+
+    def critical(self, msg, **kwargs):
+        print("[critical]", msg.format(**kwargs))
+
+
 with open("cli.config.json") as f:
     config = json.load(f)
 
-dbman = database.DatabaseManager(config["database"]["host"], config["database"]["port"],
-                                 config["database"]["name"], config["database"]["auth"]["enabled"],
-                                 config["database"]["auth"]["user"], config["database"]["auth"]["password"],
-                                 config["database"]["auth"]["source"], config["database"]["auth"]["mechanism"])
+dbman = database.DatabaseManager(config["database"]["filename"], Log())
 
 # Update items.
-users = dbman.users.find()
-if users.count():
+users = dbman.users.all()
+i = 0
+q = Query()
+if len(users):
     for u in users:
-        u["autolook"] = {"enabled": True}
-        dbman.upsert_user(u)
+        if "online" in u:
+            i += 1
+            print(u["name"])
+            dbman.users.update(delete("online"), q.name==u["name"])
+
+print("Updated {0} records.".format(i))
+dbman._unlock()

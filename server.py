@@ -80,15 +80,6 @@ log = Logger("server")
 # Open the Dennis main database.
 dbman = database.DatabaseManager(config["database"]["filename"])
 
-# Reset users.
-log.info("resetting user states (this could take a while)")
-users = dbman.users.all()
-if len(users):
-    for u in users:
-        u["online"] = False
-        dbman.upsert_user(u)
-log.info("finished resetting user states")
-
 
 class Router:
     """Router
@@ -218,6 +209,8 @@ class Router:
 if __name__ == "__main__":
     """Main Program
     """
+    log.info("starting services")
+
     # Create the router instance we will use.
     router = Router()
 

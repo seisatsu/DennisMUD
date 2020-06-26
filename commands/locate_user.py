@@ -53,7 +53,7 @@ def COMMAND(console, database, args):
         return False
 
     # If the user is offline or we are a wizard, show their location.
-    if u["online"]:
+    if database.online(u["name"]):
         for r in database.rooms.all():
             if u["name"] in r["users"]:
                 console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")

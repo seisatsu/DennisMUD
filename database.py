@@ -95,6 +95,7 @@ class DatabaseManager:
         self.users = self.database.table("users")
         self.items = self.database.table("items")
         self._info = self.database.table("_info")
+        self._users_online = []
 
         # If the info table is empty, add a version record. Otherwise, compare versions.
         if len(self._info.all()) == 0:
@@ -172,6 +173,8 @@ class DatabaseManager:
     def delete_user(self, document):
         """Delete a user.
 
+        This is not safe to call while the user is online.
+
         :param document: The user document to delete.
         :return: True
         """
@@ -195,7 +198,7 @@ class DatabaseManager:
         if roomid not in self._rooms_cleaned:
             for username in thisroom["users"]:
                 user = self.user_by_name(username)
-                if user and not user["online"]:
+                if user and username not in self._users_online:
                     thisroom["users"].remove(username)
             self.upsert_room(thisroom)
             self._rooms_cleaned.append(roomid)
@@ -244,19 +247,53 @@ class DatabaseManager:
                     return u
         return None
 
-    def auth_user(self, username, passhash):
-        """Check if a username and password match an existing user.
+    def login_user(self, username, passhash):
+        """Check if a username and password match an existing user, and log them in.
 
-        :param username: The name of the user to authenticate.
-        :param passhash: The hashed password of the user to authenticate.
-        :return: User document or None.
+        The Database Manager keeps track of which users are online.
+
+        :param username: The name of the user to log in.
+        :param passhash: The hashed password of the user to log in.
+        :return: User document if succeeded, None if failed.
         """
+        username = username.lower()
         u = self.user_by_name(username)
+
         if not u:
             return None
         if u["passhash"] != passhash:
             return None
+
+        if username in self._users_online:
+            self._log.warn("user logged in twice somehow: {username}", username=username)
+        else:
+            self._users_online.append(username)
+
         return u
+
+    def logout_user(self, username):
+        """Log out a user.
+
+        :param username: The name of the user to log out.
+        :return: True.
+        """
+        username = username.lower()
+        if username not in self._users_online:
+            self._log.warn("user logged out twice somehow: {username}", username=username)
+        else:
+            self._users_online.remove(username)
+
+        return True
+
+    def online(self, username):
+        """Check if a user is online.
+
+        :param username: The name of the user to check.
+        :return: True if online, False if offline.
+        """
+        if username.lower() in self._users_online:
+            return True
+        return False
 
     def _init_room(self):
         """Initialize the world with the first room.
@@ -289,7 +326,6 @@ class DatabaseManager:
             "nick": self.defaults["first_user"]["nick"],
             "desc": self.defaults["first_user"]["desc"],
             "passhash": "0",
-            "online": False,
             "room": 0,
             "inventory": [],
             "autolook": {

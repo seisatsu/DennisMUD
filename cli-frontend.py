@@ -88,25 +88,13 @@ log = Log()
 
 dbman = database.DatabaseManager(config["database"]["filename"], log)
 
-# Reset users.
-rooms = dbman.rooms.all()
-if len(rooms):
-    for r in rooms:
-        r["users"] = []
-        dbman.upsert_room(r)
-users = dbman.users.all()
-if len(users):
-    for u in users:
-        u["online"] = False
-        dbman.upsert_user(u)
-
-# Log in as the root user.
+# Log in as the root user. Promote to wizard if it was somehow demoted.
 dennis = console.Console(dbman, "<world>", Router(), log)
 dennis.user = dbman.user_by_name("<world>")
-dennis.user["online"] = True
+dbman._users_online.append("<world>")
 if not dennis.user["wizard"]:
     dennis.user["wizard"] = True
-dbman.upsert_user(dennis.user)
+    dbman.upsert_user(dennis.user)
 
 print("Welcome to Dennis MUD single-user mode.")
 print("Loaded database at \"{0}\".".format(config["database"]["filename"]))
