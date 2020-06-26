@@ -82,11 +82,6 @@ dbman = database.DatabaseManager(config["database"]["filename"])
 
 # Reset users.
 log.info("resetting user states (this could take a while)")
-rooms = dbman.rooms.all()
-if len(rooms):
-    for r in rooms:
-        r["users"] = []
-        dbman.upsert_room(r)
 users = dbman.users.all()
 if len(users):
     for u in users:
