@@ -30,11 +30,13 @@ CATEGORIES = ["rooms"]
 USAGE = "describe room <description>"
 DESCRIPTION = """Set the description of the room you are in.
 
-A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
+You may have any number of newlines, but you cannot stack more than two together.
 You must own the room in order to describe it.
 
 Ex. `describe room 5 You are standing in a long, dark hallway.`
-Ex2. `describe room 5 You are standing in a long, dark hallway.\\\\You cannot see the end.`"""
+Ex2. `describe room 5 You are standing in a long, dark hallway.\\\\You cannot see the end.`
+Ex3. `describe room 5 You are standing in a long, dark hallway.\\\\\\\\You cannot see the end.`"""
 
 
 def COMMAND(console, database, args):
@@ -55,11 +57,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this room")
         return False
 
-    if "\\\\\\\\" in ' '.join(args):
-        console.msg(NAME + ": paragraph breaks may not be stacked")
+    if "\\\\" * 3 in ' '.join(args):
+        console.msg(NAME + ": you may only stack two newlines")
         return False
 
-    r["desc"] = ' '.join(args).replace("\\\\", "\n\n")
+    r["desc"] = ' '.join(args).replace("\\\\", "\n")
     database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

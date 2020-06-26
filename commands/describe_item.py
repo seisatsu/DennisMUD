@@ -30,11 +30,13 @@ CATEGORIES = ["items"]
 USAGE = "describe item <id> <description>"
 DESCRIPTION = """Set the description of the item <id> which you are holding.
 
-A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
+You may have any number of newlines, but you cannot stack more than two together.
 You must own the item and be holding it in order to describe it.
 
 Ex. `describe item 4 A small music box made of ivory.`
-Ex2. `describe item 4 A small music box made of ivory.\\\\The bottom edge of the lid is lined with silver trim.`"""
+Ex2. `describe item 4 A small music box made of ivory.\\\\The bottom edge of the lid is lined with silver trim.`
+Ex3. `describe item 4 A small music box made of ivory.\\\\\\\\The bottom edge of the lid is lined with silver trim.`"""
 
 
 def COMMAND(console, database, args):
@@ -69,11 +71,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this item")
         return False
 
-    if "\\\\\\\\" in ' '.join(args[1:]):
-        console.msg(NAME + ": paragraph breaks may not be stacked")
+    if "\\\\" * 3 in ' '.join(args):
+        console.msg(NAME + ": you may only stack two newlines")
         return False
 
-    i["desc"] = ' '.join(args[1:]).replace("\\\\", "\n\n")
+    i["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
     database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

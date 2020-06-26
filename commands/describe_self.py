@@ -30,10 +30,12 @@ CATEGORIES = ["settings", "users"]
 USAGE = "describe self <description>"
 DESCRIPTION = """Set your player description, shown when someone looks at you.
 
-A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
+You may have any number of newlines, but you cannot stack more than two together.
 
 Ex. `describe self This guy is obviously some kind of badass.`
-Ex2. `describe self This guy is obviously some kind of badass.\\\\You should probably keep some distance."""
+Ex2. `describe self This guy is obviously some kind of badass.\\\\You should probably keep some distance.
+Ex3. `describe self This guy is obviously some kind of badass.\\\\\\\\You should probably keep some distance."""
 
 
 def COMMAND(console, database, args):
@@ -46,11 +48,11 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    if "\\\\\\\\" in ' '.join(args):
-        console.msg(NAME + ": paragraph breaks may not be stacked")
+    if "\\\\" * 3 in ' '.join(args):
+        console.msg(NAME + ": you may only stack two newlines")
         return False
 
-    console.user["desc"] = ' '.join(args).replace("\\\\", "\n\n")
+    console.user["desc"] = ' '.join(args).replace("\\\\", "\n")
     database.upsert_user(console.user)
     console.msg(NAME + ": done")
     return True

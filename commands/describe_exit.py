@@ -30,12 +30,13 @@ CATEGORIES = ["exits"]
 USAGE = "describe exit <id> <description>"
 DESCRIPTION = """Set the description of the exit <id> in this room.
 
-A double backslash inserts a paragraph break. You may have several paragraph breaks, but they cannot be stacked.
+A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
+You may have any number of newlines, but you cannot stack more than two together.
 You must own the exit or its room in order to describe it.
 
 Ex. `describe exit 3 You see a lovely wooden door.`
-Ex2. `describe exit 3 You see a lovely wooden door.\\\\The handle is made of brass.`"""
-
+Ex2. `describe exit 3 You see a lovely wooden door.\\\\The handle is made of brass.`
+Ex3. `describe exit 3 You see a lovely wooden door.\\\\\\\\The handle is made of brass.`"""
 
 
 def COMMAND(console, database, args):
@@ -64,10 +65,10 @@ def COMMAND(console, database, args):
                 and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
             console.msg(NAME + ": you do not own this exit or this room")
             return False
-        if "\\\\\\\\" in ' '.join(args[1:]):
-            console.msg(NAME + ": paragraph breaks may not be stacked")
+        if "\\\\" * 3 in ' '.join(args):
+            console.msg(NAME + ": you may only stack two newlines")
             return False
-        thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n\n")
+        thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
         database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
