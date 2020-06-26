@@ -31,6 +31,7 @@ import traceback
 
 from twisted.internet import protocol
 from twisted.protocols.basic import LineReceiver
+from twisted.logger import Logger
 
 # Read the motd file.
 try:
@@ -44,26 +45,27 @@ class ServerProtocol(LineReceiver):
     def __init__(self, factory):
         self.factory = factory
         self.peer = None
+        self._log = Logger("telnet")
 
     def connectionMade(self):
         p = self.transport.getPeer()
         self.peer = p.host + ':' + str(p.port)
         self.factory.register(self)
-        print("Client connected: {0}".format(self.peer))
+        self._log.info("client connected: {peer}", peer=self.peer)
         if motd:
             self.factory.communicate(self.peer, motd.encode('utf-8'))
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
-        print("Client disconnected: {0}".format(self.peer))
+        self._log.info("client disconnected: {peer}", peer=self.peer)
 
     def lineReceived(self, line):
         # self.factory.communicate(self, payload, isBinary)
-        print("Client {0} sending message: {1}".format(self.peer, line))
+        self._log.info("client {peer} sending message: {line}", peer=self.peer, line=line)
         try:
             line = line.decode('utf-8')
         except:
-            print("discarded garbage line from telnet")
+            self._log.info("discarded garbage line from {peer}", peer=self.peer)
 
         # Did we receive the quit pseudo-command?
         if line == "quit":
@@ -75,6 +77,7 @@ class ServerProtocol(LineReceiver):
             self.factory.router[self.peer]["console"].command(line)
         except:
             self.factory.communicate(self.peer, traceback.format_exc().encode('utf-8'))
+            self._log.error(traceback.format_exc())
 
 
 class ServerFactory(protocol.Factory):

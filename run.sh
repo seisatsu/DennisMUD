@@ -37,7 +37,6 @@
 python3="python3.7"                    # Python3 executable name.
 syspath="/home/seisatsu/Source/Dennis" # The absolute path to the Dennis folder.
 sysuser="seisatsu"                     # Make sure we are running as this user, or else exit.
-logname="dennis.log"                   # The name of the log file, relative or absolute.
 pidfile="run.sh.pid"                   # File for storing this script's PID, relative or absolute.
 lckfile="dennis.lock"                  # Lock file so we don't run twice, relative or absolute.
 
@@ -64,7 +63,7 @@ if [ "$1" = "start" ]; then
     echo "Starting Dennis..."
     echo $$ > "$pidfile"
     while true; do
-        $python3 server.py 2>&1 | tee -a "$logname"
+        $python3 server.py
         echo "Dennis stopped, restarting in 2 seconds..."
         sleep 2
     done

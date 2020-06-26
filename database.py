@@ -28,7 +28,10 @@
 import json
 import os
 import sys
+
 from tinydb import TinyDB, Query
+
+from twisted.logger import Logger
 
 DB_VERSION = 1
 
@@ -46,16 +49,18 @@ class DatabaseManager:
         items: The table of all items in the database.
         _info: The table of database meta info.
     """
-    def __init__(self, filename):
+    def __init__(self, filename, log=None):
         """Database Manager Initializer
 
         :param filename: The relative or absolute filename of the TinyDB database file.
+        :param log: Alternative logging facility, if set.
         """
         self._filename = filename
+        self._log = log or Logger("database")
 
         # Check if a lockfile exists for this database. If so, exit.
         if os.path.exists(filename + ".lock"):
-            print("exiting: lockfile exists for database:", filename)
+            self._log.critical("exiting: lockfile exists for database: {filename}", filename=filename)
             sys.exit(1)
 
         # See if we can access the database file.
@@ -63,7 +68,7 @@ class DatabaseManager:
             with open(filename, "a") as f:
                 pass
         except:
-            print("exiting: could not open database file:", filename)
+            self._log.critical("exiting: could not open database file: {filename}", filename=filename)
             sys.exit(1)
 
         # Create the lockfile.
@@ -71,7 +76,7 @@ class DatabaseManager:
             with open(filename + ".lock", "a") as f:
                 pass
         except:
-            print("exiting: could not create lockfile for database:", filename)
+            self._log.critical("exiting: could not create lockfile for database: {filename}", filename=filename)
             sys.exit(1)
 
         self.database = TinyDB(filename)
@@ -85,7 +90,7 @@ class DatabaseManager:
             with open("defaults.config.json") as f:
                 self.defaults = json.load(f)
         except:
-            print("exiting: could not open defaults file")
+            self._log.critical("exiting: could not open defaults file")
             self._unlock()
             sys.exit(1)
 
@@ -95,7 +100,8 @@ class DatabaseManager:
         else:
             q = Query()
             if not self._info.search(q.version == DB_VERSION):
-                print("exiting: database version mismatch, update first")
+                self._log.critical("exiting: database version mismatch, {theirs} detected, {ours} required",
+                          theirs=q.version, ours=DB_VERSION)
                 self._unlock()
                 sys.exit(1)
 
@@ -283,11 +289,12 @@ class DatabaseManager:
         :return: None
         """
         if not os.path.exists(self._filename + ".lock"):
-            print("warning: lockfile disappeared while running for database:", self._filename)
+            self._log.warn("lockfile disappeared while running for database: {filename}",
+                          filename=self._filename)
             sys.stdout.flush()
         else:
             try:
                 os.remove(self._filename + ".lock")
             except:
-                print("warning: could not delete lockfile for database:", self._filename)
+                self._log.warn("could not delete lockfile for database: {filename}", self._filename)
                 sys.stdout.flush()

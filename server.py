@@ -31,7 +31,7 @@ import sys
 
 # Check Python version.
 if sys.version_info[0] != 3:
-    print("exiting: Dennis requires Python 3")
+    print("[server#error] exiting: Dennis requires Python 3")
     sys.exit(1)
 
 import console
@@ -41,16 +41,39 @@ import json
 import telnet
 import websocket
 
-from twisted.python import log
 from twisted.internet import reactor
+from twisted.logger import Logger, textFileLogObserver, globalLogBeginner
 
 # Try to read the server config file.
 try:
     with open("server.config.json") as f:
         config = json.load(f)
 except:
-    print("exiting: could not open server.config.json")
+    print("[server#critical] exiting: could not open server.config.json")
     sys.exit(1)
+
+# Initialize logging. At least one logging method is required.
+if not config["log"]["stdout"] and not config["log"]["file"]:
+    # No logging option is set, so force stdout.
+    config["log"]["stdout"] = True
+elif config["log"]["file"]:
+    # Try to open the log file.
+    try:
+        logfile = open(config["log"]["file"], 'a')
+    except:
+        # Warn and fall back to STDOUT.
+        print("[server#critical] warning: could not open log file:", config["log"]["file"])
+        config["log"]["file"] = None
+        config["log"]["stdout"] = True
+# Configure log targets.
+logtargets = []
+if config["log"]["stdout"]:
+    logtargets.append(textFileLogObserver(sys.stdout))
+if config["log"]["file"]:
+    logtargets.append(textFileLogObserver(logfile))
+globalLogBeginner.beginLoggingTo(logtargets)
+# Start the logger.
+log = Logger("server")
 
 # Open the Dennis main database.
 dbman = database.DatabaseManager(config["database"]["filename"])
@@ -199,9 +222,6 @@ if __name__ == "__main__":
     # Create the router instance we will use.
     router = Router()
 
-    # Start Twisted's logging apparatus.
-    log.startLogging(sys.stdout)
-
     # We will exit if no services are enabled.
     any_enabled = False
 
@@ -228,7 +248,7 @@ if __name__ == "__main__":
 
     if not any_enabled:
         # No services were enabled.
-        print("exiting: no services enabled")
+        log.critical("exiting: no services enabled")
         dbman._unlock()
         sys.exit(1)
 
@@ -237,4 +257,4 @@ if __name__ == "__main__":
 
     # Just before shutdown.
     dbman._unlock()
-    print("end program")
+    log.info("end program", log_source="test")

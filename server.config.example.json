@@ -2,6 +2,10 @@
   "database": {
     "filename": "world.json"
   },
+  "log": {
+    "stdout": true,
+    "file": "dennis.server.log"
+  },
   "telnet": {
     "enabled": true,
     "port": 37381

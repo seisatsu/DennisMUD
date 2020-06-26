@@ -39,6 +39,8 @@ import json
 
 
 class Router:
+    """Dummy Router
+    """
     def __init__(self):
         self.users = {}
         self.single_user = True
@@ -53,6 +55,25 @@ class Router:
         pass
 
 
+class Log:
+    """Stand-in for Twisted's logger.
+    """
+    def debug(self, msg, **kwargs):
+        print("[debug]", msg.format(**kwargs))
+
+    def info(self, msg, **kwargs):
+        print(msg.format(**kwargs))
+
+    def warn(self, msg, **kwargs):
+        print("[warn]", msg.format(**kwargs))
+
+    def error(self, msg, **kwargs):
+        print("[error]", msg.format(**kwargs))
+
+    def critical(self, msg, **kwargs):
+        print("[critical]", msg.format(**kwargs))
+
+
 # Try to open the cli config file.
 try:
     with open("cli.config.json") as f:
@@ -61,7 +82,9 @@ except:
     print("exiting: could not open cli.config.json")
     sys.exit(1)
 
-dbman = database.DatabaseManager(config["database"]["filename"])
+log = Log()
+
+dbman = database.DatabaseManager(config["database"]["filename"], log)
 
 # Reset users.
 rooms = dbman.rooms.all()
@@ -76,7 +99,7 @@ if len(users):
         dbman.upsert_user(u)
 
 # Log in as the root user.
-dennis = console.Console(dbman, "<world>", Router())
+dennis = console.Console(dbman, "<world>", Router(), log)
 dennis.user = dbman.user_by_name("<world>")
 dennis.user["online"] = True
 if not dennis.user["wizard"]:
@@ -91,7 +114,7 @@ print("You are now logged in as the administrative user \"<world>\".")
 while True:
     cmd = input("> ")
     if cmd == "quit":
-        sys.exit(0)
+        break
     if cmd == "debug":
         pdb.set_trace()
         continue

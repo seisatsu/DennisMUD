@@ -30,6 +30,7 @@
 import traceback
 
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
+from twisted.logger import Logger
 
 
 class ServerProtocol(WebSocketServerProtocol):
@@ -39,21 +40,21 @@ class ServerProtocol(WebSocketServerProtocol):
 
     def onOpen(self):
         self.factory.register(self)
-        print("Client connected: {0}".format(self.peer))
+        self.factory.log.info("Client connected: {peer}", peer=self.peer)
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
-        print("Client disconnected: {0}".format(self.peer))
+        self.factory.log.info("Client disconnected: {peer}", peer=self.peer)
 
     def onMessage(self, payload, isBinary):
         # self.factory.communicate(self, payload, isBinary)
-        print("Client {0} sending message: {1}".format(self.peer, payload))
+        self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=payload)
         # Error handling and reporting.
         try:
             self.factory.router[self.peer]["console"].command(payload.decode('utf-8'))
         except:
             self.factory.communicate(self.peer, traceback.format_exc().encode('utf-8'))
-            print(traceback.format_exc())
+            self.factory.log.error(traceback.format_exc())
 
 
 class ServerFactory(WebSocketServerFactory):
@@ -63,6 +64,7 @@ class ServerFactory(WebSocketServerFactory):
         self.router.websocket_factory = self
         super(ServerFactory, self).__init__(*args)
         self.clients = []
+        self.log = Logger("websocket")
 
     def register(self, client):
         self.clients.append({'client-peer': client.peer, 'client': client})

@@ -31,6 +31,8 @@ import os
 import string
 import sys
 
+from twisted.logger import Logger
+
 # The directory where command modules are stored, relative to this directory.
 COMMAND_DIR = "commands/"
 
@@ -48,16 +50,18 @@ class Console:
         rname: The name used by the router for this console.
         router: The Router instance, which handles interfacing between the server backend and the user consoles.
     """
-    def __init__(self, database, rname, router):
+    def __init__(self, database, rname, router, log=None):
         """Console Initializer
 
         :param database: The DatabaseManager instance to use.
         :param rname: The name used by the router for this console.
         :param router: The Router instance, which handles interfacing between the server backend and the user consoles.
+        :param log: Alternative logging facility, if set.
         """
         self.user = None
         self.rname = rname
         self.router = router
+        self._log = log or Logger("console:{0}".format(rname))
 
         self._database = database
         self._commands = {}
@@ -253,7 +257,7 @@ class Console:
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
         :return: True
         """
-        print(message)
+        self._log.info(message)
         self.router.message(self.rname, message, _nbsp)
         return True
 
@@ -265,7 +269,7 @@ class Console:
         :param message: The message to send.
         :return: True
         """
-        print(message)
+        self._log.info(message)
         self.router.broadcast_all(message)
         return True
 
@@ -277,7 +281,7 @@ class Console:
         :param message: The message to send.
         :return: True
         """
-        print(message)
+        self._log.info(message)
         self.router.broadcast_room(self.user["room"], message)
         return True
 

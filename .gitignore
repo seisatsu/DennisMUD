@@ -1,4 +1,5 @@
 __pycache__/*
+docs/_build/*
 *.pyc
 testdb/
 .idea/
@@ -21,3 +22,5 @@ websocket-frontend.example_v2.html
 *.pid
 nohup.out
 world.json
+Thumbs.db
+.DS_Store
