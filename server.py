@@ -29,9 +29,11 @@
 
 import sys
 
+print("[server#info] Starting Dennis...")
+
 # Check Python version.
 if sys.version_info[0] != 3:
-    print("[server#error] exiting: Dennis requires Python 3")
+    print("[server#critical] exiting: Dennis requires Python 3")
     sys.exit(1)
 
 import console
@@ -79,6 +81,7 @@ log = Logger("server")
 dbman = database.DatabaseManager(config["database"]["filename"])
 
 # Reset users.
+log.info("resetting user states (this could take a while)")
 rooms = dbman.rooms.all()
 if len(rooms):
     for r in rooms:
@@ -89,6 +92,7 @@ if len(users):
     for u in users:
         u["online"] = False
         dbman.upsert_user(u)
+log.info("finished resetting user states")
 
 
 class Router:
@@ -257,4 +261,4 @@ if __name__ == "__main__":
 
     # Just before shutdown.
     dbman._unlock()
-    log.info("end program", log_source="test")
+    log.info("End Program.")

@@ -57,6 +57,15 @@ class DatabaseManager:
         """
         self._filename = filename
         self._log = log or Logger("database")
+        self._log.info("initializing database manager")
+
+        # Try to load the defaults config file.
+        try:
+            with open("defaults.config.json") as f:
+                self.defaults = json.load(f)
+        except:
+            self._log.critical("exiting: could not open defaults file")
+            sys.exit(1)
 
         # Check if a lockfile exists for this database. If so, exit.
         if os.path.exists(filename + ".lock"):
@@ -79,20 +88,12 @@ class DatabaseManager:
             self._log.critical("exiting: could not create lockfile for database: {filename}", filename=filename)
             sys.exit(1)
 
+        self._log.info("loading database: {filename}", filename=filename)
         self.database = TinyDB(filename)
         self.rooms = self.database.table("rooms")
         self.users = self.database.table("users")
         self.items = self.database.table("items")
         self._info = self.database.table("_info")
-
-        # Try to load the defaults config file.
-        try:
-            with open("defaults.config.json") as f:
-                self.defaults = json.load(f)
-        except:
-            self._log.critical("exiting: could not open defaults file")
-            self._unlock()
-            sys.exit(1)
 
         # If the info table is empty, add a version record. Otherwise, compare versions.
         if len(self._info.all()) == 0:
@@ -107,11 +108,15 @@ class DatabaseManager:
 
         # If there are no rooms, make the initial room.
         if len(self.rooms.all()) == 0:
+            self._log.info("initializing rooms table")
             self._init_room()
 
         # If there are no users, make the root user.
         if len(self.users.all()) == 0:
+            self._log.info("initializing users table")
             self._init_user()
+
+        self._log.info("finished loading database")
 
     def upsert_room(self, document):
         """Update or insert a room.
@@ -296,5 +301,5 @@ class DatabaseManager:
             try:
                 os.remove(self._filename + ".lock")
             except:
-                self._log.warn("could not delete lockfile for database: {filename}", self._filename)
+                self._log.warn("could not delete lockfile for database: {filename}", filename=self._filename)
                 sys.stdout.flush()

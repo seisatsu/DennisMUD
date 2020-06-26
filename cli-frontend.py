@@ -28,6 +28,8 @@
 import pdb
 import sys
 
+print("Starting Dennis...")
+
 # Check Python version.
 if sys.version_info[0] != 3:
     print("exiting: Dennis requires Python 3")
@@ -122,4 +124,4 @@ while True:
 
 # Just before shutdown.
 dbman._unlock()
-print("end program")
+print("End Program.")

@@ -79,6 +79,7 @@ class Console:
 
         :return: True
         """
+        self._log.info("loading command modules")
         command_modules = os.listdir(COMMAND_DIR)
         for command in command_modules:
             if command.endswith(".py"):
@@ -108,6 +109,7 @@ class Console:
                     for special_alias in self._commands[cname].SPECIAL_ALIASES:
                         self._special_aliases[special_alias] = cname
 
+        self._log.info("finished loading command modules")
         return True
 
     def _build_help(self):
