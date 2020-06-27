@@ -258,7 +258,10 @@ class Console:
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
         :return: True
         """
-        self._log.info(message)
+        if self.router.single_user:
+            print(message)
+        else:
+            self._log.info(message)
         self.router.message(self.rname, message, _nbsp)
         return True
 

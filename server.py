@@ -28,6 +28,12 @@
 # Parts of codebase borrowed from https://github.com/TKeesh/WebSocketChat
 
 import sys
+
+# Check Python version.
+if sys.version_info[0] != 3:
+    print("Not Starting: Dennis requires Python 3")
+    sys.exit(1)
+
 import console
 import database
 import html
@@ -36,7 +42,8 @@ import telnet
 import websocket
 
 from twisted.internet import reactor
-from twisted.logger import Logger, textFileLogObserver, globalLogBeginner
+from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \
+    textFileLogObserver, FilteringLogObserver, globalLogBeginner
 
 
 class Router:
@@ -163,26 +170,10 @@ class Router:
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
-def main():
-    """Main Program
+def init_logger(config):
+    """Initialize the Twisted Logger
     """
-
-    print("[server#info] Starting Dennis...")
-
-    # Check Python version.
-    if sys.version_info[0] != 3:
-        print("[server#critical] exiting: Dennis requires Python 3")
-        return 1
-
-    # Try to read the server config file.
-    try:
-        with open("server.config.json") as f:
-            config = json.load(f)
-    except:
-        print("[server#critical] exiting: could not open server.config.json")
-        return 1
-
-    # Initialize logging. At least one logging method is required.
+    # Read log options from the server config. At least one logging method is required.
     if not config["log"]["stdout"] and not config["log"]["file"]:
         # No logging option is set, so force stdout.
         config["log"]["stdout"] = True
@@ -191,31 +182,55 @@ def main():
         try:
             logfile = open(config["log"]["file"], 'a')
         except:
-            # Warn and fall back to STDOUT.
-            print("[server#critical] warning: could not open log file:", config["log"]["file"])
+            # Couldn't open the log file, so warn and fall back to STDOUT.
+            if config["log"]["level"] in ["warn", "info", "debug"]:
+                print("[server#warn] could not open log file:", config["log"]["file"])
             config["log"]["file"] = None
             config["log"]["stdout"] = True
-    # Configure log targets.
+
+    # Make sure the chosen log level is valid. Otherwise force the highest log level.
+    if config["log"]["level"] not in ["critical", "error", "warn", "info", "debug"]:
+        print("[server#warn] invalid log level in config, defaulting to \"debug\"")
+        config["log"]["level"] = "debug"
+
+    # Configure the Twisted Logger targets.
+    # (Thanks to https://stackoverflow.com/a/46651223/213445 and https://stackoverflow.com/a/49111089/213445)
+    # This part took a while to figure out, so I'm documenting it here in detail.
+    # The variable "logtargets" is a list of FilteringLogObserver instances.
+    # Each FilteringLogObserver wraps a textFileLogObserver, and imposes a LogLevelFilterPredicate.
+    # The textFileLogObserver writes to STDOUT or the file we opened earlier. So, there can be one or two of them.
+    # The LogLevelFilterPredicate conveys a maximum LogLevel to FilteringLogObserver through the "predicates" argument.
+    # The "predicates" argument to FilteringLogObserver must be iterable, so we wrap LogLevelFilterPredicate in a list.
+    # At the end, we pass our "logtargets" list to globalLogBeginner.beginLoggingTo.
+    # All future Twisted Logger instances will point to both of our log targets.
+    # We can have multiple instances of Logger, one for each subsystem of Dennis,
+    # and for each one we give it a single argument, which is the namespace for log lines from that subsystem.
     logtargets = []
     if config["log"]["stdout"]:
-        logtargets.append(textFileLogObserver(sys.stdout))
+        logtargets.append(
+            FilteringLogObserver(
+                textFileLogObserver(sys.stdout),
+                predicates=[LogLevelFilterPredicate(getattr(LogLevel, config["log"]["level"]))]
+            )
+        )
     if config["log"]["file"]:
-        logtargets.append(textFileLogObserver(logfile))
+        logtargets.append(
+            FilteringLogObserver(
+                textFileLogObserver(logfile),
+                predicates=[LogLevelFilterPredicate(getattr(LogLevel, config["log"]["level"]))]
+            )
+        )
     globalLogBeginner.beginLoggingTo(logtargets)
-    # Start the logger.
-    log = Logger("server")
 
-    # Open the Dennis main database.
-    dbman = database.DatabaseManager(config["database"]["filename"])
 
-    # Begin starting services.
-    log.info("starting services")
+def init_services(config, log):
+    """Initialize the Telnet and/or WebSocket Services
+    """
+    # We will exit if no services are enabled.
+    any_enabled = False
 
     # Create the router instance we will use.
     router = Router()
-
-    # We will exit if no services are enabled.
-    any_enabled = False
 
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
@@ -240,16 +255,59 @@ def main():
 
     if not any_enabled:
         # No services were enabled.
-        log.critical("exiting: no services enabled")
-        dbman._unlock()
+        log.critical("no services enabled")
+        return False
+    return True
+
+
+def main():
+    """Startup tasks, mainloop entry, and shutdown tasks.
+    """
+    print("Welcome to Dennis MUD PreAlpha, Multi-User Server.")
+    print("Starting up...")
+
+    # Try to read the server config file.
+    try:
+        with open("server.config.json") as f:
+            config = json.load(f)
+    except:
+        print("[server#critical] could not open server.config.json")
         return 1
 
+    # Initialize the logger.
+    stdout = sys.stdout
+    if config["log"]["level"] in ["info", "debug"]:
+        print("[server#info] initializing logger")
+    init_logger(config)
+    log = Logger("server")
+    log.info("finished initializing logger")
+
+    # Initialize the Database Manager and load the world database.
+    log.info("initializing database manager")
+    dbman = database.DatabaseManager(config["database"]["filename"])
+    _dbres = dbman._startup()
+    if not _dbres:
+        # On failure, only remove the lockfile if its existence wasn't the cause.
+        if _dbres is not None:
+            dbman._unlock()
+        return 1
+    log.info("finished initializing database manager")
+
+    # Start the services.
+    log.info("initializing services")
+    if not init_services(config, log):
+        dbman._unlock()
+        return 1
+    log.info("finished initializing services")
+
     # Start the Twisted Reactor.
+    log.info("finished startup tasks")
     reactor.run()
 
-    # Just before shutdown.
+    # Shutting down.
     dbman._unlock()
-    log.info("End Program.")
+    sys.stdout = stdout
+    print("End Program.")
     return 0
 
 

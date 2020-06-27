@@ -25,19 +25,17 @@
 # IN THE SOFTWARE.
 # **********
 
-import pdb
 import sys
-
-print("Starting Dennis...")
 
 # Check Python version.
 if sys.version_info[0] != 3:
-    print("exiting: Dennis requires Python 3")
+    print("Not Starting: Dennis requires Python 3")
     sys.exit(1)
 
 import console
 import database
 import json
+import pdb
 
 
 class Router:
@@ -61,55 +59,65 @@ class Log:
     """Stand-in for Twisted's logger.
     """
     def debug(self, msg, **kwargs):
-        print("[debug]", msg.format(**kwargs))
+        print("[cli#debug]", msg.format(**kwargs))
 
     def info(self, msg, **kwargs):
-        print(msg.format(**kwargs))
+        print("[cli#info]", msg.format(**kwargs))
 
     def warn(self, msg, **kwargs):
-        print("[warn]", msg.format(**kwargs))
+        print("[cli#warn]", msg.format(**kwargs))
 
     def error(self, msg, **kwargs):
-        print("[error]", msg.format(**kwargs))
+        print("[cli#error]", msg.format(**kwargs))
 
     def critical(self, msg, **kwargs):
-        print("[critical]", msg.format(**kwargs))
+        print("[cli#critical]", msg.format(**kwargs))
 
 
-# Try to open the cli config file.
-try:
-    with open("cli.config.json") as f:
-        config = json.load(f)
-except:
-    print("exiting: could not open cli.config.json")
-    sys.exit(1)
+def main():
+    print("Welcome to Dennis MUD PreAlpha, Single-User Client.")
+    print("Starting up...")
 
-log = Log()
+    # Try to open the cli config file.
+    try:
+        with open("cli.config.json") as f:
+            config = json.load(f)
+    except:
+        print("[cli#critical] could not open cli.config.json")
+        return 1
 
-dbman = database.DatabaseManager(config["database"]["filename"], log)
+    log = Log()
 
-# Log in as the root user. Promote to wizard if it was somehow demoted.
-dennis = console.Console(dbman, "<world>", Router(), log)
-dennis.user = dbman.user_by_name("<world>")
-dbman._users_online.append("<world>")
-if not dennis.user["wizard"]:
-    dennis.user["wizard"] = True
-    dbman.upsert_user(dennis.user)
+    log.info("initializing database manager")
+    dbman = database.DatabaseManager(config["database"]["filename"], log)
+    if not dbman._startup():
+        return 1
+    log.info("finished initializing database manager")
 
-print("Welcome to Dennis MUD single-user mode.")
-print("Loaded database at \"{0}\".".format(config["database"]["filename"]))
-print("You are now logged in as the administrative user \"<world>\".")
+    # Log in as the root user. Promote to wizard if it was somehow demoted.
+    dennis = console.Console(dbman, "<world>", Router(), log)
+    dennis.user = dbman.user_by_name("<world>")
+    dbman._users_online.append("<world>")
+    if not dennis.user["wizard"]:
+        dennis.user["wizard"] = True
+        dbman.upsert_user(dennis.user)
 
-# Command loop.
-while True:
-    cmd = input("> ")
-    if cmd == "quit":
-        break
-    if cmd == "debug":
-        pdb.set_trace()
-        continue
-    print(dennis.command(cmd))
+    print("You are now logged in as the administrative user \"<world>\".")
 
-# Just before shutdown.
-dbman._unlock()
-print("End Program.")
+    # Command loop.
+    while True:
+        cmd = input("> ")
+        if cmd == "quit":
+            break
+        if cmd == "debug":
+            pdb.set_trace()
+            continue
+        print(dennis.command(cmd))
+
+    # Just before shutdown.
+    dbman._unlock()
+    print("End Program.")
+
+
+if __name__ == "__main__":
+    sys.exit(main())

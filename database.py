@@ -27,7 +27,6 @@
 
 import json
 import os
-import sys
 
 from tinydb import TinyDB, Query
 
@@ -46,6 +45,7 @@ class DatabaseManager:
     :ivar rooms: The table of all rooms in the database.
     :ivar users: The table of all users in the database.
     :ivar items: The table of all items in the database.
+    :ivar defaults: The JSON database defaults configuration.
     """
     def __init__(self, filename, log=None):
         """Database Manager Initializer
@@ -53,47 +53,62 @@ class DatabaseManager:
         :param filename: The relative or absolute filename of the TinyDB database file.
         :param log: Alternative logging facility, if set.
         """
+        self.database = None
+        self.rooms = None
+        self.users = None
+        self.items = None
+        self.defaults = None
+
+        self._info = None
+        self._users_online = []
         self._filename = filename
         self._log = log or Logger("database")
         self._rooms_cleaned = []
-        self._log.info("initializing database manager")
 
+    def _startup(self):
+        """Perform startup tasks.
+
+        Startup tasks for the DatabaseManager that can fail are put here,
+        so that we can catch a return code and exit cleanly on failure.
+
+        :return: True if succeeded, False if failed, None if failed due to existing lockfile.
+        """
         # Try to load the defaults config file.
         try:
             with open("defaults.config.json") as f:
                 self.defaults = json.load(f)
         except:
-            self._log.critical("exiting: could not open defaults file")
-            sys.exit(1)
+            self._log.critical("could not open defaults file")
+            return False
 
         # Check if a lockfile exists for this database. If so, exit.
-        if os.path.exists(filename + ".lock"):
-            self._log.critical("exiting: lockfile exists for database: {filename}", filename=filename)
-            sys.exit(1)
+        if os.path.exists(self._filename + ".lock"):
+            self._log.critical("lockfile exists for database: {filename}", filename=self._filename)
+            return None
 
         # See if we can access the database file.
         try:
-            with open(filename, "a") as f:
+            with open(self._filename, "a") as f:
                 pass
         except:
-            self._log.critical("exiting: could not open database file: {filename}", filename=filename)
-            sys.exit(1)
+            self._log.critical("could not open database file: {filename}", filename=self._filename)
+            return False
 
         # Create the lockfile.
         try:
-            with open(filename + ".lock", "a") as f:
+            with open(self._filename + ".lock", "a") as f:
                 pass
         except:
-            self._log.critical("exiting: could not create lockfile for database: {filename}", filename=filename)
-            sys.exit(1)
+            self._log.critical("could not create lockfile for database: {filename}", filename=self._filename)
+            return False
 
-        self._log.info("loading database: {filename}", filename=filename)
-        self.database = TinyDB(filename)
+        self._log.info("loading database: {filename}", filename=self._filename)
+
+        self.database = TinyDB(self._filename)
         self.rooms = self.database.table("rooms")
         self.users = self.database.table("users")
         self.items = self.database.table("items")
         self._info = self.database.table("_info")
-        self._users_online = []
 
         # If the info table is empty, add a version record. Otherwise, compare versions.
         if len(self._info.all()) == 0:
@@ -101,10 +116,10 @@ class DatabaseManager:
         else:
             q = Query()
             if not self._info.search(q.version == DB_VERSION):
-                self._log.critical("exiting: database version mismatch, {theirs} detected, {ours} required",
-                          theirs=q.version, ours=DB_VERSION)
+                self._log.critical("database version mismatch, {theirs} detected, {ours} required",
+                                   theirs=q.version, ours=DB_VERSION)
                 self._unlock()
-                sys.exit(1)
+                return False
 
         # If there are no rooms, make the initial room.
         if len(self.rooms.all()) == 0:
@@ -117,6 +132,8 @@ class DatabaseManager:
             self._init_user()
 
         self._log.info("finished loading database")
+
+        return True
 
     def upsert_room(self, document):
         """Update or insert a room.
@@ -345,11 +362,9 @@ class DatabaseManager:
         """
         if not os.path.exists(self._filename + ".lock"):
             self._log.warn("lockfile disappeared while running for database: {filename}",
-                          filename=self._filename)
-            sys.stdout.flush()
+                           filename=self._filename)
         else:
             try:
                 os.remove(self._filename + ".lock")
             except:
                 self._log.warn("could not delete lockfile for database: {filename}", filename=self._filename)
-                sys.stdout.flush()
