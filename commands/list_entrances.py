@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# break_room.py     #
+# list_entrances.py #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
@@ -25,18 +25,21 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "break room"
-CATEGORIES = ["rooms"]
-USAGE = "break room <room>"
-DESCRIPTION = """Break the room with ID <room> if you are its owner.
+NAME = "list entrances"
+CATEGORIES = ["exits", "rooms"]
+USAGE = "list entrances [room]"
+DESCRIPTION = """List the entrances leading to a room.
 
-You must be an owner of the room, and no one can be in the room, including yourself.
+If a room ID is provided as an optional argument, list the entrances to that room.
+Otherwise, list the entrances to the room you are currently in.
+You must be an owner of a room to list its entrances.
 
-Ex. `break room 5` to break the room with ID 5."""
+Ex. `list entrances` to list the entrances to the current room.
+Ex. `list entrances 5` to list the entrances to the room with ID 5."""
 
 
 def COMMAND(console, database, args):
-    if len(args) != 1:
+    if len(args) > 1:
         console.msg("Usage: " + USAGE)
         return False
 
@@ -45,13 +48,15 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    try:
-        roomid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    thisroom = database.room_by_id(roomid)
+    if len(args) == 1:
+        try:
+            roomid = int(args[0])
+            thisroom = database.room_by_id(roomid)
+        except ValueError:
+            console.msg("Usage: " + USAGE)
+            return False
+    else:
+        thisroom = database.room_by_id(console.user["room"])
 
     # Check if the room exists.
     if not thisroom:
@@ -63,22 +68,25 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this room")
         return False
 
-    # Make sure the room is empty.
-    if thisroom["users"]:
-        console.msg(NAME + ": you cannot break an occupied room")
-        return False
+    # Are there any entrances?
+    if not thisroom["entrances"]:
+        console.msg("this room has no entrances")
+        return True
 
-    # Remove this room from the entrances record of every room it has an exit to.
-    for ex in thisroom["exits"]:
-        destroom = database.room_by_id(ex["dest"])
-        if thisroom["id"] in destroom["entrances"]:
-            destroom["entrances"].remove(thisroom["id"])
-            database.upsert_room(destroom)
+    # Enumerate exits leading to this one, and the rooms containing them.
+    for ent in sorted(thisroom["entrances"]):
+        srcroom = database.room_by_id(ent)
+        if not srcroom:
+            console.msg("warning: entrance room does not exist: {0}".format(ent))
+            continue
+        exits = []
+        for ex in enumerate(srcroom["exits"]):
+            if ex[1]["dest"] == thisroom["id"]:
+                exits.append(ex)
+        body = "{0} ({1}) :: ".format(srcroom["name"], srcroom["id"])
+        for ex in exits:
+            body += "{0} ({1}), ".format(ex[1]["name"], ex[0])
+        body = body[:-2]
+        console.msg(body)
 
-    # Delete the room.
-    database.delete_room(thisroom)
-
-    console.msg(NAME + ": done")
     return True
-
-

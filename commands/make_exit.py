@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # make_exit.py      #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -90,7 +90,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": the destination room is inbound sealed")
         return False
 
-    # Create our new exit.
+    # Create our new exit, and an entrance record in the destination room.
     newexit = {
         "dest": dest,
         "name": name,
@@ -105,6 +105,9 @@ def COMMAND(console, database, args):
         "locked": False
     }
     thisroom["exits"].append(newexit)
+    if console.user["room"] not in destroom["entrances"]:
+        destroom["entrances"].append(console.user["room"])
+        database.upsert_room(destroom)
 
     # Save.
     database.upsert_room(thisroom)

@@ -49,12 +49,12 @@ def COMMAND(console, database, args):
     if len(users):
         for u in users:
             if database.online(u["name"]):
-                console.msg(u["name"] + ": " + u["nick"])
+                console.msg("{0} ({1})".format(u["nick"], u["name"]))
                 online_count += 1
         if console.user["wizard"]:
             for u in users:
                 if not database.online(u["name"]):
-                    console.msg(u["name"] + ": " + u["nick"] + " (offline)")
+                    console.msg("{0} ({1}) [offline]".format(u["nick"], u["name"]))
                     offline_count += 1
             console.msg("total users online: {0}; offline: {1}".format(online_count, offline_count))
         else:

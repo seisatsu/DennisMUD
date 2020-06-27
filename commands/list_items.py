@@ -49,7 +49,7 @@ def COMMAND(console, database, args):
         for i in items:
             if console.user["name"] in i["owners"] or console.user["wizard"]:
                 # We either own this one, or we are a wizard.
-                console.msg(str(i["id"]) + ": " + i["name"])
+                console.msg("{0} ({1})".format(i["name"], i["id"]))
                 found_something = True
     if not found_something:
         if console.user["wizard"]:

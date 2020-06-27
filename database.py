@@ -32,7 +32,7 @@ from tinydb import TinyDB, Query
 
 from twisted.logger import Logger
 
-DB_VERSION = 1
+DB_VERSION = 2
 
 
 class DatabaseManager:
@@ -64,6 +64,9 @@ class DatabaseManager:
         self._filename = filename
         self._log = log or Logger("database")
         self._rooms_cleaned = []
+
+        # These will be changed when running an update tool.
+        self._UPDATE_FROM_VERSION = DB_VERSION
 
     def _startup(self):
         """Perform startup tasks.
@@ -114,10 +117,10 @@ class DatabaseManager:
         if len(self._info.all()) == 0:
             self._info.insert({"version": DB_VERSION})
         else:
-            q = Query()
-            if not self._info.search(q.version == DB_VERSION):
+            info_record = self._info.all()[0]
+            if info_record["version"] != self._UPDATE_FROM_VERSION:
                 self._log.critical("database version mismatch, {theirs} detected, {ours} required",
-                                   theirs=q.version, ours=DB_VERSION)
+                                   theirs=info_record["version"], ours=self._UPDATE_FROM_VERSION)
                 self._unlock()
                 return False
 
@@ -322,6 +325,7 @@ class DatabaseManager:
             "desc": self.defaults["first_room"]["desc"],
             "users": [self.defaults["first_user"]["name"]],
             "exits": [],
+            "entrances": [],
             "items": [],
             "sealed": {
                 "inbound": self.defaults["first_room"]["sealed"]["inbound"],

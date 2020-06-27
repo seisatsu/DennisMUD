@@ -49,7 +49,7 @@ def COMMAND(console, database, args):
         for r in rooms:
             if console.user["name"] in r["owners"] or console.user["wizard"]:
                 # We either own this room, or we are a wizard.
-                console.msg(str(r["id"]) + ": " + r["name"])
+                console.msg("{0} ({1})".format(r["name"], r["id"]))
                 found_something = True
     if not found_something:
         console.msg(NAME + ": you do not own any rooms")
