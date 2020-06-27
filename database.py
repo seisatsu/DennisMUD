@@ -42,12 +42,10 @@ class DatabaseManager:
     This manager handles interactions with a TinyDB database corresponding to the current game world.
     After documents are pulled from a table and modified, they need to be upserted for the changes to save.
 
-    Attributes:
-        database: The database to use for game data.
-        rooms: The table of all rooms in the database.
-        users: The table of all users in the database.
-        items: The table of all items in the database.
-        _info: The table of database meta info.
+    :ivar database: The TinyDB database instance for the world.
+    :ivar rooms: The table of all rooms in the database.
+    :ivar users: The table of all users in the database.
+    :ivar items: The table of all items in the database.
     """
     def __init__(self, filename, log=None):
         """Database Manager Initializer

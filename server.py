@@ -28,14 +28,6 @@
 # Parts of codebase borrowed from https://github.com/TKeesh/WebSocketChat
 
 import sys
-
-print("[server#info] Starting Dennis...")
-
-# Check Python version.
-if sys.version_info[0] != 3:
-    print("[server#critical] exiting: Dennis requires Python 3")
-    sys.exit(1)
-
 import console
 import database
 import html
@@ -46,40 +38,6 @@ import websocket
 from twisted.internet import reactor
 from twisted.logger import Logger, textFileLogObserver, globalLogBeginner
 
-# Try to read the server config file.
-try:
-    with open("server.config.json") as f:
-        config = json.load(f)
-except:
-    print("[server#critical] exiting: could not open server.config.json")
-    sys.exit(1)
-
-# Initialize logging. At least one logging method is required.
-if not config["log"]["stdout"] and not config["log"]["file"]:
-    # No logging option is set, so force stdout.
-    config["log"]["stdout"] = True
-elif config["log"]["file"]:
-    # Try to open the log file.
-    try:
-        logfile = open(config["log"]["file"], 'a')
-    except:
-        # Warn and fall back to STDOUT.
-        print("[server#critical] warning: could not open log file:", config["log"]["file"])
-        config["log"]["file"] = None
-        config["log"]["stdout"] = True
-# Configure log targets.
-logtargets = []
-if config["log"]["stdout"]:
-    logtargets.append(textFileLogObserver(sys.stdout))
-if config["log"]["file"]:
-    logtargets.append(textFileLogObserver(logfile))
-globalLogBeginner.beginLoggingTo(logtargets)
-# Start the logger.
-log = Logger("server")
-
-# Open the Dennis main database.
-dbman = database.DatabaseManager(config["database"]["filename"])
-
 
 class Router:
     """Router
@@ -87,11 +45,10 @@ class Router:
     This class handles interfacing between the server backends and the user command consoles. It manages a lookup table
     of connected users and their consoles, and handles passing messages between them.
 
-    Attributes:
-        users: Dictionary of connected users and their consoles, as well as the protocols they are connected by.
-        single_user: Whether we are running in single-user mode. Hard-coded here to False.
-        telnet_factory: The active telnet server factory.
-        websocket_factory: The active websocket server factory.
+    :ivar users: Dictionary of connected users and their consoles, as well as the protocols they are connected by.
+    :ivar single_user: Whether we are running in single-user mode. Hard-coded here to False.
+    :ivar telnet_factory: The active Autobahn telnet server factory.
+    :ivar websocket_factory: The active Autobahn websocket server factory.
     """
     def __init__(self):
         """Router Initializer
@@ -206,9 +163,52 @@ class Router:
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
-if __name__ == "__main__":
+def main():
     """Main Program
     """
+
+    print("[server#info] Starting Dennis...")
+
+    # Check Python version.
+    if sys.version_info[0] != 3:
+        print("[server#critical] exiting: Dennis requires Python 3")
+        return 1
+
+    # Try to read the server config file.
+    try:
+        with open("server.config.json") as f:
+            config = json.load(f)
+    except:
+        print("[server#critical] exiting: could not open server.config.json")
+        return 1
+
+    # Initialize logging. At least one logging method is required.
+    if not config["log"]["stdout"] and not config["log"]["file"]:
+        # No logging option is set, so force stdout.
+        config["log"]["stdout"] = True
+    elif config["log"]["file"]:
+        # Try to open the log file.
+        try:
+            logfile = open(config["log"]["file"], 'a')
+        except:
+            # Warn and fall back to STDOUT.
+            print("[server#critical] warning: could not open log file:", config["log"]["file"])
+            config["log"]["file"] = None
+            config["log"]["stdout"] = True
+    # Configure log targets.
+    logtargets = []
+    if config["log"]["stdout"]:
+        logtargets.append(textFileLogObserver(sys.stdout))
+    if config["log"]["file"]:
+        logtargets.append(textFileLogObserver(logfile))
+    globalLogBeginner.beginLoggingTo(logtargets)
+    # Start the logger.
+    log = Logger("server")
+
+    # Open the Dennis main database.
+    dbman = database.DatabaseManager(config["database"]["filename"])
+
+    # Begin starting services.
     log.info("starting services")
 
     # Create the router instance we will use.
@@ -242,7 +242,7 @@ if __name__ == "__main__":
         # No services were enabled.
         log.critical("exiting: no services enabled")
         dbman._unlock()
-        sys.exit(1)
+        return 1
 
     # Start the Twisted Reactor.
     reactor.run()
@@ -250,3 +250,8 @@ if __name__ == "__main__":
     # Just before shutdown.
     dbman._unlock()
     log.info("End Program.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

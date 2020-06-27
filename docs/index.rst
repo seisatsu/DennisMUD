@@ -3,18 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Dennis MUD's documentation!
-======================================
+Dennis MUD User Manual
+======================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   intro
+   usage/index
+   gameplay/index
+   commands/index
+   develop/index
+   api/index
 
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

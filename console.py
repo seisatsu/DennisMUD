@@ -45,10 +45,9 @@ class Console:
 
     Each instance of the console corresponds to a single user session. The console handles user-command interaction.
 
-    Attributes:
-        user: TinyDB user document for the currently logged in user, if any.
-        rname: The name used by the router for this console.
-        router: The Router instance, which handles interfacing between the server backend and the user consoles.
+    :ivar user: TinyDB user document for the currently logged in user, if any.
+    :ivar rname: The name used by the router for this console.
+    :ivar router: The Router instance, which handles interfacing between the server backend and the user consoles.
     """
     def __init__(self, database, rname, router, log=None):
         """Console Initializer
