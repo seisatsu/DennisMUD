@@ -5,6 +5,8 @@ Dennis MUD API Reference
    :maxdepth: 2
    :caption: Contents:
 
-   database
+   dbformat
+   dbman
    console
    server
+
