@@ -34,9 +34,9 @@
 # Usage: ./run.sh <start/restart/stop>
 # Background Start: nohup ./run.sh start &
 
-python3="python3.7"                    # Python3 executable name.
-syspath="/home/seisatsu/Source/Dennis" # The absolute path to the Dennis folder.
-sysuser="seisatsu"                     # Make sure we are running as this user, or else exit.
+python3="python3.5"                    # Python3 executable name.
+syspath="/path/to/Dennis"              # The absolute path to the Dennis folder.
+sysuser="www-data"                     # Make sure we are running as this user, or else exit.
 pidfile="run.sh.pid"                   # File for storing this script's PID, relative or absolute.
 lckfile="dennis.lock"                  # Lock file so we don't run twice, relative or absolute.
 

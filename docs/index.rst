@@ -18,8 +18,10 @@ Dennis MUD User Manual
    api/index
 
 
-Indices and tables
-==================
+Links and Downloads
+===================
 
-* :ref:`genindex`
-* :ref:`search`
+* `Play Online! - Public Test Instance <http://play.dennismud.xyz/>`_
+* `Dennis MUD on GitHub <https://github.com/seisatsu/Dennis>`_
+* `Packaged Releases <https://github.com/seisatsu/Dennis/releases>`_
+* `User Manual PDF </dennismud.pdf>`_
