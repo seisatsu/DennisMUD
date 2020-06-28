@@ -141,6 +141,10 @@ class Console:
         :param show_command: Whether or not to echo the command being executed in the console.
         :return: Command result or None.
         """
+        # Return if we got an empty line.
+        if not line:
+            return None
+
         # Strip whitespace from the front and back.
         line = line.strip()
 

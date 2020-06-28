@@ -244,6 +244,7 @@ def init_services(config, dbman, log):
     # If websocket is enabled, initialize its service.
     if config["websocket"]["enabled"]:
         if config["websocket"]["secure"]:
+            # Use secure websockets.
             websocket_factory = websocket.ServerFactory(router, "wss://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
             ssl_factory = ssl.DefaultOpenSSLContextFactory(config["websocket"]["key"], config["websocket"]["cert"])
