@@ -65,7 +65,7 @@ class DatabaseManager:
         self._log = log or Logger("database")
         self._rooms_cleaned = []
 
-        # These will be changed when running an update tool.
+        # This will be changed when running an update tool.
         self._UPDATE_FROM_VERSION = DB_VERSION
 
     def _startup(self):
@@ -121,9 +121,13 @@ class DatabaseManager:
             if info_record["version"] != self._UPDATE_FROM_VERSION:
                 if info_record["version"] == DB_VERSION:
                     self._log.critical("database is already up to date, doing nothing")
+                elif self._UPDATE_FROM_VERSION != DB_VERSION:
+                    self._log.critical("trying to update from v{oldver} to v{newver}, but detected v{filever}",
+                                       oldver=self._UPDATE_FROM_VERSION, newver=DB_VERSION,
+                                       filever=info_record["version"])
                 else:
-                    self._log.critical("database version mismatch, {theirs} detected, {ours} required",
-                                       theirs=info_record["version"], ours=self._UPDATE_FROM_VERSION)
+                    self._log.critical("database version mismatch, v{filever} detected, v{currver} required",
+                                       filever=info_record["version"], currver=self._UPDATE_FROM_VERSION)
                     self._log.critical("check the util folder for a dbupdate script to migrate between these versions")
                 self._unlock()
                 return False
