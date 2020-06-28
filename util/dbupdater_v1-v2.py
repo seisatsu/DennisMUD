@@ -54,19 +54,19 @@ class Log:
     """Stand-in for Twisted's logger.
     """
     def debug(self, msg, **kwargs):
-        print("[debug]", msg.format(**kwargs))
+        print("[cli#debug]", msg.format(**kwargs))
 
     def info(self, msg, **kwargs):
-        print(msg.format(**kwargs))
+        print("[cli#info]", msg.format(**kwargs))
 
     def warn(self, msg, **kwargs):
-        print("[warn]", msg.format(**kwargs))
+        print("[cli#warn]", msg.format(**kwargs))
 
     def error(self, msg, **kwargs):
-        print("[error]", msg.format(**kwargs))
+        print("[cli#error]", msg.format(**kwargs))
 
     def critical(self, msg, **kwargs):
-        print("[critical]", msg.format(**kwargs))
+        print("[cli#critical]", msg.format(**kwargs))
 
 
 if not path.exists(sys.argv[1]):
