@@ -15,7 +15,9 @@
     "enabled": true,
     "host": "dennis.seisat.su",
     "port": 37380,
-    "secure": false
+    "secure": false,
+    "key": "ssl/dennis.key",
+    "cert": "ssl/dennis.cert"
   },
   "disabled": ["purge_exits", "purge_entrances"]
 }

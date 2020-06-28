@@ -41,7 +41,7 @@ import json
 import telnet
 import websocket
 
-from twisted.internet import reactor
+from twisted.internet import reactor, ssl
 from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \
     textFileLogObserver, FilteringLogObserver, globalLogBeginner
 
@@ -244,16 +244,19 @@ def init_services(config, dbman, log):
     # If websocket is enabled, initialize its service.
     if config["websocket"]["enabled"]:
         if config["websocket"]["secure"]:
-            # Use secure websockets. Generally requires HTTPS for the client page. TODO: Fix.
             websocket_factory = websocket.ServerFactory(router, "wss://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
+            ssl_factory = ssl.DefaultOpenSSLContextFactory(config["websocket"]["key"], config["websocket"]["cert"])
         else:
             # Use insecure websockets.
             websocket_factory = websocket.ServerFactory(router, "ws://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
         websocket_factory.protocol = websocket.ServerProtocol
         websocket_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20)
-        reactor.listenTCP(config["websocket"]["port"], websocket_factory)
+        if config["websocket"]["secure"]:
+            reactor.listenSSL(config["websocket"]["port"], websocket_factory, ssl_factory)
+        else:
+            reactor.listenTCP(config["websocket"]["port"], websocket_factory)
         any_enabled = True
 
     if not any_enabled:
