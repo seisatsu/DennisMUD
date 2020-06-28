@@ -57,13 +57,16 @@ class Router:
     :ivar telnet_factory: The active Autobahn telnet server factory.
     :ivar websocket_factory: The active Autobahn websocket server factory.
     """
-    def __init__(self):
+    def __init__(self, config, dbman):
         """Router Initializer
         """
         self.users = {}
         self.single_user = False
         self.telnet_factory = None
         self.websocket_factory = None
+
+        self._config = config
+        self._dbman = dbman
 
     def __contains__(self, item):
         """__contains__
@@ -102,8 +105,8 @@ class Router:
         :param service: Service type. "telnet" or "websocket".
         :return: True
         """
-        self.users[peer] = {"service": service, "console": console.Console(dbman, peer, self)}
-        self.users[peer]["console"]._disabled_commands = config["disabled"]
+        self.users[peer] = {"service": service, "console": console.Console(self._dbman, peer, self)}
+        self.users[peer]["console"]._disabled_commands = self._config["disabled"]
         return True
 
     def unregister(self, peer):
@@ -223,14 +226,14 @@ def init_logger(config):
     globalLogBeginner.beginLoggingTo(logtargets)
 
 
-def init_services(config, log):
+def init_services(config, dbman, log):
     """Initialize the Telnet and/or WebSocket Services
     """
     # We will exit if no services are enabled.
     any_enabled = False
 
     # Create the router instance we will use.
-    router = Router()
+    router = Router(config, dbman)
 
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
@@ -295,7 +298,7 @@ def main():
 
     # Start the services.
     log.info("initializing services")
-    if not init_services(config, log):
+    if not init_services(config, dbman, log):
         dbman._unlock()
         return 1
     log.info("finished initializing services")
