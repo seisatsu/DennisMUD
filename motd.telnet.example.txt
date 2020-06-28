@@ -16,4 +16,4 @@ For example, "help make item" will show the manual entry for the "make item" com
 
 To end your session, use "quit".
 
-Please enjoy your stay!
+Have fun!

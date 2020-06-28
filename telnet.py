@@ -66,6 +66,7 @@ class ServerProtocol(LineReceiver):
             line = line.decode('utf-8')
         except:
             self._log.info("discarded garbage line from {peer}", peer=self.peer)
+            return
 
         # Did we receive the quit pseudo-command?
         if line == "quit":
