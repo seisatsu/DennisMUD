@@ -30,7 +30,6 @@
 # with the database filename as its only argument. This updater
 # adds entrance records to rooms.
 
-import json
 from os import path
 import sys
 
@@ -43,13 +42,7 @@ except:
     sys.exit(1)
 
 
-if len(sys.argv) != 2 or sys.argv[1] in ["help", "-h", "--help", "-help", "?", "-?"]:
-    print("Dennis 2D Database Updater v1 -> v2")
-    print("This updater adds entrance records to rooms.")
-    print("Usage: {0} <database>".format(sys.argv[0]))
-    sys.exit(0)
-
-
+# DatabaseManager will expect a logger, so we'll give it this stump.
 class Log:
     """Stand-in for Twisted's logger.
     """
@@ -69,47 +62,81 @@ class Log:
         print("[cli#critical]", msg.format(**kwargs))
 
 
-if not path.exists(sys.argv[1]):
-    print("Database file does not exist: {0}".format(sys.argv[1]))
-    sys.exit(1)
+def dbupdate_v1_to_v2(dbman):
+    """Database Updater for v1 to v2.
 
-# Start up DatabaseManager and tell it we're accepting a v1 database.
-dbman = database.DatabaseManager(sys.argv[1], Log())
-dbman._UPDATE_FROM_VERSION = 1
-sres = dbman._startup()
-if not sres:
-    sys.exit(1)
+    This update adds an empty "entrances" field to every room, and then combs through the exits
+    of every room in the world to populate the entrance records.
 
-# Perform updates.
-ri = 0
-exi = 0
-eni = 0
-rooms = dbman.rooms.all()
-q = Query()
+    This is needed for the `list entrances` command to not take several seconds on larger worlds.
+    """
+    # Counters and variables.
+    ri = 0
+    exi = 0
+    eni = 0
+    rooms = dbman.rooms.all()
+    q = Query()
 
-if len(rooms):
-    for thisroom in rooms:
-        thisroom["entrances"] = []
-        dbman.upsert_room(thisroom)
-    print("Added an empty entrance field to {0} rooms.".format(len(rooms)))
+    # Perform the updates.
+    if len(rooms):
+        # Add an empty entrance field to every room.
+        for thisroom in rooms:
+            thisroom["entrances"] = []
+            dbman.upsert_room(thisroom)
+        print("Added an empty entrance field to {0} rooms.".format(len(rooms)))
 
-    for thisroom in rooms:
-        ri += 1
-        for ex in thisroom["exits"]:
-            exi += 1
-            destroom = dbman.room_by_id(ex["dest"])
-            if thisroom["id"] not in destroom["entrances"]:
-                eni += 1
-                destroom["entrances"].append(thisroom["id"])
-                dbman.upsert_room(destroom)
-    print("Processed {0} exits in {1} rooms and added {2} entrance records.".format(exi, ri, eni))
+        # Process the exits of every room to populate the corresponding entrance records.
+        for thisroom in rooms:
+            ri += 1
+            for ex in thisroom["exits"]:
+                exi += 1
+                destroom = dbman.room_by_id(ex["dest"])
+                if thisroom["id"] not in destroom["entrances"]:
+                    eni += 1
+                    destroom["entrances"].append(thisroom["id"])
+                    dbman.upsert_room(destroom)
+        print("Processed {0} exits in {1} rooms and added {2} entrance records.".format(exi, ri, eni))
 
-    info_record = dbman._info.all()[0]
-    info_record["version"] = database.DB_VERSION
-    dbman._info.upsert(info_record, q.version == dbman._UPDATE_FROM_VERSION)
+        # We are finished, so update the database version record.
+        info_record = dbman._info.all()[0]
+        info_record["version"] = database.DB_VERSION
+        dbman._info.upsert(info_record, q.version == dbman._UPDATE_FROM_VERSION)
 
-else:
-    print("No rooms.")
+    # The database is actually empty somehow. Do nothing.
+    else:
+        print("No rooms.")
 
-print("Successfully updated database from v1 to v2: {0}".format(sys.argv[1]))
-dbman._unlock()
+
+def main():
+    """Main Program
+    """
+    print("Dennis 2D Database Updater v1 -> v2")
+
+    # Check command line arguments, and give help if needed.
+    if len(sys.argv) != 2 or sys.argv[1] in ["help", "-h", "--help", "-help", "?", "-?"]:
+        print("This updater adds entrance records to rooms for the `list entrances` command.")
+        print("Usage: {0} <database>".format(sys.argv[0]))
+        return 0
+
+    # Make sure the database file exists.
+    if not path.exists(sys.argv[1]):
+        print("Database file does not exist: {0}".format(sys.argv[1]))
+        return 1
+
+    # Start up DatabaseManager and tell it we're accepting a v1 database for migration.
+    dbman = database.DatabaseManager(sys.argv[1], Log())
+    dbman._UPDATE_FROM_VERSION = 1
+    sres = dbman._startup()
+    if not sres:
+        return 1
+
+    # Run the updates for this migration.
+    dbupdate_v1_to_v2(dbman)
+
+    # Finished.
+    print("Successfully updated database from v1 to v2: {0}".format(sys.argv[1]))
+    dbman._unlock()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

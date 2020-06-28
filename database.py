@@ -119,8 +119,12 @@ class DatabaseManager:
         else:
             info_record = self._info.all()[0]
             if info_record["version"] != self._UPDATE_FROM_VERSION:
-                self._log.critical("database version mismatch, {theirs} detected, {ours} required",
-                                   theirs=info_record["version"], ours=self._UPDATE_FROM_VERSION)
+                if info_record["version"] == DB_VERSION:
+                    self._log.critical("database is already up to date, doing nothing")
+                else:
+                    self._log.critical("database version mismatch, {theirs} detected, {ours} required",
+                                       theirs=info_record["version"], ours=self._UPDATE_FROM_VERSION)
+                    self._log.critical("check the util folder for a dbupdate script to migrate between these versions")
                 self._unlock()
                 return False
 
