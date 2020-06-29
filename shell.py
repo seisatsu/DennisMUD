@@ -79,9 +79,11 @@ class Shell:
         """
         self._log.info("loading command modules")
         command_modules = os.listdir(COMMAND_DIR)
+
+        # Run through the list of all files in the command directory.
         for command in command_modules:
+            # Python files in this directory are command modules. Construct modules.
             if command.endswith(".py") and not command.startswith('_'):
-                # Python files in this directory are command modules. Construct modules.
                 command_path = os.path.join(os.getcwd(), COMMAND_DIR, command)
                 cname = command[:-3].replace('_', ' ')
 
@@ -113,6 +115,7 @@ class Shell:
             for cname2 in self._commands:
                 if cname == cname2:
                     continue
+
                 # Check if any command starts with the name of any other command,
                 # where they are not aliases for each other. This is bad.
                 if cname.startswith(cname2 + ' ') and not (
@@ -120,6 +123,7 @@ class Shell:
                          cname in self._commands[cname2].ALIASES) or
                         (hasattr(self._commands[cname], "ALIASES") and
                          cname2 in self._commands[cname].ALIASES)):
+
                     # Only warn about each overlap once.
                     if not ([cname, cname2] in found_overlaps or [cname2, cname] in found_overlaps):
                         found_overlaps.append([cname, cname2])
@@ -184,25 +188,32 @@ class Shell:
         # Remove extraneous spaces.
         line = [elem for elem in line if elem != '']
 
-        # Find out which part of the line is the command, and which part are its arguments.
+        # Find out which part of the line is the command, and which part is its arguments.
         for splitpos in range(len(line)):
+            # Check if the whole line is a command with no arguments.
             if splitpos == 0:
+                # Call with no arguments.
                 if ' '.join(line).lower() in self._commands.keys():
-                    # Run the command with no arguments.
                     if show_command:
                         console.msg("> " + ' '.join(line))
                         console.msg('='*20)
                     return self._call(console, ' '.join(line).lower(), [])
                 continue
+
+            # Only part of the line is a command. Call that segment and pass the rest as arguments.
             if ' '.join(line[:-splitpos]).lower() in self._commands.keys():
-                # Run the command and pass arguments.
+                # Don't echo or log passwords.
                 if line[0] not in ["register", "login", "password"]:
                     if show_command:
                         console.msg("> " + ' '.join(line))
                         console.msg('=' * 20)
                 return self._call(console, ' '.join(line[:-splitpos]), line[-splitpos:])
+
+        # We're still here and haven't found a command in this line. Must be gibberish.
         if line:
             console.msg("unknown command: " + ' '.join(line))
+
+            # Suggest some possible commands that are close to what was typed, if applicable.
             possible = []
             for p in self._commands:
                 if p.startswith(' '.join(line)):
@@ -210,6 +221,8 @@ class Shell:
             if possible:
                 possible = ', '.join(possible)
                 console.msg("did you mean: " + possible)
+
+        # We didn't find anything.
         return None
 
     def help(self, console, line):
@@ -221,28 +234,35 @@ class Shell:
         :param line: The help line to parse.
         :return: True if succeeded, False if failed.
         """
+        # If help was called by itself, assume we want the help for help itself.
         if not line:
-            # If help was called by itself, assume we want the help for help itself.
             line = "help"
+
         line = line.lower()
+
+        # Check for command names overlapping category names.
         if line in self._help.keys() and line in self._commands.keys():
             self._log.warn("command name overlaps with category name: {line}", line=line)
+
+        # Return a help message for the help command, and list available categories.
         if line == "help":
-            # Return a help message for the help command, and list available categories.
             console.msg("Usage: help <command/category>")
             console.msg("Description: Print the help for a command, or list the commands in a category.")
             console.msg("Available Categories: " + ', '.join(sorted(self._help.keys())))
+
+        # Return a formatted help message for the named category.
+        # Thanks to:
+        # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
+        # https://stackoverflow.com/questions/9989334/create-nice-column-output-in-python
         elif line in self._help.keys():
-            # Return a formatted help message for the named category.
-            # Thanks to:
-            # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
-            # https://stackoverflow.com/questions/9989334/create-nice-column-output-in-python
             cn = self._database.defaults["help"]["columns"]
             cols = [sorted(self._help[line])[i:i + cn] for i in range(0, len(sorted(self._help[line])), cn)]
             col_width = max(len(word) for row in cols for word in row) + 2  # padding
             console.msg("Available commands in category {0}:".format(line))
             for row in cols:
                 console.msg("".join(word.ljust(col_width) for word in row), True)
+
+        # Return a help message for the named command.
         elif line in self._commands.keys():
             # Return a help message for the named command.
             usage = "Usage: " + self._commands[line].USAGE
@@ -259,11 +279,13 @@ class Shell:
                 desc += "\n\nCommand Aliases: " + alias_list
             console.msg(usage)
             console.msg(desc)
+
+        # Couldn't find anything.
         else:
-            # Couldn't find anything.
             console.msg("help: unknown command or category: " + line)
             return False
 
+        # Success.
         return True
 
     def usage(self, console, line):
@@ -275,22 +297,27 @@ class Shell:
         :param line: The help line to parse.
         :return: True if succeeded, False if failed.
         """
+        # If usage was called by itself, assume we want the usage string for usage itself.
         if not line:
-            # If usage was called by itself, assume we want the usage string for usage itself.
             line = "usage"
+
         line = line.lower()
+
+        # Return a usage string for the usage command.
         if line == "usage":
-            # Return a usage string for the usage command.
             console.msg("Usage: usage <command>")
+
+        # Return a usage string for the named command.
         elif line in self._commands.keys():
-            # Return a usage string for the named command.
             usage = "Usage: " + self._commands[line].USAGE
             console.msg(usage)
+
+        # Couldn't find anything.
         else:
-            # Couldn't find anything.
             console.msg("usage: unknown command: " + line)
             return False
 
+        # Success.
         return True
 
     def msg_user(self, username, message):
