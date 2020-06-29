@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # rename_item.py    #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 

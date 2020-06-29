@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # decorate_lock.py  #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -40,34 +40,30 @@ Ex2. `decorate lock 3 The door refuses %player%'s attempt to open it.`"""
 
 
 def COMMAND(console, args):
-    if len(args) < 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
 
-    try:
-        exitid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Get the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid)
+    if not thisroom:
         return False
 
-    # Make sure the exit is in this room.
-    thisroom = console.database.room_by_id(console.user["room"])
-    if thisroom:
-        if exitid > len(thisroom["exits"])-1 or exitid < 0:
-            console.msg(NAME + ": no such exit")
-            return False
-        if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
-                and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this exit or this room")
-            return False
-        thisroom["exits"][exitid]["action"]["locked"] = ' '.join(args[1:])
-        console.database.upsert_room(thisroom)
-        console.msg(NAME + ": done")
-        return True
-    console.msg("warning: current room does not exist")
-    return False
+    # Check if we have permission to decorate the lock.
+    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+            and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
+        console.msg(NAME + ": you do not own this exit or this room")
+        return False
+
+    # Decorate the lock.
+    thisroom["exits"][exitid]["action"]["locked"] = ' '.join(args[1:])
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg(NAME + ": done")
+    return True

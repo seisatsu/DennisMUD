@@ -34,9 +34,12 @@ Ex. `announce This is an announcement.`"""
 
 
 def COMMAND(console, args):
+    # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=0, wizard=True):
         return False
 
+    # Broadcast our message to all users.
     console.shell.broadcast("<<<" + console.user["nick"] + ">>>: " + ' '.join(args))
 
+    # Finished.
     return True

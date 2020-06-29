@@ -37,11 +37,13 @@ Ex. `break exit 3` to break the exit with ID 3 in the current room."""
 
 
 def COMMAND(console, args):
+    # Perform initial checks.
     if not COMMON.check(NAME, console, args, argc=1):
         return False
 
+    # Perform argument type checks and casts.
     exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
-    if not exitid:
+    if exitid is None:
         return False
 
     # Get the current room, and check if the exit exists in this room.
@@ -78,6 +80,7 @@ def COMMAND(console, args):
         console.database.upsert_room(destroom)
     console.database.upsert_room(thisroom)
 
+    # Finished.
     console.msg(NAME + ": done")
     return True
 

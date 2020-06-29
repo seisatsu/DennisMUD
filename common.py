@@ -102,7 +102,7 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
     :param cast: Whether to cast the argument if returning it.
     :param usage: Whether to print usage for the command if the check fails.
 
-    :return: True if succeeded, False if failed.
+    :return: True or args if succeeded, None if failed.
     """
     castargs = args
 
@@ -218,6 +218,7 @@ def check_exit(NAME, console, exitid, room=None, reason=True):
         if reason:
             console.msg(NAME + ": no such exit")
         return None
+
     return thisroom
 
 
@@ -278,3 +279,45 @@ def check_room(NAME, console, roomid=None, reason=True):
         return None
     return room
 
+
+def check_user(NAME, console, username, online=False, wizard=False, live=False, reason=True):
+    """Check if a user exists. If so, return it.
+
+    :param NAME: The NAME field from the command module.
+    :param console: The calling user's console.
+    :param username: The username of the user to check.
+    :param online: Whether to check if the user is online.
+    :param wizard: Whether to check if the user is a wizard.
+    :param live: Whether to try to grab the live copy of the user document instead of pulling from the database.
+    :param reason: Whether to print a common failure explanation if the check fails. Defaults to True.
+
+    :return: User document if succeeded, None if failed.
+    """
+    if type(username) is not str:
+        console.log.error("username type mismatch in COMMON.check_user from command: {name}", name=NAME)
+        console.msg("{0}: internal command error".format(NAME))
+        return None
+
+    username = username.lower()
+
+    if live:
+        user = console.shell.user_by_name(username)
+    else:
+        user = console.database.user_by_name(username)
+
+    if not user:
+        if reason:
+            console.msg(NAME + ": no such user")
+        return None
+
+    if online and not console.database.online(username):
+        if reason:
+            console.msg(NAME + ": user is not online")
+        return None
+
+    if wizard and not user["wizard"]:
+        if reason:
+            console.msg(NAME + ": user is not a wizard")
+        return None
+
+    return user

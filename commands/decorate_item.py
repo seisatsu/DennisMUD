@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # decorate_item.py  #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -40,38 +40,34 @@ Ex2. `decorate item 4 The green orb glows in %player%'s hand.`"""
 
 
 def COMMAND(console, args):
-    if len(args) < 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Get the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
 
-    # Make sure we are holding the item.
+    # Make sure we are holding the item, or we are a wizard.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
         console.msg(NAME + ": no such item in inventory")
         return False
 
-    # Make sure the item exists.
-    i = console.database.item_by_id(itemid)
-    if not i:
-        console.msg(NAME + ": no such item")
-        return False
-
-    # Make sure we are the item's owner.
-    if console.user["name"] not in i["owners"] and not console.user["wizard"]:
+    # Make sure we are the item's owner, or a wizard.
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this item")
         return False
 
-    i["action"] = ' '.join(args[1:])
-    console.database.upsert_item(i)
+    # Decorate the item.
+    thisitem["action"] = ' '.join(args[1:])
+    console.database.upsert_item(thisitem)
+
+    # Finished.
     console.msg(NAME + ": done")
     return True

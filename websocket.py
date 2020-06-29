@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # websocket.py      #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 

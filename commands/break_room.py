@@ -37,26 +37,18 @@ Ex. `break room 5` to break the room with ID 5."""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    roomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if roomid is None:
         return False
 
-    try:
-        roomid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    thisroom = console.database.room_by_id(roomid)
-
-    # Check if the room exists.
-    if not thisroom:
-        console.msg(NAME + ": no such room")
+    # Check if the item exists.
+    thisroom = COMMON.check_room(NAME, console, roomid)
+    if not thisitem:
         return False
 
     # Check that we own the room or are a wizard.
@@ -79,6 +71,7 @@ def COMMAND(console, args):
     # Delete the room.
     console.database.delete_room(thisroom)
 
+    # Finished.
     console.msg(NAME + ": done")
     return True
 

@@ -42,6 +42,7 @@ Ex4. `:trips and falls over.`"""
 
 
 def COMMAND(console, args):
+    # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=0):
         return False
 
@@ -53,4 +54,5 @@ def COMMAND(console, args):
         action = console.user["nick"] + " " + ' '.join(args)
     console.shell.broadcast_room(console, action)
 
+    # Finished.
     return True

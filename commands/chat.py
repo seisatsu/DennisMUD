@@ -39,13 +39,8 @@ Ex2. `#Hello everyone!`"""
 
 
 def COMMAND(console, args):
-    if len(args) < 1:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
     # Make sure chat is enabled.
@@ -53,9 +48,11 @@ def COMMAND(console, args):
         console.msg(NAME + ": enable chat first")
         return False
 
+    # Send our message to all users who have chat enabled and aren't ignoring us.
     for u in console.router.users:
         if console.router.users[u]["console"].user and console.router.users[u]["console"].user["chat"]["enabled"]:
             if not console.user["name"] in console.router.users[u]["console"].user["chat"]["ignored"]:
                 console.router.users[u]["console"].msg("# <" + console.user["name"] + ">: " + ' '.join(args))
 
+    # Finished.
     return True

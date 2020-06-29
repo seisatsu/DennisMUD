@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # lost_exit.py      #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 

@@ -37,11 +37,13 @@ Ex. `break item 4` to break the item with ID 4."""
 
 
 def COMMAND(console, args):
+    # Perform initial checks.
     if not COMMON.check(NAME, console, args, argc=1):
         return False
 
+    # Perform argument type checks and casts.
     itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
-    if not itemid:
+    if itemid is None:
         return False
 
     # Check if the item exists.
@@ -87,6 +89,8 @@ def COMMAND(console, args):
         console.user["inventory"].remove(itemid)
         console.msg("{0} vanished from your inventory".format(thisitem["name"]))
         console.database.upsert_user(console.user)
+
+    # Finished.
     console.msg(NAME + ": done")
     return True
 

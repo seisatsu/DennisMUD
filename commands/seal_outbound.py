@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # seal_outbound.py  #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 

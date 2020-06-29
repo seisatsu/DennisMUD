@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # lock.py           #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -80,11 +80,11 @@ def COMMAND(console, args):
         found_something = False
 
         if len(args) == 1 and args[0].lower() == "self":
-                # Looking at ourselves. Print user nickname and real name.
-                console.msg(console.user["nick"] + " (" + console.user["name"] + ")")
-                if console.user["desc"]:
-                    console.msg(console.user["desc"])  # Print user description.
-                return True
+            # Looking at ourselves. Print user nickname and real name.
+            console.msg(console.user["nick"] + " (" + console.user["name"] + ")")
+            if console.user["desc"]:
+                console.msg(console.user["desc"])  # Print user description.
+            return True
 
         # Might be an item in the room.
         for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.

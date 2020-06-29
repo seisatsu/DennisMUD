@@ -54,8 +54,8 @@ def COMMAND(console, args):
         return False
 
     roomid = console.user["room"]
-    thisroom = console.console.database.room_by_id(roomid)
-    destroom = console.console.database.room_by_id(dest)
+    thisroom = console.database.room_by_id(roomid)
+    destroom = console.database.room_by_id(dest)
 
     if not destroom:
         console.msg(NAME + ": destination room does not exist")
@@ -73,8 +73,8 @@ def COMMAND(console, args):
     console.user["room"] = destroom["id"]
     console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
     if thisroom:
-        console.console.database.upsert_room(thisroom)
-    console.console.database.upsert_room(destroom)
-    console.console.database.upsert_user(console.user)
+        console.database.upsert_room(thisroom)
+    console.database.upsert_room(destroom)
+    console.database.upsert_user(console.user)
     console.shell.command(console, "look", False)
     return True
