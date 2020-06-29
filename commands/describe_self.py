@@ -39,20 +39,17 @@ Ex3. `describe self This guy is obviously some kind of badass.\\\\\\\\You should
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
+    # Process any newlines and then describe ourselves.
     if "\\\\" * 3 in ' '.join(args):
         console.msg(NAME + ": you may only stack two newlines")
         return False
-
     console.user["desc"] = ' '.join(args).replace("\\\\", "\n")
     console.database.upsert_user(console.user)
+
+    # Finished.
     console.msg(NAME + ": done")
     return True

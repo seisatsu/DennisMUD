@@ -46,30 +46,30 @@ def COMMAND(console, args):
     if roomid is None:
         return False
 
-    # Check if the item exists.
-    thisroom = COMMON.check_room(NAME, console, roomid)
-    if not thisitem:
+    # Check if the room exists.
+    targetroom = COMMON.check_room(NAME, console, roomid)
+    if not targetroom:
         return False
 
     # Check that we own the room or are a wizard.
-    if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
+    if console.user["name"] not in targetroom["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this room")
         return False
 
     # Make sure the room is empty.
-    if thisroom["users"]:
+    if targetroom["users"]:
         console.msg(NAME + ": you cannot break an occupied room")
         return False
 
     # Remove this room from the entrances record of every room it has an exit to.
-    for ex in thisroom["exits"]:
+    for ex in targetroom["exits"]:
         destroom = console.database.room_by_id(ex["dest"])
-        if thisroom["id"] in destroom["entrances"]:
-            destroom["entrances"].remove(thisroom["id"])
+        if targetroom["id"] in destroom["entrances"]:
+            destroom["entrances"].remove(targetroom["id"])
             console.database.upsert_room(destroom)
 
     # Delete the room.
-    console.database.delete_room(thisroom)
+    console.database.delete_room(targetroom)
 
     # Finished.
     console.msg(NAME + ": done")

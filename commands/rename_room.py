@@ -57,7 +57,7 @@ def COMMAND(console, args):
         # Not an integer.
         pass
 
-    # Get the current room.
+    # Lookup the current room.
     roomid = console.user["room"]
     r = console.database.room_by_id(roomid)
 

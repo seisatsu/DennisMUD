@@ -40,28 +40,27 @@ Ex3. `describe room 5 You are standing in a long, dark hallway.\\\\\\\\You canno
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Lookup the current room.
+    thisroom = COMMON.check_room(NAME, console)
+    if not thisroom:
         return False
-
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
 
     # Make sure we are the room's owner.
-    if console.user["name"] not in r["owners"] and not console.user["wizard"]:
+    if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this room")
         return False
 
+    # Process any newlines and then describe the room.
     if "\\\\" * 3 in ' '.join(args):
         console.msg(NAME + ": you may only stack two newlines")
         return False
+    thisroom["desc"] = ' '.join(args).replace("\\\\", "\n")
+    console.database.upsert_room(thisroom)
 
-    r["desc"] = ' '.join(args).replace("\\\\", "\n")
-    console.database.upsert_room(r)
+    # Finished.
     console.msg(NAME + ": done")
     return True

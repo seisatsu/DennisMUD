@@ -46,11 +46,12 @@ def COMMAND(console, args):
     if exitid is None:
         return False
 
-    # Get the current room, and check if the exit exists in this room.
+    # Lookup the current room, and check if the exit exists in this room.
     thisroom = COMMON.check_exit(NAME, console, exitid)
     if not thisroom:
         return False
 
+    # Make sure we have permission to break the exit.
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
             console.user["name"] not in thisroom["owners"]:
         console.msg(NAME + ": this room is outbound sealed")

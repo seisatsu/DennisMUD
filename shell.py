@@ -172,7 +172,7 @@ class Shell:
             line = line.replace(line[0], self._special_aliases[line[0]]+' ', 1)
 
         # Check for illegal characters, except in passwords.
-        if line.split(' ')[0] not in ["register", "login"]:
+        if line.split(' ')[0] not in ["register", "login", "password"]:
             for c in line:
                 if c not in ALLOWED_CHARACTERS:
                     console.msg("command contains illegal characters")
@@ -196,7 +196,7 @@ class Shell:
                 continue
             if ' '.join(line[:-splitpos]).lower() in self._commands.keys():
                 # Run the command and pass arguments.
-                if line[0] != "login":
+                if line[0] not in ["register", "login", "password"]:
                     if show_command:
                         console.msg("> " + ' '.join(line))
                         console.msg('=' * 20)

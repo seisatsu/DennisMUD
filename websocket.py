@@ -47,8 +47,16 @@ class ServerProtocol(WebSocketServerProtocol):
         self.factory.log.info("Client disconnected: {peer}", peer=self.peer)
 
     def onMessage(self, payload, isBinary):
-        # self.factory.communicate(self, payload, isBinary)
-        self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=payload)
+        # Don't log passwords.
+        passcheck = payload.split(b' ')
+        if passcheck[0] == b'login' and len(passcheck) >= 2:
+            passcheck = b' '.join(passcheck[:2] + [b'********'])
+            self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=passcheck)
+        elif passcheck[0] == b'password' and len(passcheck) >= 1:
+            passcheck = b' '.join(passcheck[:1] + [b'********'])
+            self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=passcheck)
+        else:
+            self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=payload)
         # Error handling and reporting.
         try:
             self.factory.router.shell.command(self.factory.router[self.peer]["console"], payload.decode('utf-8'))

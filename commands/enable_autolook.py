@@ -34,13 +34,8 @@ You can disable autolook with the `disable autolook` command."""
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
     # Check if autolook is already enabled.
@@ -48,8 +43,10 @@ def COMMAND(console, args):
         console.msg(NAME + ": autolook is already enabled")
         return False
 
+    # Enable autolook.
     console.user["autolook"]["enabled"] = True
     console.database.upsert_user(console.user)
 
+    # Finished.
     console.msg(NAME + ": done")
     return True

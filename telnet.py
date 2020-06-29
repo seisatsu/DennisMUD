@@ -60,8 +60,18 @@ class ServerProtocol(LineReceiver):
         self._log.info("client disconnected: {peer}", peer=self.peer)
 
     def lineReceived(self, line):
-        # self.factory.communicate(self, payload, isBinary)
-        self._log.info("client {peer} sending message: {line}", peer=self.peer, line=line)
+        # Don't log passwords.
+        passcheck = line.split(b' ')
+        if passcheck[0] == b'login' and len(passcheck) >= 2:
+            passcheck = b' '.join(passcheck[:2] + [b'********'])
+            self._log.info("Client {peer} sending message: {line}", peer=self.peer, line=passcheck)
+        elif passcheck[0] == b'password' and len(passcheck) >= 1:
+            passcheck = b' '.join(passcheck[:1] + [b'********'])
+            self._log.info("Client {peer} sending message: {line}", peer=self.peer, line=passcheck)
+        else:
+            self._log.info("Client {peer} sending message: {line}", peer=self.peer, line=line)
+
+        # Try to decode the line.
         try:
             line = line.decode('utf-8')
         except:

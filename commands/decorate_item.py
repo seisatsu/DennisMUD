@@ -49,7 +49,7 @@ def COMMAND(console, args):
     if itemid is None:
         return False
 
-    # Get the target item and perform item checks.
+    # Lookup the target item and perform item checks.
     thisitem = COMMON.check_item(NAME, console, itemid)
     if not thisitem:
         return False

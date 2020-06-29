@@ -1,6 +1,6 @@
 ######################
 # Dennis MUD         #
-# change_password.py #
+# password.py        #
 # Copyright 2020     #
 # Michael D. Reiley  #
 ######################
@@ -27,16 +27,16 @@
 
 import hashlib
 
-NAME = "change password"
+NAME = "password"
 CATEGORIES = ["users"]
-USAGE = "change password [username] <password>"
+USAGE = "password [username] <password>"
 DESCRIPTION = """Change your password.
 
 You must be logged in. The username argument is optional.
 Only wizards can change the passwords of other users.
 
-Ex. `change password n3wp4ss`
-Ex2. `change password seisatsu n3wp4ss`"""
+Ex. `password n3wp4ss`
+Ex2. `password seisatsu n3wp4ss`"""
 
 
 def COMMAND(console, args):

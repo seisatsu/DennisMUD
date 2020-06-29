@@ -35,45 +35,52 @@ Ex2. `drop item 4`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
-    # Look for the current room.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+        return False
 
     # Get item name/id.
     name = ' '.join(args)
 
-    # Find the item in our inventory.
+    # Search our inventory for the target item.
     for itemid in console.user["inventory"]:
-        i = console.database.item_by_id(itemid)
-        # Check for name or id match.
-        if i["name"].lower() == name.lower() or str(i["id"]) == name:
-            # Remove the item from our inventory and place it in the room.
-            console.shell.broadcast_room(console, console.user["nick"] + " dropped " + i["name"])
-            if not i["duplified"] or not console.user["name"] in i["owners"]:
-                # Only non-owners lose duplified items when dropping them.
-                console.user["inventory"].remove(i["id"])
-                if i["duplified"]:
-                    # This will disappear.
-                    console.shell.broadcast_room(console, i["name"] + " vanished")
-            if not i["duplified"] or (i["duplified"] and console.user["name"] in i["owners"]):
-                # Only put unduplified items into the room unless we own them.
-                if i["id"] not in thisroom["items"]:
-                    # Account for duplified items.
-                    thisroom["items"].append(i["id"])
+        # Lookup the target item and perform item checks.
+        thisitem = COMMON.check_item(NAME, console, itemid)
+        if not thisitem:
+            return False
+
+        # If we find the correct item, announce the drop and figure out how to drop it.
+        if thisitem["name"].lower() == name.lower() or str(thisitem["id"]) == name:
+            console.shell.broadcast_room(console, console.user["nick"] + " dropped " + thisitem["name"])
+
+            # Only non-owners lose duplified items when dropping them.
+            if not thisitem["duplified"] or not console.user["name"] in thisitem["owners"]:
+                console.user["inventory"].remove(thisitem["id"])
+
+                # If this is a duplified item, announce that it is going away.
+                if thisitem["duplified"]:
+                    console.shell.broadcast_room(console, thisitem["name"] + " vanished")
+
+            # Only put unduplified items into the room unless we are the owner.
+            if not thisitem["duplified"] or (thisitem["duplified"] and console.user["name"] in thisitem["owners"]):
+                # If the item is not in the room yet, add it.
+                if thisitem["id"] not in thisroom["items"]:
+                    thisroom["items"].append(thisitem["id"])
+
+                # Update the room document.
                 console.database.upsert_room(thisroom)
+
+            # Update the user document.
             console.database.upsert_user(console.user)
+
+            # Finished.
             return True
 
+    # The item wasn't found in our inventory.
     console.msg(NAME + ": no such item in inventory")
     return False

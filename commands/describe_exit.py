@@ -49,7 +49,7 @@ def COMMAND(console, args):
     if exitid is None:
         return False
 
-    # Get the current room, and perform exit checks.
+    # Lookup the current room, and perform exit checks.
     thisroom = COMMON.check_exit(NAME, console, exitid)
     if not thisroom:
         return False
@@ -61,7 +61,7 @@ def COMMAND(console, args):
         return False
 
     # Process any newlines and then describe the exit.
-    if "\\\\" * 3 in ' '.join(args):
+    if "\\\\" * 3 in ' '.join(args[1:]):
         console.msg(NAME + ": you may only stack two newlines")
         return False
     thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")

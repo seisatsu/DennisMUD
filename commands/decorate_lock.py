@@ -49,7 +49,7 @@ def COMMAND(console, args):
     if exitid is None:
         return False
 
-    # Get the current room, and perform exit checks.
+    # Lookup the current room, and perform exit checks.
     thisroom = COMMON.check_exit(NAME, console, exitid)
     if not thisroom:
         return False
