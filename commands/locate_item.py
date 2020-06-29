@@ -36,7 +36,7 @@ You can only locate an item that you own.
 Ex. `locate item 4`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -52,7 +52,7 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if not i:
         console.msg(NAME + ": no such item")
         return False
@@ -68,13 +68,13 @@ def COMMAND(console, database, args):
         return True
 
     # check if someone else is holding the item.
-    for u in database.users.all():
+    for u in console.database.users.all():
         if itemid in u["inventory"]:
             console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in " + u["name"] + "'s your inventory")
             return True
 
     # check if the item is in a room.
-    for r in database.rooms.all():
+    for r in console.database.rooms.all():
         if itemid in r["items"]:
             console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in room " +
                         r["name"] + " (" + str(r["id"]) + ")")

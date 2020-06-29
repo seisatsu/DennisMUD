@@ -32,7 +32,7 @@ USAGE = "inventory"
 DESCRIPTION = "List all items in your inventory."
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -43,7 +43,7 @@ def COMMAND(console, database, args):
         return False
 
     for itemid in console.user["inventory"]:
-        i = database.item_by_id(itemid)
+        i = console.database.item_by_id(itemid)
         if i:
             console.msg(i["name"] + " (" + str(i["id"]) + ")")
         else:

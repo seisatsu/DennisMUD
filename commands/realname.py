@@ -35,7 +35,7 @@ You can also lookup a user's nickname by their username with the `nickname` comm
 Ex. `realname Overlord Seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -45,7 +45,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    u = database.user_by_nick(' '.join(args).lower())
+    u = console.database.user_by_nick(' '.join(args).lower())
     if u:
         console.msg(u["nick"] + ": " + u["name"])
         return True

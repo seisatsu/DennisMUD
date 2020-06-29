@@ -37,7 +37,7 @@ You can grant ownership with the `grant item` command, provided you are an owner
 Ex. `revoke item 4 seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -58,7 +58,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": no such item in inventory")
         return False
 
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if not i:
         console.msg(NAME + ": no such item")
         return False
@@ -69,7 +69,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the named user exists.
-    u = database.user_by_name(args[1].lower())
+    u = console.database.user_by_name(args[1].lower())
     if not u:
         console.msg(NAME + ": no such user")
         return False
@@ -80,6 +80,6 @@ def COMMAND(console, database, args):
         return False
 
     i["owners"].remove(args[1].lower())
-    database.upsert_item(i)
+    console.database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

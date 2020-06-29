@@ -36,62 +36,57 @@ You must an owner of the item, and it must be in your inventory.
 Ex. `break item 4` to break the item with ID 4."""
 
 
-def COMMAND(console, database, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+def COMMAND(console, args):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if not itemid:
         return False
 
     # Check if the item exists.
-    i = database.item_by_id(itemid)
-    if i:
-        # Make sure we are the item's owner.
-        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this item")
-            return False
-        # Make sure we are holding the item.
-        if itemid in console.user["inventory"] or console.user["wizard"]:
-            # Delete the item and remove it from our inventory.
-            database.delete_item(i)
-            if i["duplified"]:
-                # Duplified items disappear from everyone's inventory and every room when broken.
-                for u in console.router.users.values():
-                    try: # Trap to catch rare crash
-                        if itemid in u["console"].user["inventory"]:
-                            u["console"].user["inventory"].remove(itemid)
-                            u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                            database.upsert_user(u["console"].user)
-                    except:
-                        with open('break_item_trap.txt', 'w') as file:
-                            file.write("itemid: {0}, u: {1}".format(str(itemid), u))
-                            file.write("console: {0}".format(u["console"]))
-                            file.write("user: {0}".format(u["console"].user))
-                for r in database.rooms.all():
-                    if itemid in r["items"]:
-                        r["items"].remove(itemid)
-            else:
-                # It's not duplified, so we only have to worry about our own inventory.
-                console.user["inventory"].remove(itemid)
-                console.msg("{0} vanished from your inventory".format(i["name"]))
-                database.upsert_user(console.user)
-            console.msg(NAME + ": done")
-            return True
-        else:
-            # We are not holding that item.
-            console.msg(NAME + ": not holding item")
-            return False
-
-    else:
-        # No item with that ID exists.
-        console.msg(NAME + ": no such item")
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
+
+    # Make sure we are the item's owner.
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
+        console.msg(NAME + ": you do not own this item")
+        return False
+
+    # Check if we are holding the item or we are a wizard.
+    if itemid not in console.user["inventory"] and not console.user["wizard"]:
+        console.msg(NAME + ": not holding item")
+        return False
+
+    # Delete the item from the database.
+    console.database.delete_item(thisitem)
+
+    # The item is duplified, so start by deleting it from every user's inventory.
+    if thisitem["duplified"]:
+        for u in console.router.users.values():
+            try:  # Trap to catch a rare crash
+                if itemid in u["console"].user["inventory"]:
+                    u["console"].user["inventory"].remove(itemid)
+                    u["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+                    console.database.upsert_user(u["console"].user)
+            except:
+                with open('break_item_trap.txt', 'w') as file:
+                    file.write("itemid: {0}, u: {1}".format(str(itemid), u))
+                    file.write("console: {0}".format(u["console"]))
+                    file.write("user: {0}".format(u["console"].user))
+
+    # If the item is duplified or we are a wizard, check all rooms for the presence of the item, and delete.
+    if thisitem["duplified"] or console.user["wizard"]:
+        for r in console.database.rooms.all():
+            if itemid in r["items"]:
+                r["items"].remove(itemid)
+
+    # It's still in our inventory, so it must not have been duplified. Delete it from our inventory now.
+    if itemid in console.user["inventory"] and not thisitem["duplified"]:
+        console.user["inventory"].remove(itemid)
+        console.msg("{0} vanished from your inventory".format(thisitem["name"]))
+        console.database.upsert_user(console.user)
+    console.msg(NAME + ": done")
+    return True
+

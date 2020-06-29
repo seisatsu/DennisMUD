@@ -36,7 +36,7 @@ You will be added as an owner of the new room.
 Ex. `make room Small Bedroom`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -59,7 +59,7 @@ def COMMAND(console, database, args):
         pass
 
     # Check if a room by this name already exists. Case insensitive.
-    rooms = sorted(database.rooms.all(), reverse=True, key=lambda k: k["id"])
+    rooms = sorted(console.database.rooms.all(), reverse=True, key=lambda k: k["id"])
     if rooms:
         for r in rooms:
             if r["name"].lower() == name.lower():
@@ -83,12 +83,12 @@ def COMMAND(console, database, args):
         "entrances": [],
         "items": [],
         "sealed": {
-            "inbound": database.defaults["rooms"]["sealed"]["inbound"],
-            "outbound": database.defaults["rooms"]["sealed"]["outbound"]
+            "inbound": console.database.defaults["rooms"]["sealed"]["inbound"],
+            "outbound": console.database.defaults["rooms"]["sealed"]["outbound"]
         }
     }
 
     # Save.
-    database.upsert_room(newroom)
+    console.database.upsert_room(newroom)
     console.msg(NAME + ": done (id: " + str(newroom["id"]) + ")")
     return True

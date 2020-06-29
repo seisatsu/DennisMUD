@@ -36,7 +36,7 @@ It is functionally the same as using `teleport 0`.
 Ex. `xyzzy` to go to the first room."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -47,8 +47,8 @@ def COMMAND(console, database, args):
         return False
 
     roomid = console.user["room"]
-    thisroom = database.room_by_id(roomid)
-    destroom = database.room_by_id(0)
+    thisroom = console.database.room_by_id(roomid)
+    destroom = console.database.room_by_id(0)
 
     # Move us to the new room.
     if thisroom and console.user["name"] in thisroom["users"]:
@@ -61,9 +61,9 @@ def COMMAND(console, database, args):
     console.user["room"] = destroom["id"]
     console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
     if thisroom:
-        database.upsert_room(thisroom)
-    database.upsert_room(destroom)
-    database.upsert_user(console.user)
+        console.database.upsert_room(thisroom)
+    console.database.upsert_room(destroom)
+    console.database.upsert_user(console.user)
     console.shell.command(console, "look", False)
     return True
 

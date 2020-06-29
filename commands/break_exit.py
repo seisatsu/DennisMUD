@@ -36,33 +36,19 @@ You must own the exit or its room in order to break it.
 Ex. `break exit 3` to break the exit with ID 3 in the current room."""
 
 
-def COMMAND(console, database, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+def COMMAND(console, args):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if not exitid:
         return False
 
-    # Test input.
-    try:
-        exitid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Find the current room, and make sure it exists.
-    thisroom = database.room_by_id(console.user["room"])
+    # Get the current room, and check if the exit exists in this room.
+    thisroom = COMMON.check_exit(NAME, console, exitid)
     if not thisroom:
-        console.msg("warning: current room does not exist")
         return False
 
-    # Find out if the exit exists in this room.
-    if exitid > len(thisroom["exits"])-1 or exitid < 0:
-        console.msg(NAME + ": no such exit")
-        return False
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
             console.user["name"] not in thisroom["owners"]:
         console.msg(NAME + ": this room is outbound sealed")
@@ -72,9 +58,15 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not own this exit or this room")
         return False
 
+    # Check if the exit's destination exists.
+    destroom = COMMON.check_room(NAME, console, thisroom["exits"][exitid]["dest"])
+    if not destroom:
+        console.log.warn("exit destination room does not exist: {roomid}", roomid=destroom["id"])
+        console.msg("warning: exit destination room does not exist: {0}".format(destroom["id"]))
+        return False
+
     # Delete the exit. If this was the only exit leading to the destination room,
     # remove this room from the destination room's entrances record.
-    destroom = database.room_by_id(thisroom["exits"][exitid]["dest"])
     del thisroom["exits"][exitid]
     only_exit_to_destroom = True
     for ex in thisroom["exits"]:
@@ -83,8 +75,8 @@ def COMMAND(console, database, args):
             break
     if only_exit_to_destroom:
         destroom["entrances"].remove(thisroom["id"])
-        database.upsert_room(destroom)
-    database.upsert_room(thisroom)
+        console.database.upsert_room(destroom)
+    console.database.upsert_room(thisroom)
 
     console.msg(NAME + ": done")
     return True

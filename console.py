@@ -39,6 +39,8 @@ class Console:
     :ivar shell: The shell instance, which handles commands and help.
     :ivar rname: The name used by the router for this console.
     :ivar shell: The Shell instance, which handles commands and help, and communication with the router.
+    :ivar database: The DatabaseManager instance.
+    :ivar log: The Logger for this console.
     """
     def __init__(self, router, shell, rname, database, log=None):
         """Console Initializer
@@ -53,8 +55,8 @@ class Console:
         self.router = router
         self.shell = shell
         self.rname = rname
-        self._database = database
-        self._log = log or Logger("console:{0}".format(rname))
+        self.database = database
+        self.log = log or Logger("console:{0}".format(rname))
 
         self._commands = {}
         self._help = {}
@@ -73,6 +75,6 @@ class Console:
         if self.router.single_user:
             print(message)
         else:
-            self._log.info(message)
+            self.log.info(message)
         self.router.message(self.rname, message, _nbsp)
         return True

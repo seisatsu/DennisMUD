@@ -38,7 +38,7 @@ If a user is offline, only wizards can see their location.
 Ex. `locate user seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -48,14 +48,14 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    u = database.user_by_name(args[0].lower())
+    u = console.database.user_by_name(args[0].lower())
     if not u:
         console.msg(NAME + ": no such user")
         return False
 
     # If the user is offline or we are a wizard, show their location.
-    if database.online(u["name"]):
-        for r in database.rooms.all():
+    if console.database.online(u["name"]):
+        for r in console.database.rooms.all():
             if u["name"] in r["users"]:
                 console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")
                 return True

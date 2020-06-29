@@ -33,7 +33,7 @@ DESCRIPTION = """Lookup the ID of the item <name>.
 Ex. `lookup item crystal ball`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -43,7 +43,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    items = database.items.all()
+    items = console.database.items.all()
     for i in items:
         if i["name"].lower() == ' '.join(args).lower():
             console.msg(i["name"] + ": " + str(i["id"]))

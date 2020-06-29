@@ -33,7 +33,7 @@ DESCRIPTION = """List all online users in the world.
 If you are a wizard, you will see a list of all registered users, including offline users."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -43,17 +43,17 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    users = sorted(database.users.all(), key=lambda k: k["name"])
+    users = sorted(console.database.users.all(), key=lambda k: k["name"])
     online_count = 0
     offline_count = 0
     if len(users):
         for u in users:
-            if database.online(u["name"]):
+            if console.database.online(u["name"]):
                 console.msg("{0} ({1})".format(u["nick"], u["name"]))
                 online_count += 1
         if console.user["wizard"]:
             for u in users:
-                if not database.online(u["name"]):
+                if not console.database.online(u["name"]):
                     console.msg("{0} ({1}) [offline]".format(u["nick"], u["name"]))
                     offline_count += 1
             console.msg("total users online: {0}; offline: {1}".format(online_count, offline_count))

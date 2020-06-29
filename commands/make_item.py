@@ -36,7 +36,7 @@ You will be added as an owner of the new item.
 Ex. `make item Crystal Ball`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -59,7 +59,7 @@ def COMMAND(console, database, args):
         pass
 
     # Check if an item by this name already exists. Case insensitive.
-    items = sorted(database.items.all(), reverse=True, key=lambda k: k["id"])
+    items = sorted(console.database.items.all(), reverse=True, key=lambda k: k["id"])
     if items:
         for i in items:
             if i["name"].lower() == name.lower():
@@ -79,15 +79,15 @@ def COMMAND(console, database, args):
         "desc": "",
         "action": "",
         "owners": [console.user["name"]],
-        "glued": database.defaults["items"]["glued"],
+        "glued": console.database.defaults["items"]["glued"],
         "duplified": False
     }
 
     # Add the item to the creator's inventory.
     console.user["inventory"].append(newitem["id"])
-    database.upsert_user(console.user)
+    console.database.upsert_user(console.user)
 
     # Save.
-    database.upsert_item(newitem)
+    console.database.upsert_item(newitem)
     console.msg(NAME + ": done (id: " + str(newitem["id"]) + ")")
     return True

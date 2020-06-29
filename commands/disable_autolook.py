@@ -33,7 +33,7 @@ DESCRIPTION = """Disable autolook. You will no longer automatically look upon en
 You can enable autolook with the `enable autolook` command."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -49,7 +49,7 @@ def COMMAND(console, database, args):
         return False
 
     console.user["autolook"]["enabled"] = False
-    database.upsert_user(console.user)
+    console.database.upsert_user(console.user)
 
     console.msg(NAME + ": done")
     return True

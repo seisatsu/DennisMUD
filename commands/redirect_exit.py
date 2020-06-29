@@ -37,7 +37,7 @@ You must own the exit or its room.
 Ex. `redirect exit 3 27` to redirect exit 3 to room 27."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -55,13 +55,13 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the exit is in this room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if thisroom:
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
             return False
         # Check if the destination room exists.
-        destroom = database.room_by_id(dest)
+        destroom = console.database.room_by_id(dest)
         if not destroom:
             console.msg(NAME + ": destination room does not exist")
             return False  # The destination room does not exist.
@@ -74,7 +74,7 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": the destination room is inbound sealed")
             return False
         thisroom["exits"][exitid]["dest"] = dest
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
     console.msg("warning: current room does not exist")

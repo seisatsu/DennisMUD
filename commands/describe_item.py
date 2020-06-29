@@ -39,7 +39,7 @@ Ex2. `describe item 4 A small music box made of ivory.\\\\The bottom edge of the
 Ex3. `describe item 4 A small music box made of ivory.\\\\\\\\The bottom edge of the lid is lined with silver trim.`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -61,7 +61,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the item exists.
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if not i:
         console.msg(NAME + ": no such item")
         return False
@@ -76,6 +76,6 @@ def COMMAND(console, database, args):
         return False
 
     i["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
-    database.upsert_item(i)
+    console.database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

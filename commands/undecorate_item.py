@@ -35,7 +35,7 @@ You must own the item and be holding it in order to undecorate it.
 Ex. `undecorate item 4`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -57,7 +57,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the item exists.
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if not i:
         console.msg(NAME + ": no such item")
         return False
@@ -68,6 +68,6 @@ def COMMAND(console, database, args):
         return False
 
     i["action"] = ""
-    database.upsert_item(i)
+    console.database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

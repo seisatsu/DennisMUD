@@ -36,5 +36,5 @@ For a long form help message, use the `help` command.
 Ex. `usage make exit` to show the short form help message for `make exit`."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     return console.shell.usage(console, ' '.join(args))

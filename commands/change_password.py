@@ -39,7 +39,7 @@ Ex. `change password n3wp4ss`
 Ex2. `change password seisatsu n3wp4ss`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) not in [1, 2]:
         console.msg("Usage: " + USAGE)
         return False
@@ -52,7 +52,7 @@ def COMMAND(console, database, args):
     # Change our own password.
     if len(args) == 1 or (len(args) == 2 and args[0].lower() == console.user["name"]):
         console.user["passhash"] = hashlib.sha256(args[len(args)-1].encode()).hexdigest()
-        database.upsert_user(console.user)
+        console.database.upsert_user(console.user)
         console.msg(NAME + ": done")
         return True
 
@@ -68,6 +68,6 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": no such user")
             return False
         u["passhash"] = hashlib.sha256(args[1].encode()).hexdigest()
-        database.upsert_user(u)
+        console.database.upsert_user(u)
         console.msg(NAME + ": done")
         return True

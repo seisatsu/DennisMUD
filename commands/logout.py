@@ -31,18 +31,18 @@ USAGE = "logout"
 DESCRIPTION = "Log out if logged in."
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
 
     # Not logged in yet.
-    if not console.user or not database.online(console.user["name"]):
+    if not console.user or not console.database.online(console.user["name"]):
         console.msg(NAME + ": not logged in")
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -51,10 +51,10 @@ def COMMAND(console, database, args):
     if console.user["name"] in thisroom["users"]:
         console.shell.broadcast_room(console, console.user["nick"] + " logged out")
         thisroom["users"].remove(console.user["name"])
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
 
     # Take us offline
-    database.logout_user(console.user["name"])
+    console.database.logout_user(console.user["name"])
     console.user = None
     console.msg("logged out")
     return True

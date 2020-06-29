@@ -40,14 +40,14 @@ Ex2. `look self` to look at yourself.
 Ex3. `look crystal ball` to look at the item "crystal ball"."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     # Make sure we are logged in.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -60,11 +60,11 @@ def COMMAND(console, database, args):
             console.msg(thisroom["desc"])
         userlist = []
         for u in thisroom["users"]:
-            userlist.append(database.user_by_name(u)["nick"])
+            userlist.append(console.database.user_by_name(u)["nick"])
         console.msg("Occupants: " + ", ".join(userlist))
         itemlist = []
         for i in thisroom["items"]:
-            itemlookup = database.item_by_id(i)
+            itemlookup = console.database.item_by_id(i)
             if itemlookup:
                 itemlist.append(itemlookup["name"] + " (" + str(itemlookup["id"]) + ")")
         if itemlist:
@@ -88,7 +88,7 @@ def COMMAND(console, database, args):
 
         # Might be an item in the room.
         for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.
-            i = database.item_by_id(itemid)
+            i = console.database.item_by_id(itemid)
             if i and i["name"].lower() == ' '.join(args).lower():
                 console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
                 console.msg("Owned by: " + ', '.join(i["owners"]))
@@ -99,7 +99,7 @@ def COMMAND(console, database, args):
 
         # Might be an item in your inventory.
         for itemid in console.user["inventory"]:
-            i = database.item_by_id(itemid)
+            i = console.database.item_by_id(itemid)
             if i and i["name"].lower() == ' '.join(args).lower():
                 console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
                 console.msg("Owned by: " + ', '.join(i["owners"]))
@@ -117,22 +117,22 @@ def COMMAND(console, database, args):
                 if thisroom["exits"][e]["desc"]:
                     console.msg(thisroom["exits"][e]["desc"])  # Print exit description.
                 if thisroom["exits"][e]["key"] and not thisroom["exits"][e]["key_hidden"]:
-                    i = database.item_by_id(thisroom["exits"][e]["key"])
+                    i = console.database.item_by_id(thisroom["exits"][e]["key"])
                     console.msg("Unlocked with: " + i["name"] + " (" + str(i["id"]) + ")")  # Print key information.
                 found_something = True
                 break
 
         # Might be the username of a user.
-        u = database.user_by_name(' '.join(args).lower())
-        if u and database.online(u["name"]):
+        u = console.database.user_by_name(' '.join(args).lower())
+        if u and console.database.online(u["name"]):
             console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
             if u["desc"]:
                 console.msg(u["desc"])  # Print user description.
             found_something = True
 
         # Might be the nickname of a user.
-        u = database.user_by_nick(' '.join(args).lower())
-        if u and database.online(u["name"]):
+        u = console.database.user_by_nick(' '.join(args).lower())
+        if u and console.database.online(u["name"]):
             console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
             if u["desc"]:
                 console.msg(u["desc"])  # Print user description.

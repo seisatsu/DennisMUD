@@ -37,7 +37,7 @@ You can unlock a locked exit with the `unlock exit` command.
 Ex. `lock exit 3`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -54,7 +54,7 @@ def COMMAND(console, database, args):
         return False
 
     roomid = console.user["room"]
-    r = database.room_by_id(roomid)
+    r = console.database.room_by_id(roomid)
 
     # Make sure the exit exists.
     if exitid > len(r["exits"]) - 1 or exitid < 0:
@@ -71,6 +71,6 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": this exit is already locked")
         return False
     r["exits"][exitid]["locked"] = True
-    database.upsert_room(r)
+    console.database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

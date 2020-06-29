@@ -38,7 +38,7 @@ Ex. `list entrances` to list the entrances to the current room.
 Ex. `list entrances 5` to list the entrances to the room with ID 5."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) > 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -51,12 +51,12 @@ def COMMAND(console, database, args):
     if len(args) == 1:
         try:
             roomid = int(args[0])
-            thisroom = database.room_by_id(roomid)
+            thisroom = console.database.room_by_id(roomid)
         except ValueError:
             console.msg("Usage: " + USAGE)
             return False
     else:
-        thisroom = database.room_by_id(console.user["room"])
+        thisroom = console.database.room_by_id(console.user["room"])
 
     # Check if the room exists.
     if not thisroom:
@@ -75,7 +75,7 @@ def COMMAND(console, database, args):
 
     # Enumerate exits leading to this one, and the rooms containing them.
     for ent in sorted(thisroom["entrances"]):
-        srcroom = database.room_by_id(ent)
+        srcroom = console.database.room_by_id(ent)
         if not srcroom:
             console.msg("warning: entrance room does not exist: {0}".format(ent))
             continue

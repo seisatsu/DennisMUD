@@ -38,7 +38,7 @@ Ex2. `msg seisatsu Hello there!`
 Ex3. `.seisatsu Hello there!`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -50,7 +50,7 @@ def COMMAND(console, database, args):
 
     # Make sure the target user exists and is online, and get their record.
     targetuser = console.shell.user_by_name(args[0].lower())
-    if not targetuser or not database.online(args[0].lower()):
+    if not targetuser or not console.database.online(args[0].lower()):
         console.msg(NAME + ": no such user is logged in")
         return False
 

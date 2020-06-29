@@ -35,7 +35,7 @@ You must own the item and be holding it in order to unglue it.
 Ex. `unglue item 4`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -52,7 +52,7 @@ def COMMAND(console, database, args):
         return False
 
     # Check if the item exists.
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if i:
         # Make sure we are the item's owner.
         if console.user["name"] not in i["owners"] and not console.user["wizard"]:
@@ -65,7 +65,7 @@ def COMMAND(console, database, args):
                 console.msg(NAME + ": item is already unglued")
                 return False
             i["glued"] = False
-            database.upsert_item(i)
+            console.database.upsert_item(i)
             console.msg(NAME + ": done")
             return True
         else:

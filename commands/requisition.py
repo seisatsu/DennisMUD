@@ -37,7 +37,7 @@ Duplified items will just copy to your inventory if not there already.
 Ex. `requisition 14` to move item 14 to your inventory."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -54,7 +54,7 @@ def COMMAND(console, database, args):
         return False
 
     # Check if the item exists.
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if i:
         if console.user["name"] not in i["owners"] and not console.user["wizard"]:
             console.msg(NAME + ": you do not have permission to requisition that item")
@@ -68,23 +68,23 @@ def COMMAND(console, database, args):
         # Don't remove duplified items.
         if not i["duplified"]:
             # If the item is in a room's item list, remove it.
-            rooms = database.rooms.all()
+            rooms = console.database.rooms.all()
             if rooms:
                 for r in rooms:
                     if itemid in r["items"]:
                         r["items"].remove(itemid)
-                        database.upsert_room(r)
+                        console.database.upsert_room(r)
 
             # If the item is in someone's inventory, remove it.
             for u in console.router.users.values():
                 if itemid in u["console"].user["inventory"]:
                     u["console"].user["inventory"].remove(itemid)
                     u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                    database.upsert_user(u["console"].user)
+                    console.database.upsert_user(u["console"].user)
 
         # Place the item in our inventory.
         console.user["inventory"].append(itemid)
-        database.upsert_user(console.user)
+        console.database.upsert_user(console.user)
         console.msg("requisitioned item " + i["name"] + " (" + str(i["id"]) + ")")
         console.msg("{0} appeared in your inventory".format(i["name"]))
         return True

@@ -41,14 +41,8 @@ Ex3. `me trips and falls over.`
 Ex4. `:trips and falls over.`"""
 
 
-def COMMAND(console, database, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+def COMMAND(console, args):
+    if not COMMON.check(NAME, console, args, argmin=0):
         return False
 
     # Construct and broadcast the action text.

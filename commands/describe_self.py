@@ -38,7 +38,7 @@ Ex2. `describe self This guy is obviously some kind of badass.\\\\You should pro
 Ex3. `describe self This guy is obviously some kind of badass.\\\\\\\\You should probably keep some distance."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -53,6 +53,6 @@ def COMMAND(console, database, args):
         return False
 
     console.user["desc"] = ' '.join(args).replace("\\\\", "\n")
-    database.upsert_user(console.user)
+    console.database.upsert_user(console.user)
     console.msg(NAME + ": done")
     return True

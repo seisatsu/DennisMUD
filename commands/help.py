@@ -34,5 +34,5 @@ Ex. `help make room` to show the help message for `make room`.
 Ex2. `help exploration` to list the commands in the exploration category."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     return console.shell.help(console, ' '.join(args))

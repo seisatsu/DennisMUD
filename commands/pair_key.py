@@ -36,7 +36,7 @@ Any user who holds the item will be able to pass through the locked exit as if i
 Ex. `pair key 4 3` to make exit 4 unlock with item 3."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -55,7 +55,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the item exists.
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if not i:
         console.msg(NAME + ": no such item")
         return False
@@ -66,7 +66,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the exit is in this room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if thisroom:
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
@@ -85,7 +85,7 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": you do not own this exit or this room")
             return False
         thisroom["exits"][exitid]["key"] = itemid
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
     console.msg("warning: current room does not exist")

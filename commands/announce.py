@@ -33,17 +33,8 @@ DESCRIPTION = """(WIZARDS ONLY) Broadcast a message to all online users.
 Ex. `announce This is an announcement.`"""
 
 
-def COMMAND(console, database, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in, and a wizard.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-    if not console.user["wizard"]:
-        console.msg(NAME + ": you do not have permission to use this command")
+def COMMAND(console, args):
+    if not COMMON.check(NAME, console, args, argmin=0, wizard=True):
         return False
 
     console.shell.broadcast("<<<" + console.user["nick"] + ">>>: " + ' '.join(args))

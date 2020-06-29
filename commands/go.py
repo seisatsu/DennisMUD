@@ -41,14 +41,14 @@ Ex4. `>blue door`
 Ex5. `go` to list exits."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     # Make sure we are logged in.
     if not console.user:
         console.msg(NAME + ": must be logged in first")
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -74,7 +74,7 @@ def COMMAND(console, database, args):
             # Check for name or id match.
             if exits[e]["name"].lower() == name.lower() or str(e) == name:
                 # Check if the destination room exists.
-                destroom = database.room_by_id(exits[e]["dest"])
+                destroom = console.database.room_by_id(exits[e]["dest"])
                 if not destroom:
                     console.msg(NAME + ": destination room does not exist")
                     return False  # The destination room does not exist.
@@ -93,7 +93,7 @@ def COMMAND(console, database, args):
                         return False
                     else:
                         # Broadcast the action for the key item.
-                        i = database.item_by_id(exits[e]["key"])
+                        i = console.database.item_by_id(exits[e]["key"])
                         if i["action"]:
                             if "%player%" in i["action"]:
                                 action = i["action"].replace("%player%", console.user["nick"])
@@ -120,9 +120,9 @@ def COMMAND(console, database, args):
                                                  console.user["nick"] + " left the room through " + exits[e]["name"])
                 console.user["room"] = destroom["id"]
                 console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
-                database.upsert_room(thisroom)
-                database.upsert_room(destroom)
-                database.upsert_user(console.user)
+                console.database.upsert_room(thisroom)
+                console.database.upsert_room(destroom)
+                console.database.upsert_user(console.user)
 
                 # If autolook is enabled, look.
                 if console.user["autolook"]["enabled"]:

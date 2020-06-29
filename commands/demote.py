@@ -33,7 +33,7 @@ DESCRIPTION = """(WIZARDS ONLY) Remove wizard status from the named user.
 Ex. `demote seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -56,7 +56,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": user is already not a wizard")
         return False
     targetuser["wizard"] = False
-    database.upsert_user(targetuser)
+    console.database.upsert_user(targetuser)
 
     console.msg(NAME + ": done")
     return True

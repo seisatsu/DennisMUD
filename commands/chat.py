@@ -38,7 +38,7 @@ Ex. `chat Hello everyone!`
 Ex2. `#Hello everyone!`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 1:
         console.msg("Usage: " + USAGE)
         return False

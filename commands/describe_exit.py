@@ -39,7 +39,7 @@ Ex2. `describe exit 3 You see a lovely wooden door.\\\\The handle is made of bra
 Ex3. `describe exit 3 You see a lovely wooden door.\\\\\\\\The handle is made of brass.`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -56,7 +56,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the exit is in this room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if thisroom:
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
@@ -69,7 +69,7 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": you may only stack two newlines")
             return False
         thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
     console.msg("warning: current room does not exist")

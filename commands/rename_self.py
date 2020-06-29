@@ -35,7 +35,7 @@ Your nickname is separate from your username. People will see it instead of your
 Ex. `rename self Overlord Seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -58,12 +58,12 @@ def COMMAND(console, database, args):
         pass
 
     # Check if nickname is already in use.
-    for u in database.users.all():
+    for u in console.database.users.all():
         if name.lower() == u["nick"].lower():
             console.msg(NAME + ": that nickname is already in use")
             return False
 
     console.user["nick"] = name
-    database.upsert_user(console.user)
+    console.database.upsert_user(console.user)
     console.msg(NAME + ": done")
     return True

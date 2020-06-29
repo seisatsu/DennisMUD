@@ -35,7 +35,7 @@ You must own the item and it must be in your inventory.
 Ex. `rename item 4 Blue Shard`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -69,7 +69,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": no such item in inventory")
         return False
 
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if not i:
         console.msg(NAME + ": no such item")
         return False
@@ -80,6 +80,6 @@ def COMMAND(console, database, args):
         return False
 
     i["name"] = name
-    database.upsert_item(i)
+    console.database.upsert_item(i)
     console.msg(NAME + ": done")
     return True

@@ -35,7 +35,7 @@ You can enable the general chat with the `enable chat` command.
 Chat messages are separate from private messages and same-room communication."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -51,7 +51,7 @@ def COMMAND(console, database, args):
         return False
 
     console.user["chat"]["enabled"] = False
-    database.upsert_user(console.user)
+    console.database.upsert_user(console.user)
 
     console.msg(NAME + ": done")
     return True

@@ -41,7 +41,7 @@ Ex. `register seisatsu mypassword`"""
 ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_'
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     # args = [username, password]
     if len(args) != 2:
         console.msg("Usage: " + USAGE)
@@ -58,7 +58,7 @@ def COMMAND(console, database, args):
             return False
 
     # Register a new user.
-    if database.user_by_name(args[0]):  # User already exists.
+    if console.database.user_by_name(args[0]):  # User already exists.
         console.msg(NAME + ": user already exists")
         return False
 
@@ -71,16 +71,16 @@ def COMMAND(console, database, args):
         "room": 0,
         "inventory": [],
         "autolook": {
-            "enabled": database.defaults["users"]["autolook"]["enabled"]
+            "enabled": console.database.defaults["users"]["autolook"]["enabled"]
         },
         "chat": {
-            "enabled": database.defaults["users"]["chat"]["enabled"],
+            "enabled": console.database.defaults["users"]["chat"]["enabled"],
             "ignored": []
         },
         "wizard": False
     }
 
     # Save.
-    database.upsert_user(newuser)
+    console.database.upsert_user(newuser)
     console.msg("registered user \"" + newuser["name"] + "\"")
     return True

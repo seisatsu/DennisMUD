@@ -37,7 +37,7 @@ Ex. `teleport 0` to go to the first room.
 Ex2. `teleport 17` to go to room 17."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -54,8 +54,8 @@ def COMMAND(console, database, args):
         return False
 
     roomid = console.user["room"]
-    thisroom = database.room_by_id(roomid)
-    destroom = database.room_by_id(dest)
+    thisroom = console.console.database.room_by_id(roomid)
+    destroom = console.console.database.room_by_id(dest)
 
     if not destroom:
         console.msg(NAME + ": destination room does not exist")
@@ -73,8 +73,8 @@ def COMMAND(console, database, args):
     console.user["room"] = destroom["id"]
     console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
     if thisroom:
-        database.upsert_room(thisroom)
-    database.upsert_room(destroom)
-    database.upsert_user(console.user)
+        console.console.database.upsert_room(thisroom)
+    console.console.database.upsert_room(destroom)
+    console.console.database.upsert_user(console.user)
     console.shell.command(console, "look", False)
     return True

@@ -35,7 +35,7 @@ You must own the exit or its room.
 Ex. `rename exit 3 Iron Door`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -63,7 +63,7 @@ def COMMAND(console, database, args):
             pass
 
     # Make sure the exit is in this room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if thisroom:
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
@@ -73,7 +73,7 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": you do not own this exit or this room")
             return False
         thisroom["exits"][exitid]["name"] = ' '.join(args[1:])
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
     console.msg("warning: current room does not exist")

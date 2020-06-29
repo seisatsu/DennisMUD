@@ -190,13 +190,13 @@ def init_logger(config):
             logfile = open(config["log"]["file"], 'a')
         except:
             # Couldn't open the log file, so warn and fall back to STDOUT.
-            if config["log"]["level"] in ["warn", "info", "debug"]:
+            if config["log"]["level"] in ("warn", "info", "debug"):
                 print("[server#warn] could not open log file:", config["log"]["file"])
             config["log"]["file"] = None
             config["log"]["stdout"] = True
 
     # Make sure the chosen log level is valid. Otherwise force the highest log level.
-    if config["log"]["level"] not in ["critical", "error", "warn", "info", "debug"]:
+    if config["log"]["level"] not in ("critical", "error", "warn", "info", "debug"):
         print("[server#warn] invalid log level in config, defaulting to \"debug\"")
         config["log"]["level"] = "debug"
 
@@ -284,7 +284,7 @@ def main():
 
     # Initialize the logger.
     stdout = sys.stdout
-    if config["log"]["level"] in ["info", "debug"]:
+    if config["log"]["level"] in ("info", "debug"):
         print("[server#info] initializing logger")
     init_logger(config)
     log = Logger("server")

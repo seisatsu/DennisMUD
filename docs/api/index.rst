@@ -7,6 +7,7 @@ Dennis MUD API Reference
 
    dbformat
    dbman
+   shell
    console
    server
-
+   common

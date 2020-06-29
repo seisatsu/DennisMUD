@@ -37,7 +37,7 @@ First you must have registered a user with the `register` command.
 Ex. `login myusername mypassword`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     # args = [username, password]
     if len(args) != 2:
         console.msg("Usage: " + USAGE)
@@ -47,14 +47,14 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": already logged in")
         return False
 
-    thisuser = database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest())
+    thisuser = console.database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest())
     if not thisuser:
         console.msg(NAME + ": bad credentials")
         return False  # Bad login.
     console.user = thisuser
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -62,7 +62,7 @@ def COMMAND(console, database, args):
     # If we are not in the room, put us there.
     if not console.user["name"] in thisroom["users"]:
         thisroom["users"].append(console.user["name"])
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
 
     console.msg("logged in as \"" + console.user["name"] + "\"")
     console.msg('=' * 20)

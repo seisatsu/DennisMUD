@@ -33,7 +33,7 @@ DESCRIPTION = """List all rooms in the world that you own.
 If you are a wizard, you will see a list of all rooms that exist."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -43,7 +43,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    rooms = sorted(database.rooms.all(), key=lambda k: k["id"])
+    rooms = sorted(console.database.rooms.all(), key=lambda k: k["id"])
     found_something = False
     if len(rooms):
         for r in rooms:

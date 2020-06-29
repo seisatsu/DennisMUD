@@ -34,7 +34,7 @@ Ex. `get item crystal ball`
 Ex2. `get item 4`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) == 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -45,7 +45,7 @@ def COMMAND(console, database, args):
         return False
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -55,7 +55,7 @@ def COMMAND(console, database, args):
 
     # Find the item in the current room.
     for itemid in thisroom["items"]:
-        i = database.item_by_id(itemid)
+        i = console.database.item_by_id(itemid)
         # Check for name or id match.
         if i["name"].lower() == name.lower() or str(i["id"]) == name:
             if i["glued"] and console.user["name"] not in i["owners"] and not console.user["wizard"]:
@@ -69,8 +69,8 @@ def COMMAND(console, database, args):
             if i["id"] not in console.user["inventory"]:
                 # Account for duplified items.
                 console.user["inventory"].append(i["id"])
-            database.upsert_room(thisroom)
-            database.upsert_user(console.user)
+            console.database.upsert_room(thisroom)
+            console.database.upsert_user(console.user)
             console.shell.broadcast_room(console, console.user["nick"] + " picked up " + i["name"])
             return True
 

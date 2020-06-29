@@ -33,7 +33,7 @@ DESCRIPTION = """List all items in the world that you own.
 If you are a wizard, you will see a list of all items that exist."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False
@@ -43,7 +43,7 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    items = sorted(database.items.all(), key=lambda k: k["id"])
+    items = sorted(console.database.items.all(), key=lambda k: k["id"])
     found_something = False
     if len(items):
         for i in items:

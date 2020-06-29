@@ -36,7 +36,7 @@ Ex. `use 4` to show the custom action for item 4.
 Ex2. `use Crystal Ball` to show the custom action for the item named "Crystal Ball"."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -50,7 +50,7 @@ def COMMAND(console, database, args):
     name = ' '.join(args)
 
     # Look for the current room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if not thisroom:
         console.msg("warning: current room does not exist")
         return False  # The current room does not exist?!
@@ -59,7 +59,7 @@ def COMMAND(console, database, args):
 
     # Search for the item in the current room.
     for itemid in thisroom["items"]:
-        i = database.item_by_id(itemid)
+        i = console.database.item_by_id(itemid)
         # Check for name or id match.
         if i["name"].lower() == name.lower() or str(i["id"]) == name:
             found = i
@@ -67,7 +67,7 @@ def COMMAND(console, database, args):
     # Search for the item in our inventory.
     if found is None:
         for itemid in console.user["inventory"]:
-            i = database.item_by_id(itemid)
+            i = console.database.item_by_id(itemid)
             # Check for name or id match.
             if i["name"].lower() == name.lower() or str(i["id"]) == name:
                 found = i

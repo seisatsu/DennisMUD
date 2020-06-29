@@ -38,7 +38,7 @@ You can unignore an ignored user with the `unignore user` command.
 Ex. `ignore user seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -49,7 +49,7 @@ def COMMAND(console, database, args):
         return False
 
     # Lookup user.
-    targetuser = database.user_by_name(args[0])
+    targetuser = console.database.user_by_name(args[0])
     if not targetuser:
         # No such user.
         console.msg(NAME + ": no such user")
@@ -61,7 +61,7 @@ def COMMAND(console, database, args):
         return False
 
     console.user["chat"]["ignored"].append(targetuser["name"])
-    database.upsert_user(console.user)
+    console.database.upsert_user(console.user)
 
     console.msg(NAME + ": done")
     return True

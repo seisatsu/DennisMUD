@@ -36,7 +36,7 @@ You must own the exit or its room to hide the key.
 Ex. `hide key 3`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) < 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -54,7 +54,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the exit is in this room.
-    thisroom = database.room_by_id(console.user["room"])
+    thisroom = console.database.room_by_id(console.user["room"])
     if thisroom:
         if exitid > len(thisroom["exits"])-1 or exitid < 0:
             console.msg(NAME + ": no such exit")
@@ -70,7 +70,7 @@ def COMMAND(console, database, args):
             console.msg(NAME + ": the key for this exit is already hidden")
             return False
         thisroom["exits"][exitid]["key_hidden"] = True
-        database.upsert_room(thisroom)
+        console.database.upsert_room(thisroom)
         console.msg(NAME + ": done")
         return True
     console.msg("warning: current room does not exist")

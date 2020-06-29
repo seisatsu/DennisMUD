@@ -34,7 +34,7 @@ USAGE = "shutdown"
 DESCRIPTION = "(WIZARDS ONLY) Shut down the server."
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 0:
         console.msg("Usage: " + USAGE)
         return False

@@ -36,7 +36,7 @@ You must be an owner of the room, and no one can be in the room, including yours
 Ex. `break room 5` to break the room with ID 5."""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -52,7 +52,7 @@ def COMMAND(console, database, args):
         console.msg("Usage: " + USAGE)
         return False
 
-    thisroom = database.room_by_id(roomid)
+    thisroom = console.database.room_by_id(roomid)
 
     # Check if the room exists.
     if not thisroom:
@@ -71,13 +71,13 @@ def COMMAND(console, database, args):
 
     # Remove this room from the entrances record of every room it has an exit to.
     for ex in thisroom["exits"]:
-        destroom = database.room_by_id(ex["dest"])
+        destroom = console.database.room_by_id(ex["dest"])
         if thisroom["id"] in destroom["entrances"]:
             destroom["entrances"].remove(thisroom["id"])
-            database.upsert_room(destroom)
+            console.database.upsert_room(destroom)
 
     # Delete the room.
-    database.delete_room(thisroom)
+    console.database.delete_room(thisroom)
 
     console.msg(NAME + ": done")
     return True

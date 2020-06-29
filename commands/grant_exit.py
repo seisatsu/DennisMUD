@@ -37,7 +37,7 @@ You can revoke ownership with the `revoke exit` command, provided you are an own
 Ex. `grant exit 3 seisatsu`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 2:
         console.msg("Usage: " + USAGE)
         return False
@@ -54,7 +54,7 @@ def COMMAND(console, database, args):
         return False
 
     roomid = console.user["room"]
-    r = database.room_by_id(roomid)
+    r = console.database.room_by_id(roomid)
 
     # Find out if the exit exists in this room.
     if exitid > len(r["exits"]) - 1 or exitid < 0:
@@ -68,7 +68,7 @@ def COMMAND(console, database, args):
         return False
 
     # Make sure the named user exists.
-    u = database.user_by_name(args[1].lower())
+    u = console.database.user_by_name(args[1].lower())
     if not u:
         console.msg(NAME + ": no such user")
         return False
@@ -79,6 +79,6 @@ def COMMAND(console, database, args):
         return False
 
     r["exits"][exitid]["owners"].append(args[1].lower())
-    database.upsert_room(r)
+    console.database.upsert_room(r)
     console.msg(NAME + ": done")
     return True

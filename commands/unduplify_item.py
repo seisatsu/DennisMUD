@@ -37,7 +37,7 @@ All copies of the item in other users' inventories will disappear.
 Ex. `duplify item 4`"""
 
 
-def COMMAND(console, database, args):
+def COMMAND(console, args):
     if len(args) != 1:
         console.msg("Usage: " + USAGE)
         return False
@@ -54,7 +54,7 @@ def COMMAND(console, database, args):
         return False
 
     # Check if the item exists.
-    i = database.item_by_id(itemid)
+    i = console.database.item_by_id(itemid)
     if i:
         # Make sure we are the item's owner.
         if console.user["name"] not in i["owners"] and not console.user["wizard"]:
@@ -67,7 +67,7 @@ def COMMAND(console, database, args):
                 console.msg(NAME + ": item is already not duplified")
                 return False
             i["duplified"] = False
-            database.upsert_item(i)
+            console.database.upsert_item(i)
             console.msg(NAME + ": done")
 
             # Delete item from all user inventories except ours, and all rooms.
@@ -78,8 +78,8 @@ def COMMAND(console, database, args):
                 if itemid in u["console"].user["inventory"]:
                     u["console"].user["inventory"].remove(itemid)
                     u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                    database.upsert_user(u["console"].user)
-            for r in database.rooms.all():
+                    console.database.upsert_user(u["console"].user)
+            for r in console.database.rooms.all():
                 if itemid in r["items"]:
                     r["items"].remove(itemid)
 
