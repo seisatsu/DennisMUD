@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # announce.py       #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -46,6 +46,6 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": you do not have permission to use this command")
         return False
 
-    console.broadcast("<<<" + console.user["nick"] + ">>>: " + ' '.join(args))
+    console.shell.broadcast("<<<" + console.user["nick"] + ">>>: " + ' '.join(args))
 
     return True

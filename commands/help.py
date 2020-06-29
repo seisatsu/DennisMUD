@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # help.py           #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -35,4 +35,4 @@ Ex2. `help exploration` to list the commands in the exploration category."""
 
 
 def COMMAND(console, database, args):
-    return console.help(' '.join(args))
+    return console.shell.help(console, ' '.join(args))

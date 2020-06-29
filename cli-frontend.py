@@ -34,6 +34,8 @@ if sys.version_info[0] != 3:
 
 import console
 import database
+import shell
+
 import json
 import pdb
 
@@ -43,6 +45,7 @@ class Router:
     """
     def __init__(self):
         self.users = {}
+        self.shell = None
         self.single_user = True
 
     def message(self, nickname, msg, _nbsp=None):
@@ -88,14 +91,22 @@ def main():
 
     log = Log()
 
+    # Initialize the database manager.
     log.info("initializing database manager")
     dbman = database.DatabaseManager(config["database"]["filename"], log)
     if not dbman._startup():
         return 1
     log.info("finished initializing database manager")
 
+    # Initialize the router.
+    router = Router()
+
+    # Initialize the command shell.
+    command_shell = shell.Shell(dbman, router)
+    router.shell = command_shell
+
     # Log in as the root user. Promote to wizard if it was somehow demoted.
-    dennis = console.Console(dbman, "<world>", Router(), log)
+    dennis = console.Console(router, command_shell, "<world>", dbman, log)
     dennis.user = dbman.user_by_name("<world>")
     dbman._users_online.append("<world>")
     if not dennis.user["wizard"]:
@@ -112,7 +123,7 @@ def main():
         if cmd == "debug":
             pdb.set_trace()
             continue
-        print(dennis.command(cmd))
+        print(command_shell.command(dennis, cmd))
 
     # Just before shutdown.
     dbman._unlock()

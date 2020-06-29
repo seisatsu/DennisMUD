@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # xyzzy.py          #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -56,13 +56,14 @@ def COMMAND(console, database, args):
     if console.user["name"] not in destroom["users"]:
         destroom["users"].append(console.user["name"])
     if thisroom:
-        console.broadcast_room(console.user["nick"] + " uttered a mysterious word and vanished from the room")
+        console.shell.broadcast_room(console,
+                                     console.user["nick"] + " uttered a mysterious word and vanished from the room")
     console.user["room"] = destroom["id"]
-    console.broadcast_room(console.user["nick"] + " entered the room")
+    console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
     if thisroom:
         database.upsert_room(thisroom)
     database.upsert_room(destroom)
     database.upsert_user(console.user)
-    console.command("look", False)
+    console.shell.command(console, "look", False)
     return True
 

@@ -57,6 +57,6 @@ def COMMAND(console, database, args):
         action = action.replace("%player%", console.user["nick"])
     else:
         action = console.user["nick"] + " " + ' '.join(args)
-    console.broadcast_room(action)
+    console.shell.broadcast_room(console, action)
 
     return True

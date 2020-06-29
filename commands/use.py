@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # use.py            #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -80,10 +80,10 @@ def COMMAND(console, database, args):
                 action = i["action"].replace("%player%", console.user["nick"])
             else:
                 action = console.user["nick"] + " " + i["action"]
-            console.broadcast_room(action)
+            console.shell.broadcast_room(console, action)
         else:
             action = console.user["nick"] + " used " + i["name"]
-            console.broadcast_room(action)
+            console.shell.broadcast_room(console, action)
         return True
     else:
         console.msg(NAME + ": no such item is here")

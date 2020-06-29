@@ -48,14 +48,18 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    for u in console.router.users:
-        if console.router.users[u]["console"].user and \
-                console.router.users[u]["console"].user["name"] == args[0].lower():
-            if not console.user["name"] in console.router.users[u]["console"].user["chat"]["ignored"] or \
-                    console.user["wizard"]:
-                console.router.users[u]["console"].msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
-                console.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
+    # Make sure the target user exists and is online, and get their record.
+    targetuser = console.shell.user_by_name(args[0].lower())
+    if not targetuser or not database.online(args[0].lower()):
+        console.msg(NAME + ": no such user is logged in")
+        return False
+
+    # Message the user if we are a wizard or not ignored.
+    if console.user["wizard"] or not console.user["name"] in targetuser["chat"]["ignored"]:
+            console.shell.msg_user(args[0].lower(), "<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
+            console.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
             return True
 
-    console.msg(NAME + ": no such user is logged in")
+    # We are probably ignored.
+    console.msg(NAME + ": could not message user")
     return False

@@ -66,6 +66,6 @@ def COMMAND(console, database, args):
 
     console.msg("logged in as \"" + console.user["name"] + "\"")
     console.msg('=' * 20)
-    console.broadcast_room(console.user["nick"] + " logged in")
-    console.command("look", False)
+    console.shell.broadcast_room(console, console.user["nick"] + " logged in")
+    console.shell.command(console, "look", False)
     return True

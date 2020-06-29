@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # demote.py         #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -47,7 +47,7 @@ def COMMAND(console, database, args):
         return False
 
     # Demote the named user.
-    targetuser = console.user_by_name(args[0])
+    targetuser = console.shell.user_by_name(args[0])
     if not targetuser:
         # No such user.
         console.msg(NAME + ": no such user")

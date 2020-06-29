@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # logout.py         #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -49,7 +49,7 @@ def COMMAND(console, database, args):
 
     # If we are in the room, take us out.
     if console.user["name"] in thisroom["users"]:
-        console.broadcast_room(console.user["nick"] + " logged out")
+        console.shell.broadcast_room(console, console.user["nick"] + " logged out")
         thisroom["users"].remove(console.user["name"])
         database.upsert_room(thisroom)
 

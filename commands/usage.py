@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # usage.py          #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -37,4 +37,4 @@ Ex. `usage make exit` to show the short form help message for `make exit`."""
 
 
 def COMMAND(console, database, args):
-    return console.usage(' '.join(args))
+    return console.shell.usage(console, ' '.join(args))

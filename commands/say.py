@@ -45,6 +45,6 @@ def COMMAND(console, database, args):
         console.msg(NAME + ": must be logged in first")
         return False
 
-    console.broadcast_room("<" + console.user["nick"] + ">: " + ' '.join(args))
+    console.shell.broadcast_room(console, "<" + console.user["nick"] + ">: " + ' '.join(args))
 
     return True

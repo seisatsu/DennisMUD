@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # promote.py        #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -47,7 +47,7 @@ def COMMAND(console, database, args):
         return False
 
     # Upgrade the named user to wizard.
-    targetuser = console.user_by_name(args[0])
+    targetuser = console.shell.user_by_name(args[0].lower())
     if not targetuser:
         # No such user.
         console.msg(NAME + ": no such user")

@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # drop.py           #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -59,13 +59,13 @@ def COMMAND(console, database, args):
         # Check for name or id match.
         if i["name"].lower() == name.lower() or str(i["id"]) == name:
             # Remove the item from our inventory and place it in the room.
-            console.broadcast_room(console.user["nick"] + " dropped " + i["name"])
+            console.shell.broadcast_room(console, console.user["nick"] + " dropped " + i["name"])
             if not i["duplified"] or not console.user["name"] in i["owners"]:
                 # Only non-owners lose duplified items when dropping them.
                 console.user["inventory"].remove(i["id"])
                 if i["duplified"]:
                     # This will disappear.
-                    console.broadcast_room(i["name"] + " vanished")
+                    console.shell.broadcast_room(console, i["name"] + " vanished")
             if not i["duplified"] or (i["duplified"] and console.user["name"] in i["owners"]):
                 # Only put unduplified items into the room unless we own them.
                 if i["id"] not in thisroom["items"]:

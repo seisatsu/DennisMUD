@@ -1,7 +1,7 @@
 ######################
 # Dennis MUD         #
 # change_password.py #
-# Copyright 2018     #
+# Copyright 2020     #
 # Michael D. Reiley  #
 ######################
 
@@ -63,7 +63,7 @@ def COMMAND(console, database, args):
 
     # And we have permission.
     else:
-        u = console.user_by_name(args[0].lower())
+        u = console.shell.user_by_name(args[0].lower())
         if not u:
             console.msg(NAME + ": no such user")
             return False

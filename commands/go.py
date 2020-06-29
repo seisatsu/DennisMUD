@@ -89,7 +89,7 @@ def COMMAND(console, database, args):
                                 action = exits[e]["action"]["locked"].replace("%player%", console.user["nick"])
                             else:
                                 action = console.user["nick"] + " " + exits[e]["action"]["locked"]
-                            console.broadcast_room(action)
+                            console.shell.broadcast_room(console, action)
                         return False
                     else:
                         # Broadcast the action for the key item.
@@ -99,10 +99,10 @@ def COMMAND(console, database, args):
                                 action = i["action"].replace("%player%", console.user["nick"])
                             else:
                                 action = console.user["nick"] + " " + i["action"]
-                            console.broadcast_room(action)
+                            console.shell.broadcast_room(console, action)
                         else:
                             action = console.user["nick"] + " used " + i["name"]
-                            console.broadcast_room(action)
+                            console.shell.broadcast_room(console, action)
 
                 # Move us to the new room.
                 if console.user["name"] in thisroom["users"]:
@@ -114,18 +114,19 @@ def COMMAND(console, database, args):
                         action = exits[e]["action"]["go"].replace("%player%", console.user["nick"])
                     else:
                         action = console.user["nick"] + " " + exits[e]["action"]["go"]
-                    console.broadcast_room(action)
+                    console.shell.broadcast_room(console, action)
                 else:
-                    console.broadcast_room(console.user["nick"] + " left the room through " + exits[e]["name"])
+                    console.shell.broadcast_room(console,
+                                                 console.user["nick"] + " left the room through " + exits[e]["name"])
                 console.user["room"] = destroom["id"]
-                console.broadcast_room(console.user["nick"] + " entered the room")
+                console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
                 database.upsert_room(thisroom)
                 database.upsert_room(destroom)
                 database.upsert_user(console.user)
 
                 # If autolook is enabled, look.
                 if console.user["autolook"]["enabled"]:
-                    console.command("look", False)
+                    console.shell.command(console, "look", False)
                 else:
                     console.msg(thisroom["name"] + " (" + str(thisroom["id"]) + ")")
 

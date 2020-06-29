@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # get.py            #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -71,7 +71,7 @@ def COMMAND(console, database, args):
                 console.user["inventory"].append(i["id"])
             database.upsert_room(thisroom)
             database.upsert_user(console.user)
-            console.broadcast_room(console.user["nick"] + " picked up " + i["name"])
+            console.shell.broadcast_room(console, console.user["nick"] + " picked up " + i["name"])
             return True
 
     console.msg(NAME + ": no such item in room")

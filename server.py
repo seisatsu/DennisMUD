@@ -36,6 +36,8 @@ if sys.version_info[0] != 3:
 
 import console
 import database
+import shell
+
 import html
 import json
 import telnet
@@ -53,20 +55,22 @@ class Router:
     of connected users and their consoles, and handles passing messages between them.
 
     :ivar users: Dictionary of connected users and their consoles, as well as the protocols they are connected by.
+    :ivar shell: The shell instance, which handles commands and help.
     :ivar single_user: Whether we are running in single-user mode. Hard-coded here to False.
     :ivar telnet_factory: The active Autobahn telnet server factory.
     :ivar websocket_factory: The active Autobahn websocket server factory.
     """
-    def __init__(self, config, dbman):
+    def __init__(self, config, database):
         """Router Initializer
         """
         self.users = {}
+        self.shell = None
         self.single_user = False
         self.telnet_factory = None
         self.websocket_factory = None
 
         self._config = config
-        self._dbman = dbman
+        self._database = database
 
     def __contains__(self, item):
         """__contains__
@@ -105,8 +109,8 @@ class Router:
         :param service: Service type. "telnet" or "websocket".
         :return: True
         """
-        self.users[peer] = {"service": service, "console": console.Console(self._dbman, peer, self)}
-        self.users[peer]["console"]._disabled_commands = self._config["disabled"]
+        self.users[peer] = {"service": service, "console": console.Console(self, self.shell, peer, self._database)}
+        self.shell._disabled_commands = self._config["disabled"]
         return True
 
     def unregister(self, peer):
@@ -119,7 +123,7 @@ class Router:
             return False
         if not self.users[peer]["console"].user:
             return False
-        self.users[peer]["console"].command("logout")
+        self.shell.command(self.users[peer]["console"], "logout")
         del self.users[peer]
         return True
 
@@ -226,14 +230,11 @@ def init_logger(config):
     globalLogBeginner.beginLoggingTo(logtargets)
 
 
-def init_services(config, dbman, log):
+def init_services(config, dbman, router, log):
     """Initialize the Telnet and/or WebSocket Services
     """
     # We will exit if no services are enabled.
     any_enabled = False
-
-    # Create the router instance we will use.
-    router = Router(config, dbman)
 
     # If telnet is enabled, initialize its service.
     if config["telnet"]["enabled"]:
@@ -300,9 +301,16 @@ def main():
         return 1
     log.info("finished initializing database manager")
 
+    # Initialize the router.
+    router = Router(config, dbman)
+
+    # initialize the command shell.
+    command_shell = shell.Shell(dbman, router)
+    router.shell = command_shell
+
     # Start the services.
     log.info("initializing services")
-    if not init_services(config, dbman, log):
+    if not init_services(config, dbman, router, log):
         dbman._unlock()
         return 1
     log.info("finished initializing services")

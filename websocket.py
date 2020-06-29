@@ -51,7 +51,7 @@ class ServerProtocol(WebSocketServerProtocol):
         self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=payload)
         # Error handling and reporting.
         try:
-            self.factory.router[self.peer]["console"].command(payload.decode('utf-8'))
+            self.factory.router.shell.command(self.factory.router[self.peer]["console"], payload.decode('utf-8'))
         except:
             self.factory.communicate(self.peer, traceback.format_exc().encode('utf-8'))
             self.factory.log.error(traceback.format_exc())
