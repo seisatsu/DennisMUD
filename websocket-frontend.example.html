@@ -1,15 +1,19 @@
 <!-- Codebase borrowed from https://github.com/TKeesh/WebSocketChat -->
 
 <!DOCTYPE html>
-<html style="height: 98%;">
+<html>
 <head>
     <title>Dennis MUD</title>
     <meta charset="UTF-8">
     <style>
+        html {
+            height: 95%;
+        }
         body {
             background-color: #303030;
-            height: 100%;
+            height: 95%;
             font-family: monospace;
+            font-size: 12pt;
         }
         a:link, a:visited {
             color: #050530;
@@ -21,22 +25,32 @@
             text-align: left;
             margin: auto;
             margin-top: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             padding: 5px;
             background-color: #484848;
-            height: 80%;
-            width: 800px;
+            height: 70%;
+            width: 95%;
             border: 1px solid #301010;
             overflow: auto;
         }
         #container {
             height: 100%;
+            max-width: 1200px;
             text-align: center;
+            margin: auto;
         }
         #input {
             background-color: #484848;
             border: 1px solid #301010;
-            width: 400px;
+            width: 95%;
+            height: auto;
+            font-family: monospace;
+            font-size: 28pt;
+        }
+        form.console {
+            font-family: monospace;
+            font-size: 28pt;
+            height: auto;
         }
     </style>
 </head>
