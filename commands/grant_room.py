@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # grant_room.py     #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -27,6 +27,7 @@
 
 NAME = "grant room"
 CATEGORIES = ["rooms"]
+ALIASES = ["share room"]
 USAGE = "grant room <username>"
 DESCRIPTION = """Add user <username> to the owners of the current room.
 

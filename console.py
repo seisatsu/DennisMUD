@@ -184,6 +184,13 @@ class Console:
                 return self._call(' '.join(line[:-splitpos]), line[-splitpos:])
         if line:
             self.msg("unknown command: " + ' '.join(line))
+            possible = []
+            for p in self._commands:
+                if p.startswith(' '.join(line)):
+                    possible.append(p)
+            if possible:
+                possible = ', '.join(possible)
+                self.msg("did you mean: " + possible)
         return None
 
     def help(self, line):
@@ -198,17 +205,13 @@ class Console:
             # If help was called by itself, assume we want the help for help itself.
             line = "help"
         line = line.lower()
+        if line in self._help.keys() and line in self._commands.keys():
+            self._log.warn("command name overlaps with category name: {line}", line=line)
         if line == "help":
             # Return a help message for the help command, and list available categories.
             self.msg("Usage: help <command/category>")
             self.msg("Description: Print the help for a command, or list the commands in a category.")
             self.msg("Available Categories: " + ', '.join(sorted(self._help.keys())))
-        elif line in self._commands.keys():
-            # Return a help message for the named command.
-            usage = "Usage: " + self._commands[line].USAGE
-            desc = "Description: " + self._commands[line].DESCRIPTION
-            self.msg(usage)
-            self.msg(desc)
         elif line in self._help.keys():
             # Return a formatted help message for the named category.
             # Thanks to:
@@ -220,6 +223,19 @@ class Console:
             self.msg("Available commands in category {0}:".format(line))
             for row in cols:
                 self.msg("".join(word.ljust(col_width) for word in row), True)
+        elif line in self._commands.keys():
+            # Return a help message for the named command.
+            usage = "Usage: " + self._commands[line].USAGE
+            desc = "Description: " + self._commands[line].DESCRIPTION
+            alias_list = ""
+            if hasattr(self._commands[line], "ALIASES"):
+                alias_list += (', '.join(self._commands[line].ALIASES))
+            if hasattr(self._commands[line], "SPECIAL_ALIASES"):
+                alias_list += ', ' + (', '.join(self._commands[line].SPECIAL_ALIASES))
+            if alias_list:
+                desc += "\n\nCommand Aliases: " + alias_list
+            self.msg(usage)
+            self.msg(desc)
         else:
             # Couldn't find anything.
             self.msg("help: unknown command or category: " + line)

@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # teleport.py       #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -29,7 +29,7 @@ NAME = "teleport"
 CATEGORIES = ["exploration"]
 ALIASES = ["tp"]
 USAGE = "teleport <room>"
-DESCRIPTION = """Teleport to the room with ID <room>. Alias: tp
+DESCRIPTION = """Teleport to the room with ID <room>.
 
 Anyone can teleport to room 0, but otherwise you can only teleport to a room that you own.
 

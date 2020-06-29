@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # say.py            #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -29,7 +29,7 @@ NAME = "say"
 CATEGORIES = ["messaging"]
 SPECIAL_ALIASES = ['\"']
 USAGE = "say <message>"
-DESCRIPTION = """Send a message to everyone in the same room as you. Alias: \"
+DESCRIPTION = """Send a message to everyone in the same room as you.
 
 Ex. `say Hello everyone!`
 Ex2. `"Hello everyone!`"""

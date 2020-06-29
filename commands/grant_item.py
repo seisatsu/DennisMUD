@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # grant_item.py     #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -27,6 +27,7 @@
 
 NAME = "grant item"
 CATEGORIES = ["items"]
+ALIASES = ["share item"]
 USAGE = "grant item <id> <username>"
 DESCRIPTION = """Add user <username> to the owners of item <id>.
 

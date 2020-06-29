@@ -27,6 +27,7 @@
 
 NAME = "break exit"
 CATEGORIES = ["exits"]
+ALIASES = ["delete exit", "destroy exit", "remove exit"]
 USAGE = "break exit <exit>"
 DESCRIPTION = """Break the exit with ID <exit> in the current room.
 

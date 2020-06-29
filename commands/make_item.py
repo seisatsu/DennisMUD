@@ -27,6 +27,7 @@
 
 NAME = "make item"
 CATEGORIES = ["items"]
+ALIASES = ["create item", "new item"]
 USAGE = "make item <name>"
 DESCRIPTION = """Create a new item called <name> and place it in your inventory.
 

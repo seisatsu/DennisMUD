@@ -27,6 +27,7 @@
 
 NAME = "locate user"
 CATEGORIES = ["users"]
+ALIASES = ["find user"]
 USAGE = "locate user <name>"
 DESCRIPTION = """Find out what room the user with username <name> is in.
 

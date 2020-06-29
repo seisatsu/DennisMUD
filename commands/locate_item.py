@@ -27,6 +27,7 @@
 
 NAME = "locate item"
 CATEGORIES = ["items"]
+ALIASES = ["find item"]
 USAGE = "locate item <id>"
 DESCRIPTION = """Find out what room the item <id> is in, or who is holding it.
 

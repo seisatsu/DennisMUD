@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # revoke_item.py    #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -27,6 +27,7 @@
 
 NAME = "revoke item"
 CATEGORIES = ["items"]
+ALIASES = ["unshare item"]
 USAGE = "revoke item <id> <username>"
 DESCRIPTION = """Remove user <username> from the owners of item <id>.
 

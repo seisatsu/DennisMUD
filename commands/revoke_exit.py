@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # revoke_exit.py    #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -27,6 +27,7 @@
 
 NAME = "revoke exit"
 CATEGORIES = ["exits"]
+ALIASES = ["unshare exit"]
 USAGE = "revoke exit <id> <username>"
 DESCRIPTION = """Remove user <username> from the owners of the exit <id> in the current room.
 

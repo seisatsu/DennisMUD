@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # action.py         #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -30,7 +30,7 @@ CATEGORIES = ["messaging"]
 ALIASES = ["emote", "me"]
 SPECIAL_ALIASES = [':']
 USAGE = "action <message>"
-DESCRIPTION = """Send a message styled as performing an action. Aliases: emote, me, and :
+DESCRIPTION = """Send a message styled as performing an action.
 
 By default, the action text is shown following your nickname and one space.
 To place your name elsewhere in the text, use the %player% marker.

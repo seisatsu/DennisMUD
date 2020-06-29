@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # go.py             #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -30,7 +30,7 @@ CATEGORIES = ["exploration"]
 ALIASES = ["exit"]
 SPECIAL_ALIASES = ['>']
 USAGE = "go [exit]"
-DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works by exit ID. Aliases: exit and >
+DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works by exit ID.
 
 If no argument is given, list the exits in the current room instead.
 

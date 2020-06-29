@@ -27,6 +27,7 @@
 
 NAME = "make room"
 CATEGORIES = ["rooms"]
+ALIASES = ["create room", "new room"]
 USAGE = "make room <name>"
 DESCRIPTION = """Create a new room called <name>.
 

@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # chat.py           #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -29,7 +29,7 @@ NAME = "chat"
 CATEGORIES = ["messaging"]
 SPECIAL_ALIASES = ['#']
 USAGE = "chat <message>"
-DESCRIPTION = """Send a message to the general chat. Alias: #
+DESCRIPTION = """Send a message to the general chat.
 
 General chat messages are seen by all online users who have chat enabled and are not ignoring you.
 You must also have chat enabled to send a message.

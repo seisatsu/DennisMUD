@@ -27,6 +27,7 @@
 
 NAME = "break item"
 CATEGORIES = ["items"]
+ALIASES = ["delete item", "destroy item", "remove item"]
 USAGE = "break item <item>"
 DESCRIPTION = """Break the item in your inventory with ID <item>.
 

@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # inventory.py      #
-# Copyright 2019    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -29,7 +29,7 @@ NAME = "inventory"
 CATEGORIES = ["items"]
 ALIASES = ["inv"]
 USAGE = "inventory"
-DESCRIPTION = "List all items in your inventory. Alias: inv"
+DESCRIPTION = "List all items in your inventory."
 
 
 def COMMAND(console, database, args):

@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # grant_exit.py     #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -27,6 +27,7 @@
 
 NAME = "grant exit"
 CATEGORIES = ["exits"]
+ALIASES = ["share exit"]
 USAGE = "grant exit <id> <username>"
 DESCRIPTION = """Add user <username> to the owners of the exit <id> in the current room.
 

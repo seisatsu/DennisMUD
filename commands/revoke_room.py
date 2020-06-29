@@ -1,7 +1,7 @@
 #####################
 # Dennis MUD        #
 # revoke_room.py    #
-# Copyright 2018    #
+# Copyright 2020    #
 # Michael D. Reiley #
 #####################
 
@@ -27,6 +27,7 @@
 
 NAME = "revoke room"
 CATEGORIES = ["rooms"]
+ALIASES = ["unshare room"]
 USAGE = "revoke room <username>"
 DESCRIPTION = """Remove user <username> from the owners of the current room.
 
