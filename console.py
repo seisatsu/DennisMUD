@@ -108,6 +108,25 @@ class Console:
                     for special_alias in self._commands[cname].SPECIAL_ALIASES:
                         self._special_aliases[special_alias] = cname
 
+        # Check for overlapping command names.
+        found_overlaps = []
+        for cname in self._commands:
+            for cname2 in self._commands:
+                if cname == cname2:
+                    continue
+                # Check if any command starts with the name of any other command,
+                # where they are not aliases for each other. This is bad.
+                if cname.startswith(cname2 + ' ') and not (
+                        (hasattr(self._commands[cname2], "ALIASES") and
+                         cname in self._commands[cname2].ALIASES) or
+                        (hasattr(self._commands[cname], "ALIASES") and
+                         cname2 in self._commands[cname].ALIASES)):
+                    # Only warn about each overlap once.
+                    if not ([cname, cname2] in found_overlaps or [cname2, cname] in found_overlaps):
+                        found_overlaps.append([cname, cname2])
+                        self._log.warn("overlapping command names: {cname}, {cname2}", cname=cname,
+                                       cname2=cname2)
+
         self._log.info("finished loading command modules")
         return True
 
