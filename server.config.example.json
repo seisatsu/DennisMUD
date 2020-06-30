@@ -19,5 +19,6 @@
     "key": "ssl/dennis.key",
     "cert": "ssl/dennis.cert"
   },
-  "disabled": ["purge_exits", "purge_entrances"]
+  "disabled": ["purge_exits", "purge_entrances"],
+  "shutdown_delay": 10
 }

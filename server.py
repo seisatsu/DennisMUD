@@ -37,11 +37,12 @@ if sys.version_info[0] != 3:
 import console
 import database
 import shell
+import telnet
+import websocket
 
 import html
 import json
-import telnet
-import websocket
+import signal
 
 from twisted.internet import reactor, ssl
 from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \
@@ -68,9 +69,11 @@ class Router:
         self.single_user = False
         self.telnet_factory = None
         self.websocket_factory = None
+        self.shutting_down = False
 
         self._config = config
         self._database = database
+        self._reactor = None
 
     def __contains__(self, item):
         """__contains__
@@ -315,8 +318,19 @@ def main():
         return 1
     log.info("finished initializing services")
 
+    # Graceful shutdown on SIGINT (ctrl-c).
+    # The shutdown command does the same thing.
+    # To shut down quickly but cleanly, send the TERM signal.
+    def shutdown(signal_received, frame):
+        if not router.shutting_down:
+            command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(config["shutdown_delay"]))
+            reactor.callLater(config["shutdown_delay"], reactor.stop)
+            router.shutting_down = True
+    signal.signal(signal.SIGINT, shutdown)
+
     # Start the Twisted Reactor.
     log.info("finished startup tasks")
+    router._reactor = reactor
     reactor.run()
 
     # Shutting down.

@@ -27,6 +27,7 @@
 
 import os
 import signal
+import time
 
 NAME = "shutdown"
 CATEGORIES = ["wizard"]
@@ -47,5 +48,16 @@ def COMMAND(console, args):
         console.msg("shutdown: you do not have permission to use this command")
         return False
 
-    # Send ourselves the TERM signal.
-    os.kill(os.getpid(), signal.SIGTERM)
+    # Make sure we are not already shutting down.
+    if console.router.shutting_down:
+        console.msg("shutdown: already shutting down")
+        return False
+
+    # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.
+    if hasattr(console.router, "_reactor"):
+        console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(
+            console.router._config["shutdown_delay"]))
+        console.router._reactor.callLater(console.router._config["shutdown_delay"], console.router._reactor.stop)
+        console.router.shutting_down = True
+    else:
+        os.kill(os.getpid(), signal.SIGTERM)
