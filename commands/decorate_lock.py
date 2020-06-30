@@ -65,5 +65,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

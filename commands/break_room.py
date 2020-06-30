@@ -53,12 +53,12 @@ def COMMAND(console, args):
 
     # Check that we own the room or are a wizard.
     if console.user["name"] not in targetroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
+        console.msg("{0}: you do not own this room".format(NAME))
         return False
 
     # Make sure the room is empty.
     if targetroom["users"]:
-        console.msg(NAME + ": you cannot break an occupied room")
+        console.msg("{0}: you cannot break an occupied room".format(NAME))
         return False
 
     # Remove this room from the entrances record of every room it has an exit to.
@@ -72,7 +72,7 @@ def COMMAND(console, args):
     console.database.delete_room(targetroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True
 
 

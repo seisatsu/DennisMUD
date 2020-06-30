@@ -56,21 +56,21 @@ def COMMAND(console, args):
 
     # Make sure we are holding the item, or we are a wizard.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg(NAME + ": no such item in inventory")
+        console.msg("{0}: no such item in inventory".format(NAME))
         return False
 
     # Make sure we are the item's owner, or a wizard.
     if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this item")
+        console.msg("{0}: you do not own this item".format(NAME))
         return False
 
     # Process any newlines and then describe the item.
     if "\\\\" * 3 in ' '.join(args[1:]):
-        console.msg(NAME + ": you may only stack two newlines")
+        console.msg("{0}: you may only stack two newlines".format(NAME))
         return False
     thisitem["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

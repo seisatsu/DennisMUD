@@ -82,5 +82,5 @@ def COMMAND(console, args):
             return True
 
     # The item wasn't found in our inventory.
-    console.msg(NAME + ": no such item in inventory")
+    console.msg("{0}: no such item in inventory".format(NAME))
     return False

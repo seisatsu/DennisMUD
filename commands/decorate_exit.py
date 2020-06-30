@@ -57,7 +57,7 @@ def COMMAND(console, args):
     # Check if we have permission to decorate the exit.
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
     # Decorate the exit.
@@ -65,5 +65,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

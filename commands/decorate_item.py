@@ -59,7 +59,7 @@ def COMMAND(console, args):
         console.msg(NAME + ": no such item in inventory")
         return False
 
-    # Make sure we are the item's owner, or a wizard.
+    console.msg("{0}: done".format(NAME))
     if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this item")
         return False
@@ -69,5 +69,5 @@ def COMMAND(console, args):
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

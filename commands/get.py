@@ -60,7 +60,7 @@ def COMMAND(console, args):
 
             # The item is glued down. Only the owner or a wizard can pick it up.
             if thisitem["glued"] and console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-                console.msg(NAME + ": you cannot get this item")
+                console.msg("{0}: you cannot get this item".format(NAME))
                 return False
 
             # Don't remove duplified items when picking them up, unless we are the owner.
@@ -79,5 +79,5 @@ def COMMAND(console, args):
             return True
 
     # The item wasn't found in the room.
-    console.msg(NAME + ": no such item in room")
+    console.msg("{0}: no such item in room".format(NAME))
     return False

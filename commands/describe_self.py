@@ -45,11 +45,11 @@ def COMMAND(console, args):
 
     # Process any newlines and then describe ourselves.
     if "\\\\" * 3 in ' '.join(args):
-        console.msg(NAME + ": you may only stack two newlines")
+        console.msg("{0}: you may only stack two newlines".format(NAME))
         return False
     console.user["desc"] = ' '.join(args).replace("\\\\", "\n")
     console.database.upsert_user(console.user)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

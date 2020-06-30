@@ -42,7 +42,7 @@ def COMMAND(console, args):
 
     # Check if chat is already enabled.
     if console.user["chat"]["enabled"]:
-        console.msg(NAME + ": chat is already enabled")
+        console.msg("{0}: chat is already enabled".format(NAME))
         return False
 
     # Enable chat.
@@ -50,5 +50,5 @@ def COMMAND(console, args):
     console.database.upsert_user(console.user)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

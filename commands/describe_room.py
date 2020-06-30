@@ -51,16 +51,16 @@ def COMMAND(console, args):
 
     # Make sure we are the room's owner.
     if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
+        console.msg("{0}: you do not own this room".format(NAME))
         return False
 
     # Process any newlines and then describe the room.
     if "\\\\" * 3 in ' '.join(args):
-        console.msg(NAME + ": you may only stack two newlines")
+        console.msg("{0}: you may only stack two newlines".format(NAME))
         return False
     thisroom["desc"] = ' '.join(args).replace("\\\\", "\n")
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

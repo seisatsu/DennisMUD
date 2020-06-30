@@ -54,11 +54,11 @@ def COMMAND(console, args):
     # Make sure we have permission to break the exit.
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
             console.user["name"] not in thisroom["owners"]:
-        console.msg(NAME + ": this room is outbound sealed")
+        console.msg("{0}: this room is outbound sealed".format(NAME))
         return False
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
     # Check if the exit's destination exists.
@@ -82,6 +82,6 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True
 

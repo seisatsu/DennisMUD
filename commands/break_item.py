@@ -53,12 +53,12 @@ def COMMAND(console, args):
 
     # Make sure we are the item's owner.
     if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this item")
+        console.msg("{0}: you do not own this item".format(NAME))
         return False
 
     # Check if we are holding the item or we are a wizard.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg(NAME + ": not holding item")
+        console.msg("{0}: not holding item".format(NAME))
         return False
 
     # Delete the item from the database.
@@ -91,6 +91,6 @@ def COMMAND(console, args):
         console.database.upsert_user(console.user)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True
 

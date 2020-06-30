@@ -78,14 +78,14 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
     if online:
         if not console.user:
             if reason:
-                console.msg(NAME + ": must be logged in first")
+                console.msg("{0}: must be logged in first".format(NAME))
             return False
 
     # Check if the calling user is a wizard.
     if wizard:
         if not console.user["wizard"]:
             if reason:
-                console.msg(NAME + ": you do not have permission to use this command")
+                console.msg("{0}: you do not have permission to use this command".format(NAME))
             return False
 
     return True
@@ -169,7 +169,7 @@ def check_wizard(NAME, console, reason=True):
     """
     if not console.user["wizard"]:
         if reason:
-            console.msg(NAME + ": you do not have permission to use this command")
+            console.msg("{0}: you do not have permission to use this command".format(NAME))
         return False
     return True
 
@@ -208,15 +208,15 @@ def check_exit(NAME, console, exitid, room=None, reason=True):
         if room is None:
             console.log.error("current room does not exist for user: {user} ({room})", user=console.user["name"],
                               room=console.user["room"])
-            console.msg("error: current room does not exist")
+            console.msg("{0}: error: current room does not exist".format(NAME))
         console.log.error("nonexistent room in COMMON.check_exit from command: {name}", name=NAME)
         if reason:
-            console.msg(NAME + ": no such exit")
+            console.msg("{0}: no such exit".format(NAME))
         return None
 
     if exitid > len(thisroom["exits"]) - 1 or exitid < 0:
         if reason:
-            console.msg(NAME + ": no such exit")
+            console.msg("{0}: no such exit".format(NAME))
         return None
 
     return thisroom
@@ -242,7 +242,7 @@ def check_item(NAME, console, itemid, reason=True):
     item = console.database.item_by_id(itemid)
     if not item:
         if reason:
-            console.msg(NAME + ": no such item")
+            console.msg("{0}: no such item".format(NAME))
         return None
     return item
 
@@ -272,10 +272,10 @@ def check_room(NAME, console, roomid=None, reason=True):
         if roomid is None:
             console.log.error("current room does not exist for user: {user} ({room})", user=console.user["name"],
                               room=console.user["room"])
-            console.msg("error: current room does not exist")
+            console.msg("{0}: error: current room does not exist".format(NAME))
             return None
         elif reason:
-            console.msg(NAME + ": no such room")
+            console.msg("{0}: no such room".format(NAME))
         return None
     return room
 
@@ -307,17 +307,17 @@ def check_user(NAME, console, username, online=False, wizard=False, live=False, 
 
     if not user:
         if reason:
-            console.msg(NAME + ": no such user")
+            console.msg("{0}: no such user".format(NAME))
         return None
 
     if online and not console.database.online(username):
         if reason:
-            console.msg(NAME + ": user is not online")
+            console.msg("{0}: user is not online".format(NAME))
         return None
 
     if wizard and not user["wizard"]:
         if reason:
-            console.msg(NAME + ": user is not a wizard")
+            console.msg("{0}: user is not a wizard".format(NAME))
         return None
 
     return user

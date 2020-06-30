@@ -42,26 +42,24 @@ Ex5. `go` to list exits."""
 
 
 def COMMAND(console, args):
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args):
         return False
 
-    # Look for the current room.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+        return False
 
     if len(args) == 0:
         # Just list exits.
         exitlist = []
-        for e in range(len(thisroom["exits"])):
-            exitlist.append(thisroom["exits"][e]["name"] + " (" + str(e) + ")")
+        for ex in range(len(thisroom["exits"])):
+            exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
         if exitlist:
-            console.msg("Exits: " + ", ".join(exitlist))
+            console.msg("Exits: {0}".format(", ".join(exitlist)))
         else:
-            console.msg(NAME + ": no exits in this room")
+            console.msg("{0}: no exits in this room".format(NAME))
         return True
 
     # Get exit name/id.
@@ -70,56 +68,70 @@ def COMMAND(console, args):
     # Try to find the exit.
     exits = thisroom["exits"]
     if len(exits):
-        for e in range(len(exits)):
+        for ex in range(len(exits)):
             # Check for name or id match.
-            if exits[e]["name"].lower() == name.lower() or str(e) == name:
+            if exits[ex]["name"].lower() == name.lower() or str(ex) == name:
                 # Check if the destination room exists.
-                destroom = console.database.room_by_id(exits[e]["dest"])
+                destroom = COMMON.check_room(NAME, console, roomid=exits[ex]["dest"], reason=False)
                 if not destroom:
-                    console.msg(NAME + ": destination room does not exist")
-                    return False  # The destination room does not exist.
+                    console.log.error("destination room does not exist for exit: {thisroom} :: {exit} -> {destroom}",
+                                      thisoorm=console.user["room"], exit=ex, destroom=exits[ex]["dest"])
+                    console.msg("{0}: error: destination room does not exist".format(NAME))
+                    return False
 
                 # Check if the exit is locked.
-                if exits[e]["locked"] and console.user["name"] not in exits[e]["owners"] and not console.user["wizard"]:
-                    # Check whether the user has the key, if any.
-                    if not exits[e]["key"] in console.user["inventory"]:
-                        console.msg(NAME + ": this exit is locked.")
-                        if exits[e]["action"]["locked"]:
-                            if "%player%" in exits[e]["action"]["locked"]:
-                                action = exits[e]["action"]["locked"].replace("%player%", console.user["nick"])
+                if exits[ex]["locked"] and console.user["name"] not in exits[ex]["owners"] \
+                        and not console.user["wizard"]:
+                    # Check whether the user has the key, if any. Broadcast the lock action.
+                    if not exits[ex]["key"] in console.user["inventory"]:
+                        console.msg("{0}: this exit is locked.".format(NAME))
+                        if exits[ex]["action"]["locked"]:
+                            if "%player%" in exits[ex]["action"]["locked"]:
+                                action = exits[ex]["action"]["locked"].replace("%player%", console.user["nick"])
                             else:
-                                action = console.user["nick"] + " " + exits[e]["action"]["locked"]
+                                action = "{0} {1}".format(console.user["nick"], exits[ex]["action"]["locked"])
                             console.shell.broadcast_room(console, action)
                         return False
+
+                    # The player has the key. Broadcast the action for the key item.
                     else:
-                        # Broadcast the action for the key item.
-                        i = console.database.item_by_id(exits[e]["key"])
-                        if i["action"]:
-                            if "%player%" in i["action"]:
-                                action = i["action"].replace("%player%", console.user["nick"])
+                        # Lookup the key item and perform item checks.
+                        thisitem = COMMON.check_item(NAME, console, exits[ex]["key"], reason=False)
+                        if not thisitem:
+                            console.log.error("key item in user inventory does not exist: {thisitem}",
+                                              thisitem=exits[ex]["key"])
+                            console.msg("{0}: error: key item in inventory does not exist".format(NAME))
+                            return False
+                        if thisitem["action"]:
+                            if "%player%" in thisitem["action"]:
+                                action = thisitem["action"].replace("%player%", console.user["nick"])
                             else:
-                                action = console.user["nick"] + " " + i["action"]
+                                action = "{0} {1}".format(console.user["nick"], thisitem["action"])
                             console.shell.broadcast_room(console, action)
                         else:
-                            action = console.user["nick"] + " used " + i["name"]
+                            action = "{0} used {1}".format(console.user["nick"], thisitem["name"])
                             console.shell.broadcast_room(console, action)
 
-                # Move us to the new room.
+                # Move us to the new room. Broadcast the exit action if one exists.
                 if console.user["name"] in thisroom["users"]:
                     thisroom["users"].remove(console.user["name"])
                 if console.user["name"] not in destroom["users"]:
                     destroom["users"].append(console.user["name"])
-                if exits[e]["action"]["go"]:
-                    if "%player%" in exits[e]["action"]["go"]:
-                        action = exits[e]["action"]["go"].replace("%player%", console.user["nick"])
+                if exits[ex]["action"]["go"]:
+                    if "%player%" in exits[ex]["action"]["go"]:
+                        action = exits[ex]["action"]["go"].replace("%player%", console.user["nick"])
                     else:
-                        action = console.user["nick"] + " " + exits[e]["action"]["go"]
+                        action = "{0} {1}".format(console.user["nick"], exits[ex]["action"]["go"])
                     console.shell.broadcast_room(console, action)
                 else:
-                    console.shell.broadcast_room(console,
-                                                 console.user["nick"] + " left the room through " + exits[e]["name"])
+                    console.shell.broadcast_room(console, "{0} left the room through {1}".format(
+                        console.user["nick"], exits[ex]["name"]))
+
+                # Finish entering the new room and announce our presence.
                 console.user["room"] = destroom["id"]
-                console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
+                console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]))
+
+                # Update everything.
                 console.database.upsert_room(thisroom)
                 console.database.upsert_room(destroom)
                 console.database.upsert_user(console.user)
@@ -128,9 +140,11 @@ def COMMAND(console, args):
                 if console.user["autolook"]["enabled"]:
                     console.shell.command(console, "look", False)
                 else:
-                    console.msg(thisroom["name"] + " (" + str(thisroom["id"]) + ")")
+                    console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
 
+                # Finished.
                 return True
 
-    console.msg(NAME + ": no such exit")
+    # We didn't find the requested exit.
+    console.msg("{0}: no such exit".format(NAME))
     return False

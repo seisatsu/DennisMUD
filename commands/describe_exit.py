@@ -57,17 +57,17 @@ def COMMAND(console, args):
     # Check if we have permission to describe the exit.
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
     # Process any newlines and then describe the exit.
     if "\\\\" * 3 in ' '.join(args[1:]):
-        console.msg(NAME + ": you may only stack two newlines")
+        console.msg("{0}: you may only stack two newlines".format(NAME))
         return False
     thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True
 

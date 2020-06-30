@@ -39,7 +39,7 @@ def COMMAND(console, args):
         return False
 
     # Broadcast our message to all users.
-    console.shell.broadcast("<<<" + console.user["nick"] + ">>>: " + ' '.join(args))
+    console.shell.broadcast("<<<{0}>>>: {1}".format(console.user["nick"], ' '.join(args)))
 
     # Finished.
     return True
