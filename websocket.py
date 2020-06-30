@@ -49,10 +49,13 @@ class ServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         # Don't log passwords.
         passcheck = payload.split(b' ')
-        if passcheck[0] == b'login' and len(passcheck) >= 2:
+        if passcheck[0] == b'login' and len(passcheck) > 2:
             passcheck = b' '.join(passcheck[:2] + [b'********'])
             self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=passcheck)
-        elif passcheck[0] == b'password' and len(passcheck) >= 1:
+        elif passcheck[0] == b'register' and len(passcheck) > 2:
+            passcheck = b' '.join(passcheck[:2] + [b'********'])
+            self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=passcheck)
+        elif passcheck[0] == b'password' and len(passcheck) > 1:
             passcheck = b' '.join(passcheck[:1] + [b'********'])
             self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=passcheck)
         else:

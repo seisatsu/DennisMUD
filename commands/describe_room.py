@@ -44,7 +44,7 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Lookup the current room.
+    # Lookup the current room and perform room checks.
     thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
         return False

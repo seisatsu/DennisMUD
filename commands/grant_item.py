@@ -38,48 +38,44 @@ Ex. `grant item 4 seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
 
     # Make sure we are holding the item.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg(NAME + ": no such item in inventory")
-        return False
-
-    i = console.database.item_by_id(itemid)
-    if not i:
-        console.msg(NAME + ": no such item")
+        console.msg("{0}: no such item in inventory".format(NAME))
         return False
 
     # Make sure we are the item's owner.
-    if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this item")
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this item".format(NAME))
         return False
 
     # Make sure the named user exists.
-    u = console.database.user_by_name(args[1].lower())
-    if not u:
-        console.msg(NAME + ": no such user")
+    targetuser = COMMON.check_user(NAME, console, args[1].lower())
+    if not targetuser:
         return False
 
     # Check if the named user is already an owner.
-    if args[1].lower() in i["owners"]:
-        console.msg(NAME + ": user already an owner of this item")
+    if args[1].lower() in thisitem["owners"]:
+        console.msg("{0}: user already an owner of this item".format(NAME))
         return False
 
-    i["owners"].append(args[1].lower())
-    console.database.upsert_item(i)
-    console.msg(NAME + ": done")
+    # Grant the item to the user.
+    thisitem["owners"].append(args[1].lower())
+    console.database.upsert_item(thisitem)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

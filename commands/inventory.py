@@ -33,19 +33,28 @@ DESCRIPTION = "List all items in your inventory."
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
+    # Check if our inventory is empty.
+    if not console.user["inventory"]:
+        console.msg(NAME + ": empty")
 
+    # Enumerate our inventory.
     for itemid in console.user["inventory"]:
-        i = console.database.item_by_id(itemid)
-        if i:
-            console.msg(i["name"] + " (" + str(i["id"]) + ")")
-        else:
-            console.msg(NAME + ": empty")
+        # Lookup the target item and perform item checks.
+        thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
+
+        # Uh oh, an item in our inventory doesn't actually exist.
+        if not thisitem:
+            console.log.error("inventory item does not exist for user: {user} ({item})", user=console.user["name"],
+                              item=itemid)
+            console.msg("{0}: error: inventory item does not exist: {1}".format(NAME, itemid))
+            continue
+
+        # Show the item's name and ID.
+        console.msg("{0} ({1})".format(thisitem["name"], itemid))
+
+    # Finished.
     return True

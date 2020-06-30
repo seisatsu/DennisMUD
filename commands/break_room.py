@@ -46,7 +46,7 @@ def COMMAND(console, args):
     if roomid is None:
         return False
 
-    # Check if the room exists.
+    # Lookup the target room and perform room checks.
     targetroom = COMMON.check_room(NAME, console, roomid)
     if not targetroom:
         return False
