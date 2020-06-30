@@ -180,20 +180,24 @@ class DatabaseManager:
         """Delete a room.
 
         :param document: The room document to delete.
-        :return: True
+        :return: True if succeeded, False if the document didn't exist.
         """
         q = Query()
-        self.rooms.remove(q.id == document["id"])
+        removed = self.rooms.remove(q.id == document["id"])
+        if not removed:
+            return False
         return True
 
     def delete_item(self, document):
         """Delete an item.
 
         :param document: The item document to delete.
-        :return: True
+        :return: True if succeeded, False if the document didn't exist.
         """
         q = Query()
-        self.items.remove(q.id == document["id"])
+        removed = self.items.remove(q.id == document["id"])
+        if not removed:
+            return False
         return True
 
     def delete_user(self, document):
@@ -202,10 +206,12 @@ class DatabaseManager:
         This is not safe to call while the user is online.
 
         :param document: The user document to delete.
-        :return: True
+        :return: True if succeeded, False if the document didn't exist.
         """
         q = Query()
-        self.users.remove(q.name == document["name"])
+        removed = self.users.remove(q.name == document["name"])
+        if not removed:
+            return False
         return True
 
     def room_by_id(self, roomid):
@@ -215,7 +221,10 @@ class DatabaseManager:
         :return: Room document or None.
         """
         q = Query()
-        thisroom = self.rooms.search(q.id == roomid)[0]
+        thisroom = self.rooms.search(q.id == roomid)
+        if not thisroom:
+            return None
+        thisroom = thisroom[0]
 
         # For each user in the room, check if they are online. If not, remove them. This used to be done for every room
         # at startup, and took a long time. It is much faster to do it as needed, though not doing it at startup leaves
@@ -239,7 +248,10 @@ class DatabaseManager:
         :return: Item document or None.
         """
         q = Query()
-        return self.items.search(q.id == itemid)[0]
+        thisitem = self.items.search(q.id == itemid)
+        if not thisitem:
+            return None
+        return thisitem[0]
 
     def user_by_name(self, username):
         """Get a user by their name.
@@ -283,11 +295,11 @@ class DatabaseManager:
         :return: User document if succeeded, None if failed.
         """
         username = username.lower()
-        u = self.user_by_name(username)
+        thisuser = self.user_by_name(username)
 
-        if not u:
+        if not thisuser:
             return None
-        if u["passhash"] != passhash:
+        if thisuser["passhash"] != passhash:
             return None
 
         if username in self._users_online:
@@ -295,7 +307,7 @@ class DatabaseManager:
         else:
             self._users_online.append(username)
 
-        return u
+        return thisuser
 
     def logout_user(self, username):
         """Log out a user.

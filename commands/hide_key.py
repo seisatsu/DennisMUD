@@ -54,17 +54,17 @@ def COMMAND(console, args):
     # Make sure we we own the exit or the room, or we are a wizard.
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
     # Make sure there is a key paired to this exit.
     if not thisroom["exits"][exitid]["key"]:
-        console.msg(NAME + ": there is no key paired to this exit")
+        console.msg("{0}: there is no key paired to this exit".format(NAME))
         return False
 
     # Check if the key is already hidden.
     if thisroom["exits"][exitid]["key_hidden"]:
-        console.msg(NAME + ": the key for this exit is already hidden")
+        console.msg("{0}: the key for this exit is already hidden".format(NAME))
         return False
 
     # Hide the key.
@@ -72,6 +72,6 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True
 

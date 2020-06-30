@@ -34,32 +34,42 @@ If you are a wizard, you will see a list of all registered users, including offl
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
+    # Sort all users in the database by username.
     users = sorted(console.database.users.all(), key=lambda k: k["name"])
+
+    # Iterate through the users, checking whether each one is online or offline,
+    # and keeping track of how many were online vs offline.
     online_count = 0
     offline_count = 0
     if len(users):
-        for u in users:
-            if console.database.online(u["name"]):
-                console.msg("{0} ({1})".format(u["nick"], u["name"]))
+        for thisuser in users:
+            # Everyone can see which users are online. List them out and keep count.
+            if console.database.online(thisuser["name"]):
+                console.msg("{0} ({1})".format(thisuser["nick"], thisuser["name"]))
                 online_count += 1
-        if console.user["wizard"]:
-            for u in users:
-                if not console.database.online(u["name"]):
-                    console.msg("{0} ({1}) [offline]".format(u["nick"], u["name"]))
-                    offline_count += 1
-            console.msg("total users online: {0}; offline: {1}".format(online_count, offline_count))
-        else:
-            console.msg("total users online: {0}".format(online_count))
-    else:
-        console.msg(NAME + ": no users?!")
 
+        # If we are a wizard, iterate through again and list out the offline users this time, and keep count.
+        if console.user["wizard"]:
+            for thisuser in users:
+                if not console.database.online(thisuser["name"]):
+                    console.msg("{0} ({1}) [offline]".format(thisuser["nick"], thisuser["name"]))
+                    offline_count += 1
+
+            # Format the count of online and offline users for wizards.
+            console.msg("total users online: {0}; offline: {1}".format(online_count, offline_count))
+
+        else:
+            # Format the count of just online users for regular players.
+            console.msg("total users online: {0}".format(online_count))
+
+    # This shouldn't ever happen.
+    else:
+        console.log.error("no users returned from list users command")
+        console.msg("{0}: error: no users?!".format(NAME))
+
+    # Finished.
     return True

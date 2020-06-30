@@ -37,49 +37,61 @@ Ex. `locate item 4`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    i = console.database.item_by_id(itemid)
-    if not i:
-        console.msg(NAME + ": no such item")
+    # Check if the item exists.
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
 
     # Make sure we are the item's owner.
-    if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this item")
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this item".format(NAME))
         return False
 
-    # check if we are holding the item.
+    # Keep track of whether we found anything in case the item is duplified and we can't return right away.
+    found_something = False
+
+    # Check if we are holding the item.
     if itemid in console.user["inventory"]:
-        console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in your inventory")
-        return True
-
-    # check if someone else is holding the item.
-    for u in console.database.users.all():
-        if itemid in u["inventory"]:
-            console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in " + u["name"] + "'s your inventory")
+        console.msg("{0}: {1} ({2}) is in your inventory".format(NAME, thisitem["name"], thisitem["id"]))
+        # If the item is duplified we need to keep looking for other copies.
+        if not thisitem["duplified"]:
             return True
+        found_something = True
 
-    # check if the item is in a room.
-    for r in console.database.rooms.all():
-        if itemid in r["items"]:
-            console.msg("Item " + i["name"] + " (" + str(i["id"]) + ") is in room " +
-                        r["name"] + " (" + str(r["id"]) + ")")
-            return True
+    # Check if someone else is holding the item.
+    for targetuser in console.database.users.all():
+        if itemid in targetuser["inventory"]:
+            console.msg("{0}: {1} ({2}) is in the inventory of {3}".format(NAME, thisitem["name"], thisitem["id"],
+                                                                                targetuser["name"]))
+            # If the item is duplified we need to keep looking for other copies.
+            if not thisitem["duplified"]:
+                return True
+            found_something = True
+
+    # Check if the item is in a room.
+    for targetroom in console.database.rooms.all():
+        if itemid in targetroom["items"]:
+            console.msg("{0}: {1} ({2}) is in room {3} ({4})".format(NAME, thisitem["name"], thisitem["id"],
+                                                                          targetroom["name"], targetroom["id"]))
+            # If the item is duplified we need to keep looking for other copies.
+            if not thisitem["duplified"]:
+                return True
+            found_something = True
 
     # Couldn't find the item.
-    console.msg(NAME + ": Warning: item exists but could not be found")
-    return False
+    if not found_something:
+        console.log.error("item exists but has no location: {item}", item=itemid)
+        console.msg("{0}: error: item exists but could not be found")
+        return False
+
+    # Finished.
+    return True

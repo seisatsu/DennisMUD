@@ -49,7 +49,7 @@ def COMMAND(console, args):
 
     # Make sure we are the room's owner.
     if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
+        console.msg("{0}: you do not own this room".format(NAME))
         return False
 
     # Make sure the named user exists.
@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # Check if the named user is already an owner.
     if args[0].lower() in thisroom["owners"]:
-        console.msg(NAME + ": user already an owner of this room")
+        console.msg("{0}: user already an owner of this room".format(NAME))
         return False
 
     # Grant the room to the user.
@@ -67,5 +67,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

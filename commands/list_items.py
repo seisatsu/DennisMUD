@@ -34,27 +34,29 @@ If you are a wizard, you will see a list of all items that exist."""
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
+    # Sort all items in the database by ID.
     items = sorted(console.database.items.all(), key=lambda k: k["id"])
+
+    # Iterate through the items, checking whether we own each one (or are a wizard),
+    # and keeping track of whether we found anything at all.
     found_something = False
     if len(items):
-        for i in items:
-            if console.user["name"] in i["owners"] or console.user["wizard"]:
-                # We either own this one, or we are a wizard.
-                console.msg("{0} ({1})".format(i["name"], i["id"]))
+        for thisitem in items:
+            # We either own this item, or we are a wizard. List it out.
+            if console.user["name"] in thisitem["owners"] or console.user["wizard"]:
+                console.msg("{0} ({1})".format(thisitem["name"], thisitem["id"]))
                 found_something = True
+
+    # We found nothing. If we are a wizard, that means no items exist. Otherwise, it means we don't own any.
     if not found_something:
         if console.user["wizard"]:
-            console.msg(NAME + ": there are no items")
+            console.msg("{0}: there are no items".format(NAME))
         else:
-            console.msg(NAME + ": you do not own any items")
+            console.msg("{0}: you do not own any items".format(NAME))
 
+    # Finished.
     return True

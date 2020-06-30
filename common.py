@@ -109,24 +109,24 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
     if type(checks) not in (list, tuple):
         console.log.error("checks type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
         console.msg("{0}: internal command error".format(NAME))
-        return False
+        return None
 
     for chk in checks:
         if type(chk) not in (list, tuple):
             console.log.error("checks type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
             console.msg("{0}: internal command error".format(NAME))
-            return False
+            return None
         if chk[0] >= len(args):
             console.log.error("checks index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
             console.msg("{0}: internal command error".format(NAME))
-            return False
+            return None
         try:
             # Try to cast the arg at the given index as the given type.
             castargs[chk[0]] = chk[1](args[chk[0]])
         except ValueError:
             if usage:
                 console.msg("Usage: {0}".format(console.shell._commands[NAME].USAGE))
-            return False
+            return None
 
     if retargs is None:
         pass
@@ -134,7 +134,7 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
         if retargs >= len(args):
             console.log.error("retargs index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
             console.msg("{0}: internal command error".format(NAME))
-            return False
+            return None
         if cast:
             return castargs[retargs]
         return args[retargs]
@@ -144,7 +144,7 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
             if ret >= len(args):
                 console.log.error("retargs index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
                 console.msg("{0}: internal command error".format(NAME))
-                return False
+                return None
             if cast:
                 retval.append(castargs[ret])
             else:
@@ -153,7 +153,7 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
     else:
         console.log.error("retargs type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
         console.msg("{0}: internal command error".format(NAME))
-        return False
+        return None
 
     return True
 

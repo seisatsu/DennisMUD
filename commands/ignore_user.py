@@ -50,7 +50,7 @@ def COMMAND(console, args):
 
     # Check if user is already ignored.
     if targetuser["name"] in console.user["chat"]["ignored"]:
-        console.msg(NAME + ": already ignoring user")
+        console.msg("{0}: already ignoring user".format(NAME))
         return False
 
     # Ignore the user.
@@ -58,5 +58,5 @@ def COMMAND(console, args):
     console.database.upsert_user(console.user)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: done".format(NAME))
     return True

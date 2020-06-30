@@ -34,24 +34,26 @@ If you are a wizard, you will see a list of all rooms that exist."""
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
+    # Sort all rooms in the database by ID.
     rooms = sorted(console.database.rooms.all(), key=lambda k: k["id"])
+
+    # Iterate through the rooms, checking whether we own each one (or are a wizard),
+    # and keeping track of whether we found anything at all.
     found_something = False
     if len(rooms):
-        for r in rooms:
-            if console.user["name"] in r["owners"] or console.user["wizard"]:
-                # We either own this room, or we are a wizard.
-                console.msg("{0} ({1})".format(r["name"], r["id"]))
+        for thisroom in rooms:
+            # We either own this room, or we are a wizard. List it out.
+            if console.user["name"] in thisroom["owners"] or console.user["wizard"]:
+                console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
                 found_something = True
-    if not found_something:
-        console.msg(NAME + ": you do not own any rooms")
 
+    # We found nothing. At least the first room must exist, so that means we just don't own any rooms.
+    if not found_something:
+        console.msg("{0}: you do not own any rooms".format(NAME))
+
+    # Finished.
     return True

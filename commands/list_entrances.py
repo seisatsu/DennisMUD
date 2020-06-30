@@ -39,54 +39,60 @@ Ex. `list entrances 5` to list the entrances to the room with ID 5."""
 
 
 def COMMAND(console, args):
-    if len(args) > 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
+    # Select the given room or the current room.
     if len(args) == 1:
-        try:
-            roomid = int(args[0])
-            thisroom = console.database.room_by_id(roomid)
-        except ValueError:
-            console.msg("Usage: " + USAGE)
+        # Perform argument type checks and casts.
+        roomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+        if roomid is None:
             return False
     else:
-        thisroom = console.database.room_by_id(console.user["room"])
+        roomid = console.user["room"]
 
-    # Check if the room exists.
-    if not thisroom:
-        console.msg(NAME + ": no such room")
+    # Lookup the target room and perform room checks.
+    targetroom = COMMON.check_room(NAME, console, roomid)
+    if not targetroom:
         return False
 
     # Check that we own the room or are a wizard.
-    if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
+    if console.user["name"] not in targetroom["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this room".format(NAME))
         return False
 
     # Are there any entrances?
-    if not thisroom["entrances"]:
-        console.msg("this room has no entrances")
+    if not targetroom["entrances"]:
+        console.msg("{0}: room has no entrances".format(NAME))
         return True
 
-    # Enumerate exits leading to this one, and the rooms containing them.
-    for ent in sorted(thisroom["entrances"]):
-        srcroom = console.database.room_by_id(ent)
+    # Scan the entrance source rooms listed for this room.
+    for ent in sorted(targetroom["entrances"]):
+        # Lookup the entrance source room and perform room checks.
+        srcroom = COMMON.check_room(NAME, console, roomid, reason=False)
         if not srcroom:
-            console.msg("warning: entrance room does not exist: {0}".format(ent))
+            console.log.error("entrance source room does not exist for target room: {srcroom} -> {targetroom}",
+                              srcroom=ent, targetroom=roomid)
+            console.msg("{0}: error: entrance room does not exist: {0}".format(NAME, ent))
             continue
+
+        # Enumerate the exits in the entrance source room.
         exits = []
         for ex in enumerate(srcroom["exits"]):
-            if ex[1]["dest"] == thisroom["id"]:
+            if ex[1]["dest"] == targetroom["id"]:
                 exits.append(ex)
+
+        # Format the entrance source room name and ID.
         body = "{0} ({1}) :: ".format(srcroom["name"], srcroom["id"])
+
+        # Format the names and IDs of the exits in the entrance source room that lead to this room.
         for ex in exits:
             body += "{0} ({1}), ".format(ex[1]["name"], ex[0])
+
+        # Trim extra ', ' from the end of the line and send it.
         body = body[:-2]
         console.msg(body)
 
+    # Finished
     return True
