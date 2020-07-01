@@ -39,35 +39,37 @@ Ex. `locate user seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Make sure the named user exists.
+    targetuser = COMMON.check_user(NAME, console, args[0].lower())
+    if not targetuser:
         return False
 
-    u = console.database.user_by_name(args[0].lower())
-    if not u:
-        console.msg(NAME + ": no such user")
+    # Lookup the user's room and perform room checks.
+    userroom = COMMON.check_room(NAME, console, targetuser["room"], reason=False)
+    if not userroom:
+        console.log.error("room does not exist for user: {user} -> {room}",
+                          user=args[0].lower(), room=targetuser["room"])
+        console.msg("{0}: error: room does not exist for user")
         return False
 
-    # If the user is offline or we are a wizard, show their location.
-    if console.database.online(u["name"]):
-        for r in console.database.rooms.all():
-            if u["name"] in r["users"]:
-                console.msg("User " + u["name"] + " is in room " + r["name"] + " (" + str(r["id"]) + ")")
-                return True
+    # If the target user is online, show their location.
+    if console.database.online(args[0].lower()):
+        console.msg("{0}: {1} is in room {2} ({3})".format(NAME, targetuser["name"], userroom["name"], userroom["id"]))
+        return True
+
+    # If the target user is offline but we are a wizard, show their location anyway.
     elif console.user["wizard"]:
-        console.msg("User " + u["name"] + " (offline) is in room " + str(u["room"]) + " (" + str(r["id"]) + ")")
+        console.msg("{0}: {1} (offline) is in room {2} ({3})".format(NAME, targetuser["name"], userroom["name"],
+                                                                     userroom["id"]))
         return True
 
-    # User is not online and we are not a wizard.
+    # User is not online and we are not a wizard. Just say they are offline.
     else:
-        console.msg("User " + u["name"] + " is offline")
+        console.msg("{0}: {1} is offline".format(NAME, targetuser["name"]))
         return True
 
-    # Couldn't find the user.
-    console.msg(NAME + ": Warning: user is online but could not be found")
-    return False
+    # Finished.
