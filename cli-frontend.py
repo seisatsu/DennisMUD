@@ -87,7 +87,7 @@ def main():
             config = json.load(f)
     except:
         print("[cli#critical] could not open cli.config.json")
-        return 1
+        return 2
 
     log = Log()
 
@@ -95,7 +95,7 @@ def main():
     log.info("initializing database manager")
     dbman = database.DatabaseManager(config["database"]["filename"], log)
     if not dbman._startup():
-        return 1
+        return 3
     log.info("finished initializing database manager")
 
     # Initialize the router.
@@ -128,7 +128,15 @@ def main():
     # Just before shutdown.
     dbman._unlock()
     print("End Program.")
+    return 0
 
 
+# Don't do anything if we're not running as a program.
+# Otherwise, run main() and return its exit status to the OS.
+# Return Codes:
+# * 0: Success.
+# * 1: Wrong Python version.
+# * 2: Could not read main configuration file.
+# * 3: Could not initialize DatabaseManager.
 if __name__ == "__main__":
     sys.exit(main())

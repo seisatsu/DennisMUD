@@ -41,104 +41,135 @@ Ex3. `look crystal ball` to look at the item "crystal ball"."""
 
 
 def COMMAND(console, args):
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args):
         return False
 
-    # Look for the current room.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+        return False
 
+    # There were no arguments, so just look at the current room.
     if len(args) == 0:
-        # Look at the current room.
-        console.msg(thisroom["name"] + " (" + str(thisroom["id"]) + ")")
-        console.msg("Owned by: " + ', '.join(thisroom["owners"]))
+        # Show the room name, ID, owners, and description.
+        console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
+        console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
+
+        # Build and show the user list.
         userlist = []
-        for u in thisroom["users"]:
-            userlist.append(console.database.user_by_name(u)["nick"])
-        console.msg("Occupants: " + ", ".join(userlist))
+        for user in thisroom["users"]:
+            userlist.append(console.database.user_by_name(user)["nick"])
+        console.msg("Occupants: {0}".format(", ".join(userlist)))
+
+        # Build and show the item list.
         itemlist = []
-        for i in thisroom["items"]:
-            itemlookup = console.database.item_by_id(i)
-            if itemlookup:
-                itemlist.append(itemlookup["name"] + " (" + str(itemlookup["id"]) + ")")
+        for itemid in thisroom["items"]:
+            item = console.database.item_by_id(itemid)
+            if item:
+                itemlist.append("{0} ({1})".format(item["name"], item["id"]))
         if itemlist:
-            console.msg("Items: " + ", ".join(itemlist))
+            console.msg("Items: {0}".format(", ".join(itemlist)))
+
+        # Build and show the exit list.
         exitlist = []
-        for e in range(len(thisroom["exits"])):
-            exitlist.append(thisroom["exits"][e]["name"] + " (" + str(e) + ")")
+        for ex in range(len(thisroom["exits"])):
+            exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
         if exitlist:
-            console.msg("Exits: " + ", ".join(exitlist))
+            console.msg("Exits: {0}".format(", ".join(exitlist)))
         return True
 
+    # There were arguments. Figure out what in the room they might be referring to.
+    # Also keep track of whether we found anything, and whether we found a certain item
+    # in the current room so we don't list it twice if it was duplified and also in our inventory.
     else:
         found_something = False
+        found_item = None
 
+        # Looking at ourselves. Show user nickname real name, and description.
         if len(args) == 1 and args[0].lower() == "self":
-            # Looking at ourselves. Print user nickname and real name.
-            console.msg(console.user["nick"] + " (" + console.user["name"] + ")")
+            console.msg("{0} ({1})".format(console.user["nick"], console.user["name"]))
+
+            # Description exists, so show it.
             if console.user["desc"]:
-                console.msg(console.user["desc"])  # Print user description.
+                console.msg(console.user["desc"])
             return True
 
-        # Might be an item in the room.
-        for itemid in thisroom["items"]:  # Oops, "items" mirrors a method of lists.
-            i = console.database.item_by_id(itemid)
-            if i and i["name"].lower() == ' '.join(args).lower():
-                console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
-                console.msg("Owned by: " + ', '.join(i["owners"]))
-                if i["desc"]:
-                    console.msg(i["desc"])  # Print item description.
+        # It wasn't us, so maybe it's an item in the room.
+        for itemid in thisroom["items"]:
+            item = console.database.item_by_id(itemid)
+            # It was an item in the room. Show the item's name, ID, owners, and description.
+            if item and item["name"].lower() == ' '.join(args).lower():
+                console.msg("{0} ({1})".format(item["name"], item["id"]))
+                console.msg("Owned by: {0}".format(', '.join(item["owners"])))
+
+                # Description exists, so show it.
+                if item["desc"]:
+                    console.msg(item["desc"])
                 found_something = True
+                found_item = itemid
                 break
 
-        # Might be an item in your inventory.
+        # Maybe it's an item in our inventory.
         for itemid in console.user["inventory"]:
-            i = console.database.item_by_id(itemid)
-            if i and i["name"].lower() == ' '.join(args).lower():
-                console.msg(i["name"] + " (" + str(i["id"]) + ")")  # Print item ID and name.
-                console.msg("Owned by: " + ', '.join(i["owners"]))
-                if i["desc"]:
-                    console.msg(i["desc"])  # Print item description.
+            item = console.database.item_by_id(itemid)
+            # It was an item in our inventory. Show the item's name, ID, owners, and description,
+            # but only if we didn't already see it in the current room.
+            if item and item["name"].lower() == ' '.join(args).lower() and item["id"] != found_item:
+                console.msg("{0} ({1})".format(item["name"], item["id"]))
+                console.msg("Owned by: {0}".format(', '.join(item["owners"])))
+
+                # Description exists, so show it.
+                if item["desc"]:
+                    console.msg(item["desc"])  # Print item description.
                 found_something = True
                 break
 
-        # Might be an exit in the room.
-        for e in range(len(thisroom["exits"])):
-            if thisroom["exits"][e]["name"].lower() == ' '.join(args).lower():
-                # Print exit name, ID, destination, and any key information.
-                console.msg(thisroom["exits"][e]["name"] + " (" + str(e) + ") -> " + str(thisroom["exits"][e]["dest"]))
-                console.msg("Owned by: " + ', '.join(thisroom["exits"][e]["owners"]))
-                if thisroom["exits"][e]["desc"]:
-                    console.msg(thisroom["exits"][e]["desc"])  # Print exit description.
-                if thisroom["exits"][e]["key"] and not thisroom["exits"][e]["key_hidden"]:
-                    i = console.database.item_by_id(thisroom["exits"][e]["key"])
-                    console.msg("Unlocked with: " + i["name"] + " (" + str(i["id"]) + ")")  # Print key information.
+        # Maybe it's an exit in the room.
+        for ex in range(len(thisroom["exits"])):
+            if thisroom["exits"][ex]["name"].lower() == ' '.join(args).lower():
+                # It was an exit in the current room. Show the exit name, destination,
+                # description, ID, owners, and any key information.
+                console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
+                console.msg("Owned by: {0}".format(', '.join(thisroom["exits"][ex]["owners"])))
+
+                # Description exists, so show it.
+                if thisroom["exits"][ex]["desc"]:
+                    console.msg(thisroom["exits"][ex]["desc"])
+
+                # Key info is visible, so show it.
+                if thisroom["exits"][ex]["key"] and not thisroom["exits"][ex]["key_hidden"]:
+                    item = console.database.item_by_id(thisroom["exits"][ex]["key"])
+                    console.msg("Unlocked with: {0} ({1})".format(item["name"], item["id"]))
                 found_something = True
                 break
 
-        # Might be the username of a user.
-        u = console.database.user_by_name(' '.join(args).lower())
-        if u and console.database.online(u["name"]):
-            console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
-            if u["desc"]:
-                console.msg(u["desc"])  # Print user description.
+        # Maybe it's the username of a user.
+        user = console.database.user_by_name(' '.join(args).lower())
+        if user and console.database.online(user["name"]):
+            console.msg("{0} ({1})".format(user["nick"], user["name"]))
+
+            # Description exists, so show it.
+            if user["desc"]:
+                console.msg(user["desc"])  # Print user description.
             found_something = True
 
-        # Might be the nickname of a user.
-        u = console.database.user_by_nick(' '.join(args).lower())
-        if u and console.database.online(u["name"]):
-            console.msg(u["nick"] + " (" + u["name"] + ")")  # Print user nickname and real name.
-            if u["desc"]:
-                console.msg(u["desc"])  # Print user description.
+        # Maybe it's the nickname of a user.
+        user = console.database.user_by_nick(' '.join(args).lower())
+        if user and console.database.online(user["name"]):
+            console.msg("{0} ({1})".format(user["nick"], user["name"]))
+
+            # Description exists, so show it.
+            if user["desc"]:
+                console.msg(user["desc"])  # Print user description.
             found_something = True
 
-        if found_something:
-            return True
-        console.msg(NAME + ": no such thing")
-        return False
+        # We didn't find anything by that name.
+        if not found_something:
+            console.msg(NAME + ": no such thing")
+            return False
+
+        # Finished.
+        return True

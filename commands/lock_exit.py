@@ -38,39 +38,35 @@ Ex. `lock exit 3`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
 
-    try:
-        exitid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid)
+    if not thisroom:
         return False
 
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
-
-    # Make sure the exit exists.
-    if exitid > len(r["exits"]) - 1 or exitid < 0:
-        console.msg(NAME + ": no such exit")
+    # Make sure we own the exit or the room, or we are a wizard.
+    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+            and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
-    # Make sure we own the exit or the room.
-    if console.user["name"] not in r["exits"][exitid]["owners"] \
-            and console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
+    # Check if the exit is already locked.
+    if thisroom["exits"][exitid]["locked"]:
+        console.msg("{0}: this exit is already locked".format(NAME))
         return False
 
-    if r["exits"][exitid]["locked"]:
-        console.msg(NAME + ": this exit is already locked")
-        return False
-    r["exits"][exitid]["locked"] = True
-    console.database.upsert_room(r)
-    console.msg(NAME + ": done")
+    # Lock the exit.
+    thisroom["exits"][exitid]["locked"] = True
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

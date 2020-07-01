@@ -38,34 +38,35 @@ Ex. `login myusername mypassword`"""
 
 
 def COMMAND(console, args):
-    # args = [username, password]
-    if len(args) != 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=2, online=False):
         return False
 
+    # Make sure we are not already logged in.
     if console.user:
-        console.msg(NAME + ": already logged in")
+        console.msg("{0}: already logged in".format(NAME))
         return False
 
+    # Attempt to authenticate with the database.
     thisuser = console.database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest())
     if not thisuser:
-        console.msg(NAME + ": bad credentials")
+        console.msg("{0}: bad credentials".format(NAME))
         return False  # Bad login.
     console.user = thisuser
 
-    # Look for the current room.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+        return False
 
     # If we are not in the room, put us there.
     if not console.user["name"] in thisroom["users"]:
         thisroom["users"].append(console.user["name"])
         console.database.upsert_room(thisroom)
 
-    console.msg("logged in as \"" + console.user["name"] + "\"")
+    # Show the log in message, broadcast our presence, and look at the room.
+    console.msg("logged in as \"{0}\"".format(console.user["name"]))
     console.msg('=' * 20)
-    console.shell.broadcast_room(console, console.user["nick"] + " logged in")
+    console.shell.broadcast_room(console, "{0} logged in".format(console.user["nick"]))
     console.shell.command(console, "look", False)
     return True

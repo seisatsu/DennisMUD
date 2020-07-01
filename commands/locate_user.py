@@ -71,5 +71,3 @@ def COMMAND(console, args):
     else:
         console.msg("{0}: {1} is offline".format(NAME, targetuser["name"]))
         return True
-
-    # Finished.

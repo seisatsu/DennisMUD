@@ -248,7 +248,7 @@ def init_services(config, dbman, router, log):
     # If websocket is enabled, initialize its service.
     if config["websocket"]["enabled"]:
         if config["websocket"]["secure"]:
-            # Use secure websockets.
+            # Use secure websockets. Requires the key and certificate.
             websocket_factory = websocket.ServerFactory(router, "wss://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
             ssl_factory = ssl.DefaultOpenSSLContextFactory(config["websocket"]["key"], config["websocket"]["cert"])
@@ -256,18 +256,24 @@ def init_services(config, dbman, router, log):
             # Use insecure websockets.
             websocket_factory = websocket.ServerFactory(router, "ws://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
+
+        # Set up protocol options.
         websocket_factory.protocol = websocket.ServerProtocol
         websocket_factory.setProtocolOptions(autoPingInterval=1, autoPingTimeout=3, autoPingSize=20)
+
+        # Begin listening on SSL or plain TCP.
         if config["websocket"]["secure"]:
             reactor.listenSSL(config["websocket"]["port"], websocket_factory, ssl_factory)
         else:
             reactor.listenTCP(config["websocket"]["port"], websocket_factory)
         any_enabled = True
 
+    # No services were enabled.
     if not any_enabled:
-        # No services were enabled.
         log.critical("no services enabled")
         return False
+
+    # Finished.
     return True
 
 
@@ -283,7 +289,7 @@ def main():
             config = json.load(f)
     except:
         print("[server#critical] could not open server.config.json")
-        return 1
+        return 2
 
     # Initialize the logger.
     stdout = sys.stdout
@@ -301,7 +307,7 @@ def main():
         # On failure, only remove the lockfile if its existence wasn't the cause.
         if _dbres is not None:
             dbman._unlock()
-        return 1
+        return 3
     log.info("finished initializing database manager")
 
     # Initialize the router.
@@ -315,7 +321,7 @@ def main():
     log.info("initializing services")
     if not init_services(config, dbman, router, log):
         dbman._unlock()
-        return 1
+        return 4
     log.info("finished initializing services")
 
     # Graceful shutdown on SIGINT (ctrl-c).
@@ -340,5 +346,13 @@ def main():
     return 0
 
 
+# Don't do anything if we're not running as a program.
+# Otherwise, run main() and return its exit status to the OS.
+# Return Codes:
+# * 0: Success.
+# * 1: Wrong Python version.
+# * 2: Could not read main configuration file.
+# * 3: Could not initialize DatabaseManager.
+# * 4: Could not initialize services.
 if __name__ == "__main__":
     sys.exit(main())

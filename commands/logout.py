@@ -32,24 +32,18 @@ DESCRIPTION = "Log out if logged in."
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Not logged in yet.
-    if not console.user or not console.database.online(console.user["name"]):
-        console.msg(NAME + ": not logged in")
-        return False
-
-    # Look for the current room.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+        return False
 
-    # If we are in the room, take us out.
+    # If we are in the room, take us out and broadcast our departure.
     if console.user["name"] in thisroom["users"]:
-        console.shell.broadcast_room(console, console.user["nick"] + " logged out")
+        console.shell.broadcast_room(console, "{0} logged out".format(console.user["nick"]))
         thisroom["users"].remove(console.user["name"])
         console.database.upsert_room(thisroom)
 
