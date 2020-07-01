@@ -39,27 +39,22 @@ Ex3. `.seisatsu Hello there!`"""
 
 
 def COMMAND(console, args):
-    if len(args) < 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Make sure the named user exists and is online.
+    targetuser = COMMON.check_user(NAME, console, args[0].lower(), online=True)
+    if not targetuser:
         return False
 
-    # Make sure the target user exists and is online, and get their record.
-    targetuser = console.shell.user_by_name(args[0].lower())
-    if not targetuser or not console.database.online(args[0].lower()):
-        console.msg(NAME + ": no such user is logged in")
+    # Make sure we are not ignored or we are a wizard.
+    if console.user["name"] in targetuser["chat"]["ignored"] and not console.user["wizard"]:
+        console.msg("{0}: could not message user".format(NAME))
         return False
 
-    # Message the user if we are a wizard or not ignored.
-    if console.user["wizard"] or not console.user["name"] in targetuser["chat"]["ignored"]:
-            console.shell.msg_user(args[0].lower(), "<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
-            console.msg("<<" + console.user["name"] + ">>: " + ' '.join(args[1:]))
-            return True
+    # Finished. Message the user, and echo the message to ourselves.
+    console.shell.msg_user(args[0].lower(), "<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
+    console.msg("<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
+    return True
 
-    # We are probably ignored.
-    console.msg(NAME + ": could not message user")
-    return False

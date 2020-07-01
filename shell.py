@@ -267,6 +267,7 @@ class Shell:
             # Return a help message for the named command.
             usage = "Usage: " + self._commands[line].USAGE
             desc = "Description: " + self._commands[line].DESCRIPTION
+
             # Enumerate the aliases and list them at the end of the description.
             alias_list = ""
             if hasattr(self._commands[line], "ALIASES"):

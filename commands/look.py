@@ -139,8 +139,10 @@ def COMMAND(console, args):
                 if thisroom["exits"][ex]["desc"]:
                     console.msg(thisroom["exits"][ex]["desc"])
 
-                # Key info is visible, so show it.
-                if thisroom["exits"][ex]["key"] and not thisroom["exits"][ex]["key_hidden"]:
+                # Key info is visible or we own the exit or are a wizard, so show it.
+                if thisroom["exits"][ex]["key"] and (console.user["name"] in thisroom["exits"][ex]["owners"]
+                                                     or console.user["wizard"]
+                                                     or not thisroom["exits"][ex]["key_hidden"]):
                     item = console.database.item_by_id(thisroom["exits"][ex]["key"])
                     console.msg("Unlocked with: {0} ({1})".format(item["name"], item["id"]))
                 found_something = True

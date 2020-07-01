@@ -39,7 +39,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the target user and perform user checks.
-    targetuser = COMMON.check_user(NAME, console, args[0].lower(), wizard=True, live=True, reason=True)
+    targetuser = COMMON.check_user(NAME, console, args[0].lower(), wizard=True, live=True, reason=True, already=True)
     if not targetuser:
         return False
 

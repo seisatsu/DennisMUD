@@ -34,21 +34,16 @@ Ex. `lookup room Small Bedroom`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
     rooms = console.database.rooms.all()
-    for r in rooms:
-        if r["name"].lower() == ' '.join(args).lower():
-            console.msg(r["name"] + ": " + str(r["id"]))
+    for room in rooms:
+        if room["name"].lower() == ' '.join(args).lower():
+            console.msg("{0}: {1}".format(room["name"], room["id"]))
             return True
 
     # Couldn't find the room.
-    console.msg(NAME + ": no such room")
+    console.msg("{0}: no such room".format(NAME))
     return False

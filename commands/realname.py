@@ -36,20 +36,16 @@ Ex. `realname Overlord Seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Make sure the nicknamed user exists.
+    targetuser = console.database.user_by_nick(' '.join(args).lower())
+    if not targetuser:
+        console.msg(NAME + ": no such user")
         return False
 
-    u = console.database.user_by_nick(' '.join(args).lower())
-    if u:
-        console.msg(u["nick"] + ": " + u["name"])
-        return True
-
-    # Couldn't find the user.
-    console.msg(NAME + ": no such user")
-    return False
+    # Show the user's username.
+    console.msg("{0}: {1}".format(targetuser["nick"], targetuser["name"]))
+    return True

@@ -54,7 +54,7 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Check if we have permission to decorate the lock.
+    # Make sure we own the exit or the current room, or we are a wizard.
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this exit or this room")

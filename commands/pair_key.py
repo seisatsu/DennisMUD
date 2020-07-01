@@ -37,56 +37,55 @@ Ex. `pair key 4 3` to make exit 4 unlock with item 3."""
 
 
 def COMMAND(console, args):
-    if len(args) != 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid, itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
+    if exitid is None or itemid is None:
         return False
 
-    # Make sure the exit and item IDs are both integers.
-    try:
-        exitid = int(args[0])
-        itemid = int(args[1])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid)
+    if not thisroom:
         return False
 
-    # Make sure the item exists.
-    i = console.database.item_by_id(itemid)
-    if not i:
-        console.msg(NAME + ": no such item")
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
 
-    # Make sure we are holding the item.
+    # Make sure we are holding the item, or we are a wizard.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg(NAME + ": no such item in inventory")
+        console.msg("{0}: no such item in inventory".format(NAME))
         return False
 
-    # Make sure the exit is in this room.
-    thisroom = console.database.room_by_id(console.user["room"])
-    if thisroom:
-        if exitid > len(thisroom["exits"])-1 or exitid < 0:
-            console.msg(NAME + ": no such exit")
-            return False
-        if not thisroom["exits"][exitid]["locked"]:
-            console.msg(NAME + ": only locked exits can have keys")
-            return False
-        if thisroom["exits"][exitid]["key"]:
-            console.msg(NAME + ": this exit is already paired to a key")
-            return False
-        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this item")
-            return False
-        if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
-                and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this exit or this room")
-            return False
-        thisroom["exits"][exitid]["key"] = itemid
-        console.database.upsert_room(thisroom)
-        console.msg(NAME + ": done")
-        return True
-    console.msg("warning: current room does not exist")
-    return False
+    # Make sure the exit is locked.
+    if not thisroom["exits"][exitid]["locked"]:
+        console.msg("{0}: only locked exits can have keys".format(NAME))
+        return False
+
+    # Make sure the exit is not already paired to a key.
+    if thisroom["exits"][exitid]["key"]:
+        console.msg("{0}: this exit is already paired to a key".format(NAME))
+        return False
+
+    # Make sure we own the item or we are a wizard.
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this item".format(NAME))
+        return False
+
+    # Make sure we own the exit or the current room, or we are a wizard.
+    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+            and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
+        return False
+
+    # Pair the key.
+    thisroom["exits"][exitid]["key"] = itemid
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
+    return True

@@ -44,24 +44,26 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1, argmax=2):
         return False
 
-    # Change our own password.
+    # We only gave one argument or named ourselves, so change our own password.
     if len(args) == 1 or (len(args) == 2 and args[0].lower() == console.user["name"]):
         console.user["passhash"] = hashlib.sha256(args[len(args)-1].encode()).hexdigest()
         console.database.upsert_user(console.user)
 
-    # Trying to change someone else's password.
-    elif not console.user["wizard"]:
-        console.msg(NAME + ": only a wizard can change another user's password")
-        return False
-
-    # We have permission, so change another user's password.
-    else:
-        u = console.shell.user_by_name(args[0].lower())
-        if not u:
-            console.msg(NAME + ": no such user")
+    # We are a wizard and named another user, so change their password.
+    elif console.user["wizard"]:
+        # Make sure the named user exists.
+        targetuser = COMMON.check_user(NAME, console, args[0].lower())
+        if not targetuser:
             return False
-        u["passhash"] = hashlib.sha256(args[1].encode()).hexdigest()
-        console.database.upsert_user(u)
+
+        # Change their password.
+        targetuser["passhash"] = hashlib.sha256(args[1].encode()).hexdigest()
+        console.database.upsert_user(targetuser)
+
+    # We named another user, but we aren't a wizard.
+    else:
+        console.msg("{0}: only a wizard can change another user's password".format(NAME))
+        return False
 
     # Finished.
     console.msg(NAME + ": done")

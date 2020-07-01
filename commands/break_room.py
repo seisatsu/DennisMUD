@@ -51,7 +51,7 @@ def COMMAND(console, args):
     if not targetroom:
         return False
 
-    # Check that we own the room or are a wizard.
+    # Make sure we own the room or we are a wizard.
     if console.user["name"] not in targetroom["owners"] and not console.user["wizard"]:
         console.msg("{0}: you do not own this room".format(NAME))
         return False

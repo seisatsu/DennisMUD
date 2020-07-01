@@ -34,21 +34,16 @@ Ex. `lookup item crystal ball`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
     items = console.database.items.all()
-    for i in items:
-        if i["name"].lower() == ' '.join(args).lower():
-            console.msg(i["name"] + ": " + str(i["id"]))
+    for item in items:
+        if item["name"].lower() == ' '.join(args).lower():
+            console.msg("{0}: {1}".format(item["name"], item["id"]))
             return True
 
     # Couldn't find the item.
-    console.msg(NAME + ": no such item")
+    console.msg("{0}: no such item".format(NAME))
     return False

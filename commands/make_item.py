@@ -37,45 +37,43 @@ Ex. `make item Crystal Ball`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
+    # Get item name.
+    itemname = ' '.join(args)
 
-    # Get name.
-    name = ' '.join(args)
-
-    # Make sure the name is not an integer, as this would be confusing.
+    # Make sure the item name is not an integer, as this would be confusing.
+    # We actually want an exception to be raised here.
     try:
-        test = int(name)
-        console.msg(NAME + ": item name cannot be an integer")
+        int(itemname)
+        console.msg("{0}: item name cannot be an integer".format(NAME))
         return False
     except ValueError:
         # Not an integer.
         pass
 
-    # Check if an item by this name already exists. Case insensitive.
-    items = sorted(console.database.items.all(), reverse=True, key=lambda k: k["id"])
-    if items:
-        for i in items:
-            if i["name"].lower() == name.lower():
-                console.msg(NAME + ": an item by this name already exists")
-                return False  # An item by this name already exists.
+    # Get a list of all items, sorted in reverse order.
+    allitems = sorted(console.database.items.all(), reverse=True, key=lambda k: k["id"])
+
+    # Make sure an item by this name does not already exist.
+    if allitems:
+        for item in allitems:
+            if item["name"].lower() == itemname.lower():
+                console.msg("{0}: an item by this name already exists".format(NAME))
+                return False
 
     # Find the highest numbered currently existing item ID.
-    if items:
-        lastitem = items[0]["id"]
+    if allitems:
+        lastitem = allitems[0]["id"]
     else:
         lastitem = -1
 
-    # Create our new item with an ID one higher.
+    # Create our new item with an ID one higher than the last item.
     newitem = {
         "id": lastitem + 1,
-        "name": name,
+        "name": itemname,
         "desc": "",
         "action": "",
         "owners": [console.user["name"]],
@@ -83,11 +81,11 @@ def COMMAND(console, args):
         "duplified": False
     }
 
-    # Add the item to the creator's inventory.
+    # Add the new item to the our inventory, and save the item.
     console.user["inventory"].append(newitem["id"])
     console.database.upsert_user(console.user)
-
-    # Save.
     console.database.upsert_item(newitem)
-    console.msg(NAME + ": done (id: " + str(newitem["id"]) + ")")
+
+    # Show the item ID.
+    console.msg("{0}: done (itemid: {1})".format(NAME, newitem["id"]))
     return True

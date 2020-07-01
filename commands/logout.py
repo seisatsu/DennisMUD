@@ -47,7 +47,7 @@ def COMMAND(console, args):
         thisroom["users"].remove(console.user["name"])
         console.database.upsert_room(thisroom)
 
-    # Take us offline
+    # Take us offline.
     console.database.logout_user(console.user["name"])
     console.user = None
     console.msg("logged out")

@@ -34,29 +34,19 @@ Ex. `promote seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1, wizard=True):
         return False
 
-    # Make sure we are logged in, and a wizard.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-    if not console.user["wizard"]:
-        console.msg(NAME + ": you do not have permission to use this command")
-        return False
-
-    # Upgrade the named user to wizard.
-    targetuser = console.shell.user_by_name(args[0].lower())
+    # Lookup the target user and perform user checks.
+    targetuser = COMMON.check_user(NAME, console, args[0].lower(), wizard=False, live=True, reason=True, already=True)
     if not targetuser:
-        # No such user.
-        console.msg(NAME + ": no such user")
         return False
-    if targetuser["wizard"]:
-        console.msg(NAME + ": user is already a wizard")
-        return False
+
+    # Promote the user.
     targetuser["wizard"] = True
     console.database.upsert_user(targetuser)
 
+    # Finished.
     console.msg(NAME + ": done")
     return True

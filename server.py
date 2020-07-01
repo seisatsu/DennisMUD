@@ -185,7 +185,8 @@ def init_logger(config):
     """
     # Read log options from the server config. At least one logging method is required.
     if not config["log"]["stdout"] and not config["log"]["file"]:
-        # No logging option is set, so force stdout.
+        # No logging target is set, so force stdout.
+        print("[server#error] no logging target in config, defaulting to stdout")
         config["log"]["stdout"] = True
     elif config["log"]["file"]:
         # Try to open the log file.
@@ -194,13 +195,13 @@ def init_logger(config):
         except:
             # Couldn't open the log file, so warn and fall back to STDOUT.
             if config["log"]["level"] in ("warn", "info", "debug"):
-                print("[server#warn] could not open log file:", config["log"]["file"])
+                print("[server#error] could not open log file:", config["log"]["file"])
             config["log"]["file"] = None
             config["log"]["stdout"] = True
 
     # Make sure the chosen log level is valid. Otherwise force the highest log level.
     if config["log"]["level"] not in ("critical", "error", "warn", "info", "debug"):
-        print("[server#warn] invalid log level in config, defaulting to \"debug\"")
+        print("[server#error] invalid log level in config, defaulting to \"debug\"")
         config["log"]["level"] = "debug"
 
     # Configure the Twisted Logger targets.

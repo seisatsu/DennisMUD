@@ -37,46 +37,44 @@ Ex. `make room Small Bedroom`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
+    # Get room name.
+    roomname = ' '.join(args)
 
-    # Get name.
-    name = ' '.join(args)
-
-    # Make sure the name is not an integer, as this would be confusing.
+    # Make sure the room name is not an integer, as this would be confusing.
+    # We actually want an exception to be raised here.
     try:
-        test = int(name)
-        console.msg(NAME + ": room name cannot be an integer")
+        int(roomname)
+        console.msg("{0}: room name cannot be an integer".format(NAME))
         return False
     except ValueError:
         # Not an integer.
         pass
 
-    # Check if a room by this name already exists. Case insensitive.
-    rooms = sorted(console.database.rooms.all(), reverse=True, key=lambda k: k["id"])
-    if rooms:
-        for r in rooms:
-            if r["name"].lower() == name.lower():
-                console.msg(NAME + ": a room by this name already exists")
-                return False  # A room by this name already exists.
+    # Get a list of all rooms, sorted in reverse order.
+    allrooms = sorted(console.database.rooms.all(), reverse=True, key=lambda k: k["id"])
+
+    # Make sure a room by this name does not already exist.
+    if allrooms:
+        for room in allrooms:
+            if room["name"].lower() == roomname.lower():
+                console.msg("{0}: a room by this name already exists".format(NAME))
+                return False
 
     # Find the highest numbered currently existing room ID.
-    if rooms:
-        lastroom = rooms[0]["id"]
+    if allrooms:
+        lastroom = allrooms[0]["id"]
     else:
         lastroom = -1
 
-    # Create our new room with an ID one higher.
+    # Create our new room with an ID one higher than the last room, and save the room.
     newroom = {
         "owners": [console.user["name"]],
         "id": lastroom + 1,
-        "name": name,
+        "name": roomname,
         "desc": "",
         "users": [],
         "exits": [],
@@ -87,8 +85,8 @@ def COMMAND(console, args):
             "outbound": console.database.defaults["rooms"]["sealed"]["outbound"]
         }
     }
-
-    # Save.
     console.database.upsert_room(newroom)
-    console.msg(NAME + ": done (id: " + str(newroom["id"]) + ")")
+
+    # Show the room ID.
+    console.msg("{0}: done (room id: {1}".format(NAME, newroom["id"]))
     return True

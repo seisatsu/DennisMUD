@@ -39,62 +39,60 @@ Ex. `make exit 12 Iron Door` to make an exit in the current room called "Iron Do
 
 
 def COMMAND(console, args):
-    if len(args) < 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    destroomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if destroomid is None:
         return False
 
-    # Make sure an integer was passed as the destination.
-    try:
-        dest = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
-        return False
-    name = ' '.join(args[1:])
+    # Get exit name.
+    exitname = ' '.join(args[1:])
 
-    # Make sure the name is not an integer, as this would be confusing.
+    # Make sure the exit name is not an integer, as this would be confusing.
+    # We actually want an exception to be raised here.
     if len(args) == 2:
         try:
-            test = int(args[1])
-            console.msg(NAME + ": exit name cannot be an integer")
+            int(args[1])
+            console.msg("{0}: exit name cannot be an integer".format(NAME))
             return False
         except ValueError:
             # Not an integer.
             pass
 
-    # Check if an exit by this name already exists. Case insensitive.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
+        return False
+
+    # Make sure an exit by this name does not already exist in the current room.
     exits = thisroom["exits"]
     if len(exits):
-        for e in exits:
-            if e["name"].lower() == name.lower():
-                return False  # An exit by this name already exists.
+        for ex in exits:
+            if ex["name"].lower() == exitname.lower():
+                return False
 
-    # Check if the destination room exists.
-    destroom = console.database.room_by_id(dest)
+    # Lookup the destination room and perform room checks.
+    destroom = COMMON.check_room(NAME, console, destroomid)
     if not destroom:
-        console.msg(NAME + ": destination room does not exist")
-        return False  # The destination room does not exist.
+        return False
 
+    # Make sure the current room is not outbound sealed, or we are a room owner or a wizard.
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and console.user["name"] not in thisroom["owners"]:
-        console.msg(NAME + ": this room is outbound sealed")
+        console.msg("{0}: the current room is outbound sealed".format(NAME))
         return False
 
+    # Make sure the destination room is not inbound sealed, or we are a room owner or a wizard.
     if destroom["sealed"]["inbound"] and not console.user["wizard"] and console.user["name"] not in destroom["owners"]:
-        console.msg(NAME + ": the destination room is inbound sealed")
+        console.msg("{0}: the destination room is inbound sealed".format(NAME))
         return False
 
-    # Create our new exit, and an entrance record in the destination room.
+    # Create our new exit and add it to the current room.
     newexit = {
-        "dest": dest,
-        "name": name,
+        "dest": destroomid,
+        "name": exitname,
         "owners": [console.user["name"]],
         "desc": "",
         "action": {
@@ -106,11 +104,13 @@ def COMMAND(console, args):
         "locked": False
     }
     thisroom["exits"].append(newexit)
+    console.database.upsert_room(thisroom)
+
+    # If this room is not in the entrance list for the destination room, add it.
     if console.user["room"] not in destroom["entrances"]:
         destroom["entrances"].append(console.user["room"])
         console.database.upsert_room(destroom)
 
-    # Save.
-    console.database.upsert_room(thisroom)
-    console.msg(NAME + ": done (id: " + str(len(thisroom["exits"])-1) + ")")
+    # Show the exit ID.
+    console.msg("{0}: done (exit id: {1})".format(NAME, len(thisroom["exits"])-1))
     return True

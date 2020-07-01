@@ -36,20 +36,16 @@ Ex. `nickname seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Make sure the named user exists.
+    targetuser = COMMON.check_user(NAME, console, args[0].lower())
+    if not targetuser:
         return False
 
-    u = console.database.user_by_name(' '.join(args).lower())
-    if u:
-        console.msg(u["name"] + ": " + u["nick"])
-        return True
+    # Show the user's nickname.
+    console.msg("{0}: {1}".format(targetuser["name"], targetuser["nick"]))
+    return True
 
-    # Couldn't find the user.
-    console.msg(NAME + ": no such user")
-    return False

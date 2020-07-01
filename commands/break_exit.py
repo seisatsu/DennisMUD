@@ -51,17 +51,19 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Make sure we have permission to break the exit.
+    # Make sure the current room is not outbound sealed, or we are a room owner or a wizard.
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
             console.user["name"] not in thisroom["owners"]:
         console.msg("{0}: this room is outbound sealed".format(NAME))
         return False
+
+    # Make sure we own the exit or the current room, or we are a wizard.
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
         console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
-    # Check if the exit's destination exists.
+    # Make sure the exit's destination room exists.
     destroom = COMMON.check_room(NAME, console, thisroom["exits"][exitid]["dest"])
     if not destroom:
         console.log.warn("exit destination room does not exist: {roomid}", roomid=destroom["id"])

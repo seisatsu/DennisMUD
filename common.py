@@ -158,22 +158,6 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
     return True
 
 
-def check_wizard(NAME, console, reason=True):
-    """Just check if the user is a wizard.
-
-    :param NAME: The NAME field from the command module.
-    :param console: The calling user's console.
-    :param reason: Whether to print a common failure explanation if the check fails. Defaults to True.
-
-    :return: True if succeeded, False if failed.
-    """
-    if not console.user["wizard"]:
-        if reason:
-            console.msg("{0}: you do not have permission to use this command".format(NAME))
-        return False
-    return True
-
-
 def check_exit(NAME, console, exitid, room=None, reason=True):
     """Check if an exit exists in a room.
     
@@ -181,6 +165,7 @@ def check_exit(NAME, console, exitid, room=None, reason=True):
 
     :param NAME: The NAME field from the command module.
     :param console: The calling user's console.
+    :param exitid: The exit id of the exit to check.
     :param room: The room id or room document of the room to check if set, otherwise the user's current room.
     :param reason: Whether to print a common failure explanation if the check fails. Defaults to True.
     
@@ -214,7 +199,7 @@ def check_exit(NAME, console, exitid, room=None, reason=True):
             console.msg("{0}: no such exit".format(NAME))
         return None
 
-    if exitid > len(thisroom["exits"]) - 1 or exitid < 0:
+    elif exitid > len(thisroom["exits"]) - 1 or exitid < 0:
         if reason:
             console.msg("{0}: no such exit".format(NAME))
         return None
@@ -280,16 +265,17 @@ def check_room(NAME, console, roomid=None, reason=True):
     return room
 
 
-def check_user(NAME, console, username, online=False, wizard=False, live=False, reason=True):
+def check_user(NAME, console, username, online=False, wizard=None, live=False, reason=True, already=False):
     """Check if a user exists. If so, return it.
 
     :param NAME: The NAME field from the command module.
     :param console: The calling user's console.
     :param username: The username of the user to check.
     :param online: Whether to check if the user is online.
-    :param wizard: Whether to check if the user is a wizard.
+    :param wizard: If True, check if the user is a wizard. If False, check if the user is not a wizard.
     :param live: Whether to try to grab the live copy of the user document instead of pulling from the database.
     :param reason: Whether to print a common failure explanation if the check fails. Defaults to True.
+    :param already: Whether to include the word "already" in the wizard failure explanation.
 
     :return: User document if succeeded, None if failed.
     """
@@ -310,14 +296,25 @@ def check_user(NAME, console, username, online=False, wizard=False, live=False, 
             console.msg("{0}: no such user".format(NAME))
         return None
 
-    if online and not console.database.online(username):
+    elif online and not console.database.online(username):
         if reason:
             console.msg("{0}: user is not online".format(NAME))
         return None
 
-    if wizard and not user["wizard"]:
-        if reason:
-            console.msg("{0}: user is not a wizard".format(NAME))
-        return None
+    elif wizard is not None:
+        if wizard and not user["wizard"]:
+            if reason:
+                if already:
+                    console.msg("{0}: user is already not a wizard".format(NAME))
+                else:
+                    console.msg("{0}: user is not a wizard".format(NAME))
+            return None
+        elif user["wizard"] and not wizard:
+            if reason:
+                if already:
+                    console.msg("{0}: user is already a wizard".format(NAME))
+                else:
+                    console.msg("{0}: user is a wizard".format(NAME))
+            return None
 
     return user

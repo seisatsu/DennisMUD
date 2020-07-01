@@ -71,7 +71,7 @@ def COMMAND(console, args):
     for targetuser in console.database.users.all():
         if itemid in targetuser["inventory"]:
             console.msg("{0}: {1} ({2}) is in the inventory of {3}".format(NAME, thisitem["name"], thisitem["id"],
-                                                                                targetuser["name"]))
+                                                                           targetuser["name"]))
             # If the item is duplified we need to keep looking for other copies.
             if not thisitem["duplified"]:
                 return True
@@ -81,7 +81,7 @@ def COMMAND(console, args):
     for targetroom in console.database.rooms.all():
         if itemid in targetroom["items"]:
             console.msg("{0}: {1} ({2}) is in room {3} ({4})".format(NAME, thisitem["name"], thisitem["id"],
-                                                                          targetroom["name"], targetroom["id"]))
+                                                                     targetroom["name"], targetroom["id"]))
             # If the item is duplified we need to keep looking for other copies.
             if not thisitem["duplified"]:
                 return True

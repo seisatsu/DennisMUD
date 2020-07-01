@@ -59,7 +59,7 @@ def COMMAND(console, args):
         console.msg("{0}: no such item in inventory".format(NAME))
         return False
 
-    # Make sure we are the item's owner, or a wizard.
+    # Make sure we own the item or we are a wizard.
     if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
         console.msg("{0}: you do not own this item".format(NAME))
         return False

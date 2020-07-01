@@ -49,7 +49,7 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Make sure we are the room's owner.
+    # Make sure we own the room or we are a wizard.
     if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
         console.msg("{0}: you do not own this room".format(NAME))
         return False
