@@ -41,7 +41,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room and perform room checks.
-    thisroom = COMMON.check_room(NAME, console)
+    thisroom = COMMON.check_room(NAME, console, owner=True)
     if not thisroom:
         return False
 
@@ -65,11 +65,6 @@ def COMMAND(console, args):
         if room["name"].lower() == roomname.lower() and room["name"].lower() != thisroom["name"].lower():
             console.msg("{0}: a room by this name already exists".format(NAME))
             return False
-
-    # Make sure we own the room or we are a wizard.
-    if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg("{0} : you do not own this room".format(NAME))
-        return False
 
     # Rename the room.
     thisroom["name"] = roomname

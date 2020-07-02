@@ -101,6 +101,7 @@ def COMMAND(console, args):
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
             attributes = []
+
             # It was an item in the room. Show the item's name, ID, owners, description, and attributes.
             if item and item["name"].lower() == ' '.join(args).lower():
                 # Only enumerate item attributes if we are the item owner or a wizard.
@@ -109,6 +110,7 @@ def COMMAND(console, args):
                         attributes.append("[duplified]")
                     if item["glued"]:
                         attributes.append("[glued]")
+
                 # Send the info for this item.
                 console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
                 console.msg("Owned by: {0}".format(', '.join(item["owners"])))
@@ -124,6 +126,7 @@ def COMMAND(console, args):
         for itemid in console.user["inventory"]:
             item = console.database.item_by_id(itemid)
             attributes = []
+
             # It was an item in our inventory. Show the item's name, ID, owners, description, and attributes,
             # but only if we didn't already see it in the current room.
             if item and item["name"].lower() == ' '.join(args).lower() and item["id"] != found_item:
@@ -133,6 +136,7 @@ def COMMAND(console, args):
                         attributes.append("[duplified]")
                     if item["glued"]:
                         attributes.append("[glued]")
+
                 # Send the info for this item.
                 console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
                 console.msg("Owned by: {0}".format(', '.join(item["owners"])))
@@ -186,7 +190,7 @@ def COMMAND(console, args):
 
         # We didn't find anything by that name.
         if not found_something:
-            console.msg(NAME + ": no such thing")
+            console.msg("{0}: no such thing: {1}".format(NAME, ' '.join(args)))
             return False
 
         # Finished.

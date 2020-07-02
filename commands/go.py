@@ -146,5 +146,5 @@ def COMMAND(console, args):
                 return True
 
     # We didn't find the requested exit.
-    console.msg("{0}: no such exit".format(NAME))
+    console.msg("{0}: no such exit: {1}".format(NAME, ' '.join(args)))
     return False

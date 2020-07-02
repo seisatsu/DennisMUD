@@ -30,8 +30,8 @@ CATEGORIES = ["items"]
 USAGE = "get <item>"
 DESCRIPTION = """Pick up the item called <item> from the current room. Also works by item ID.
 
-Ex. `get item crystal ball`
-Ex2. `get item 4`"""
+Ex. `get crystal ball`
+Ex2. `get 4`"""
 
 
 def COMMAND(console, args):
@@ -86,5 +86,9 @@ def COMMAND(console, args):
             return True
 
     # The item wasn't found in the room.
-    console.msg("{0}: no such item in room".format(NAME))
+    console.msg("{0}: no such item in room: {1}".format(NAME, ' '.join(args)))
+
+    # Maybe the user accidentally typed "get item <item>".
+    if args[0].lower() == "item":
+        console.msg("{0}: maybe you meant \"get {1}\"".format(NAME, ' '.join(args[1:])))
     return False

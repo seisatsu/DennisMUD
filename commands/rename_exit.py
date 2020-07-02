@@ -46,7 +46,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid)
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
     if not thisroom:
         return False
 
@@ -71,12 +71,6 @@ def COMMAND(console, args):
         if ex["name"].lower() == exitname.lower() and ex["name"].lower() != thisroom["exits"][exitid]["name"].lower():
             console.msg("{0}: an exit by this name already exists in this room".format(NAME))
             return False
-
-    # Make sure we own the exit or the current room, or we are a wizard.
-    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
-            and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this exit or this room".format(NAME))
-        return False
 
     # Rename the exit.
     thisroom["exits"][exitid]["name"] = exitname

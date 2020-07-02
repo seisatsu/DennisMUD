@@ -47,13 +47,8 @@ def COMMAND(console, args):
         return False
 
     # Lookup the target room and perform room checks.
-    targetroom = COMMON.check_room(NAME, console, roomid)
+    targetroom = COMMON.check_room(NAME, console, roomid, owner=True)
     if not targetroom:
-        return False
-
-    # Make sure we own the room or we are a wizard.
-    if console.user["name"] not in targetroom["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this room".format(NAME))
         return False
 
     # Make sure the room is empty.

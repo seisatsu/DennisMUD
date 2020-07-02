@@ -38,47 +38,34 @@ Ex. `revoke exit 3 seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
 
-    try:
-        exitid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
-
-    # Find out if the exit exists in this room.
-    if exitid > len(r["exits"]) - 1 or exitid < 0:
-        console.msg(NAME + ": no such exit")
-        return False
-
-    # Make sure we own the exit or the room.
-    if console.user["name"] not in r["exits"][exitid]["owners"] \
-            and console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
+    if not thisroom:
         return False
 
     # Make sure the named user exists.
-    u = console.database.user_by_name(args[1].lower())
-    if not u:
-        console.msg(NAME + ": no such user")
+    targetuser = COMMON.check_user(NAME, console, args[1].lower())
+    if not targetuser:
         return False
 
-    # Check if the named user is already an owner.
-    if not args[1].lower() in r["exits"][exitid]["owners"]:
-        console.msg(NAME + ": user already not an owner of this exit")
+    # Check if the named user is already not an owner.
+    if not args[1].lower() not in thisroom["exits"][exitid]["owners"]:
+        console.msg("{0}: user already not an owner of this exit".format(NAME))
         return False
 
-    r["exits"][exitid]["owners"].remove(args[1].lower())
-    console.database.upsert_room(r)
-    console.msg(NAME + ": done")
+    # Revoke the exit from the user.
+    thisroom["exits"][exitid]["owners"].remove(args[1].lower())
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

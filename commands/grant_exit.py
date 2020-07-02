@@ -48,14 +48,8 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid)
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
     if not thisroom:
-        return False
-
-    # Make sure we own the exit or the room, or we are a wizard.
-    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
-            and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
     # Make sure the named user exists.

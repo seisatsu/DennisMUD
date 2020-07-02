@@ -30,8 +30,8 @@ CATEGORIES = ["items"]
 USAGE = "drop <item>"
 DESCRIPTION = """Drop the item called <item> into the current room. Also works by item ID.
 
-Ex. `drop item crystal ball`
-Ex2. `drop item 4`"""
+Ex. `drop crystal ball`
+Ex2. `drop 4`"""
 
 
 def COMMAND(console, args):
@@ -83,5 +83,9 @@ def COMMAND(console, args):
             return True
 
     # The item wasn't found in our inventory.
-    console.msg("{0}: no such item in inventory".format(NAME))
+    console.msg("{0}: no such item in inventory: {1}".format(NAME, ' '.join(args)))
+
+    # Maybe the user accidentally typed "drop item <item>".
+    if args[0].lower() == "item":
+        console.msg("{0}: maybe you meant \"drop {1}\"".format(NAME, ' '.join(args[1:])))
     return False

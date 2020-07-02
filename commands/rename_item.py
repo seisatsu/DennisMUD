@@ -46,7 +46,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the target item and perform item checks.
-    thisitem = COMMON.check_item(NAME, console, itemid)
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
     if not thisitem:
         return False
 
@@ -70,16 +70,6 @@ def COMMAND(console, args):
         if item["name"].lower() == itemname.lower() and item["name"].lower() != thisitem["name"].lower():
             console.msg("{0}: an item by this name already exists".format(NAME))
             return False
-
-    # Make sure we are holding the item or we are a wizard.
-    if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg("{0}: no such item in inventory".format(NAME))
-        return False
-
-    # Make sure we own the item or we are a wizard.
-    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this item".format(NAME))
-        return False
 
     # Rename the item.
     thisitem["name"] = itemname

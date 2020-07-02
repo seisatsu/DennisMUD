@@ -36,15 +36,12 @@ Ex2. `"Hello everyone!`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
+    # Broadcast our message to the current room.
+    console.shell.broadcast_room(console, "<{0}>: {1}".format(console.user["nick"], ' '.join(args)))
 
-    console.shell.broadcast_room(console, "<" + console.user["nick"] + ">: " + ' '.join(args))
-
+    # Finished.
     return True
