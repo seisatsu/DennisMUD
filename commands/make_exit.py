@@ -48,9 +48,6 @@ def COMMAND(console, args):
     if destroomid is None:
         return False
 
-    # Get exit name.
-    exitname = ' '.join(args[1:])
-
     # Make sure the exit name is not an integer, as this would be confusing.
     # We actually want an exception to be raised here.
     if len(args) == 2:
@@ -62,6 +59,9 @@ def COMMAND(console, args):
             # Not an integer.
             pass
 
+    # Get exit name.
+    exitname = ' '.join(args[1:])
+
     # Lookup the current room and perform room checks.
     thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
@@ -69,10 +69,10 @@ def COMMAND(console, args):
 
     # Make sure an exit by this name does not already exist in the current room.
     exits = thisroom["exits"]
-    if len(exits):
-        for ex in exits:
-            if ex["name"].lower() == exitname.lower():
-                return False
+    for ex in exits:
+        if ex["name"].lower() == exitname.lower():
+            console.msg("{0}: an exit by this name already exists in this room".format(NAME))
+            return False
 
     # Lookup the destination room and perform room checks.
     destroom = COMMON.check_room(NAME, console, destroomid)

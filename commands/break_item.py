@@ -66,23 +66,23 @@ def COMMAND(console, args):
 
     # The item is duplified, so start by deleting it from every user's inventory.
     if thisitem["duplified"]:
-        for u in console.router.users.values():
+        for user in console.router.users.values():
             try:  # Trap to catch a rare crash
-                if itemid in u["console"].user["inventory"]:
-                    u["console"].user["inventory"].remove(itemid)
-                    u["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
-                    console.database.upsert_user(u["console"].user)
+                if itemid in user["console"].user["inventory"]:
+                    user["console"].user["inventory"].remove(itemid)
+                    user["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+                    console.database.upsert_user(user["console"].user)
             except:
                 with open('break_item_trap.txt', 'w') as file:
-                    file.write("itemid: {0}, u: {1}".format(str(itemid), u))
-                    file.write("console: {0}".format(u["console"]))
-                    file.write("user: {0}".format(u["console"].user))
+                    file.write("itemid: {0}, u: {1}".format(str(itemid), user))
+                    file.write("console: {0}".format(user["console"]))
+                    file.write("user: {0}".format(user["console"].user))
 
     # If the item is duplified or we are a wizard, check all rooms for the presence of the item, and delete.
     if thisitem["duplified"] or console.user["wizard"]:
-        for r in console.database.rooms.all():
-            if itemid in r["items"]:
-                r["items"].remove(itemid)
+        for room in console.database.rooms.all():
+            if itemid in room["items"]:
+                room["items"].remove(itemid)
 
     # It's still in our inventory, so it must not have been duplified. Delete it from our inventory now.
     if itemid in console.user["inventory"] and not thisitem["duplified"]:

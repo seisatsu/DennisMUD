@@ -42,7 +42,7 @@ def COMMAND(console, args):
         console.msg(NAME + ": empty")
 
     # Enumerate our inventory.
-    for itemid in console.user["inventory"]:
+    for itemid in sorted(console.user["inventory"]):
         # Lookup the target item and perform item checks.
         thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
 

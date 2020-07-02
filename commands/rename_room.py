@@ -36,37 +36,45 @@ Ex. `rename room Small Bedroom`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
+    if not thisroom:
         return False
 
-    # Get name.
-    name = ' '.join(args)
+    # Make sure the room name is not an integer, as this would be confusing.
+    # We actually want an exception to be raised here.
+    if len(args) == 1:
+        try:
+            int(args[0])
+            console.msg("{0}: room name cannot be an integer".format(NAME))
+            return False
+        except ValueError:
+            # Not an integer.
+            pass
 
-    # Make sure the name is not an integer, as this would be confusing.
-    try:
-        test = int(name)
-        console.msg(NAME + ": room name cannot be an integer")
+    # Get new room name.
+    roomname = ' '.join(args)
+
+    # Make sure a room by this name does not already exist.
+    # Make an exception if that is the room we are renaming. (changing case)
+    for room in console.database.rooms.all():
+        if room["name"].lower() == roomname.lower() and room["name"].lower() != thisroom["name"].lower():
+            console.msg("{0}: a room by this name already exists".format(NAME))
+            return False
+
+    # Make sure we own the room or we are a wizard.
+    if console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
+        console.msg("{0} : you do not own this room".format(NAME))
         return False
-    except ValueError:
-        # Not an integer.
-        pass
 
-    # Lookup the current room.
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
+    # Rename the room.
+    thisroom["name"] = roomname
+    console.database.upsert_room(thisroom)
 
-    # Make sure we are the room's owner.
-    if console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
-        return False
-
-    r["name"] = name
-    console.database.upsert_room(r)
-    console.msg(NAME + ": done")
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

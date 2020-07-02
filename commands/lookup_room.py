@@ -38,8 +38,8 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    rooms = console.database.rooms.all()
-    for room in rooms:
+    # Search through all of the rooms.
+    for room in console.database.rooms.all():
         if room["name"].lower() == ' '.join(args).lower():
             console.msg("{0}: {1}".format(room["name"], room["id"]))
             return True

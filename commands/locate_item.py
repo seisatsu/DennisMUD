@@ -69,6 +69,8 @@ def COMMAND(console, args):
 
     # Check if someone else is holding the item.
     for targetuser in console.database.users.all():
+        if targetuser["name"] == console.user["name"]:
+            continue
         if itemid in targetuser["inventory"]:
             console.msg("{0}: {1} ({2}) is in the inventory of {3}".format(NAME, thisitem["name"], thisitem["id"],
                                                                            targetuser["name"]))
@@ -90,7 +92,7 @@ def COMMAND(console, args):
     # Couldn't find the item.
     if not found_something:
         console.log.error("item exists but has no location: {item}", item=itemid)
-        console.msg("{0}: error: item exists but could not be found")
+        console.msg("{0}: error: item exists but could not be found".format(NAME))
         return False
 
     # Finished.

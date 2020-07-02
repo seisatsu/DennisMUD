@@ -38,58 +38,49 @@ Ex. `requisition 14` to move item 14 to your inventory."""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
 
-    # Check if the item exists.
-    i = console.database.item_by_id(itemid)
-    if i:
-        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not have permission to requisition that item")
-            return False
-
-        # Do nothing if we are already holding the item.
-        if itemid in console.user["inventory"]:
-            console.msg(NAME + ": that item is already in your inventory")
-            return False
-
-        # Don't remove duplified items.
-        if not i["duplified"]:
-            # If the item is in a room's item list, remove it.
-            rooms = console.database.rooms.all()
-            if rooms:
-                for r in rooms:
-                    if itemid in r["items"]:
-                        r["items"].remove(itemid)
-                        console.database.upsert_room(r)
-
-            # If the item is in someone's inventory, remove it.
-            for u in console.router.users.values():
-                if itemid in u["console"].user["inventory"]:
-                    u["console"].user["inventory"].remove(itemid)
-                    u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                    console.database.upsert_user(u["console"].user)
-
-        # Place the item in our inventory.
-        console.user["inventory"].append(itemid)
-        console.database.upsert_user(console.user)
-        console.msg("requisitioned item " + i["name"] + " (" + str(i["id"]) + ")")
-        console.msg("{0} appeared in your inventory".format(i["name"]))
-        return True
-
-    else:
-        # No item with that ID exists.
-        console.msg(NAME + ": no such item")
+    # Make sure we own the item or we are a wizard.
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this item".format(NAME))
         return False
+
+    # Do nothing if we are already holding the item.
+    if itemid in console.user["inventory"]:
+        console.msg(NAME + ": this item is already in your inventory")
+        return False
+
+    # Don't remove duplified items.
+    if not thisitem["duplified"]:
+        # If the item is in a room's item list, remove it and announce its disappearance.
+        for room in console.database.rooms.all():
+            if itemid in room["items"]:
+                room["items"].remove(itemid)
+                console.router.broadcast_room(room["id"], "{0} vanished from the room".format(thisitem["name"]))
+                console.database.upsert_room(room)
+
+        # If the item is in someone's inventory, remove it and announce its disappearance.
+        for user in console.router.users.values():
+            if itemid in user["console"].user["inventory"]:
+                user["console"].user["inventory"].remove(itemid)
+                user["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+                console.database.upsert_user(user["console"].user)
+
+    # Place the item in our inventory and announce its appearance.
+    console.user["inventory"].append(itemid)
+    console.database.upsert_user(console.user)
+    console.msg("requisitioned item {0} ({1})".format(thisitem["name"], thisitem["id"]))
+    console.msg("{0} appeared in your inventory".format(thisitem["name"]))
+    return True

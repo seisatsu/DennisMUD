@@ -52,7 +52,7 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Make sure we own the exit or the room.
+    # Make sure we own the exit or the room, or we are a wizard.
     if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
             and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
         console.msg("{0}: you do not own this exit or this room".format(NAME))

@@ -36,45 +36,53 @@ Ex. `rename exit 3 Iron Door`"""
 
 
 def COMMAND(console, args):
-    if len(args) < 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
 
-    # Make sure the id is an integer.
-    try:
-        exitid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid)
+    if not thisroom:
         return False
 
-    # Make sure the name is not an integer, as this would be confusing.
+    # Make sure the exit name is not an integer, as this would be confusing.
+    # We actually want an exception to be raised here.
     if len(args) == 2:
         try:
-            test = int(args[1])
-            console.msg(NAME + ": exit name cannot be an integer")
+            int(args[1])
+            console.msg("{0}: exit name cannot be an integer".format(NAME))
             return False
         except ValueError:
             # Not an integer.
             pass
 
-    # Make sure the exit is in this room.
-    thisroom = console.database.room_by_id(console.user["room"])
-    if thisroom:
-        if exitid > len(thisroom["exits"])-1 or exitid < 0:
-            console.msg(NAME + ": no such exit")
+    # Get new exit name.
+    exitname = ' '.join(args[1:])
+
+    # Make sure an exit by this name does not already exist in the current room.
+    # Make an exception if that is the exit we are renaming. (changing case)
+    exits = thisroom["exits"]
+    for ex in exits:
+        if ex["name"].lower() == exitname.lower() and ex["name"].lower() != thisroom["exits"][exitid]["name"].lower():
+            console.msg("{0}: an exit by this name already exists in this room".format(NAME))
             return False
-        if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
-                and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this exit or this room")
-            return False
-        thisroom["exits"][exitid]["name"] = ' '.join(args[1:])
-        console.database.upsert_room(thisroom)
-        console.msg(NAME + ": done")
-        return True
-    console.msg("warning: current room does not exist")
-    return False
+
+    # Make sure we own the exit or the current room, or we are a wizard.
+    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+            and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
+        return False
+
+    # Rename the exit.
+    thisroom["exits"][exitid]["name"] = exitname
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
+    return True
+

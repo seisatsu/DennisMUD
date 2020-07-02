@@ -56,21 +56,22 @@ def COMMAND(console, args):
 
         # If we find the correct item, announce the drop and figure out how to drop it.
         if thisitem["name"].lower() == name.lower() or str(thisitem["id"]) == name:
-            console.shell.broadcast_room(console, console.user["nick"] + " dropped " + thisitem["name"])
-
             # Only non-owners lose duplified items when dropping them.
             if not thisitem["duplified"] or not console.user["name"] in thisitem["owners"]:
                 console.user["inventory"].remove(thisitem["id"])
 
-                # If this is a duplified item, announce that it is going away.
-                if thisitem["duplified"]:
-                    console.shell.broadcast_room(console, thisitem["name"] + " vanished")
+            # If this is a duplified item we do not own, announce that it is going away.
+            if thisitem["duplified"] and not console.user["name"] in thisitem["owners"]:
+                console.msg("{0} vanished".format(thisitem["name"]))
 
             # Only put unduplified items into the room unless we are the owner.
-            if not thisitem["duplified"] or (thisitem["duplified"] and console.user["name"] in thisitem["owners"]):
+            if not thisitem["duplified"] or console.user["name"] in thisitem["owners"]:
                 # If the item is not in the room yet, add it.
-                if thisitem["id"] not in thisroom["items"]:
+                if thisitem["id"] in thisroom["items"]:
+                    console.msg("{0}: item is already in this room".format(NAME))
+                else:
                     thisroom["items"].append(thisitem["id"])
+                    console.shell.broadcast_room(console, console.user["nick"] + " dropped " + thisitem["name"])
 
                 # Update the room document.
                 console.database.upsert_room(thisroom)

@@ -41,28 +41,28 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Get item name.
-    itemname = ' '.join(args)
-
     # Make sure the item name is not an integer, as this would be confusing.
     # We actually want an exception to be raised here.
-    try:
-        int(itemname)
-        console.msg("{0}: item name cannot be an integer".format(NAME))
-        return False
-    except ValueError:
-        # Not an integer.
-        pass
+    if len(args) == 1:
+        try:
+            int(args[0])
+            console.msg("{0}: item name cannot be an integer".format(NAME))
+            return False
+        except ValueError:
+            # Not an integer.
+            pass
+
+    # Get item name.
+    itemname = ' '.join(args)
 
     # Get a list of all items, sorted in reverse order.
     allitems = sorted(console.database.items.all(), reverse=True, key=lambda k: k["id"])
 
     # Make sure an item by this name does not already exist.
-    if allitems:
-        for item in allitems:
-            if item["name"].lower() == itemname.lower():
-                console.msg("{0}: an item by this name already exists".format(NAME))
-                return False
+    for item in allitems:
+        if item["name"].lower() == itemname.lower():
+            console.msg("{0}: an item by this name already exists".format(NAME))
+            return False
 
     # Find the highest numbered currently existing item ID.
     if allitems:

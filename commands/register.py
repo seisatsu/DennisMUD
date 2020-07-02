@@ -42,27 +42,27 @@ ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_'
 
 
 def COMMAND(console, args):
-    # args = [username, password]
-    if len(args) != 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=2, online=False):
         return False
 
+    # Make sure we are not already logged in.
     if console.user:
-        console.msg(NAME + ": logout first to register a user")
+        console.msg("{0}: logout first to register a user".format(NAME))
         return False
 
     # Check allowed characters.
-    for c in args[0]:
-        if c not in ALLOWED_CHARACTERS:
-            console.msg(NAME + ": usernames may contain alphanumerics and underscores only")
+    for char in args[0]:
+        if char not in ALLOWED_CHARACTERS:
+            console.msg("{0}: usernames may contain alphanumerics and underscores only".format(NAME))
             return False
 
-    # Register a new user.
-    if console.database.user_by_name(args[0]):  # User already exists.
-        console.msg(NAME + ": user already exists")
+    # Make sure the username isn't already taken.
+    if console.database.user_by_name(args[0]):
+        console.msg("{0}: username is already registered".format(NAME))
         return False
 
-    # Create new user.
+    # Create and save a new user.
     newuser = {
         "name": args[0].lower(),
         "nick": args[0],
@@ -79,8 +79,8 @@ def COMMAND(console, args):
         },
         "wizard": False
     }
-
-    # Save.
     console.database.upsert_user(newuser)
-    console.msg("registered user \"" + newuser["name"] + "\"")
+
+    # Confirm the registration.
+    console.msg("registered user \"{0}\"".format(newuser["name"]))
     return True

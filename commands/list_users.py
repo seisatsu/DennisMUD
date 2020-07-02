@@ -39,14 +39,14 @@ def COMMAND(console, args):
         return False
 
     # Sort all users in the database by username.
-    users = sorted(console.database.users.all(), key=lambda k: k["name"])
+    allusers = sorted(console.database.users.all(), key=lambda k: k["name"])
 
     # Iterate through the users, checking whether each one is online or offline,
     # and keeping track of how many were online vs offline.
     online_count = 0
     offline_count = 0
-    if len(users):
-        for thisuser in users:
+    if len(allusers):
+        for thisuser in allusers:
             # Everyone can see which users are online. List them out and keep count.
             if console.database.online(thisuser["name"]):
                 console.msg("{0} ({1})".format(thisuser["nick"], thisuser["name"]))
@@ -54,7 +54,7 @@ def COMMAND(console, args):
 
         # If we are a wizard, iterate through again and list out the offline users this time, and keep count.
         if console.user["wizard"]:
-            for thisuser in users:
+            for thisuser in allusers:
                 if not console.database.online(thisuser["name"]):
                     console.msg("{0} ({1}) [offline]".format(thisuser["nick"], thisuser["name"]))
                     offline_count += 1

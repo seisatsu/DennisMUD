@@ -38,8 +38,8 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    items = console.database.items.all()
-    for item in items:
+    # Search through all of the items.
+    for item in console.database.items.all():
         if item["name"].lower() == ' '.join(args).lower():
             console.msg("{0}: {1}".format(item["name"], item["id"]))
             return True

@@ -39,17 +39,16 @@ def COMMAND(console, args):
         return False
 
     # Sort all items in the database by ID.
-    items = sorted(console.database.items.all(), key=lambda k: k["id"])
+    allitems = sorted(console.database.items.all(), key=lambda k: k["id"])
 
     # Iterate through the items, checking whether we own each one (or are a wizard),
     # and keeping track of whether we found anything at all.
     found_something = False
-    if len(items):
-        for thisitem in items:
-            # We either own this item, or we are a wizard. List it out.
-            if console.user["name"] in thisitem["owners"] or console.user["wizard"]:
-                console.msg("{0} ({1})".format(thisitem["name"], thisitem["id"]))
-                found_something = True
+    for thisitem in allitems:
+        # We either own this item, or we are a wizard. List it out.
+        if console.user["name"] in thisitem["owners"] or console.user["wizard"]:
+            console.msg("{0} ({1})".format(thisitem["name"], thisitem["id"]))
+            found_something = True
 
     # We found nothing. If we are a wizard, that means no items exist. Otherwise, it means we don't own any.
     if not found_something:

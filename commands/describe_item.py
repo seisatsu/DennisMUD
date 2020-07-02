@@ -54,7 +54,7 @@ def COMMAND(console, args):
     if not thisitem:
         return False
 
-    # Make sure we are holding the item, or we are a wizard.
+    # Make sure we are holding the item or we are a wizard.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
         console.msg("{0}: no such item in inventory".format(NAME))
         return False

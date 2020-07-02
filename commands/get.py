@@ -56,20 +56,27 @@ def COMMAND(console, args):
 
         # Check for name or id match.
         if thisitem["name"].lower() == name.lower() or str(thisitem["id"]) == name:
-            console.shell.broadcast_room(console, console.user["nick"] + " picked up " + thisitem["name"])
-
             # The item is glued down. Only the owner or a wizard can pick it up.
             if thisitem["glued"] and console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
                 console.msg("{0}: you cannot get this item".format(NAME))
+                return False
+
+            # If the item is in our inventory, and it's not a duplified item that we own, we can't pick it up.
+            if thisitem["id"] in console.user["inventory"] and not\
+                    (console.user["name"] in thisitem["owners"] and thisitem["duplified"]):
+                console.msg("{0}: item is already in your inventory".format(NAME))
                 return False
 
             # Don't remove duplified items when picking them up, unless we are the owner.
             if console.user["name"] in thisitem["owners"] or not thisitem["duplified"]:
                 thisroom["items"].remove(thisitem["id"])
 
-            # If the item is not in our inventory yet, add it.
-            if thisitem["id"] not in console.user["inventory"]:
+            # If the item is not in our inventory, get it.
+            if not thisitem["id"] in console.user["inventory"]:
                 console.user["inventory"].append(thisitem["id"])
+
+            # Announce that we picked up the item.
+            console.shell.broadcast_room(console, console.user["nick"] + " picked up " + thisitem["name"])
 
             # Update the room and user documents.
             console.database.upsert_room(thisroom)

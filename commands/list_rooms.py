@@ -39,17 +39,16 @@ def COMMAND(console, args):
         return False
 
     # Sort all rooms in the database by ID.
-    rooms = sorted(console.database.rooms.all(), key=lambda k: k["id"])
+    allrooms = sorted(console.database.rooms.all(), key=lambda k: k["id"])
 
     # Iterate through the rooms, checking whether we own each one (or are a wizard),
     # and keeping track of whether we found anything at all.
     found_something = False
-    if len(rooms):
-        for thisroom in rooms:
-            # We either own this room, or we are a wizard. List it out.
-            if console.user["name"] in thisroom["owners"] or console.user["wizard"]:
-                console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
-                found_something = True
+    for thisroom in allrooms:
+        # We either own this room, or we are a wizard. List it out.
+        if console.user["name"] in thisroom["owners"] or console.user["wizard"]:
+            console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
+            found_something = True
 
     # We found nothing. At least the first room must exist, so that means we just don't own any rooms.
     if not found_something:

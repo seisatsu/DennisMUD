@@ -48,8 +48,6 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
 
     :return: True if succeeded, False if failed.
     """
-    caller = console.shell._commands[NAME]
-
     # Check argument count.
     if argc is None:
         pass
@@ -104,7 +102,7 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
 
     :return: True or args if succeeded, None if failed.
     """
-    castargs = args
+    castargs = args.copy()
 
     if type(checks) not in (list, tuple):
         console.log.error("checks type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)

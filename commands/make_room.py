@@ -41,28 +41,28 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Get room name.
-    roomname = ' '.join(args)
-
     # Make sure the room name is not an integer, as this would be confusing.
     # We actually want an exception to be raised here.
-    try:
-        int(roomname)
-        console.msg("{0}: room name cannot be an integer".format(NAME))
-        return False
-    except ValueError:
-        # Not an integer.
-        pass
+    if len(args) == 1:
+        try:
+            int(args[0])
+            console.msg("{0}: room name cannot be an integer".format(NAME))
+            return False
+        except ValueError:
+            # Not an integer.
+            pass
+
+    # Get room name.
+    roomname = ' '.join(args)
 
     # Get a list of all rooms, sorted in reverse order.
     allrooms = sorted(console.database.rooms.all(), reverse=True, key=lambda k: k["id"])
 
     # Make sure a room by this name does not already exist.
-    if allrooms:
-        for room in allrooms:
-            if room["name"].lower() == roomname.lower():
-                console.msg("{0}: a room by this name already exists".format(NAME))
-                return False
+    for room in allrooms:
+        if room["name"].lower() == roomname.lower():
+            console.msg("{0}: a room by this name already exists".format(NAME))
+            return False
 
     # Find the highest numbered currently existing room ID.
     if allrooms:

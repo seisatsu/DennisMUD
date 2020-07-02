@@ -82,6 +82,7 @@ def COMMAND(console, args):
             for r in console.database.rooms.all():
                 if itemid in r["items"]:
                     r["items"].remove(itemid)
+                    console.database.upsert_room(r)
 
             return True
         else:

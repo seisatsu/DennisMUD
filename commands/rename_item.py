@@ -36,50 +36,55 @@ Ex. `rename item 4 Blue Shard`"""
 
 
 def COMMAND(console, args):
-    if len(args) < 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    # Make sure the id is an integer.
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid)
+    if not thisitem:
         return False
 
-    # Get name.
-    name = ' '.join(args[1:])
+    # Make sure the item name is not an integer, as this would be confusing.
+    # We actually want an exception to be raised here.
+    if len(args) == 2:
+        try:
+            int(args[1])
+            console.msg("{0}: item name cannot be an integer".format(NAME))
+            return False
+        except ValueError:
+            # Not an integer.
+            pass
 
-    # Make sure the name is not an integer, as this would be confusing.
-    try:
-        test = int(name)
-        console.msg(NAME + ": item name cannot be an integer")
-        return False
-    except ValueError:
-        # Not an integer.
-        pass
+    # Get new item name.
+    itemname = ' '.join(args[1:])
 
-    # Make sure we are holding the item.
+    # Make sure an item by this name does not already exist.
+    # Make an exception if that is the item we are renaming. (changing case)
+    for item in console.database.items.all():
+        if item["name"].lower() == itemname.lower() and item["name"].lower() != thisitem["name"].lower():
+            console.msg("{0}: an item by this name already exists".format(NAME))
+            return False
+
+    # Make sure we are holding the item or we are a wizard.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg(NAME + ": no such item in inventory")
+        console.msg("{0}: no such item in inventory".format(NAME))
         return False
 
-    i = console.database.item_by_id(itemid)
-    if not i:
-        console.msg(NAME + ": no such item")
+    # Make sure we own the item or we are a wizard.
+    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this item".format(NAME))
         return False
 
-    # Make sure we are the item's owner.
-    if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this item")
-        return False
+    # Rename the item.
+    thisitem["name"] = itemname
+    console.database.upsert_item(thisitem)
 
-    i["name"] = name
-    console.database.upsert_item(i)
-    console.msg(NAME + ": done")
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

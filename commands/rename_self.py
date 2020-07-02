@@ -36,34 +36,34 @@ Ex. `rename self Overlord Seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) == 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
-
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
-    # Get name.
-    name = ' '.join(args)
 
     # Make sure the name is not an integer, as this would be confusing.
-    try:
-        test = int(name)
-        console.msg(NAME + ": nickname cannot be an integer")
-        return False
-    except ValueError:
-        # Not an integer.
-        pass
-
-    # Check if nickname is already in use.
-    for u in console.database.users.all():
-        if name.lower() == u["nick"].lower():
-            console.msg(NAME + ": that nickname is already in use")
+    # We actually want an exception to be raised here.
+    if len(args) == 1:
+        try:
+            int(args[0])
+            console.msg("{0}: nickname cannot be an integer".format(NAME))
             return False
+        except ValueError:
+            # Not an integer.
+            pass
 
-    console.user["nick"] = name
+    # Get new nickname.
+    nickname = ' '.join(args)
+
+    # Make sure a user with this nickname does not already exist.
+    # Make an exception if that user is us. (changing case)
+    if console.database.user_by_nick(nickname) and nickname.lower() != console.user["nick"].lower():
+        console.msg(NAME + ": that nickname is already in use")
+        return False
+
+    # Rename ourselves.
+    console.user["nick"] = nickname
     console.database.upsert_user(console.user)
+
+    # Finished.
     console.msg(NAME + ": done")
     return True

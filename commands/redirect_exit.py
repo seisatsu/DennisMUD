@@ -38,44 +38,45 @@ Ex. `redirect exit 3 27` to redirect exit 3 to room 27."""
 
 
 def COMMAND(console, args):
-    if len(args) != 2:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=2):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid, destroomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
+    if exitid is None or destroomid is None:
         return False
 
-    try:
-        exitid = int(args[0])
-        dest = int(args[1])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid)
+    if not thisroom:
         return False
 
-    # Make sure the exit is in this room.
-    thisroom = console.database.room_by_id(console.user["room"])
-    if thisroom:
-        if exitid > len(thisroom["exits"])-1 or exitid < 0:
-            console.msg(NAME + ": no such exit")
-            return False
-        # Check if the destination room exists.
-        destroom = console.database.room_by_id(dest)
-        if not destroom:
-            console.msg(NAME + ": destination room does not exist")
-            return False  # The destination room does not exist.
-        if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
-                console.user["name"] not in thisroom["owners"]:
-            console.msg(NAME + ": this room is outbound sealed")
-            return False
-        if destroom["sealed"]["inbound"] and not console.user["wizard"] and \
-                console.user["name"] not in destroom["owners"]:
-            console.msg(NAME + ": the destination room is inbound sealed")
-            return False
-        thisroom["exits"][exitid]["dest"] = dest
-        console.database.upsert_room(thisroom)
-        console.msg(NAME + ": done")
-        return True
-    console.msg("warning: current room does not exist")
-    return False
+    # Lookup the destination room and perform room checks.
+    destroom = COMMON.check_room(NAME, console, destroomid)
+    if not destroom:
+        return False
+
+    # Make sure we own the exit or the current room, or we are a wizard.
+    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
+            and console.user["name"].lower() not in thisroom["owners"] and not console.user["wizard"]:
+        console.msg("{0}: you do not own this exit or this room".format(NAME))
+        return False
+
+    # Make sure the current room is not outbound sealed, or we are a room owner or a wizard.
+    if thisroom["sealed"]["outbound"] and not console.user["wizard"] and console.user["name"] not in thisroom["owners"]:
+        console.msg("{0}: the current room is outbound sealed".format(NAME))
+        return False
+
+    # Make sure the destination room is not inbound sealed, or we are a room owner or a wizard.
+    if destroom["sealed"]["inbound"] and not console.user["wizard"] and console.user["name"] not in destroom["owners"]:
+        console.msg("{0}: the destination room is inbound sealed".format(NAME))
+        return False
+
+    # Redirect the exit.
+    thisroom["exits"][exitid]["dest"] = destroomid
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
+    return True
