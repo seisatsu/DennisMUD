@@ -100,9 +100,17 @@ def COMMAND(console, args):
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
-            # It was an item in the room. Show the item's name, ID, owners, and description.
+            attributes = []
+            # It was an item in the room. Show the item's name, ID, owners, description, and attributes.
             if item and item["name"].lower() == ' '.join(args).lower():
-                console.msg("{0} ({1})".format(item["name"], item["id"]))
+                # Only enumerate item attributes if we are the item owner or a wizard.
+                if console.user["name"] in item["owners"] or console.user["wizard"]:
+                    if item["duplified"]:
+                        attributes.append("[duplified]")
+                    if item["glued"]:
+                        attributes.append("[glued]")
+                # Send the info for this item.
+                console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
                 console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
@@ -115,10 +123,18 @@ def COMMAND(console, args):
         # Maybe it's an item in our inventory.
         for itemid in console.user["inventory"]:
             item = console.database.item_by_id(itemid)
-            # It was an item in our inventory. Show the item's name, ID, owners, and description,
+            attributes = []
+            # It was an item in our inventory. Show the item's name, ID, owners, description, and attributes,
             # but only if we didn't already see it in the current room.
             if item and item["name"].lower() == ' '.join(args).lower() and item["id"] != found_item:
-                console.msg("{0} ({1})".format(item["name"], item["id"]))
+                # Only enumerate item attributes if we are the item owner or a wizard.
+                if console.user["name"] in item["owners"] or console.user["wizard"]:
+                    if item["duplified"]:
+                        attributes.append("[duplified]")
+                    if item["glued"]:
+                        attributes.append("[glued]")
+                # Send the info for this item.
+                console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
                 console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
