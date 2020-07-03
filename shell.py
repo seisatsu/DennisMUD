@@ -336,31 +336,33 @@ class Shell:
                 return True
         return False
 
-    def broadcast(self, message, exclude=None):
+    def broadcast(self, message, exclude=None, playertag=None):
         """Broadcast Message
 
         Send a message to all users connected to consoles.
 
         :param message: The message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: Username to exclude from broadcast. Usually ourselves if set.
+        :param playertag: If set, this is our nickname for formatting %player% tags and actions.
         :return: True
         """
         self._log.info(message)
-        self.router.broadcast_all(message, exclude)
+        self.router.broadcast_all(message, exclude, playertag)
         return True
 
-    def broadcast_room(self, console, message, exclude=None):
+    def broadcast_room(self, console, message, exclude=None, playertag=None):
         """Broadcast Message to Room
 
         Send a message to all users who are in the same room as the user connected to this console.
 
         :param console: The console sending the message.
         :param message: The message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: Username to exclude from broadcast. Usually ourselves if set.
+        :param playertag: If set, this is our nickname for formatting %player% tags and actions.
         :return: True
         """
         self._log.info(message)
-        self.router.broadcast_room(console.user["room"], message, exclude)
+        self.router.broadcast_room(console.user["room"], message, exclude, playertag)
         return True
 
     def user_by_name(self, username):

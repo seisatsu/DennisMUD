@@ -149,45 +149,93 @@ class Router:
         if self.users[peer]["service"] == "websocket":
             self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
 
-    def broadcast_all(self, msg, exclude=None):
+    def broadcast_all(self, msg, exclude=None, playertag=None):
         """Broadcast All
 
         Broadcast a message to all logged in users.
+        Also handle some simple formatting tasks.
 
         :param msg: Message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: If set, username to exclude from broadcast.
+        :param playertag: If set, this is our nickname for formatting %player% tags and actions.
         :return: True
         """
         for u in self.users:
+            fmsg = msg
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
+            if playertag and self.users[u]["console"].user["nick"] == playertag:
+                if "%player%" in fmsg:
+                    if fmsg.startswith("%player%'s"):
+                        fmsg.replace("%player%'s", "Your", 1)
+                    elif fmsg.startswith("%player%"):
+                        fmsg.replace("%player%", "You", 1)
+                    fmsg.replace("%player%'s", "your")
+                    fmsg.replace("%player%", "you")
+                else:
+                    if fmsg.startswith("'s"):
+                        fmsg = "Your {0}".format(fmsg)
+                    else:
+                        fmsg = "You {0}".format(fmsg)
+            elif playertag:
+                if "%player%" in fmsg:
+                    fmsg.replace("%player%", playertag)
+                else:
+                    if fmsg.startswith("'s"):
+                        fmsg = "{0}{1}".format(playertag, fmsg)
+                    else:
+                        fmsg = "{0} {1}".format(playertag, fmsg)
             if self.users[u]["service"] == "telnet":
-                self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
+                self.telnet_factory.communicate(self.users[u]["console"].rname, fmsg.encode())
             if self.users[u]["service"] == "websocket":
-                self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
+                self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(fmsg).encode("utf-8"))
 
-    def broadcast_room(self, room, msg, exclude=None):
+    def broadcast_room(self, room, msg, exclude=None, playertag=None):
         """Broadcast Room
 
         Broadcast a message to all logged in users in the given room.
+        Also handle some simple formatting tasks.
 
         :param room: Room ID.
         :param msg: Message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: If set, username to exclude from broadcast.
+        :param playertag: If set, this is our nickname for formatting %player% tags and actions.
         :return: True
         """
         for u in self.users:
+            fmsg = msg
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
+            if playertag and self.users[u]["console"].user["nick"] == playertag:
+                if "%player%" in fmsg:
+                    if fmsg.startswith("%player%'s"):
+                        fmsg.replace("%player%'s", "Your", 1)
+                    elif fmsg.startswith("%player%"):
+                        fmsg.replace("%player%", "You", 1)
+                    fmsg.replace("%player%'s", "your")
+                    fmsg.replace("%player%", "you")
+                else:
+                    if fmsg.startswith("'s"):
+                        fmsg = "Your {0}".format(fmsg)
+                    else:
+                        fmsg = "You {0}".format(fmsg)
+            elif playertag:
+                if "%player%" in fmsg:
+                    fmsg.replace("%player%", playertag)
+                else:
+                    if fmsg.startswith("'s"):
+                        fmsg = "{0}{1}".format(playertag, fmsg)
+                    else:
+                        fmsg = "{0} {1}".format(playertag, fmsg)
             if self.users[u]["console"].user["room"] == room:
                 if self.users[u]["service"] == "telnet":
-                    self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
+                    self.telnet_factory.communicate(self.users[u]["console"].rname, fmsg.encode())
                 if self.users[u]["service"] == "websocket":
-                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
+                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(fmsg).encode("utf-8"))
 
 
 def init_logger(config):
