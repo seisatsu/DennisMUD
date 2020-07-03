@@ -85,6 +85,17 @@ def COMMAND(console, args):
     # Also keep track of whether we found anything, and whether we found a certain item
     # in the current room so we don't list it twice if it was duplified and also in our inventory.
     else:
+        # See if the user tried to look at an ID instead of a name.
+        try:
+            int(' '.join(args))
+            console.msg("{0}: requires a name, not an ID".format(NAME))
+            return False
+
+        # Nope, just looking for something that isn't there.
+        except:
+            pass
+
+        # Keep track of whether we found stuff during our search.
         found_something = False
         found_item = None
 
