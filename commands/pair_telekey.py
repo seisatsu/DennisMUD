@@ -28,13 +28,13 @@
 NAME = "pair key"
 CATEGORIES = ["rooms", "items"]
 USAGE = "pair telekey <item> <room>"
-DESCRIPTION = """Make the item <item> teleport its user to <room> when used.
+DESCRIPTION = """Make the <item> teleport its user to <room> when used.
 
 You must own and be holding the item to pair it.
 The destination room must be inbound unsealed, or you must be a room owner.
 Any user who uses the item will teleport to the paired room.
 
-Ex. `pair telekey 3 5` to make item 3 teleport to room 5."""
+Ex. `pair telekey 3 5` to make item 3 teleport the user to room 5."""
 
 
 def COMMAND(console, args):

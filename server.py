@@ -60,9 +60,13 @@ class Router:
     :ivar single_user: Whether we are running in single-user mode. Hard-coded here to False.
     :ivar telnet_factory: The active Autobahn telnet server factory.
     :ivar websocket_factory: The active Autobahn websocket server factory.
+    :ivar shutting_down: Whether the server is currently counting down to shutdown.
     """
     def __init__(self, config, database):
         """Router Initializer
+
+        :param config: The server configuration file.
+        :param database: The DatabaseManager instance to use.
         """
         self.users = {}
         self.shell = None

@@ -51,7 +51,7 @@ class DatabaseManager:
         """Database Manager Initializer
 
         :param filename: The relative or absolute filename of the TinyDB database file.
-        :param log: Alternative logging facility, if set.
+        :param log: Alternative logging facility, if set. Otherwise use the Twisted logger.
         """
         self.database = None
         self.rooms = None
@@ -76,7 +76,7 @@ class DatabaseManager:
 
         :return: True if succeeded, False if failed, None if failed due to existing lockfile.
         """
-        # Try to load the defaults config file.
+        # Try to load the defaults config file. If we can't, then fail.
         try:
             with open("defaults.config.json") as f:
                 self.defaults = json.load(f)
@@ -84,12 +84,12 @@ class DatabaseManager:
             self._log.critical("could not open defaults file")
             return False
 
-        # Check if a lockfile exists for this database. If so, exit.
+        # Check if a lockfile exists for this database. If so, then fail.
         if os.path.exists(self._filename + ".lock"):
             self._log.critical("lockfile exists for database: {filename}", filename=self._filename)
             return None
 
-        # See if we can access the database file.
+        # See if we can access the database file. If not, then fail.
         try:
             with open(self._filename, "a") as f:
                 pass
@@ -97,7 +97,7 @@ class DatabaseManager:
             self._log.critical("could not open database file: {filename}", filename=self._filename)
             return False
 
-        # Create the lockfile.
+        # Attempt to create the lockfile. If we can't, then fail.
         try:
             with open(self._filename + ".lock", "a") as f:
                 pass
@@ -107,28 +107,50 @@ class DatabaseManager:
 
         self._log.info("loading database: {filename}", filename=self._filename)
 
-        self.database = TinyDB(self._filename)
+        # Try to load the database file. If an error occurs, fail.
+        try:
+            self.database = TinyDB(self._filename)
+        except:
+            self._log.critical("error in tinydb while loading database: {filename}", filename=self._filename)
+            return False
+
+        # Load the rooms, users, items, and _info tables.
         self.rooms = self.database.table("rooms")
         self.users = self.database.table("users")
         self.items = self.database.table("items")
         self._info = self.database.table("_info")
 
-        # If the info table is empty, add a version record. Otherwise, compare versions.
+        # If the info table is empty, assume a new database and add an info record containing the current version.
         if len(self._info.all()) == 0:
             self._info.insert({"version": DB_VERSION})
+
+        # Otherwise read out the existing info record and check if it's ok.
         else:
             info_record = self._info.all()[0]
+
+            # This either needs to be the current version or the version we are updating from.
+            # The _UPDATE_FROM_VERSION variable is identical to the current database version,
+            # except when we are running an updater script. If _UPDATE_FROM_VERSION is identical
+            # to the current database version, we are running normally and loading a database of
+            # the correct version, so we can skip this whole section.
             if info_record["version"] != self._UPDATE_FROM_VERSION:
+                # An updater is trying to update the database, but the database is already up to date. Fail.
                 if info_record["version"] == DB_VERSION:
                     self._log.critical("database is already up to date, doing nothing")
+
+                # An updater is trying to update a database of the wrong version. Fail.
                 elif self._UPDATE_FROM_VERSION != DB_VERSION:
                     self._log.critical("trying to update from v{oldver} to v{newver}, but detected v{filever}",
                                        oldver=self._UPDATE_FROM_VERSION, newver=DB_VERSION,
                                        filever=info_record["version"])
+
+                # No updater is running, we are just trying to load a database of the wrong version. Fail.
                 else:
                     self._log.critical("database version mismatch, v{filever} detected, v{currver} required",
                                        filever=info_record["version"], currver=self._UPDATE_FROM_VERSION)
                     self._log.critical("check the util folder for a dbupdate script to migrate between these versions")
+
+                # Remove the lockfile before exiting.
                 self._unlock()
                 return False
 
@@ -142,12 +164,15 @@ class DatabaseManager:
             self._log.info("initializing users table")
             self._init_user()
 
+        # Finished starting up.
         self._log.info("finished loading database")
-
         return True
 
     def upsert_room(self, document):
         """Update or insert a room.
+
+        If the room exists, it will be updated, otherwise it will be inserted.
+        The key is the room ID.
 
         :param document: The room document to update or insert.
         :return: True
@@ -159,6 +184,9 @@ class DatabaseManager:
     def upsert_item(self, document):
         """Update or insert an item.
 
+        If the item exists, it will be updated, otherwise it will be inserted.
+        The key is the item ID.
+
         :param document: The item document to update or insert.
         :return: True
         """
@@ -168,6 +196,9 @@ class DatabaseManager:
 
     def upsert_user(self, document):
         """Update or insert a user.
+
+        If the user exists, it will be updated, otherwise it will be inserted.
+        The key is the username.
 
         :param document: The user document to update or insert.
         :return: True
@@ -221,11 +252,20 @@ class DatabaseManager:
         :param clean: Whether to automatically remove offline user records. Should usually be True.
         :return: Room document or None.
         """
+        # Search for a room in the database whose ID is the given ID. Assume only one exists.
         q = Query()
         thisroom = self.rooms.search(q.id == roomid)
+
+        # Couldn't find a room with that ID, so return nothing.
         if not thisroom:
             return None
+
+        # TinyDB always returns a list, so take the first item.
         thisroom = thisroom[0]
+
+        # If we are not automatically removing offline users from this room, then return the room document right away.
+        # Cleaning offline users is usually only disabled for debugging purposes, for example to grab a corrupted
+        # room document that won't make it through cleaning so that we can pass it to delete_room().
         if not clean:
             return thisroom
 
@@ -238,10 +278,13 @@ class DatabaseManager:
                 user = self.user_by_name(username)
                 if user and username not in self._users_online:
                     thisroom["users"].remove(username)
+
+            # Save the room after cleaning out the offline users, and then grab it again.
             self.upsert_room(thisroom)
             self._rooms_cleaned.append(roomid)
             thisroom = self.rooms.search(q.id == roomid)[0]
 
+        # Return the cleaned room document.
         return thisroom
 
     def item_by_id(self, itemid):
@@ -259,33 +302,31 @@ class DatabaseManager:
     def user_by_name(self, username):
         """Get a user by their name.
 
-        If there is any chance the user could be logged in, and the record needs to be altered,
-        you should use the equivalent Console method. This method is faster but unsafe for logged in users.
+        If there is any chance the user could be logged in, and their record needs to be altered,
+        you should use the equivalent Console method instead. This method is faster but won't update logged in users.
 
         :param username: The name of the user to retrieve from the database.
         :return: User document or None.
         """
-        users = self.users.all()
-        if len(users):
-            for u in users:
-                if u["name"].lower() == username.lower():
-                    return u
+        allusers = self.users.all()
+        for user in allusers:
+            if user["name"].lower() == username.lower():
+                return user
         return None
 
     def user_by_nick(self, nickname):
         """Get a user by their nickname.
 
-        If there is any chance the user could be logged in, and the record needs to be altered,
-        you should use the equivalent Console method. This method is faster but unsafe for logged in users.
+        If there is any chance the user could be logged in, and their record needs to be altered,
+        you should use the equivalent Console method instead. This method is faster but won't update logged in users.
 
         :param nickname: The nickname of the user to retrieve from the database.
         :return: User document or None.
         """
-        users = self.users.all()
-        if len(users):
-            for u in users:
-                if u["nick"].lower() == nickname.lower():
-                    return u
+        allusers = self.users.all()
+        for user in allusers:
+            if user["nick"].lower() == nickname.lower():
+                return user
         return None
 
     def login_user(self, username, passhash):
@@ -300,31 +341,53 @@ class DatabaseManager:
         username = username.lower()
         thisuser = self.user_by_name(username)
 
+        # This user does not exist.
         if not thisuser:
             return None
+
+        # Bad credentials.
         if thisuser["passhash"] != passhash:
             return None
 
+        # Attempt to log in a user who is already logged in.
         if username in self._users_online:
-            self._log.warn("user logged in twice somehow: {username}", username=username)
+            self._log.warn("user logged in twice: {username}", username=username)
+            return None
+
+        # Clean and successful login.
         else:
             self._users_online.append(username)
-
-        return thisuser
+            return thisuser
 
     def logout_user(self, username):
         """Log out a user.
 
         :param username: The name of the user to log out.
-        :return: True.
+        :return: True if succeeded, False if failed.
         """
         username = username.lower()
-        if username not in self._users_online:
-            self._log.warn("user logged out twice somehow: {username}", username=username)
+        thisuser = self.user_by_name(username)
+
+        # User does not exist.
+        if not thisuser and username not in self._users_online:
+            return False
+
+        # User does not exist, but they are online anyway for some reason.
+        # Still return True since we logged them out.
+        elif not thisuser and username in self._users_online:
+            self._log.warn("nonexistent user was online: {username}", username=username)
+            self._users_online.remove(username)
+            return True
+
+        # Attempt to log out user who was not logged in.
+        elif username not in self._users_online:
+            self._log.warn("user logged out twice: {username}", username=username)
+            return False
+
+        # Clean and successful logout.
         else:
             self._users_online.remove(username)
-
-        return True
+            return True
 
     def online(self, username):
         """Check if a user is online.
@@ -337,7 +400,7 @@ class DatabaseManager:
         return False
 
     def _init_room(self):
-        """Initialize the world with the first room.
+        """Initialize the world with the first room, taking defaults from the defaults config file.
 
         :return: True
         """
@@ -359,7 +422,7 @@ class DatabaseManager:
         return True
 
     def _init_user(self):
-        """Initialize the world with the root user.
+        """Initialize the world with the root user, taking defaults from the defaults config file.
 
         :return: True
         """
@@ -387,11 +450,16 @@ class DatabaseManager:
 
         :return: None
         """
+        # The lockfile should not disappear before shutdown.
         if not os.path.exists(self._filename + ".lock"):
             self._log.warn("lockfile disappeared while running for database: {filename}",
                            filename=self._filename)
+
+        # The lockfile still exists, so attempt to remove it.
         else:
             try:
                 os.remove(self._filename + ".lock")
+
+            # Couldn't remove the lockfile. Probably a permissions issue.
             except:
                 self._log.warn("could not delete lockfile for database: {filename}", filename=self._filename)
