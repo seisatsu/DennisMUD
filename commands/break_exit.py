@@ -57,12 +57,19 @@ def COMMAND(console, args):
         console.msg("{0}: this room is outbound sealed".format(NAME))
         return False
 
-    # Make sure the exit's destination room exists.
+    # Make sure the exit's destination room exists. Otherwise give an error but delete the exit anyway.
     destroom = COMMON.check_room(NAME, console, thisroom["exits"][exitid]["dest"])
     if not destroom:
-        console.log.warn("exit destination room does not exist: {roomid}", roomid=destroom["id"])
-        console.msg("warning: exit destination room does not exist: {0}".format(destroom["id"]))
-        return False
+        console.log.error("exit destination room does not exist: {roomid}", roomid=destroom["id"])
+        console.msg("error: exit destination room does not exist: {0}".format(destroom["id"]))
+
+        # Delete the exit.
+        del thisroom["exits"][exitid]
+        console.database.upsert_room(thisroom)
+
+        # Finished successfully but with an error.
+        console.msg("{0}: done".format(NAME))
+        return True
 
     # Delete the exit. If this was the only exit leading to the destination room,
     # remove this room from the destination room's entrances record.
