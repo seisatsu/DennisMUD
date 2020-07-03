@@ -50,5 +50,5 @@ def COMMAND(console, args):
     console.database.upsert_user(console.user)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

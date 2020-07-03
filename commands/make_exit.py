@@ -112,5 +112,5 @@ def COMMAND(console, args):
         console.database.upsert_room(destroom)
 
     # Show the exit ID.
-    console.msg("{0}: done (exit id: {1})".format(NAME, len(thisroom["exits"])-1))
+    console.msg("{0}: Done. (exit id: {1})".format(NAME, len(thisroom["exits"])-1))
     return True

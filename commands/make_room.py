@@ -88,5 +88,5 @@ def COMMAND(console, args):
     console.database.upsert_room(newroom)
 
     # Show the room ID.
-    console.msg("{0}: done (room id: {1}".format(NAME, newroom["id"]))
+    console.msg("{0}: Done. (room id: {1}".format(NAME, newroom["id"]))
     return True

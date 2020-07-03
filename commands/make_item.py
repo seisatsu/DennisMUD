@@ -88,5 +88,5 @@ def COMMAND(console, args):
     console.database.upsert_item(newitem)
 
     # Show the item ID.
-    console.msg("{0}: done (itemid: {1})".format(NAME, newitem["id"]))
+    console.msg("{0}: Done. (itemid: {1})".format(NAME, newitem["id"]))
     return True
