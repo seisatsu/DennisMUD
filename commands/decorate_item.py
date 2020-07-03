@@ -54,11 +54,6 @@ def COMMAND(console, args):
     if not thisitem:
         return False
 
-    # Make sure we own the item or we are a wizard.
-    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this item")
-        return False
-
     # Decorate the item.
     thisitem["action"] = ' '.join(args[1:])
     console.database.upsert_item(thisitem)
