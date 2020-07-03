@@ -36,21 +36,13 @@ DESCRIPTION = "(WIZARDS ONLY) Shut down the server."
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
-        return False
-
-    # Make sure we are logged in, and a wizard.
-    if not console.user:
-        console.msg("shutdown: must be logged in first")
-        return False
-    if not console.user["wizard"]:
-        console.msg("shutdown: you do not have permission to use this command")
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0, wizard=True):
         return False
 
     # Make sure we are not already shutting down.
     if console.router.shutting_down:
-        console.msg("shutdown: already shutting down")
+        console.msg("{0}: already shutting down".format(NAME))
         return False
 
     # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.

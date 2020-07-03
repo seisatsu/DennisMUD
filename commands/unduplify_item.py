@@ -38,59 +38,51 @@ Ex. `duplify item 4`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
     # Check if the item exists.
-    i = console.database.item_by_id(itemid)
-    if i:
-        # Make sure we are the item's owner.
-        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this item")
-            return False
-        # Make sure we are holding the item.
-        if itemid in console.user["inventory"] or console.user["wizard"]:
-            # Unuplify the item.
-            if not i["duplified"]:
-                console.msg(NAME + ": item is already not duplified")
-                return False
-            i["duplified"] = False
-            console.database.upsert_item(i)
-            console.msg(NAME + ": done")
-
-            # Delete item from all user inventories except ours, and all rooms.
-            for u in console.router.users.values():
-                if u["console"].user["name"] == console.user["name"]:
-                    # Not this user, this is us.
-                    continue
-                if itemid in u["console"].user["inventory"]:
-                    u["console"].user["inventory"].remove(itemid)
-                    u["console"].msg("{0} vanished from your inventory".format(i["name"]))
-                    console.database.upsert_user(u["console"].user)
-            for r in console.database.rooms.all():
-                if itemid in r["items"]:
-                    r["items"].remove(itemid)
-                    console.database.upsert_room(r)
-
-            return True
-        else:
-            # We are not holding that item.
-            console.msg(NAME + ": not holding item")
-            return False
-
-    else:
-        # No item with that ID exists.
-        console.msg(NAME + ": no such item")
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True)
+    if not thisitem:
         return False
+
+    # Make sure we are holding the item or we are a wizard.
+    # If we are a wizard but aren't holding the item, put it in our inventory.
+    # Otherwise it won't have any locations.
+    if itemid not in console.user["inventory"] and not console.user["wizard"]:
+        console.msg("{0}: not holding item".format(NAME))
+        return False
+    elif console.user["wizard"] and itemid not in console.user["inventory"]:
+        console.user["inventory"].append(itemid)
+        console.database.upsert_user(console.user)
+        console.msg("{0} appeared in your inventory".format(thisitem["name"]))
+
+    # Check if the item is already not duplified.
+    if not thisitem["duplified"]:
+        console.msg("{0}: item is already not duplified".format(NAME))
+        return False
+
+    # Delete the item from all user inventories except ours.
+    for user in console.router.users.values():
+        if user["console"].user["name"] == console.user["name"]:
+            # Not this user, this is us.
+            continue
+        if itemid in user["console"].user["inventory"]:
+            user["console"].user["inventory"].remove(itemid)
+            user["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+            console.database.upsert_user(user["console"].user)
+
+    # Delete the item from all rooms.
+    for room in console.database.rooms.all():
+        if itemid in room["items"]:
+            room["items"].remove(itemid)
+            console.database.upsert_room(room)
+
+    # Finished.
+    return True

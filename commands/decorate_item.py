@@ -50,12 +50,11 @@ def COMMAND(console, args):
         return False
 
     # Lookup the target item and perform item checks.
-    thisitem = COMMON.check_item(NAME, console, itemid, owner=True)
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
     if not thisitem:
         return False
 
     # Make sure we own the item or we are a wizard.
-    console.msg("{0}: done".format(NAME))
     if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
         console.msg(NAME + ": you do not own this item")
         return False

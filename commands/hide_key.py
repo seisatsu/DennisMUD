@@ -38,7 +38,7 @@ Ex. `hide key 3`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
     # Perform argument type checks and casts.

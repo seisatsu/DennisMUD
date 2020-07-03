@@ -100,6 +100,10 @@ def COMMAND(console, args):
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
+            # A reference was found to a nonexistent item. Report this and quietly continue searching.
+            if not item:
+                console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+                continue
             attributes = []
 
             # It was an item in the room. Show the item's name, ID, owners, description, and attributes.
@@ -125,6 +129,10 @@ def COMMAND(console, args):
         # Maybe it's an item in our inventory.
         for itemid in console.user["inventory"]:
             item = console.database.item_by_id(itemid)
+            # A reference was found to a nonexistent item. Report this and quietly continue searching.
+            if not item:
+                console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+                continue
             attributes = []
 
             # It was an item in our inventory. Show the item's name, ID, owners, description, and attributes,

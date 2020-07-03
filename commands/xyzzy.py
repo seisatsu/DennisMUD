@@ -37,33 +37,42 @@ Ex. `xyzzy` to go to the first room."""
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
+    if not thisroom:
         return False
 
-    roomid = console.user["room"]
-    thisroom = console.database.room_by_id(roomid)
-    destroom = console.database.room_by_id(0)
+    # Lookup the first room and perform room checks.
+    destroom = COMMON.check_room(NAME, console, 0)
+    if not destroom:
+        return False
 
-    # Move us to the new room.
-    if thisroom and console.user["name"] in thisroom["users"]:
+    # Remove us from the current room.
+    if console.user["name"] in thisroom["users"]:
         thisroom["users"].remove(console.user["name"])
+
+    # Add us to the destination room.
     if console.user["name"] not in destroom["users"]:
         destroom["users"].append(console.user["name"])
-    if thisroom:
-        console.shell.broadcast_room(console,
-                                     console.user["nick"] + " uttered a mysterious word and vanished from the room")
+
+    # Broadcast our teleportation to the origin room.
+    console.shell.broadcast_room(
+        console, "{0} uttered a mysterious word and vanished from the room".format(console.user["nick"]))
+
+    # Set our current room to the new room.
     console.user["room"] = destroom["id"]
-    console.shell.broadcast_room(console, console.user["nick"] + " entered the room")
-    if thisroom:
-        console.database.upsert_room(thisroom)
+
+    # Broadcast our arrival to the destination room.
+    console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]))
+
+    # Save the origin room, the destination room, and our user document.
+    console.database.upsert_room(thisroom)
     console.database.upsert_room(destroom)
     console.database.upsert_user(console.user)
-    console.shell.command(console, "look", False)
-    return True
 
+    # Take a look around.
+    console.shell.command(console, "look", False)

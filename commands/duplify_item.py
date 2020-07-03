@@ -52,19 +52,9 @@ def COMMAND(console, args):
     if itemid is None:
         return False
 
-    # Check if the item exists.
-    thisitem = COMMON.check_item(NAME, console, itemid)
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
     if not thisitem:
-        return False
-
-    # Make sure we are the item's owner.
-    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this item".format(NAME))
-        return False
-
-    # Check if we are holding the item or we are a wizard.
-    if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg("{0}: not holding item".format(NAME))
         return False
 
     # Check if the item is already duplified.

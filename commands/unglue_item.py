@@ -36,44 +36,30 @@ Ex. `unglue item 4`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    try:
-        itemid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
+    if not thisitem:
         return False
 
-    # Check if the item exists.
-    i = console.database.item_by_id(itemid)
-    if i:
-        # Make sure we are the item's owner.
-        if console.user["name"] not in i["owners"] and not console.user["wizard"]:
-            console.msg(NAME + ": you do not own this item")
-            return False
-        # Make sure we are holding the item.
-        if itemid in console.user["inventory"] or console.user["wizard"]:
-            # Unglue the item.
-            if not i["glued"]:
-                console.msg(NAME + ": item is already unglued")
-                return False
-            i["glued"] = False
-            console.database.upsert_item(i)
-            console.msg(NAME + ": done")
-            return True
-        else:
-            # We are not holding that item.
-            console.msg(NAME + ": not holding item")
-            return False
-
-    else:
-        # No item with that ID exists.
-        console.msg(NAME + ": no such item")
+    # Check if the item is already not glued.
+    if not thisitem["glued"]:
+        console.msg("{0}: item is already not glued".format(NAME))
         return False
+
+    # Unglue the item.
+    thisitem["glued"] = False
+    console.database.upsert_item(thisitem)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
+    return True
+

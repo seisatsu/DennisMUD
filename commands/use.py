@@ -37,54 +37,68 @@ Ex2. `use Crystal Ball` to show the custom action for the item named "Crystal Ba
 
 
 def COMMAND(console, args):
-    if len(args) < 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
+    # Get item name or id.
+    itemname = ' '.join(args)
 
-    # Get item name/id.
-    name = ' '.join(args)
+    # Reference to whatever item we do or don't find in the room.
+    targetitem = None
 
-    # Look for the current room.
-    thisroom = console.database.room_by_id(console.user["room"])
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
-        console.msg("warning: current room does not exist")
-        return False  # The current room does not exist?!
-
-    found = None
-
-    # Search for the item in the current room.
-    for itemid in thisroom["items"]:
-        i = console.database.item_by_id(itemid)
-        # Check for name or id match.
-        if i["name"].lower() == name.lower() or str(i["id"]) == name:
-            found = i
+        return False
 
     # Search for the item in our inventory.
-    if found is None:
-        for itemid in console.user["inventory"]:
-            i = console.database.item_by_id(itemid)
+    for itemid in console.user["inventory"]:
+        testitem = console.database.item_by_id(itemid)
+        # A reference was found to a nonexistent item. Report this and quietly continue searching.
+        if not testitem:
+            console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+            continue
+
+        # Check for name or id match.
+        if testitem["name"].lower() == itemname.lower() or str(testitem["id"]) == itemname:
+            targetitem = testitem
+            break
+
+    # We didn't find it in our inventory, so search for the item in the current room.
+    if not targetitem:
+        for itemid in thisroom["items"]:
+            testitem = console.database.item_by_id(itemid)
+            # A reference was found to a nonexistent item. Report this and quietly continue searching.
+            if not testitem:
+                console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+                continue
+
             # Check for name or id match.
-            if i["name"].lower() == name.lower() or str(i["id"]) == name:
-                found = i
+            if testitem["name"].lower() == itemname.lower() or str(testitem["id"]) == itemname:
+                targetitem = testitem
+                break
 
     # If the item was found, show the action.
-    if found is not None:
-        i = found
-        if i["action"]:
-            if "%player%" in i["action"]:
-                action = i["action"].replace("%player%", console.user["nick"])
+    if targetitem:
+        # This item has a custom action.
+        if targetitem["action"]:
+            # Format and broadcast a custom action containing a player tag.
+            if "%player%" in targetitem["action"]:
+                action = targetitem["action"].replace("%player%", console.user["nick"])
+
+            # Format and broadcast a regular custom action.
             else:
-                action = console.user["nick"] + " " + i["action"]
+                action = "{0} {1}".format(console.user["nick"], targetitem["action"])
             console.shell.broadcast_room(console, action)
+
+        # This item has no custom action. Broadcast the default action.
         else:
-            action = console.user["nick"] + " used " + i["name"]
+            action = "{0} used {1}".format(console.user["nick"], targetitem["name"])
             console.shell.broadcast_room(console, action)
         return True
+
+    # We didn't find anything.
     else:
-        console.msg(NAME + ": no such item is here")
+        console.msg("{0}: no such item is here: {1}".format(NAME, itemname))
         return False

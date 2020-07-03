@@ -37,27 +37,24 @@ You can reverse this with the `unseal outbound` command."""
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console, owner=True)
+    if not thisroom:
         return False
 
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
-
-    # Make sure we are the room's owner.
-    if console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
+    # Check if the room is already outbound sealed.
+    if thisroom["sealed"]["outbound"]:
+        console.msg("{0}: this room is already outbound sealed".format(NAME))
         return False
 
-    if r["sealed"]["outbound"]:
-        console.msg(NAME + ": this room is already outbound sealed")
-        return False
-    r["sealed"]["outbound"] = True
-    console.database.upsert_room(r)
-    console.msg(NAME + ": done")
+    # Seal the room's outbound.
+    thisroom["sealed"]["outbound"] = True
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

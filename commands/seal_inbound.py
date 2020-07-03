@@ -37,7 +37,7 @@ You can reverse this with the `unseal inbound` command."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, argc=0):
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
     # Lookup the current room and perform room checks.
@@ -45,10 +45,12 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
+    # Check if the room is already inbound sealed.
     if thisroom["sealed"]["inbound"]:
         console.msg("{0}: this room is already inbound sealed".format(NAME))
         return False
 
+    # Seal the room's inbound.
     thisroom["sealed"]["inbound"] = True
     console.database.upsert_room(thisroom)
 

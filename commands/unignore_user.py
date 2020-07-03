@@ -36,29 +36,24 @@ Ex. `unignore user seisatsu`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
-        return False
-
-    # Lookup user.
-    targetuser = console.database.user_by_name(args[0])
+    # Lookup target user.
+    targetuser = COMMON.check_user(NAME, console, args[0].lower())
     if not targetuser:
-        # No such user.
-        console.msg(NAME + ": no such user")
         return False
 
     # Check if user is already not ignored.
     if targetuser["name"] not in console.user["chat"]["ignored"]:
-        console.msg(NAME + ": already not ignoring user")
+        console.msg("{0}: already not ignoring user".format(NAME))
         return False
 
+    # Ignore the user.
     console.user["chat"]["ignored"].remove(targetuser["name"])
     console.database.upsert_user(console.user)
 
-    console.msg(NAME + ": done")
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

@@ -35,27 +35,24 @@ Undoes inbound sealing the room via the `seal inbound` command."""
 
 
 def COMMAND(console, args):
-    if len(args) != 0:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Lookup the current room and perform room checks.
+    thisroom = COMMON.check_room(NAME, console, owner=True)
+    if not thisroom:
         return False
 
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
-
-    # Make sure we are the room's owner.
-    if console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this room")
+    # Make sure the room is currently inbound sealed.
+    if not thisroom["sealed"]["inbound"]:
+        console.msg("{0}: this room is already not inbound sealed".format(NAME))
         return False
 
-    if not r["sealed"]["inbound"]:
-        console.msg(NAME + ": this room is already inbound unsealed")
-        return False
-    r["sealed"]["inbound"] = False
-    console.database.upsert_room(r)
-    console.msg(NAME + ": done")
+    # Unseal the room's inbound.
+    thisroom["sealed"]["inbound"] = False
+    console.database.upsert_room(thisroom)
+
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True

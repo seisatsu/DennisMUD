@@ -35,4 +35,5 @@ Ex2. `help exploration` to list the commands in the exploration category."""
 
 
 def COMMAND(console, args):
+    # Pass the arguments back to the command shell's help command.
     return console.shell.help(console, ' '.join(args))

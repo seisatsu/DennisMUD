@@ -37,4 +37,5 @@ Ex. `usage make exit` to show the short form help message for `make exit`."""
 
 
 def COMMAND(console, args):
+    # Pass the arguments back to the command shell's usage command.
     return console.shell.usage(console, ' '.join(args))

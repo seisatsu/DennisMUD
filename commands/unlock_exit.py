@@ -37,40 +37,30 @@ Ex. `unlock exit 3`"""
 
 
 def COMMAND(console, args):
-    if len(args) != 1:
-        console.msg("Usage: " + USAGE)
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Make sure we are logged in.
-    if not console.user:
-        console.msg(NAME + ": must be logged in first")
+    # Perform argument type checks and casts.
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
 
-    try:
-        exitid = int(args[0])
-    except ValueError:
-        console.msg("Usage: " + USAGE)
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
+    if not thisroom:
         return False
 
-    roomid = console.user["room"]
-    r = console.database.room_by_id(roomid)
-
-    # Make sure the exit exists.
-    if exitid > len(r["exits"]) - 1 or exitid < 0:
-        console.msg(NAME + ": no such exit")
+    # Check if the exit is already unlocked.
+    if not thisroom["exits"][exitid]["locked"]:
+        console.msg("{0}: this exit is already unlocked".format(NAME))
         return False
 
-    # Make sure we own the exit or the room.
-    if console.user["name"] not in r["exits"][exitid]["owners"] \
-            and console.user["name"] not in r["owners"] and not console.user["wizard"]:
-        console.msg(NAME + ": you do not own this exit or this room")
-        return False
+    # Unlock the exit.
+    thisroom["exits"][exitid]["locked"] = False
+    thisroom["exits"][exitid]["key"] = None
+    console.database.upsert_room(thisroom)
 
-    if not r["exits"][exitid]["locked"]:
-        console.msg(NAME + ": this exit is already unlocked")
-        return False
-    r["exits"][exitid]["locked"] = False
-    r["exits"][exitid]["key"] = None
-    console.database.upsert_room(r)
-    console.msg(NAME + ": done")
+    # Finished.
+    console.msg("{0}: done".format(NAME))
     return True
