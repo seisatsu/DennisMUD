@@ -52,9 +52,14 @@ def COMMAND(console, args):
     if not thisitem:
         return False
 
-    # Lookup the destination room, and perform exit checks.
-    thisroom = COMMON.check_room(NAME, console, roomid, owner=True)
-    if not thisroom:
+    # Lookup the destination room, and perform room checks.
+    destroom = COMMON.check_room(NAME, console, roomid)
+    if not destroom:
+        return False
+
+    # Make sure the destination room is not inbound sealed, or we are a room owner or a wizard.
+    if destroom["sealed"]["inbound"] and not console.user["wizard"] and console.user["name"] not in destroom["owners"]:
+        console.msg("{0}: the destination room is inbound sealed".format(NAME))
         return False
 
     # Make sure the item is not already paired to a room.
