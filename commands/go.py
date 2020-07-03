@@ -162,9 +162,10 @@ def COMMAND(console, args):
                 console.shell.broadcast_room(console, "{0} left the room through {1}".format(
                     console.user["nick"], exits[ex]["name"]))
 
-            # Finish entering the new room and announce our presence.
+            # Finish entering the new room and announce our presence, except to ourselves.
             console.user["room"] = destroom["id"]
-            console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]))
+            console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]),
+                                         exclude=console.user["name"])
 
             # Save this room, the destination room, and the current user.
             console.database.upsert_room(thisroom)

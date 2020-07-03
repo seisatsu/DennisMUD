@@ -126,8 +126,9 @@ def COMMAND(console, args):
                 # Set our current room to the new room.
                 console.user["room"] = destroom["id"]
 
-                # Broadcast our arrival to the destination room.
-                console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]))
+                # Broadcast our arrival to the destination room, but not to ourselves.
+                console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]),
+                                             exclude=console.user["name"])
 
                 # Save the origin room, the destination room, and our user document.
                 console.database.upsert_room(thisroom)

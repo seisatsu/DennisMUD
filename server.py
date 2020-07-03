@@ -149,33 +149,39 @@ class Router:
         if self.users[peer]["service"] == "websocket":
             self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
 
-    def broadcast_all(self, msg):
+    def broadcast_all(self, msg, exclude=None):
         """Broadcast All
 
         Broadcast a message to all logged in users.
 
         :param msg: Message to send.
+        :param exclude: Username to exclude. Usually ourselves if set.
         :return: True
         """
         for u in self.users:
             if not self.users[u]["console"].user:
+                continue
+            if self.users[u]["console"].user["name"] == exclude:
                 continue
             if self.users[u]["service"] == "telnet":
                 self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
             if self.users[u]["service"] == "websocket":
                 self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
-    def broadcast_room(self, room, msg):
+    def broadcast_room(self, room, msg, exclude=None):
         """Broadcast Room
 
         Broadcast a message to all logged in users in the given room.
 
         :param room: Room ID.
         :param msg: Message to send.
+        :param exclude: Username to exclude. Usually ourselves if set.
         :return: True
         """
         for u in self.users:
             if not self.users[u]["console"].user:
+                continue
+            if self.users[u]["console"].user["name"] == exclude:
                 continue
             if self.users[u]["console"].user["room"] == room:
                 if self.users[u]["service"] == "telnet":
