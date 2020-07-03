@@ -83,13 +83,15 @@ def COMMAND(console, args):
     if targetitem:
         # This item has a custom action.
         if targetitem["action"]:
-            # Format and broadcast a custom action containing a player tag.
+            # Format a custom item action containing a player tag.
             if "%player%" in targetitem["action"]:
                 action = targetitem["action"].replace("%player%", console.user["nick"])
 
-            # Format and broadcast a regular custom action.
+            # Format a regular custom item action.
             else:
                 action = "{0} {1}".format(console.user["nick"], targetitem["action"])
+
+            # Broadcast the custom action.
             console.shell.broadcast_room(console, action)
 
         # This item has no custom action. Broadcast the default action.
