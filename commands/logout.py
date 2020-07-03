@@ -43,12 +43,12 @@ def COMMAND(console, args):
 
     # If we are in the room, take us out and broadcast our departure.
     if console.user["name"] in thisroom["users"]:
-        console.shell.broadcast_room(console, "{0} logged out".format(console.user["nick"]))
+        console.shell.broadcast_room(console, "{0} logged out.".format(console.user["nick"]))
         thisroom["users"].remove(console.user["name"])
         console.database.upsert_room(thisroom)
 
     # Take us offline.
     console.database.logout_user(console.user["name"])
     console.user = None
-    console.msg("logged out")
+    console.msg("Logged out.")
     return True

@@ -53,7 +53,7 @@ def COMMAND(console, args):
 
     # Check if the exit is already unlocked.
     if not thisroom["exits"][exitid]["locked"]:
-        console.msg("{0}: this exit is already unlocked".format(NAME))
+        console.msg("{0}: This exit is already unlocked.".format(NAME))
         return False
 
     # Unlock the exit.
@@ -62,5 +62,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

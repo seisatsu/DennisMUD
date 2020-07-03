@@ -33,12 +33,15 @@ USAGE = "action <message>"
 DESCRIPTION = """Send a message styled as performing an action.
 
 By default, the action text is shown following your nickname and one space.
+If the action starts with 's then the space is removed to allow possessive grammar.
 To place your name elsewhere in the text, use the %player% marker.
 
 Ex. `action trips and falls over.`
 Ex2. `action A coconut falls on %player%'s head.`
 Ex3. `me trips and falls over.`
-Ex4. `:trips and falls over.`"""
+Ex4. `:trips and falls over.`
+Ex5. `'s face turns bright red.`
+Ex6. `%player%'s face turns bright red."""
 
 
 def COMMAND(console, args):
@@ -50,8 +53,10 @@ def COMMAND(console, args):
     action = ' '.join(args)
     if "%player%" in action:
         action = action.replace("%player%", console.user["nick"])
+    elif action.startswith("'s"):
+        action = "{0}{1}".format(console.user["nick"], ' '.join(args))
     else:
-        action = console.user["nick"] + " " + ' '.join(args)
+        action = "{0} {1}".format(console.user["nick"], ' '.join(args))
     console.shell.broadcast_room(console, action)
 
     # Finished.

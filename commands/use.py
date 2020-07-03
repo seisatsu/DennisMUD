@@ -55,9 +55,11 @@ def COMMAND(console, args):
     # Search for the item in our inventory.
     for itemid in console.user["inventory"]:
         testitem = console.database.item_by_id(itemid)
-        # A reference was found to a nonexistent item. Report this and quietly continue searching.
+        # A reference was found to a nonexistent item. Report this and continue searching.
         if not testitem:
-            console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+            console.log.error("Item referenced in user inventory does not exist: {user} :: {item}",
+                              user=console.user["name"], item=itemid)
+            console.msg("{0}: ERROR: Item referenced in your inventory does not exist: {1}".format(NAME, itemid))
             continue
 
         # Check for name or id match.
@@ -69,9 +71,11 @@ def COMMAND(console, args):
     if not targetitem:
         for itemid in thisroom["items"]:
             testitem = console.database.item_by_id(itemid)
-            # A reference was found to a nonexistent item. Report this and quietly continue searching.
+            # A reference was found to a nonexistent item. Report this and continue searching.
             if not testitem:
-                console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+                console.log.error("Item referenced in room does not exist: {room} :: {item}", room=console.user["room"],
+                                  item=itemid)
+                console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
                 continue
 
             # Check for name or id match.
@@ -89,14 +93,17 @@ def COMMAND(console, args):
 
             # Format a regular custom item action.
             else:
-                action = "{0} {1}".format(console.user["nick"], targetitem["action"])
+                if targetitem["action"].startswith("'s"):
+                    action = "{0}{1}".format(console.user["nick"], targetitem["action"])
+                else:
+                    action = "{0} {1}".format(console.user["nick"], targetitem["action"])
 
             # Broadcast the custom item action.
             console.shell.broadcast_room(console, action)
 
         # This item has no custom action. Format and broadcast the default item action.
         else:
-            action = "{0} used {1}".format(console.user["nick"], targetitem["name"])
+            action = "{0} used {1}.".format(console.user["nick"], targetitem["name"])
             console.shell.broadcast_room(console, action)
 
         # The item is a telekey. Prepare for teleportation.
@@ -104,10 +111,14 @@ def COMMAND(console, args):
             # Lookup the destination room and perform room checks.
             destroom = COMMON.check_room(NAME, console, targetitem["telekey"])
 
-            # The telekey is paired to a broken room. Report and ignore it.
+            # The telekey is paired to a nonexistent room. Report and ignore it.
             if not destroom:
-                console.msg("{0}: telekey is paired to a broken room".format(NAME))
-                console.log.error("telekey is paired to a broken room: {item} -> {room}", item=targetitem["id"],
+                console.msg(
+                    "{0}: ERROR: This telekey is paired to a nonexistent room: {1} -> {2}".format(NAME,
+                                                                                                  targetitem["id"],
+                                                                                                  targetitem["telekey"]
+                                                                                                  ))
+                console.log.error("Telekey is paired to a nonexistent room: {item} -> {room}", item=targetitem["id"],
                                   room=targetitem["telekey"])
 
             # Proceed with teleportation.
@@ -121,13 +132,13 @@ def COMMAND(console, args):
                     destroom["users"].append(console.user["name"])
 
                 # Broadcast our teleportation to the origin room.
-                console.shell.broadcast_room(console, "{0} vanished from the room".format(console.user["nick"]))
+                console.shell.broadcast_room(console, "{0} vanished from the room.".format(console.user["nick"]))
 
                 # Set our current room to the new room.
                 console.user["room"] = destroom["id"]
 
                 # Broadcast our arrival to the destination room, but not to ourselves.
-                console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]),
+                console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
                                              exclude=console.user["name"])
 
                 # Save the origin room, the destination room, and our user document.
@@ -143,5 +154,5 @@ def COMMAND(console, args):
 
     # We didn't find anything.
     else:
-        console.msg("{0}: no such item is here: {1}".format(NAME, itemname))
+        console.msg("{0}: No such item is here: {1}".format(NAME, itemname))
         return False

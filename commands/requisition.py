@@ -54,7 +54,7 @@ def COMMAND(console, args):
 
     # Do nothing if we are already holding the item.
     if itemid in console.user["inventory"]:
-        console.msg(NAME + ": this item is already in your inventory")
+        console.msg("{0}: This item is already in your inventory.")
         return False
 
     # Don't remove duplified items.
@@ -63,19 +63,19 @@ def COMMAND(console, args):
         for room in console.database.rooms.all():
             if itemid in room["items"]:
                 room["items"].remove(itemid)
-                console.router.broadcast_room(room["id"], "{0} vanished from the room".format(thisitem["name"]))
+                console.router.broadcast_room(room["id"], "{0} vanished from the room.".format(thisitem["name"]))
                 console.database.upsert_room(room)
 
         # If the item is in someone's inventory, remove it and announce its disappearance.
         for user in console.router.users.values():
             if itemid in user["console"].user["inventory"]:
                 user["console"].user["inventory"].remove(itemid)
-                user["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+                user["console"].msg("{0} vanished from your inventory.".format(thisitem["name"]))
                 console.database.upsert_user(user["console"].user)
 
     # Place the item in our inventory and announce its appearance.
     console.user["inventory"].append(itemid)
     console.database.upsert_user(console.user)
-    console.msg("requisitioned item {0} ({1})".format(thisitem["name"], thisitem["id"]))
-    console.msg("{0} appeared in your inventory".format(thisitem["name"]))
+    console.msg("Requisitioned item: {0} ({1})".format(thisitem["name"], thisitem["id"]))
+    console.msg("{0} appeared in your inventory.".format(thisitem["name"]))
     return True

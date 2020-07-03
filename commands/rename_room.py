@@ -50,7 +50,7 @@ def COMMAND(console, args):
     if len(args) == 1:
         try:
             int(args[0])
-            console.msg("{0}: room name cannot be an integer".format(NAME))
+            console.msg("{0}: The room name cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -63,7 +63,7 @@ def COMMAND(console, args):
     # Make an exception if that is the room we are renaming. (changing case)
     for room in console.database.rooms.all():
         if room["name"].lower() == roomname.lower() and room["name"].lower() != thisroom["name"].lower():
-            console.msg("{0}: a room by this name already exists".format(NAME))
+            console.msg("{0}: A room by that name already exists.".format(NAME))
             return False
 
     # Rename the room.
@@ -71,5 +71,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

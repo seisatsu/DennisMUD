@@ -53,7 +53,7 @@ def COMMAND(console, args):
     if len(args) == 2:
         try:
             int(args[1])
-            console.msg("{0}: exit name cannot be an integer".format(NAME))
+            console.msg("{0}: Exit name cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -71,7 +71,7 @@ def COMMAND(console, args):
     exits = thisroom["exits"]
     for ex in exits:
         if ex["name"].lower() == exitname.lower():
-            console.msg("{0}: an exit by this name already exists in this room".format(NAME))
+            console.msg("{0}: An exit by this name already exists in this room.".format(NAME))
             return False
 
     # Lookup the destination room and perform room checks.
@@ -81,12 +81,12 @@ def COMMAND(console, args):
 
     # Make sure the current room is not outbound sealed, or we are a room owner or a wizard.
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and console.user["name"] not in thisroom["owners"]:
-        console.msg("{0}: the current room is outbound sealed".format(NAME))
+        console.msg("{0}: The current room is outbound sealed.".format(NAME))
         return False
 
     # Make sure the destination room is not inbound sealed, or we are a room owner or a wizard.
     if destroom["sealed"]["inbound"] and not console.user["wizard"] and console.user["name"] not in destroom["owners"]:
-        console.msg("{0}: the destination room is inbound sealed".format(NAME))
+        console.msg("{0}: The destination room is inbound sealed.".format(NAME))
         return False
 
     # Create our new exit and add it to the current room.

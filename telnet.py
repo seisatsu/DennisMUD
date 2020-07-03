@@ -51,13 +51,13 @@ class ServerProtocol(LineReceiver):
         p = self.transport.getPeer()
         self.peer = p.host + ':' + str(p.port)
         self.factory.register(self)
-        self._log.info("client connected: {peer}", peer=self.peer)
+        self._log.info("Client connected: {peer}", peer=self.peer)
         if motd:
             self.factory.communicate(self.peer, motd.encode('utf-8'))
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
-        self._log.info("client disconnected: {peer}", peer=self.peer)
+        self._log.info("Client disconnected: {peer}", peer=self.peer)
 
     def lineReceived(self, line):
         # Don't log passwords.
@@ -78,7 +78,7 @@ class ServerProtocol(LineReceiver):
         try:
             line = line.decode('utf-8')
         except:
-            self._log.info("discarded garbage line from {peer}", peer=self.peer)
+            self._log.info("Discarded garbage line from {peer}", peer=self.peer)
             return
 
         # Did we receive the quit pseudo-command?

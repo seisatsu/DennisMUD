@@ -40,7 +40,7 @@ def COMMAND(console, args):
 
     # Check if autolook is already enabled.
     if console.user["autolook"]["enabled"]:
-        console.msg("{0}: autolook is already enabled".format(NAME))
+        console.msg("{0}: Autolook is already enabled.".format(NAME))
         return False
 
     # Enable autolook.

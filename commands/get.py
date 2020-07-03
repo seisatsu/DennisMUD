@@ -58,13 +58,13 @@ def COMMAND(console, args):
         if thisitem["name"].lower() == name.lower() or str(thisitem["id"]) == name:
             # The item is glued down. Only the owner or a wizard can pick it up.
             if thisitem["glued"] and console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-                console.msg("{0}: you cannot get this item".format(NAME))
+                console.msg("{0}: You cannot get this item.".format(NAME))
                 return False
 
             # If the item is in our inventory, and it's not a duplified item that we own, we can't pick it up.
             if thisitem["id"] in console.user["inventory"] and not\
                     (console.user["name"] in thisitem["owners"] and thisitem["duplified"]):
-                console.msg("{0}: item is already in your inventory".format(NAME))
+                console.msg("{0}: This item is already in your inventory.".format(NAME))
                 return False
 
             # Don't remove duplified items when picking them up, unless we are the owner.
@@ -76,7 +76,7 @@ def COMMAND(console, args):
                 console.user["inventory"].append(thisitem["id"])
 
             # Announce that we picked up the item.
-            console.shell.broadcast_room(console, console.user["nick"] + " picked up " + thisitem["name"])
+            console.shell.broadcast_room(console, "{0} picked up {1}.".format(console.user["nick"], thisitem["name"]))
 
             # Update the room and user documents.
             console.database.upsert_room(thisroom)
@@ -86,9 +86,9 @@ def COMMAND(console, args):
             return True
 
     # The item wasn't found in the room.
-    console.msg("{0}: no such item in room: {1}".format(NAME, ' '.join(args)))
+    console.msg("{0}: No such item in this room: {1}".format(NAME, ' '.join(args)))
 
     # Maybe the user accidentally typed "get item <item>".
     if args[0].lower() == "item":
-        console.msg("{0}: maybe you meant \"get {1}\"".format(NAME, ' '.join(args[1:])))
+        console.msg("{0}: Maybe you meant \"get {1}\".".format(NAME, ' '.join(args[1:])))
     return False

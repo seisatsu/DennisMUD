@@ -52,7 +52,7 @@ def COMMAND(console, args):
 
     # Check if the item is already not glued.
     if not thisitem["glued"]:
-        console.msg("{0}: item is already not glued".format(NAME))
+        console.msg("{0}: This item is already not glued.".format(NAME))
         return False
 
     # Unglue the item.
@@ -60,6 +60,6 @@ def COMMAND(console, args):
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True
 

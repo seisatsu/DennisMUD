@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # Check if the named user is already an owner.
     if args[1].lower() in thisitem["owners"]:
-        console.msg("{0}: user already an owner of this item".format(NAME))
+        console.msg("{0}: That user is already an owner of this item.".format(NAME))
         return False
 
     # Grant the item to the user.

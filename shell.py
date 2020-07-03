@@ -77,7 +77,7 @@ class Shell:
 
         :return: True
         """
-        self._log.info("loading command modules")
+        self._log.info("Loading command modules...")
         command_modules = os.listdir(COMMAND_DIR)
 
         # Run through the list of all files in the command directory.
@@ -127,10 +127,10 @@ class Shell:
                     # Only warn about each overlap once.
                     if not ([cname, cname2] in found_overlaps or [cname2, cname] in found_overlaps):
                         found_overlaps.append([cname, cname2])
-                        self._log.warn("overlapping command names: {cname}, {cname2}", cname=cname,
+                        self._log.warn("Overlapping command names: {cname}, {cname2}", cname=cname,
                                        cname2=cname2)
 
-        self._log.info("finished loading command modules")
+        self._log.info("Finished loading command modules.")
         return True
 
     def _build_help(self):
@@ -162,6 +162,7 @@ class Shell:
         :param console: The console calling the command.
         :param line: The command line to parse.
         :param show_command: Whether or not to echo the command being executed in the console.
+
         :return: Command result or None.
         """
         # Return if we got an empty line.
@@ -179,7 +180,7 @@ class Shell:
         if line.split(' ')[0] not in ["register", "login", "password"]:
             for c in line:
                 if c not in ALLOWED_CHARACTERS:
-                    console.msg("command contains illegal characters")
+                    console.msg("Command contains illegal characters.")
                     return None
 
         # Split the command line into a list of arguments.
@@ -211,7 +212,7 @@ class Shell:
 
         # We're still here and haven't found a command in this line. Must be gibberish.
         if line:
-            console.msg("unknown command: " + ' '.join(line))
+            console.msg("Unknown command: " + ' '.join(line))
 
             # Suggest some possible commands that are close to what was typed, if applicable.
             possible = []
@@ -220,7 +221,7 @@ class Shell:
                     possible.append(p)
             if possible:
                 possible = ', '.join(possible)
-                console.msg("did you mean: " + possible)
+                console.msg("Did you mean: " + possible)
 
         # We didn't find anything.
         return None
@@ -232,6 +233,7 @@ class Shell:
 
         :param console: The console requesting help.
         :param line: The help line to parse.
+
         :return: True if succeeded, False if failed.
         """
         # If help was called by itself, assume we want the help for help itself.
@@ -242,7 +244,7 @@ class Shell:
 
         # Check for command names overlapping category names.
         if line in self._help.keys() and line in self._commands.keys():
-            self._log.warn("command name overlaps with category name: {line}", line=line)
+            self._log.warn("Command name overlaps with category name: {line}", line=line)
 
         # Return a help message for the help command, and list available categories.
         if line == "help":
@@ -283,7 +285,7 @@ class Shell:
 
         # Couldn't find anything.
         else:
-            console.msg("help: unknown command or category: " + line)
+            console.msg("help: Unknown command or category: " + line)
             return False
 
         # Success.
@@ -296,6 +298,7 @@ class Shell:
 
         :param console: The console requesting help.
         :param line: The help line to parse.
+
         :return: True if succeeded, False if failed.
         """
         # If usage was called by itself, assume we want the usage string for usage itself.
@@ -315,7 +318,7 @@ class Shell:
 
         # Couldn't find anything.
         else:
-            console.msg("usage: unknown command: " + line)
+            console.msg("usage: Unknown command: " + line)
             return False
 
         # Success.
@@ -327,6 +330,7 @@ class Shell:
         :param console: The console sending the message.
         :param username: The username of the user to message.
         :param message: The message to send.
+
         :return: True if succeeded, False if failed.
         """
         for u in self.router.users:
@@ -342,7 +346,8 @@ class Shell:
         Send a message to all users connected to consoles.
 
         :param message: The message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: If set, username to exclude from broadcast.
+
         :return: True
         """
         self._log.info(message)
@@ -356,7 +361,8 @@ class Shell:
 
         :param console: The console sending the message.
         :param message: The message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: If set, username to exclude from broadcast.
+
         :return: True
         """
         self._log.info(message)
@@ -400,6 +406,7 @@ class Shell:
 
         :param console: The console calling the command.
         :param args: Arguments to the command.
+
         :return: True if succeeded, False if failed
         """
         if command in self._disabled_commands and not console.user["wizard"]:

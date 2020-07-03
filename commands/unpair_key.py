@@ -53,7 +53,7 @@ def COMMAND(console, args):
 
     # Make sure the exit is currently paired to a key.
     if not thisroom["exits"][exitid]["key"]:
-        console.msg("{0}: this exit already has no key".format(NAME))
+        console.msg("{0}: This exit already has no key.".format(NAME))
         return False
 
     # Unpair the key.
@@ -61,5 +61,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

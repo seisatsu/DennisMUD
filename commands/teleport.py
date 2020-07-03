@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # Make sure we are the destination room owner or a wizard, or the destination is the first room.
     if not console.user["name"] in destroom["owners"] and not console.user["wizard"] and not destroom["id"] == 0:
-        console.msg(NAME + ": you do not have permission to teleport to that room")
+        console.msg("{0}: You do not have permission to teleport to that room.".format(NAME))
         return False
 
     # Remove us from the current room.
@@ -71,13 +71,13 @@ def COMMAND(console, args):
         destroom["users"].append(console.user["name"])
 
     # Broadcast our teleportation to the origin room.
-    console.shell.broadcast_room(console, "{0} vanished from the room".format(console.user["nick"]))
+    console.shell.broadcast_room(console, "{0} vanished from the room.".format(console.user["nick"]))
 
     # Set our current room to the new room.
     console.user["room"] = destroom["id"]
 
     # Broadcast our arrival to the destination room, but not to ourselves.
-    console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]),
+    console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
                                  exclude=console.user["name"])
 
     # Save the origin room, the destination room, and our user document.

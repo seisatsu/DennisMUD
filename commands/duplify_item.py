@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # Check if the item is already duplified.
     if thisitem["duplified"]:
-        console.msg("{0}: item is already duplified".format(NAME))
+        console.msg("{0}: This item is already duplified.".format(NAME))
         return False
 
     # Duplify the item.

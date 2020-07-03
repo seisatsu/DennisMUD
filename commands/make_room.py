@@ -46,7 +46,7 @@ def COMMAND(console, args):
     if len(args) == 1:
         try:
             int(args[0])
-            console.msg("{0}: room name cannot be an integer".format(NAME))
+            console.msg("{0}: Room name cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -61,7 +61,7 @@ def COMMAND(console, args):
     # Make sure a room by this name does not already exist.
     for room in allrooms:
         if room["name"].lower() == roomname.lower():
-            console.msg("{0}: a room by this name already exists".format(NAME))
+            console.msg("{0}: A room by this name already exists.".format(NAME))
             return False
 
     # Find the highest numbered currently existing room ID.

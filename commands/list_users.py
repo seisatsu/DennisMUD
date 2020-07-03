@@ -60,16 +60,16 @@ def COMMAND(console, args):
                     offline_count += 1
 
             # Format the count of online and offline users for wizards.
-            console.msg("total users online: {0}; offline: {1}".format(online_count, offline_count))
+            console.msg("Total users online: {0}; offline: {1}".format(online_count, offline_count))
 
         else:
             # Format the count of just online users for regular players.
-            console.msg("total users online: {0}".format(online_count))
+            console.msg("Total users online: {0}".format(online_count))
 
     # This shouldn't ever happen.
     else:
-        console.log.error("no users returned from list users command")
-        console.msg("{0}: error: no users?!".format(NAME))
+        console.log.error("No users returned from list users command.")
+        console.msg("{0}: ERROR: No users returned from list users command.".format(NAME))
 
     # Finished.
     return True

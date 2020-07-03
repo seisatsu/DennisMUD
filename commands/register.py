@@ -48,18 +48,18 @@ def COMMAND(console, args):
 
     # Make sure we are not already logged in.
     if console.user:
-        console.msg("{0}: logout first to register a user".format(NAME))
+        console.msg("{0}: You must logout first to register a new user.".format(NAME))
         return False
 
     # Check allowed characters.
     for char in args[0]:
         if char not in ALLOWED_CHARACTERS:
-            console.msg("{0}: usernames may contain alphanumerics and underscores only".format(NAME))
+            console.msg("{0}: Usernames may contain alphanumerics and underscores only.".format(NAME))
             return False
 
     # Make sure the username isn't already taken.
     if console.database.user_by_name(args[0]):
-        console.msg("{0}: username is already registered".format(NAME))
+        console.msg("{0}: That username is already registered.".format(NAME))
         return False
 
     # Create and save a new user.
@@ -82,5 +82,5 @@ def COMMAND(console, args):
     console.database.upsert_user(newuser)
 
     # Confirm the registration.
-    console.msg("registered user \"{0}\"".format(newuser["name"]))
+    console.msg("Registered user \"{0}\".".format(newuser["name"]))
     return True

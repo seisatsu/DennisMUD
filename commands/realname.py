@@ -43,7 +43,7 @@ def COMMAND(console, args):
     # Make sure the nicknamed user exists.
     targetuser = console.database.user_by_nick(' '.join(args).lower())
     if not targetuser:
-        console.msg(NAME + ": no such user")
+        console.msg("{0}: No such user.".format(NAME))
         return False
 
     # Show the user's username.

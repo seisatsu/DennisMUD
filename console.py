@@ -70,6 +70,7 @@ class Console:
 
         :param message: The message to send.
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
+
         :return: True
         """
         if self.router.single_user:

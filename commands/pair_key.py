@@ -58,12 +58,12 @@ def COMMAND(console, args):
 
     # Make sure the exit is locked.
     if not thisroom["exits"][exitid]["locked"]:
-        console.msg("{0}: only locked exits can have keys".format(NAME))
+        console.msg("{0}: Only locked exits can have keys.".format(NAME))
         return False
 
     # Make sure the exit is not already paired to a key.
     if thisroom["exits"][exitid]["key"]:
-        console.msg("{0}: this exit is already paired to a key".format(NAME))
+        console.msg("{0}: This exit is already paired to a key.".format(NAME))
         return False
 
     # Pair the key.

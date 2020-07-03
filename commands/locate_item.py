@@ -56,7 +56,7 @@ def COMMAND(console, args):
 
     # Check if we are holding the item.
     if itemid in console.user["inventory"]:
-        console.msg("{0}: {1} ({2}) is in your inventory".format(NAME, thisitem["name"], thisitem["id"]))
+        console.msg("{0}: {1} ({2}) is in your inventory.".format(NAME, thisitem["name"], thisitem["id"]))
         # If the item is duplified we need to keep looking for other copies.
         if not thisitem["duplified"]:
             return True
@@ -67,7 +67,7 @@ def COMMAND(console, args):
         if targetuser["name"] == console.user["name"]:
             continue
         if itemid in targetuser["inventory"]:
-            console.msg("{0}: {1} ({2}) is in the inventory of {3}".format(NAME, thisitem["name"], thisitem["id"],
+            console.msg("{0}: {1} ({2}) is in the inventory of: {3}.".format(NAME, thisitem["name"], thisitem["id"],
                                                                            targetuser["name"]))
             # If the item is duplified we need to keep looking for other copies.
             if not thisitem["duplified"]:
@@ -77,7 +77,7 @@ def COMMAND(console, args):
     # Check if the item is in a room.
     for targetroom in console.database.rooms.all():
         if itemid in targetroom["items"]:
-            console.msg("{0}: {1} ({2}) is in room {3} ({4})".format(NAME, thisitem["name"], thisitem["id"],
+            console.msg("{0}: {1} ({2}) is in room: {3} ({4})".format(NAME, thisitem["name"], thisitem["id"],
                                                                      targetroom["name"], targetroom["id"]))
             # If the item is duplified we need to keep looking for other copies.
             if not thisitem["duplified"]:
@@ -86,8 +86,8 @@ def COMMAND(console, args):
 
     # Couldn't find the item.
     if not found_something:
-        console.log.error("item exists but has no location: {item}", item=itemid)
-        console.msg("{0}: error: item exists but could not be found".format(NAME))
+        console.log.error("Item exists but has no location: {item}", item=itemid)
+        console.msg("{0}: ERROR: Item exists but has no location. Use `requisition` to fix this.".format(NAME))
         return False
 
     # Finished.

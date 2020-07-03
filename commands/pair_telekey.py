@@ -59,12 +59,12 @@ def COMMAND(console, args):
 
     # Make sure the destination room is not inbound sealed, or we are a room owner or a wizard.
     if destroom["sealed"]["inbound"] and not console.user["wizard"] and console.user["name"] not in destroom["owners"]:
-        console.msg("{0}: the destination room is inbound sealed".format(NAME))
+        console.msg("{0}: The destination room is inbound sealed.".format(NAME))
         return False
 
     # Make sure the item is not already paired to a room.
     if thisitem["telekey"]:
-        console.msg("{0}: this item is already paired to a room".format(NAME))
+        console.msg("{0}: This item is already paired to a room.".format(NAME))
         return False
 
     # Pair the telekey.

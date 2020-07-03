@@ -48,7 +48,7 @@ def COMMAND(console, args):
 
     # Check if the room is already outbound sealed.
     if thisroom["sealed"]["outbound"]:
-        console.msg("{0}: this room is already outbound sealed".format(NAME))
+        console.msg("{0}: This room is already outbound sealed.".format(NAME))
         return False
 
     # Seal the room's outbound.
@@ -56,5 +56,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

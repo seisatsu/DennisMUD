@@ -62,9 +62,9 @@ def COMMAND(console, args):
 
     # We named another user, but we aren't a wizard.
     else:
-        console.msg("{0}: only a wizard can change another user's password".format(NAME))
+        console.msg("{0}: Only a wizard can change another user's password".format(NAME))
         return False
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: Done.".format(NAME))
     return True

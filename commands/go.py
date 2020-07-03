@@ -65,7 +65,7 @@ def COMMAND(console, args):
 
         # There were no exits.
         else:
-            console.msg("{0}: no exits in this room".format(NAME))
+            console.msg("{0}: No exits in this room.".format(NAME))
 
         # Finished.
         return True
@@ -81,9 +81,9 @@ def COMMAND(console, args):
             # Check if the destination room exists, otherwise give an error and fail.
             destroom = COMMON.check_room(NAME, console, roomid=exits[ex]["dest"], reason=False)
             if not destroom:
-                console.log.error("destination room does not exist for exit: {thisroom} :: {exit} -> {destroom}",
+                console.log.error("Destination room does not exist for exit: {thisroom} :: {exit} -> {destroom}",
                                   thisoorm=console.user["room"], exit=ex, destroom=exits[ex]["dest"])
-                console.msg("{0}: error: destination room does not exist".format(NAME))
+                console.msg("{0}: ERROR: Destination room does not exist.".format(NAME))
                 return False
 
             # Check if the exit is locked.
@@ -92,7 +92,7 @@ def COMMAND(console, args):
 
                 # The exit is locked and the player does not have the key.
                 if not exits[ex]["key"] in console.user["inventory"]:
-                    console.msg("{0}: this exit is locked.".format(NAME))
+                    console.msg("{0}: This exit is locked.".format(NAME))
 
                     # This lock has a custom action.
                     if exits[ex]["action"]["locked"]:
@@ -100,10 +100,12 @@ def COMMAND(console, args):
                         if "%player%" in exits[ex]["action"]["locked"]:
                             action = exits[ex]["action"]["locked"].replace("%player%", console.user["nick"])
 
-                        # Format a regular custom action.
+                        # Format a regular custom key action.
                         else:
-                            action = "{0} {1}".format(console.user["nick"], exits[ex]["action"]["locked"])
-                        console.shell.broadcast_room(console, action)
+                            if exits[ex]["action"]["locked"].startswith("'s"):
+                                action = "{0}{1}".format(console.user["nick"], exits[ex]["action"]["locked"])
+                            else:
+                                action = "{0} {1}".format(console.user["nick"], exits[ex]["action"]["locked"])
 
                     # We couldn't take the exit, so fail.
                     return False
@@ -113,9 +115,10 @@ def COMMAND(console, args):
                     # Check if the key item exists, otherwise give an error and fail.
                     thisitem = COMMON.check_item(NAME, console, exits[ex]["key"], reason=False)
                     if not thisitem:
-                        console.log.error("key item in user inventory does not exist: {thisitem}",
+                        console.log.error("Key item referenced in user inventory does not actually exist: {thisitem}",
                                           thisitem=exits[ex]["key"])
-                        console.msg("{0}: error: key item in inventory does not exist".format(NAME))
+                        console.msg(
+                            "{0}: ERROR: Key item referenced in your inventory does not actually exist.".format(NAME))
                         return False
 
                     # This key item has a custom action.
@@ -126,7 +129,10 @@ def COMMAND(console, args):
 
                         # Format a regular custom key action.
                         else:
-                            action = "{0} {1}".format(console.user["nick"], thisitem["action"])
+                            if thisitem["action"].startswith("'s"):
+                                action = "{0}{1}".format(console.user["nick"], thisitem["action"])
+                            else:
+                                action = "{0} {1}".format(console.user["nick"], thisitem["action"])
 
                         # Broadcast the custom key action.
                         console.shell.broadcast_room(console, action)
@@ -159,12 +165,12 @@ def COMMAND(console, args):
 
             # Format and broadcast the default exit action.
             else:
-                console.shell.broadcast_room(console, "{0} left the room through {1}".format(
+                console.shell.broadcast_room(console, "{0} left the room through {1}.".format(
                     console.user["nick"], exits[ex]["name"]))
 
             # Finish entering the new room and announce our presence, except to ourselves.
             console.user["room"] = destroom["id"]
-            console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]),
+            console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
                                          exclude=console.user["name"])
 
             # Save this room, the destination room, and the current user.
@@ -182,5 +188,5 @@ def COMMAND(console, args):
             return True
 
     # We didn't find the requested exit.
-    console.msg("{0}: no such exit: {1}".format(NAME, ' '.join(args)))
+    console.msg("{0}: No such exit: {1}".format(NAME, ' '.join(args)))
     return False

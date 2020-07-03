@@ -62,16 +62,17 @@ def COMMAND(console, args):
 
             # If this is a duplified item we do not own, announce that it is going away.
             if thisitem["duplified"] and not console.user["name"] in thisitem["owners"]:
-                console.msg("{0} vanished".format(thisitem["name"]))
+                console.msg("{0} vanished.".format(thisitem["name"]))
 
             # Only put unduplified items into the room unless we are the owner.
             if not thisitem["duplified"] or console.user["name"] in thisitem["owners"]:
                 # If the item is not in the room yet, add it.
                 if thisitem["id"] in thisroom["items"]:
-                    console.msg("{0}: item is already in this room".format(NAME))
+                    console.msg("{0}: This item is already in this room.".format(NAME))
                 else:
                     thisroom["items"].append(thisitem["id"])
-                    console.shell.broadcast_room(console, console.user["nick"] + " dropped " + thisitem["name"])
+                    console.shell.broadcast_room(console, "{0} dropped {1}.".format(console.user["nick"],
+                                                                                    thisitem["name"]))
 
                 # Update the room document.
                 console.database.upsert_room(thisroom)
@@ -83,9 +84,9 @@ def COMMAND(console, args):
             return True
 
     # The item wasn't found in our inventory.
-    console.msg("{0}: no such item in inventory: {1}".format(NAME, ' '.join(args)))
+    console.msg("{0}: No such item in your inventory: {1}".format(NAME, ' '.join(args)))
 
     # Maybe the user accidentally typed "drop item <item>".
     if args[0].lower() == "item":
-        console.msg("{0}: maybe you meant \"drop {1}\"".format(NAME, ' '.join(args[1:])))
+        console.msg("{0}: Maybe you meant \"drop {1}\".".format(NAME, ' '.join(args[1:])))
     return False

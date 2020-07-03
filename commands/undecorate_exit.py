@@ -52,7 +52,7 @@ def COMMAND(console, args):
 
     # Check if the exit is already undecorated.
     if not thisroom["exits"][exitid]["action"]["go"]:
-        console.msg("{0}: this exit already has no custom action".format(NAME))
+        console.msg("{0}: This exit already has no custom action.".format(NAME))
         return False
 
     # Undecorate the exit.
@@ -60,6 +60,6 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True
 

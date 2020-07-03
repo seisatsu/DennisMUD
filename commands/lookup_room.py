@@ -45,5 +45,5 @@ def COMMAND(console, args):
             return True
 
     # Couldn't find the room.
-    console.msg("{0}: no such room".format(NAME))
+    console.msg("{0}: Found no such room.".format(NAME))
     return False

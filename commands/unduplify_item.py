@@ -53,29 +53,29 @@ def COMMAND(console, args):
         return False
 
     # Make sure we are holding the item or we are a wizard.
-    # If we are a wizard but aren't holding the item, put it in our inventory.
-    # Otherwise it won't have any locations.
+    # If we are a wizard but aren't holding the item, put it in our inventory,
+    # Because otherwise it won't have any locations.
     if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg("{0}: not holding item".format(NAME))
+        console.msg("{0}: You are not holding the item.".format(NAME))
         return False
     elif console.user["wizard"] and itemid not in console.user["inventory"]:
         console.user["inventory"].append(itemid)
         console.database.upsert_user(console.user)
-        console.msg("{0} appeared in your inventory".format(thisitem["name"]))
+        console.msg("{0} appeared in your inventory.".format(thisitem["name"]))
 
     # Check if the item is already not duplified.
     if not thisitem["duplified"]:
-        console.msg("{0}: item is already not duplified".format(NAME))
+        console.msg("{0}: This item is already not duplified.".format(NAME))
         return False
 
-    # Delete the item from all user inventories except ours.
+    # Delete the item from all user inventories except ours, and announce its disappearance.
     for user in console.router.users.values():
         if user["console"].user["name"] == console.user["name"]:
             # Not this user, this is us.
             continue
         if itemid in user["console"].user["inventory"]:
             user["console"].user["inventory"].remove(itemid)
-            user["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+            user["console"].msg("{0} vanished from your inventory.".format(thisitem["name"]))
             console.database.upsert_user(user["console"].user)
 
     # Delete the item from all rooms.

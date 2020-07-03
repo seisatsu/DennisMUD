@@ -52,7 +52,7 @@ def COMMAND(console, args):
 
     # Check if the lock is already undecorated.
     if not thisroom["exits"][exitid]["action"]["locked"]:
-        console.msg("{0}: this lock already has no custom action".format(NAME))
+        console.msg("{0}: This lock already has no custom action.".format(NAME))
         return False
 
     # Undecorate the lock.
@@ -60,5 +60,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

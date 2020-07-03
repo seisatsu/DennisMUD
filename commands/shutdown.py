@@ -42,7 +42,7 @@ def COMMAND(console, args):
 
     # Make sure we are not already shutting down.
     if console.router.shutting_down:
-        console.msg("{0}: already shutting down".format(NAME))
+        console.msg("{0}: Already shutting down.".format(NAME))
         return False
 
     # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.

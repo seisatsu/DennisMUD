@@ -28,7 +28,7 @@
 NAME = "unhide key"
 CATEGORIES = ["exits"]
 USAGE = "unhide key <exit>"
-DESCRIPTION = """Allow looking at the locked <exit> to reveal its key.
+DESCRIPTION = """Allow looking at the locked <exit> to reveal the name of its key.
 
 If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
 You must own the exit or its room to unhide the key.
@@ -53,12 +53,12 @@ def COMMAND(console, args):
 
     # Make sure there is a key paired to this exit.
     if not thisroom["exits"][exitid]["key"]:
-        console.msg("{0}: there is no key paired to this exit".format(NAME))
+        console.msg("{0}: There is no key paired to this exit.".format(NAME))
         return False
 
     # Check if the key is already not hidden.
     if not thisroom["exits"][exitid]["key_hidden"]:
-        console.msg("{0}: the key for this exit is already not hidden".format(NAME))
+        console.msg("{0}: The key for this exit is already not hidden.".format(NAME))
         return False
 
     # Unhide the key.
@@ -66,5 +66,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

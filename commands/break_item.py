@@ -60,7 +60,7 @@ def COMMAND(console, args):
             try:  # Trap to catch a rare crash
                 if itemid in user["console"].user["inventory"]:
                     user["console"].user["inventory"].remove(itemid)
-                    user["console"].msg("{0} vanished from your inventory".format(thisitem["name"]))
+                    user["console"].msg("{0} vanished from your inventory.".format(thisitem["name"]))
                     console.database.upsert_user(user["console"].user)
             except:
                 with open('break_item_trap.txt', 'w') as file:
@@ -77,7 +77,7 @@ def COMMAND(console, args):
     # It's still in our inventory, so it must not have been duplified. Delete it from our inventory now.
     if itemid in console.user["inventory"] and not thisitem["duplified"]:
         console.user["inventory"].remove(itemid)
-        console.msg("{0} vanished from your inventory".format(thisitem["name"]))
+        console.msg("{0} vanished from your inventory.".format(thisitem["name"]))
         console.database.upsert_user(console.user)
 
     # Finished.

@@ -54,7 +54,7 @@ def COMMAND(console, args):
 
     # Check if the exit is already locked.
     if thisroom["exits"][exitid]["locked"]:
-        console.msg("{0}: this exit is already locked".format(NAME))
+        console.msg("{0}: This exit is already locked.".format(NAME))
         return False
 
     # Lock the exit.

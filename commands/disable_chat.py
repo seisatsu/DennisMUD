@@ -42,7 +42,7 @@ def COMMAND(console, args):
 
     # Check if chat is already disabled.
     if not console.user["chat"]["enabled"]:
-        console.msg("{0}: chat is already disabled".format(NAME))
+        console.msg("{0}: Chat is already disabled.".format(NAME))
         return False
 
     # Disable chat.

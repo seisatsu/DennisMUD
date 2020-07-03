@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # Check if the named user is already not an owner.
     if not args[1].lower() not in thisroom["exits"][exitid]["owners"]:
-        console.msg("{0}: user already not an owner of this exit".format(NAME))
+        console.msg("{0}: That user is already not an owner of this exit".format(NAME))
         return False
 
     # Revoke the exit from the user.
@@ -67,5 +67,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

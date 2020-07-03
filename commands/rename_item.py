@@ -55,7 +55,7 @@ def COMMAND(console, args):
     if len(args) == 2:
         try:
             int(args[1])
-            console.msg("{0}: item name cannot be an integer".format(NAME))
+            console.msg("{0}: The item name cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -68,7 +68,7 @@ def COMMAND(console, args):
     # Make an exception if that is the item we are renaming. (changing case)
     for item in console.database.items.all():
         if item["name"].lower() == itemname.lower() and item["name"].lower() != thisitem["name"].lower():
-            console.msg("{0}: an item by this name already exists".format(NAME))
+            console.msg("{0}: An item by that name already exists.".format(NAME))
             return False
 
     # Rename the item.
@@ -76,5 +76,5 @@ def COMMAND(console, args):
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

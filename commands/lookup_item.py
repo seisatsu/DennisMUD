@@ -45,5 +45,5 @@ def COMMAND(console, args):
             return True
 
     # Couldn't find the item.
-    console.msg("{0}: no such item".format(NAME))
+    console.msg("{0}: Found no such item.".format(NAME))
     return False

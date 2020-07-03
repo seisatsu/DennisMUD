@@ -50,9 +50,9 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
     """
     # Make sure we didn't receive argc along with argmin or argmax, because that would be pointless.
     if argc is not None and (argmin is not None or argmax is not None):
-        console.log.error("received argc along with argmin or argmax in COMMON.check from command: {name}",
+        console.log.error("Detected argc along with argmin or argmax in COMMON.check from command: {name}",
                           name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # Check argument count, if given.
@@ -61,8 +61,8 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
 
     # If argc is not an int, report a type mismatch and fail.
     elif type(argc) is not int:
-        console.log.error("argc type mismatch in COMMON.check from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected argc type mismatch in COMMON.check from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # The command received the wrong number of arguments. Fail.
@@ -77,8 +77,8 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
 
     # If argmin is not an int, report a type mismatch and fail.
     elif type(argmin) is not int:
-        console.log.error("argc type mismatch in COMMON.check from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected argc type mismatch in COMMON.check from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # The command received too few arguments. Fail.
@@ -93,8 +93,8 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
 
     # If argmax is not an int, report a type mismatch and fail.
     elif type(argmax) is not int:
-        console.log.error("argc type mismatch in COMMON.check from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected argc type mismatch in COMMON.check from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # The command received too many arguments. Fail.
@@ -107,14 +107,14 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
     if online:
         if not console.user:
             if reason:
-                console.msg("{0}: must be logged in first".format(NAME))
+                console.msg("{0}: You must be logged in first.".format(NAME))
             return False
 
     # Check if the calling user is a wizard. Otherwise, fail.
     if wizard:
         if not console.user["wizard"]:
             if reason:
-                console.msg("{0}: you do not have permission to use this command".format(NAME))
+                console.msg("{0}: You do not have permission to use this command.".format(NAME))
             return False
 
     # All checks succeeded.
@@ -139,22 +139,23 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
 
     # Make sure checks is a list or tuple. Otherwise report a type mismatch and fail.
     if type(checks) not in (list, tuple):
-        console.log.error("checks type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected checks type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # Investigate and perform checks.
     for chk in checks:
         # Each check should be a list or tuple of length 2. Fail.
         if type(chk) not in (list, tuple) or len(chk) != 2:
-            console.log.error("checks member type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
-            console.msg("{0}: internal command error".format(NAME))
+            console.log.error("Detected checks member type mismatch in COMMON.check_argtypes from command: {name}",
+                              name=NAME)
+            console.msg("{0}: ERROR: Internal command error.".format(NAME))
             return None
 
         # The check indices can't be larger than length of the list of arguments to check. Fail.
         if chk[0] >= len(args):
-            console.log.error("checks index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
-            console.msg("{0}: internal command error".format(NAME))
+            console.log.error("Detected checks index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
+            console.msg("{0}: ERROR: Internal command error.".format(NAME))
             return None
 
         # Try to cast the arg at the given index as the given type.
@@ -175,8 +176,9 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
     elif type(retargs) is int:
         # The retargs index can't be larger than length of the list of arguments to return. Fail.
         if retargs >= len(args):
-            console.log.error("retargs index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
-            console.msg("{0}: internal command error".format(NAME))
+            console.log.error("Detected retargs index mismatch in COMMON.check_argtypes from command: {name}",
+                              name=NAME)
+            console.msg("{0}: ERROR: Internal command error.".format(NAME))
             return None
 
         # We are returning a typecasted argument.
@@ -192,8 +194,9 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
         # The retargs indices can't be larger than length of the list of arguments to return. Fail.
         for ret in retargs:
             if ret >= len(args):
-                console.log.error("retargs index mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
-                console.msg("{0}: internal command error".format(NAME))
+                console.log.error("Detected retargs index mismatch in COMMON.check_argtypes from command: {name}",
+                                  name=NAME)
+                console.msg("{0}: ERROR: Internal command error.".format(NAME))
                 return None
 
             # We are returning typecasted arguments.
@@ -209,8 +212,8 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
 
     # Something illegal was done with the retargs argument to this function. Fail.
     else:
-        console.log.error("retargs type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected retargs type mismatch in COMMON.check_argtypes from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # All checks succeeded.
@@ -236,8 +239,8 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
     try:
         exitid = int(exitid)
     except ValueError:
-        console.log.error("exitid type mismatch in COMMON.check_exit from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected exitid type mismatch in COMMON.check_exit from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # If the room argument is None, lookup the calling user's current room.
@@ -254,30 +257,30 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
 
     # An illegal type was passed to the room argument of this function. Fail.
     else:
-        console.log.error("room type mismatch in COMMON.check_exit from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected room type mismatch in COMMON.check_exit from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # We couldn't find the room. Fail.
     if not thisroom:
         # What's more, the room we couldn't find was the user's current room. Double Fail.
         if room is None:
-            console.log.error("current room does not exist for user: {user} ({room})", user=console.user["name"],
+            console.log.error("Current room does not exist for user: {user} ({room})", user=console.user["name"],
                               room=console.user["room"])
-            console.msg("{0}: error: current room does not exist".format(NAME))
+            console.msg("{0}: ERROR: The current room does not exist".format(NAME))
 
         # Always give this error if the room doesn't exist.
-        console.log.error("nonexistent room in COMMON.check_exit from command: {name}", name=NAME)
+        console.log.error("Detected nonexistent room in COMMON.check_exit from command: {name}", name=NAME)
 
         # Optionally throw a failure reason to the player.
         if reason:
-            console.msg("{0}: no such exit".format(NAME))
+            console.msg("{0}: No such exit.".format(NAME))
         return None
 
     # We found the room but not the exit. Fail.
     elif exitid > len(thisroom["exits"]) - 1 or exitid < 0:
         if reason:
-            console.msg("{0}: no such exit".format(NAME))
+            console.msg("{0}: No such exit.".format(NAME))
         return None
 
     # Perform a permission check on the current user.
@@ -293,7 +296,7 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
         # The user does not have permission for this exit or this room. Fail.
         else:
             if reason:
-                console.msg("{0}: you do not own this exit or this room".format(NAME))
+                console.msg("{0}: You do not own this exit or this room.".format(NAME))
             return None
 
     # Perform a permission check on a named user.
@@ -304,7 +307,7 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
         # The named user does not exist. Fail.
         if not targetuser:
             if reason:
-                console.msg("{0}: no such user".format(NAME))
+                console.msg("{0}: User not found for exit permission check.".format(NAME))
             return None
 
         # Make sure the user owns the room or the exit. If so, pass along.
@@ -318,7 +321,7 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
         # The user does not have permission for this exit or this room. Fail.
         else:
             if reason:
-                console.msg("{0}: you do not own this exit or this room".format(NAME))
+                console.msg("{0}: You do not own this exit or this room.".format(NAME))
             return None
 
     # All checks succeeded. Return the room containing the exit as a convenience.
@@ -342,8 +345,8 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
     try:
         itemid = int(itemid)
     except ValueError:
-        console.log.error("itemid type mismatch in COMMON.check_item from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected itemid type mismatch in COMMON.check_item from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # Look up the target item.
@@ -352,7 +355,7 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
     # We couldn't find the item. Fail.
     if not targetitem:
         if reason:
-            console.msg("{0}: no such item".format(NAME))
+            console.msg("{0}: No such item.".format(NAME))
         return None
 
     # Check if the calling user is holding the item.
@@ -360,7 +363,7 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
         # They are not holding the item, and they aren't a wizard who can twiddle items remotely. Fail.
         if itemid not in console.user["inventory"] and not console.user["wizard"]:
             if reason:
-                console.msg("{0}: not holding item".format(NAME))
+                console.msg("{0}: You are not holding the item.".format(NAME))
             return None
 
     # Perform a permission check on the current user.
@@ -376,7 +379,7 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
         # The user does not have permission for this item. Fail.
         else:
             if reason:
-                console.msg("{0}: you do not own this item".format(NAME))
+                console.msg("{0}: You do not own this item.".format(NAME))
             return None
 
     # Perform a permission check on a named user.
@@ -387,7 +390,7 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
         # The named user does not exist. Fail.
         if not targetuser:
             if reason:
-                console.msg("{0}: no such user".format(NAME))
+                console.msg("{0}: User not found for item permission check.".format(NAME))
             return None
 
         # Make sure the user owns the item. If so, pass along.
@@ -401,7 +404,7 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
         # The user does not have permission for this item. Fail.
         else:
             if reason:
-                console.msg("{0}: you do not own this item".format(NAME))
+                console.msg("{0}: You do not own this item.".format(NAME))
             return None
 
     # All checks succeeded. Return the item.
@@ -428,8 +431,8 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
         try:
             roomid = int(roomid)
         except ValueError:
-            console.log.error("roomid type mismatch in COMMON.check_room from command: {name}", name=NAME)
-            console.msg("{0}: internal command error".format(NAME))
+            console.log.error("Detected roomid type mismatch in COMMON.check_room from command: {name}", name=NAME)
+            console.msg("{0}: ERROR: Internal command error.".format(NAME))
             return None
 
     # Look up the target room.
@@ -439,14 +442,14 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
     if not targetroom:
         # What's more, the room we couldn't find was the user's current room. Double Fail.
         if roomid is None:
-            console.log.error("current room does not exist for user: {user} ({room})", user=console.user["name"],
+            console.log.error("Current room does not exist for user: {user} ({room})", user=console.user["name"],
                               room=console.user["room"])
-            console.msg("{0}: error: current room does not exist".format(NAME))
+            console.msg("{0}: ERROR: The current room does not exist".format(NAME))
             return None
 
         # Optionally throw a failure reason to the player.
         elif reason:
-            console.msg("{0}: no such room".format(NAME))
+            console.msg("{0}: No such room.".format(NAME))
         return None
 
     # Perform a permission check on the current user.
@@ -462,7 +465,7 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
         # The user does not have permission for this room. Fail.
         else:
             if reason:
-                console.msg("{0}: you do not own this room".format(NAME))
+                console.msg("{0}: You do not own this room.".format(NAME))
             return None
 
     # Perform a permission check on a named user.
@@ -473,7 +476,7 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
         # The named user does not exist. Fail.
         if not targetuser:
             if reason:
-                console.msg("{0}: no such user".format(NAME))
+                console.msg("{0}: User not found for room permission check.".format(NAME))
             return None
 
         # Make sure the user owns the room. If so, pass along.
@@ -487,7 +490,7 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
         # The user does not have permission for this room. Fail.
         else:
             if reason:
-                console.msg("{0}: you do not own this room".format(NAME))
+                console.msg("{0}: You do not own this room.".format(NAME))
             return None
 
     # All checks succeeded. Return the room.
@@ -510,8 +513,8 @@ def check_user(NAME, console, username, online=False, wizard=None, live=False, r
     """
     # Make sure roomid is a str. Otherwise report a type mismatch and fail.
     if type(username) is not str:
-        console.log.error("username type mismatch in COMMON.check_user from command: {name}", name=NAME)
-        console.msg("{0}: internal command error".format(NAME))
+        console.log.error("Detected username type mismatch in COMMON.check_user from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
         return None
 
     # Look up the target user.
@@ -528,13 +531,13 @@ def check_user(NAME, console, username, online=False, wizard=None, live=False, r
     # We couldn't find the user. Fail.
     if not targetuser:
         if reason:
-            console.msg("{0}: no such user".format(NAME))
+            console.msg("{0}: No such user.".format(NAME))
         return None
 
     # The user isn't online and we want them to be. Fail.
     elif online and not console.database.online(username):
         if reason:
-            console.msg("{0}: user is not online".format(NAME))
+            console.msg("{0}: That user is not online.".format(NAME))
         return None
 
     # Check the wizardship of the user.
@@ -544,9 +547,9 @@ def check_user(NAME, console, username, online=False, wizard=None, live=False, r
             # Optionally choose between one of two failure reasons to throw to the player.
             if reason:
                 if already:
-                    console.msg("{0}: user is already not a wizard".format(NAME))
+                    console.msg("{0}: That user is already not a wizard.".format(NAME))
                 else:
-                    console.msg("{0}: user is not a wizard".format(NAME))
+                    console.msg("{0}: That user is not a wizard.".format(NAME))
             return None
 
         # We want the user to not be a wizard and they are. Fail.
@@ -554,9 +557,9 @@ def check_user(NAME, console, username, online=False, wizard=None, live=False, r
             # Optionally choose between one of two failure reasons to throw to the player.
             if reason:
                 if already:
-                    console.msg("{0}: user is already a wizard".format(NAME))
+                    console.msg("{0}: That user is already a wizard.".format(NAME))
                 else:
-                    console.msg("{0}: user is a wizard".format(NAME))
+                    console.msg("{0}: That user is a wizard.".format(NAME))
             return None
 
     # All checks succeeded. Return the user.

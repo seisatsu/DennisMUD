@@ -53,7 +53,7 @@ def COMMAND(console, args):
 
     # Make sure the room is empty.
     if targetroom["users"]:
-        console.msg("{0}: you cannot break an occupied room".format(NAME))
+        console.msg("{0}: You cannot break an occupied room.".format(NAME))
         return False
 
     # Remove this room from the entrances record of every room it has an exit to.

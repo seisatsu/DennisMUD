@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # Are there any entrances?
     if not targetroom["entrances"]:
-        console.msg("{0}: room has no entrances".format(NAME))
+        console.msg("{0}: This room has no entrances.".format(NAME))
         return True
 
     # Scan the entrance source rooms listed for this room.
@@ -67,9 +67,9 @@ def COMMAND(console, args):
         # Lookup the entrance source room and perform room checks.
         srcroom = COMMON.check_room(NAME, console, roomid, reason=False)
         if not srcroom:
-            console.log.error("entrance source room does not exist for target room: {srcroom} -> {targetroom}",
+            console.log.error("Entrance source room does not exist for target room: {srcroom} -> {targetroom}",
                               srcroom=ent, targetroom=roomid)
-            console.msg("{0}: error: entrance room does not exist: {0}".format(NAME, ent))
+            console.msg("{0}: ERROR: Entrance room does not exist: {0}".format(NAME, ent))
             continue
 
         # Enumerate the exits in the entrance source room.

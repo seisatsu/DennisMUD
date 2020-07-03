@@ -45,7 +45,7 @@ def COMMAND(console, args):
     if len(args) == 1:
         try:
             int(args[0])
-            console.msg("{0}: nickname cannot be an integer".format(NAME))
+            console.msg("{0}: Your nickname cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -57,7 +57,7 @@ def COMMAND(console, args):
     # Make sure a user with this nickname does not already exist.
     # Make an exception if that user is us. (changing case)
     if console.database.user_by_nick(nickname) and nickname.lower() != console.user["nick"].lower():
-        console.msg(NAME + ": that nickname is already in use")
+        console.msg("{0}: That nickname is already in use.".format(NAME))
         return False
 
     # Rename ourselves.
@@ -65,5 +65,5 @@ def COMMAND(console, args):
     console.database.upsert_user(console.user)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: Done.")
     return True

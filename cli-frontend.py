@@ -51,10 +51,10 @@ class Router:
     def message(self, nickname, msg, _nbsp=None):
         pass
 
-    def broadcast_all(self, msg, exclude=None):
+    def broadcast_all(self, msg, exclude=None, playertag=None):
         pass
 
-    def broadcast_room(self, room, msg, exclude=None):
+    def broadcast_room(self, room, msg, exclude=None, playertag=None):
         pass
 
 

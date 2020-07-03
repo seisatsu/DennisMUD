@@ -53,7 +53,7 @@ def COMMAND(console, args):
 
     # Check if the item is already glued.
     if thisitem["glued"]:
-        console.msg("{0}: item is already glued".format(NAME))
+        console.msg("{0}: This item is already glued.".format(NAME))
         return False
 
     # Glue the item.

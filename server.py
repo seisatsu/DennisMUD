@@ -31,7 +31,7 @@ import sys
 
 # Check Python version.
 if sys.version_info[0] != 3:
-    print("Not Starting: Dennis requires Python 3")
+    print("Not Starting: Dennis requires Python 3.")
     sys.exit(1)
 
 import console
@@ -85,6 +85,7 @@ class Router:
         Check if a peer name is present in the users table.
 
         :param item: Internal peer name.
+
         :return: True if succeeded, False if failed.
         """
         if item in self.users:
@@ -97,6 +98,7 @@ class Router:
         Get a user record by their peer name.
 
         :param item: Internal peer name.
+
         :return: User record if succeeded, None if failed.
         """
         if self.__contains__(item):
@@ -114,6 +116,7 @@ class Router:
 
         :param peer: Internal peer name.
         :param service: Service type. "telnet" or "websocket".
+
         :return: True
         """
         self.users[peer] = {"service": service, "console": console.Console(self, self.shell, peer, self._database)}
@@ -124,6 +127,7 @@ class Router:
         """Unregister and Logout User
 
         :param peer: Internal peer name.
+
         :return: True if succeeded, False if no such user.
         """
         if peer not in self.users:
@@ -142,6 +146,7 @@ class Router:
         :param peer: Internal peer name.
         :param msg: Message to send.
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
+
         :return: True
         """
         if self.users[peer]["service"] == "telnet":
@@ -155,7 +160,8 @@ class Router:
         Broadcast a message to all logged in users.
 
         :param msg: Message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: If set, username to exclude from broadcast.
+
         :return: True
         """
         for u in self.users:
@@ -175,7 +181,8 @@ class Router:
 
         :param room: Room ID.
         :param msg: Message to send.
-        :param exclude: Username to exclude. Usually ourselves if set.
+        :param exclude: If set, username to exclude from broadcast.
+
         :return: True
         """
         for u in self.users:
@@ -196,7 +203,7 @@ def init_logger(config):
     # Read log options from the server config. At least one logging method is required.
     if not config["log"]["stdout"] and not config["log"]["file"]:
         # No logging target is set, so force stdout.
-        print("[server#error] no logging target in config, defaulting to stdout")
+        print("[server#error] No logging target in config, defaulting to stdout.")
         config["log"]["stdout"] = True
     elif config["log"]["file"]:
         # Try to open the log file.
@@ -205,13 +212,13 @@ def init_logger(config):
         except:
             # Couldn't open the log file, so warn and fall back to STDOUT.
             if config["log"]["level"] in ("warn", "info", "debug"):
-                print("[server#error] could not open log file:", config["log"]["file"])
+                print("[server#error] Could not open log file: {0}".format(config["log"]["file"]))
             config["log"]["file"] = None
             config["log"]["stdout"] = True
 
     # Make sure the chosen log level is valid. Otherwise force the highest log level.
     if config["log"]["level"] not in ("critical", "error", "warn", "info", "debug"):
-        print("[server#error] invalid log level in config, defaulting to \"debug\"")
+        print("[server#error] Invalid log level in config, defaulting to \"debug\".")
         config["log"]["level"] = "debug"
 
     # Configure the Twisted Logger targets.
@@ -281,7 +288,7 @@ def init_services(config, dbman, router, log):
 
     # No services were enabled.
     if not any_enabled:
-        log.critical("no services enabled")
+        log.critical("No services enabled.")
         return False
 
     # Finished.
@@ -299,19 +306,19 @@ def main():
         with open("server.config.json") as f:
             config = json.load(f)
     except:
-        print("[server#critical] could not open server.config.json")
+        print("[server#critical] Could not open server config file: server.config.json")
         return 2
 
     # Initialize the logger.
     stdout = sys.stdout
     if config["log"]["level"] in ("info", "debug"):
-        print("[server#info] initializing logger")
+        print("[server#info] Initializing logger...")
     init_logger(config)
     log = Logger("server")
-    log.info("finished initializing logger")
+    log.info("Finished initializing logger.")
 
     # Initialize the Database Manager and load the world database.
-    log.info("initializing database manager")
+    log.info("Initializing database manager...")
     dbman = database.DatabaseManager(config["database"]["filename"])
     _dbres = dbman._startup()
     if not _dbres:
@@ -319,7 +326,7 @@ def main():
         if _dbres is not None:
             dbman._unlock()
         return 3
-    log.info("finished initializing database manager")
+    log.info("Finished initializing database manager.")
 
     # Initialize the router.
     router = Router(config, dbman)
@@ -329,11 +336,11 @@ def main():
     router.shell = command_shell
 
     # Start the services.
-    log.info("initializing services")
+    log.info("Initializing services...")
     if not init_services(config, dbman, router, log):
         dbman._unlock()
         return 4
-    log.info("finished initializing services")
+    log.info("Finished initializing services.")
 
     # Graceful shutdown on SIGINT (ctrl-c).
     # The shutdown command does the same thing.
@@ -346,7 +353,7 @@ def main():
     signal.signal(signal.SIGINT, shutdown)
 
     # Start the Twisted Reactor.
-    log.info("finished startup tasks")
+    log.info("Finished startup tasks.")
     router._reactor = reactor
     reactor.run()
 

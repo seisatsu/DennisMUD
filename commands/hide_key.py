@@ -28,7 +28,7 @@
 NAME = "hide key"
 CATEGORIES = ["exits"]
 USAGE = "hide key <exit>"
-DESCRIPTION = """Prevent looking at the locked <exit> from revealing its key.
+DESCRIPTION = """Prevent looking at the locked <exit> from revealing the name of its key.
 
 If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
 You must own the exit or its room to hide the key.
@@ -53,12 +53,12 @@ def COMMAND(console, args):
 
     # Make sure there is a key paired to this exit.
     if not thisroom["exits"][exitid]["key"]:
-        console.msg("{0}: there is no key paired to this exit".format(NAME))
+        console.msg("{0}: There is no key paired to this exit.".format(NAME))
         return False
 
     # Check if the key is already hidden.
     if thisroom["exits"][exitid]["key_hidden"]:
-        console.msg("{0}: the key for this exit is already hidden".format(NAME))
+        console.msg("{0}: The key for this exit is already hidden.".format(NAME))
         return False
 
     # Hide the key.

@@ -56,7 +56,7 @@ def COMMAND(console, args):
 
     # Process any newlines and then describe the exit.
     if "\\\\" * 3 in ' '.join(args[1:]):
-        console.msg("{0}: you may only stack two newlines".format(NAME))
+        console.msg("{0}: You may only stack two newlines.".format(NAME))
         return False
     thisroom["exits"][exitid]["desc"] = ' '.join(args[1:]).replace("\\\\", "\n")
     console.database.upsert_room(thisroom)

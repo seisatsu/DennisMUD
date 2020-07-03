@@ -48,9 +48,9 @@ def COMMAND(console, args):
 
         # Uh oh, an item in our inventory doesn't actually exist.
         if not thisitem:
-            console.log.error("inventory item does not exist for user: {user} ({item})", user=console.user["name"],
-                              item=itemid)
-            console.msg("{0}: error: inventory item does not exist: {1}".format(NAME, itemid))
+            console.log.error("Item referenced in user inventory does not exist: {user} :: {item}",
+                              user=console.user["name"], item=itemid)
+            console.msg("{0}: ERROR: Item referenced in your inventory does not exist: {1}".format(NAME, itemid))
             continue
 
         # Show the item's name and ID.

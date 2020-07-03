@@ -52,7 +52,7 @@ def COMMAND(console, args):
 
     # Check if the item is already undecorated.
     if not thisitem["action"]:
-        console.msg("{0}: this item already has no custom action".format(NAME))
+        console.msg("{0}: This item already has no custom action.".format(NAME))
         return False
 
     # Undecorate the item.

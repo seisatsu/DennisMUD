@@ -53,9 +53,9 @@ def COMMAND(console, args):
     # We found nothing. If we are a wizard, that means no items exist. Otherwise, it means we don't own any.
     if not found_something:
         if console.user["wizard"]:
-            console.msg("{0}: there are no items".format(NAME))
+            console.msg("{0}: There are no items.".format(NAME))
         else:
-            console.msg("{0}: you do not own any items".format(NAME))
+            console.msg("{0}: You do not own any items.".format(NAME))
 
     # Finished.
     return True

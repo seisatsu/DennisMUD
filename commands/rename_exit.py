@@ -55,7 +55,7 @@ def COMMAND(console, args):
     if len(args) == 2:
         try:
             int(args[1])
-            console.msg("{0}: exit name cannot be an integer".format(NAME))
+            console.msg("{0}: The exit name cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -69,7 +69,7 @@ def COMMAND(console, args):
     exits = thisroom["exits"]
     for ex in exits:
         if ex["name"].lower() == exitname.lower() and ex["name"].lower() != thisroom["exits"][exitid]["name"].lower():
-            console.msg("{0}: an exit by this name already exists in this room".format(NAME))
+            console.msg("{0}: An exit by that name already exists in this room.".format(NAME))
             return False
 
     # Rename the exit.
@@ -77,6 +77,6 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True
 

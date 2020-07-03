@@ -54,7 +54,7 @@ def COMMAND(console, args):
     # Make sure the current room is not outbound sealed, or we are a room owner or a wizard.
     if thisroom["sealed"]["outbound"] and not console.user["wizard"] and \
             console.user["name"] not in thisroom["owners"]:
-        console.msg("{0}: This room is outbound sealed.".format(NAME))
+        console.msg("{0}: The current room is outbound sealed.".format(NAME))
         return False
 
     # Make sure the exit's destination room exists. Otherwise give an error but delete the exit anyway.

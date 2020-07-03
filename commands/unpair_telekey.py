@@ -53,7 +53,7 @@ def COMMAND(console, args):
 
     # Make sure the item is currently paired to a room.
     if not thisitem["telekey"]:
-        console.msg("{0}: this item is already not paired to a room".format(NAME))
+        console.msg("{0}: This item is already not paired to a room.".format(NAME))
         return False
 
     # Unpair the telekey.
@@ -61,5 +61,5 @@ def COMMAND(console, args):
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

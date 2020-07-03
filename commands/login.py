@@ -44,13 +44,13 @@ def COMMAND(console, args):
 
     # Make sure we are not already logged in.
     if console.user:
-        console.msg("{0}: already logged in".format(NAME))
+        console.msg("{0}: You are already logged in.".format(NAME))
         return False
 
     # Attempt to authenticate with the database.
     thisuser = console.database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest())
     if not thisuser:
-        console.msg("{0}: bad credentials".format(NAME))
+        console.msg("{0}: Incorrect username or password.".format(NAME))
         return False  # Bad login.
     console.user = thisuser
 
@@ -65,8 +65,8 @@ def COMMAND(console, args):
         console.database.upsert_room(thisroom)
 
     # Show the log in message, broadcast our presence, and look at the room.
-    console.msg("logged in as \"{0}\"".format(console.user["name"]))
+    console.msg("You are logged in as \"{0}\".".format(console.user["name"]))
     console.msg('=' * 20)
-    console.shell.broadcast_room(console, "{0} logged in".format(console.user["nick"]))
+    console.shell.broadcast_room(console, "{0} logged in.".format(console.user["nick"]))
     console.shell.command(console, "look", False)
     return True

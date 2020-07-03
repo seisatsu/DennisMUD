@@ -46,7 +46,7 @@ def COMMAND(console, args):
     if len(args) == 1:
         try:
             int(args[0])
-            console.msg("{0}: item name cannot be an integer".format(NAME))
+            console.msg("{0}: Item name cannot be an integer.".format(NAME))
             return False
         except ValueError:
             # Not an integer.
@@ -61,7 +61,7 @@ def COMMAND(console, args):
     # Make sure an item by this name does not already exist.
     for item in allitems:
         if item["name"].lower() == itemname.lower():
-            console.msg("{0}: an item by this name already exists".format(NAME))
+            console.msg("{0}: An item by this name already exists.".format(NAME))
             return False
 
     # Find the highest numbered currently existing item ID.

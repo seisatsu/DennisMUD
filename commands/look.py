@@ -88,7 +88,7 @@ def COMMAND(console, args):
         # See if the user tried to look at an ID instead of a name.
         try:
             int(' '.join(args))
-            console.msg("{0}: requires a name, not an ID".format(NAME))
+            console.msg("{0}: Requires a name, not an ID.".format(NAME))
             return False
 
         # Nope, just looking for something that isn't there.
@@ -111,9 +111,11 @@ def COMMAND(console, args):
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
-            # A reference was found to a nonexistent item. Report this and quietly continue searching.
+            # A reference was found to a nonexistent item. Report this and continue searching.
             if not item:
-                console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+                console.log.error("Item referenced in room does not exist: {room} :: {item}", room=console.user["room"],
+                                  item=itemid)
+                console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
                 continue
             attributes = []
 
@@ -142,9 +144,11 @@ def COMMAND(console, args):
         # Maybe it's an item in our inventory.
         for itemid in console.user["inventory"]:
             item = console.database.item_by_id(itemid)
-            # A reference was found to a nonexistent item. Report this and quietly continue searching.
+            # A reference was found to a nonexistent item. Report this and continue searching.
             if not item:
-                console.log.error("reference exists to nonexistent item: {item}", item=itemid)
+                console.log.error("Item referenced in user inventory does not exist: {user} :: {item}",
+                                  user=console.user["name"], item=itemid)
+                console.msg("{0}: ERROR: Item referenced in your inventory does not exist: {1}".format(NAME, itemid))
                 continue
             attributes = []
 
@@ -213,7 +217,7 @@ def COMMAND(console, args):
 
         # We didn't find anything by that name.
         if not found_something:
-            console.msg("{0}: no such thing: {1}".format(NAME, ' '.join(args)))
+            console.msg("{0}: No such thing: {1}".format(NAME, ' '.join(args)))
             return False
 
         # Finished.

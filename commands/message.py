@@ -50,7 +50,7 @@ def COMMAND(console, args):
 
     # Make sure we are not ignored or we are a wizard.
     if console.user["name"] in targetuser["chat"]["ignored"] and not console.user["wizard"]:
-        console.msg("{0}: could not message user".format(NAME))
+        console.msg("{0}: Could not message user.".format(NAME))
         return False
 
     # Finished. Message the user, and echo the message to ourselves.

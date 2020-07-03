@@ -50,7 +50,7 @@ def COMMAND(console, args):
 
     # Check if user is already ignored.
     if targetuser["name"] in console.user["chat"]["ignored"]:
-        console.msg("{0}: already ignoring user".format(NAME))
+        console.msg("{0}: You are already ignoring that user.".format(NAME))
         return False
 
     # Ignore the user.

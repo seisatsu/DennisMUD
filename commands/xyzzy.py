@@ -61,13 +61,13 @@ def COMMAND(console, args):
 
     # Broadcast our teleportation to the origin room.
     console.shell.broadcast_room(
-        console, "{0} uttered a mysterious word and vanished from the room".format(console.user["nick"]))
+        console, "{0} uttered a mysterious word and vanished from the room.".format(console.user["nick"]))
 
     # Set our current room to the new room.
     console.user["room"] = destroom["id"]
 
     # Broadcast our arrival to the destination room, but not to ourselves.
-    console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]),
+    console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
                                  exclude=console.user["name"])
 
     # Save the origin room, the destination room, and our user document.

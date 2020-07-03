@@ -45,7 +45,7 @@ def COMMAND(console, args):
 
     # Make sure chat is enabled.
     if not console.user["chat"]["enabled"]:
-        console.msg("{0}: enable chat first".format(NAME))
+        console.msg("{0}: Chat must be enabled first.".format(NAME))
         return False
 
     # Send our message to all users who have chat enabled and aren't ignoring us.

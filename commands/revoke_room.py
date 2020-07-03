@@ -54,7 +54,7 @@ def COMMAND(console, args):
 
     # Check if the named user is already not an owner.
     if args[0].lower() in thisroom["owners"]:
-        console.msg("{0}: user already not an owner of this room".format(NAME))
+        console.msg("{0}: That user is already not an owner of this room.".format(NAME))
         return False
 
     # Revoke the room from the user.
@@ -62,5 +62,5 @@ def COMMAND(console, args):
     console.database.upsert_room(thisroom)
 
     # Finished.
-    console.msg("{0}: done".format(NAME))
+    console.msg("{0}: Done.".format(NAME))
     return True

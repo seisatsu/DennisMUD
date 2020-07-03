@@ -52,7 +52,7 @@ def COMMAND(console, args):
 
     # We found nothing. At least the first room must exist, so that means we just don't own any rooms.
     if not found_something:
-        console.msg("{0}: you do not own any rooms".format(NAME))
+        console.msg("{0}: You do not own any rooms.".format(NAME))
 
     # Finished.
     return True
