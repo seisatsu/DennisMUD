@@ -79,7 +79,7 @@ def COMMAND(console, args):
                 targetitem = testitem
                 break
 
-    # If the item was found, show the action.
+    # The item was found. See what it does.
     if targetitem:
         # This item has a custom action.
         if targetitem["action"]:
@@ -91,14 +91,54 @@ def COMMAND(console, args):
             else:
                 action = "{0} {1}".format(console.user["nick"], targetitem["action"])
 
-            # Broadcast the custom action.
+            # Broadcast the custom item action.
             console.shell.broadcast_room(console, action)
 
-        # This item has no custom action. Broadcast the default action.
+        # This item has no custom action. Format and broadcast the default item action.
         else:
             action = "{0} used {1}".format(console.user["nick"], targetitem["name"])
             console.shell.broadcast_room(console, action)
-        return True
+
+        # The item is a telekey. Prepare for teleportation.
+        if targetitem["telekey"]:
+            # Lookup the destination room and perform room checks.
+            destroom = COMMON.check_room(NAME, console, targetitem["telekey"])
+
+            # The telekey is paired to a broken room. Report and ignore it.
+            if not destroom:
+                console.msg("{0}: telekey is paired to a broken room".format(NAME))
+                console.log.error("telekey is paired to a broken room: {item} -> {room}", item=targetitem["id"],
+                                  room=targetitem["telekey"])
+
+            # Proceed with teleportation.
+            else:
+                # Remove us from the current room.
+                if console.user["name"] in thisroom["users"]:
+                    thisroom["users"].remove(console.user["name"])
+
+                # Add us to the destination room.
+                if console.user["name"] not in destroom["users"]:
+                    destroom["users"].append(console.user["name"])
+
+                # Broadcast our teleportation to the origin room.
+                console.shell.broadcast_room(console, "{0} vanished from the room".format(console.user["nick"]))
+
+                # Set our current room to the new room.
+                console.user["room"] = destroom["id"]
+
+                # Broadcast our arrival to the destination room.
+                console.shell.broadcast_room(console, "{0} entered the room".format(console.user["nick"]))
+
+                # Save the origin room, the destination room, and our user document.
+                console.database.upsert_room(thisroom)
+                console.database.upsert_room(destroom)
+                console.database.upsert_user(console.user)
+
+                # Take a look around.
+                console.shell.command(console, "look", False)
+
+            # Finished.
+            return True
 
     # We didn't find anything.
     else:

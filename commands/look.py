@@ -114,6 +114,8 @@ def COMMAND(console, args):
                         attributes.append("[duplified]")
                     if item["glued"]:
                         attributes.append("[glued]")
+                    if item["telekey"]:
+                        attributes.append("[telekey:{0}]".format(item["telekey"]))
 
                 # Send the info for this item.
                 console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
@@ -144,6 +146,8 @@ def COMMAND(console, args):
                         attributes.append("[duplified]")
                     if item["glued"]:
                         attributes.append("[glued]")
+                    if item["telekey"]:
+                        attributes.append("[telekey:{0}]".format(item["telekey"]))
 
                 # Send the info for this item.
                 console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))

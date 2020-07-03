@@ -47,18 +47,13 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid)
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
     if not thisroom:
         return False
 
     # Lookup the target item and perform item checks.
-    thisitem = COMMON.check_item(NAME, console, itemid)
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
     if not thisitem:
-        return False
-
-    # Make sure we are holding the item, or we are a wizard.
-    if itemid not in console.user["inventory"] and not console.user["wizard"]:
-        console.msg("{0}: no such item in inventory".format(NAME))
         return False
 
     # Make sure the exit is locked.
@@ -69,17 +64,6 @@ def COMMAND(console, args):
     # Make sure the exit is not already paired to a key.
     if thisroom["exits"][exitid]["key"]:
         console.msg("{0}: this exit is already paired to a key".format(NAME))
-        return False
-
-    # Make sure we own the item or we are a wizard.
-    if console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this item".format(NAME))
-        return False
-
-    # Make sure we own the exit or the current room, or we are a wizard.
-    if console.user["name"] not in thisroom["exits"][exitid]["owners"] \
-            and console.user["name"] not in thisroom["owners"] and not console.user["wizard"]:
-        console.msg("{0}: you do not own this exit or this room".format(NAME))
         return False
 
     # Pair the key.

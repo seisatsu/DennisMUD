@@ -63,6 +63,12 @@ def COMMAND(console, args):
             destroom["entrances"].remove(targetroom["id"])
             console.database.upsert_room(destroom)
 
+    # Unpair all telekey items that are paired to this room.
+    for item in console.database.items.all():
+        if item["telekey"] == roomid:
+            item["telekey"] = None
+            console.database.upsert_item(item)
+
     # Delete the room.
     console.database.delete_room(targetroom)
 

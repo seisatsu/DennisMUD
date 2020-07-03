@@ -78,7 +78,8 @@ def COMMAND(console, args):
         "action": "",
         "owners": [console.user["name"]],
         "glued": console.database.defaults["items"]["glued"],
-        "duplified": False
+        "duplified": False,
+        "telekey": None
     }
 
     # Add the new item to the our inventory, and save the item.

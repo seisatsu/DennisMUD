@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# unpair_key.py     #
+# pair_telekey.py   #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
@@ -25,40 +25,46 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "unpair key"
-CATEGORIES = ["exits"]
-USAGE = "unpair key <exit>"
-DESCRIPTION = """Remove the key pairing from <exit>.
+NAME = "pair key"
+CATEGORIES = ["rooms", "items"]
+USAGE = "pair telekey <item> <room>"
+DESCRIPTION = """Make the item <item> teleport its user to <room> when used.
 
-Undoes pairing a key item to an exit via the `pair key` command.
-You must own the exit or its room in order to unpair its key.
+You must own and be holding the item to pair it.
+The destination room must be inbound unsealed, or you must be a room owner.
+Any user who uses the item will teleport to the paired room.
 
-Ex. `unpair key 4` to remove the key pairing from exit 4."""
+Ex. `pair telekey 3 5` to make item 3 teleport to room 5."""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=1):
+    if not COMMON.check(NAME, console, args, argc=2):
         return False
 
     # Perform argument type checks and casts.
-    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
-    if exitid is None:
+    itemid, roomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
+    if itemid is None or roomid is None:
         return False
 
-    # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
+    if not thisitem:
+        return False
+
+    # Lookup the destination room, and perform exit checks.
+    thisroom = COMMON.check_room(NAME, console, roomid, owner=True)
     if not thisroom:
         return False
 
-    # Make sure the exit is currently paired to a key.
-    if not thisroom["exits"][exitid]["key"]:
-        console.msg("{0}: this exit already has no key".format(NAME))
+    # Make sure the item is not already paired to a room.
+    if thisitem["telekey"]:
+        console.msg("{0}: this item is already paired to a room".format(NAME))
         return False
 
-    # Unpair the key.
-    thisroom["exits"][exitid]["key"] = None
-    console.database.upsert_room(thisroom)
+    # Pair the telekey.
+    thisitem["telekey"] = roomid
+    console.database.upsert_item(thisitem)
 
     # Finished.
     console.msg("{0}: done".format(NAME))

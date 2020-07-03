@@ -32,7 +32,7 @@ from tinydb import TinyDB, Query
 
 from twisted.logger import Logger
 
-DB_VERSION = 2
+DB_VERSION = 3
 
 
 class DatabaseManager:
@@ -214,10 +214,11 @@ class DatabaseManager:
             return False
         return True
 
-    def room_by_id(self, roomid):
+    def room_by_id(self, roomid, clean=True):
         """Get a room by its id.
 
         :param roomid: The id of the room to retrieve from the database.
+        :param clean: Whether to automatically remove offline user records. Should usually be True.
         :return: Room document or None.
         """
         q = Query()
@@ -225,6 +226,8 @@ class DatabaseManager:
         if not thisroom:
             return None
         thisroom = thisroom[0]
+        if not clean:
+            return thisroom
 
         # For each user in the room, check if they are online. If not, remove them. This used to be done for every room
         # at startup, and took a long time. It is much faster to do it as needed, though not doing it at startup leaves

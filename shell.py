@@ -202,7 +202,7 @@ class Shell:
 
             # Only part of the line is a command. Call that segment and pass the rest as arguments.
             if ' '.join(line[:-splitpos]).lower() in self._commands.keys():
-                # Don't echo or log passwords.
+                # Log and echo commands to the console that don't involve passwords.
                 if line[0] not in ["register", "login", "password"]:
                     if show_command:
                         console.msg("> " + ' '.join(line))
