@@ -34,7 +34,8 @@ class Console:
     Each instance of the console corresponds to a single user session. The console abstracts interaction between a user
     and the router and shell.
 
-    :ivar user: TinyDB user document for the currently logged in user, if any.
+    :ivar user: The TinyDB user document for the currently logged in user, if any.
+    :ivar vars: A dict of temporary variables that will disappear on shutdown.
     :ivar router: The Router instance, which handles interfacing between the server backend and the user consoles.
     :ivar shell: The shell instance, which handles commands and help.
     :ivar rname: The name used by the router for this console.
@@ -52,6 +53,7 @@ class Console:
         :param log: Alternative logging facility, if not set.
         """
         self.user = None
+        self.vars = {}
         self.router = router
         self.shell = shell
         self.rname = rname
@@ -62,6 +64,46 @@ class Console:
         self._help = {}
         self._special_aliases = {}
         self._disabled_commands = []
+
+    def __contains__(self, item):
+        """__contains__
+
+        Check if a console variable exists.
+
+        :param item: Console variable name.
+
+        :return: True if succeeded, False if failed.
+        """
+        if item in self.vars:
+            return True
+        return False
+
+    def __getitem__(self, item):
+        """__getitem__
+
+        Get a console variable by its name.
+
+        :param item: Console variable name.
+
+        :return: Console variable if succeeded, None if failed.
+        """
+        if self.__contains__(item):
+            return self.vars[item]
+        else:
+            return None
+
+    def __setitem__(self, item, value):
+        """__setitem__
+
+        Assign a value to a console variable.
+
+        :param item: Console variable name.
+        :param value: New value.
+
+        :return: True
+        """
+        self.vars[item] = value
+        return True
 
     def msg(self, message, _nbsp=False):
         """Send Message

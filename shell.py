@@ -198,7 +198,7 @@ class Shell:
                     if show_command:
                         console.msg("> " + ' '.join(line))
                         console.msg('='*20)
-                    return self._call(console, ' '.join(line).lower(), [])
+                    return self.call(console, ' '.join(line).lower(), [])
                 continue
 
             # Only part of the line is a command. Call that segment and pass the rest as arguments.
@@ -208,7 +208,7 @@ class Shell:
                     if show_command:
                         console.msg("> " + ' '.join(line))
                         console.msg('=' * 20)
-                return self._call(console, ' '.join(line[:-splitpos]), line[-splitpos:])
+                return self.call(console, ' '.join(line[:-splitpos]), line[-splitpos:])
 
         # We're still here and haven't found a command in this line. Must be gibberish.
         if line:
@@ -381,7 +381,7 @@ class Shell:
         """
         for u in self.router.users:
             if self.router.users[u]["console"].user and \
-                    self.router.users[u]["console"].user["name"] == username.lower():
+                    self.router.users[u]["console"].user["name"].lower() == username.lower():
                 return self.router.users[u]["console"].user
         return self._database.user_by_name(username.lower())
 
@@ -397,19 +397,30 @@ class Shell:
         """
         for u in self.router.users:
             if self.router.users[u]["console"].user and \
-                    self.router.users[u]["console"].user["nick"] == nickname.lower():
+                    self.router.users[u]["console"].user["nick"].lower() == nickname.lower():
                 return self.router.users[u]["console"].user
         return self._database.user_by_nick(nickname.lower())
 
-    def _call(self, console, command, args):
+    def console_by_username(self, username):
+        """Get the console of a user by their username.
+
+        :return: Console if succeeded, None if failed.
+        """
+        for u in self.router.users:
+            if self.router.users[u]["console"].user and \
+                    self.router.users[u]["console"].user["name"].lower() == username.lower():
+                return self.router.users[u]["console"]
+
+    def call(self, console, command, args):
         """Call a command, making sure it isn't disabled. (Unless we're a wizard, then it doesn't matter.)
 
         :param console: The console calling the command.
+        :param command: The name of the command to call.
         :param args: Arguments to the command.
 
         :return: True if succeeded, False if failed
         """
         if command in self._disabled_commands and not console.user["wizard"]:
-            console.msg(command + ": command disabled")
+            console.msg("{0}: Command disabled.".format(command))
             return False
         return self._commands[command].COMMAND(console, args)

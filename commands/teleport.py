@@ -70,6 +70,9 @@ def COMMAND(console, args):
     if console.user["name"] not in destroom["users"]:
         destroom["users"].append(console.user["name"])
 
+    # If we are posturing on an item, it's not coming with us.
+    console["posture_item"] = None
+
     # Broadcast our teleportation to the origin room.
     console.shell.broadcast_room(console, "{0} vanished from the room.".format(console.user["nick"]))
 

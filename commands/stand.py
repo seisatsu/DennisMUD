@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# describe_self.py  #
+# stand.py          #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
@@ -25,31 +25,27 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "describe self"
+NAME = "stand"
 CATEGORIES = ["settings", "users"]
-USAGE = "describe self <description>"
-DESCRIPTION = """Set your player description, shown when someone looks at you.
+ALIASES = ["stand up"]
+USAGE = "stand"
+DESCRIPTION = """Stand up if currently in another posture.
 
-A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
-You may have any number of newlines, but you cannot stack more than two together.
+This will perform an action and modify your description if you are currently taking a posture.
+Commands that make you take a posture include `sit` and `lay`.
 
-Ex. `describe self This guy is obviously some kind of badass.`
-Ex2. `describe self This guy is obviously some kind of badass.\\\\You should probably keep some distance.`
-Ex3. `describe self This guy is obviously some kind of badass.\\\\\\\\You should probably keep some distance.`"""
+Ex. `stand`
+Ex2. `stand up`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argc=0):
         return False
 
-    # Process any newlines and then describe ourselves.
-    if "\\\\" * 3 in ' '.join(args):
-        console.msg("{0}: You may only stack two newlines.".format(NAME))
+    # Check if we are already standing up. If so, don't do anything. Otherwise, stand up.
+    if not console["posture"]:
+        console.msg("{0}: You are already standing up.".format(NAME))
         return False
-    console.user["desc"] = ' '.join(args).replace("\\\\", "\n")
-    console.database.upsert_user(console.user)
-
-    # Finished.
-    console.msg("{0}: Done.".format(NAME))
-    return True
+    else:
+        return COMMON.posture(NAME, console)

@@ -564,3 +564,69 @@ def check_user(NAME, console, username, online=False, wizard=None, live=False, r
 
     # All checks succeeded. Return the user.
     return targetuser
+
+
+def posture(NAME, console, pname=None, action=None, pitem=None):
+    """Helper function for posturing commands like sit, lay, and stand.
+
+    :param NAME: The NAME field from the command module.
+    :param console: The calling user's console.
+    :param pname: The name of the posture. If not set, then stand up.
+    :param action: The immediate action text associated with the posture. Must be set if pname is set.
+    :param pitem: The item to posture on if set. Otherwise posture in place.
+
+    :return: True if succeeded, False if failed.
+    """
+    # If no extra arguments were given, stand up.
+    if not pname:
+        console["posture"] = None
+        console["posture_item"] = None
+        console.shell.broadcast_room(console, "{0} stands up.".format(console.user["nick"]))
+        return True
+
+    # Make sure if we have pname, we also have action.
+    elif pname and not action:
+        console.log.error("Detected pname without action in COMMON.posture from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
+        return False
+
+    # If we have pname without pitem, just perform the action and set the posture.
+    elif pname and not pitem:
+        console["posture"] = pname
+        console["posture_item"] = None
+        console.shell.broadcast_room(console, "{0} {1}.".format(console.user["nick"], action))
+        return True
+
+    # Lookup the current room and perform room checks.
+    thisroom = check_room(NAME, console, console.user["room"])
+    if not thisroom:
+        return False
+
+    # We are going to posture on an item. Look through the room for the named item.
+    for itemid in thisroom["items"]:
+        item = console.database.item_by_id(itemid)
+        # A reference was found to a nonexistent item. Report this and continue searching.
+        if not item:
+            console.log.error("Item referenced in room does not exist: {room} :: {item}",
+                              room=console.user["room"],
+                              item=itemid)
+            console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
+            continue
+
+        # We found the item. Format and broadcast the appropriate action.
+        if item["name"].lower() == pitem.lower():
+            console["posture"] = pname
+            console["posture_item"] = item["name"]
+            if pitem.lower().startswith("a ") or pitem.lower().startswith("an ") or pitem.lower().startswith("the "):
+                console.shell.broadcast_room(console, "{0} {1} on {2}.".format(console.user["nick"], action,
+                                                                               item["name"]))
+            else:
+                console.shell.broadcast_room(console, "{0} {1} on the {2}.".format(console.user["nick"], action,
+                                                                                   item["name"]))
+
+            # Finished.
+            return True
+
+    # We didn't find anything to lay on.
+    console.msg("{0}: No such item in this room: {1}".format(NAME, pitem))
+    return False

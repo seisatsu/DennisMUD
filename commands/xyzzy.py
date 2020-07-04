@@ -77,3 +77,6 @@ def COMMAND(console, args):
 
     # Take a look around.
     console.shell.command(console, "look", False)
+
+    # Finished.
+    return True

@@ -48,14 +48,16 @@ class Router:
         self.shell = None
         self.single_user = True
 
-    def message(self, nickname, msg, _nbsp=None):
+    def message(self, peer, msg, _nbsp=None):
         pass
 
-    def broadcast_all(self, msg, exclude=None, playertag=None):
-        pass
+    def broadcast_all(self, msg, exclude=None):
+        if not exclude:
+            print(msg)
 
-    def broadcast_room(self, room, msg, exclude=None, playertag=None):
-        pass
+    def broadcast_room(self, room, msg, exclude=None):
+        if not exclude:
+            print(msg)
 
 
 class Log:
@@ -112,6 +114,9 @@ def main():
     if not dennis.user["wizard"]:
         dennis.user["wizard"] = True
         dbman.upsert_user(dennis.user)
+
+    # Register us with the router.
+    router.users["<world>"] = {"service": "cli-frontend", "console": dennis}
 
     print("You are now logged in as the administrative user \"<world>\".")
 

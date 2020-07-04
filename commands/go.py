@@ -142,6 +142,10 @@ def COMMAND(console, args):
                         action = "{0} used {1}".format(console.user["nick"], thisitem["name"])
                         console.shell.broadcast_room(console, action)
 
+            # Stand up if we aren't already.
+            if console["posture"]:
+                COMMON.posture(NAME, console)
+
             # Remove us from the current room.
             if console.user["name"] in thisroom["users"]:
                 thisroom["users"].remove(console.user["name"])
