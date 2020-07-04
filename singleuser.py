@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# cli-frontend.py   #
+# singleuser.py     #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
@@ -87,42 +87,42 @@ class Log:
         """Write a debug level message to the console and/or the log file.
         """
         if self._loglevel in ["debug"]:
-            print("[cli#debug]", msg.format(**kwargs))
+            print("[singleuser#debug]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[cli#debug] " + msg.format(**kwargs) + "\n")
+                self._logfile.write("[singleuser#debug] " + msg.format(**kwargs) + "\n")
 
     def info(self, msg, **kwargs):
         """Write an info level message to the console and/or the log file.
         """
         if self._loglevel in ["debug", "info"]:
-            print("[cli#info]", msg.format(**kwargs))
+            print("[singleuser#info]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[cli#info] " + msg.format(**kwargs) + "\n")
+                self._logfile.write("[singleuser#info] " + msg.format(**kwargs) + "\n")
 
     def warn(self, msg, **kwargs):
         """Write a warn level message to the console and/or the log file.
         """
         if self._loglevel in ["debug", "info", "warn"]:
-            print("[cli#warn]", msg.format(**kwargs))
+            print("[singleuser#warn]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[cli#warn] " + msg.format(**kwargs) + "\n")
+                self._logfile.write("[singleuser#warn] " + msg.format(**kwargs) + "\n")
 
     def error(self, msg, **kwargs):
         """Write an error level message to the console and/or the log file.
         """
         if self._loglevel in ["debug", "info", "warn", "error"]:
-            print("[cli#error]", msg.format(**kwargs))
+            print("[singleuser#error]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[cli#error] " + msg.format(**kwargs) + "\n")
+                self._logfile.write("[singleuser#error] " + msg.format(**kwargs) + "\n")
 
     def critical(self, msg, **kwargs):
         """Write a critical level message to the console and/or the log file.
 
         All log levels include critical, so these messages cannot be disabled.
         """
-        print("[cli#critical]", msg.format(**kwargs))
+        print("[singleuser#critical]", msg.format(**kwargs))
         if self._logfile:
-            self._logfile.write("[cli#critical] " + msg.format(**kwargs) + "\n")
+            self._logfile.write("[singleuser#critical] " + msg.format(**kwargs) + "\n")
 
     def write(self, msg):
         """Write an untagged message to the console and/or the log file, regardless of log level.
@@ -132,18 +132,18 @@ class Log:
 
 
 def main():
-    print("Welcome to Dennis MUD PreAlpha, Single-User Client.")
+    print("Welcome to Dennis MUD PreAlpha, Single-User Mode.")
     print("Starting up...")
 
     # When this is False, Dennis will shut down.
     _running = True
 
-    # Try to open the cli config file.
+    # Try to open the singleuser config file.
     try:
-        with open("cli.config.json") as f:
+        with open("singleuser.config.json") as f:
             config = json.load(f)
     except:
-        print("[cli#critical] could not open cli.config.json")
+        print("[singleuser#critical] could not open singleuser.config.json")
         return 2
 
     # Try to open the log file for writing, if one is set.
@@ -154,7 +154,7 @@ def main():
             logfile = open(config["log"]["file"], 'a')
         except:
             if config["log"]["level"] in ["debug", "info", "warn"]:
-                print("[cli#warn] Could not open cli log file: {0}".format(config["log"]["file"]))
+                print("[singleuser#warn] Could not open singleuser log file: {0}".format(config["log"]["file"]))
     log = Log(config["log"]["level"], logfile)
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
@@ -184,7 +184,7 @@ def main():
     console = dennis
 
     # Register our console with the router.
-    router.users["<world>"] = {"service": "cli-frontend", "console": dennis}
+    router.users["<world>"] = {"service": "singleuser", "console": dennis}
 
     # Try to start a command prompt session with a history file.
     # Otherwise start a sessionless prompt without history.
@@ -238,12 +238,12 @@ def main():
         try:
             file = open(filename)
         except:
-            log.write("[cli#error] load: Failed to load Python file: {0}".format(filename))
+            log.write("[singleuser#error] load: Failed to load Python file: {0}".format(filename))
             return False
         try:
             exec(file.read(), globals(), mainscope)
         except:
-            log.write("[cli#error] load: Execution error inside file: {0}".format(filename))
+            log.write("[singleuser#error] load: Execution error inside file: {0}".format(filename))
             log.write(traceback.format_exc())
             return False
         return True

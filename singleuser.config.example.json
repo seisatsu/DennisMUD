@@ -3,10 +3,10 @@
     "filename": "world.json"
   },
   "log": {
-    "file": "dennis.cli.log",
+    "file": "dennis.singleuser.log",
     "level": "debug"
   },
   "prompt": {
-    "history": "cli.history.txt"
+    "history": "singleuser.history.txt"
   }
 }
