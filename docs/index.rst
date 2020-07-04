@@ -6,6 +6,8 @@
 Dennis MUD User Manual
 ======================
 
+This documentation is unfinished.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

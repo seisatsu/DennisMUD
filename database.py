@@ -87,6 +87,8 @@ class DatabaseManager:
         # Check if a lockfile exists for this database. If so, then fail.
         if os.path.exists(self._filename + ".lock"):
             self._log.critical("Lockfile exists for database: {filename}", filename=self._filename)
+            self._log.critical(
+                "If you are sure the database isn't in use, delete this file: {filename}.lock", filename=self._filename)
             return None
 
         # See if we can access the database file. If not, then fail.

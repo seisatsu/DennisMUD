@@ -45,7 +45,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 
 
-VERSION = "Alpha-0.0.1"
+VERSION = "Alpha-0.0.1a"
 
 
 class Router:
@@ -77,14 +77,16 @@ class Log:
     Logs to STDOUT, and optionally to a file.
     Filters out unwanted messages using a log level setting.
     """
-    def __init__(self, loglevel, logfile):
+    def __init__(self, loglevel, logfile, waitoncritical):
         """Single User Mode Log Initializer
 
-        :param loglevel: The log level to use. One of "debug", "info", "warn", "error", "critical", in descending verbosity.
+        :param loglevel: The log level to use. One of: debug, info, warn, error, critical, in descending verbosity.
         :param logfile: The open file to log to.
+        :param waitoncritical: Whether to wait for the enter key before exiting on a critical error. Nice for Windows.
         """
         self._loglevel = loglevel
         self._logfile = logfile
+        self._waitoncritical = waitoncritical
 
     def debug(self, msg, **kwargs):
         """Write a debug level message to the console and/or the log file.
@@ -127,6 +129,10 @@ class Log:
         if self._logfile:
             self._logfile.write("[singleuser#critical] " + msg.format(**kwargs) + "\n")
 
+        # Be nice to Windows users who ran the program by double-clicking. :)
+        if self._waitoncritical:
+            input("Press Enter Key to Continue...")
+
     def write(self, msg):
         """Write an untagged message to the console and/or the log file, regardless of log level.
         """
@@ -146,11 +152,13 @@ def main():
         with open("singleuser.config.json") as f:
             config = json.load(f)
     except:
-        print("[singleuser#critical] could not open singleuser.config.json")
+        print("[singleuser#critical] Could not open singleuser config file: singleuser.config.json")
         return 2
 
     # Try to open the log file for writing, if one is set.
     # Otherwise don't use one.
+    if config["log"]["level"] in ["debug", "info"]:
+        print("[singleuser#info] Initializing logger...")
     logfile = None
     if config["log"]["file"]:
         try:
@@ -158,14 +166,15 @@ def main():
         except:
             if config["log"]["level"] in ["debug", "info", "warn"]:
                 print("[singleuser#warn] Could not open singleuser log file: {0}".format(config["log"]["file"]))
-    log = Log(config["log"]["level"], logfile)
+    log = Log(config["log"]["level"], logfile, config["log"]["wait_on_critical"])
+    log.info("Finished initializing logger.")
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
-    log.info("initializing database manager")
+    log.info("Initializing database manager...")
     dbman = _database.DatabaseManager(config["database"]["filename"], log)
     if not dbman._startup():
         return 3
-    log.info("finished initializing database manager")
+    log.info("Finished initializing database manager.")
     database = dbman
 
     # Initialize the router.

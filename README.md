@@ -22,4 +22,4 @@ To run a multi-player server, you can run `server.py`, which will start a websoc
 Windows Releases
 ================
 
-The Windows releases contain binaries which already contain all of the requirements for running the server and cli. You shouldn't need to install anything. You also don't need to copy or rename the config files if you download a windows release.
+The Windows releases contain binaries which already contain all of the requirements for running the server and cli. You shouldn't need to install anything. You also don't need to copy or rename the config files if you download a Windows release.

@@ -4,7 +4,8 @@
   },
   "log": {
     "file": "dennis.singleuser.log",
-    "level": "debug"
+    "level": "debug",
+    "wait_on_critical": true
   },
   "prompt": {
     "history": "singleuser.history.txt"
