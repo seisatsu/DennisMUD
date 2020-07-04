@@ -45,6 +45,9 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 
 
+VERSION = "Alpha-0.0.1"
+
+
 class Router:
     """Dummy Router
 
@@ -132,7 +135,7 @@ class Log:
 
 
 def main():
-    print("Welcome to Dennis MUD PreAlpha, Single-User Mode.")
+    print("Welcome to Dennis MUD {0}, Single User Mode.".format(VERSION))
     print("Starting up...")
 
     # When this is False, Dennis will shut down.

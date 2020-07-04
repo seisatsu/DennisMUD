@@ -49,6 +49,9 @@ from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \
     textFileLogObserver, FilteringLogObserver, globalLogBeginner
 
 
+VERSION = "Alpha-0.0.1"
+
+
 class Router:
     """Router
 
@@ -298,7 +301,7 @@ def init_services(config, dbman, router, log):
 def main():
     """Startup tasks, mainloop entry, and shutdown tasks.
     """
-    print("Welcome to Dennis MUD PreAlpha, Multi-User Server.")
+    print("Welcome to Dennis MUD {0}, Multi-Player Server.".format(VERSION))
     print("Starting up...")
 
     # Try to read the server config file.
