@@ -116,7 +116,7 @@ class Console:
         :return: True
         """
         if self.router.single_user:
-            print(message)
+            self.log.write(message)
         else:
             self.log.info(message)
         self.router.message(self.rname, message, _nbsp)

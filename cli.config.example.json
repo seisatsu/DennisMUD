@@ -1,5 +1,12 @@
 {
   "database": {
     "filename": "world.json"
+  },
+  "log": {
+    "file": "dennis.cli.log",
+    "level": "debug"
+  },
+  "prompt": {
+    "history": "cli.history.txt"
   }
 }
