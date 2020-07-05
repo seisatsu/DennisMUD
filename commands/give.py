@@ -26,7 +26,7 @@
 # **********
 
 NAME = "give"
-CATEGORIES = ["items"]
+CATEGORIES = ["items", "users"]
 USAGE = "give <username> <item>"
 DESCRIPTION = """Give the item called <item> to the user <username>. Also works by item ID.
 

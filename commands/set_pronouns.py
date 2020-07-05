@@ -1,9 +1,9 @@
-#######################
-# Dennis MUD          #
-# disable_autolook.py #
-# Copyright 2020      #
-# Michael D. Reiley   #
-#######################
+######################
+# Dennis MUD         #
+# set_pronouns.py    #
+# Copyright 2020     #
+# Michael D. Reiley  #
+######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,26 +25,36 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "disable autolook"
-CATEGORIES = ["exploration", "settings"]
-USAGE = "disable autolook"
-DESCRIPTION = """Disable autolook. You will no longer automatically look upon entering a room.
+NAME = "set pronouns"
+CATEGORIES = ["settings", "users"]
+USAGE = "set pronouns [female|male|neutral]"
+DESCRIPTION = """Check or set your pronouns for formatting posturing text.
 
-You can enable autolook with the `enable autolook` command."""
+The default setting is neutral. Without an argument, just check the current setting.
+
+Ex. `set pronouns female` to set female pronouns."""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=0):
+    if not COMMON.check(NAME, console, args, argmin=0, argmax=1):
         return False
 
-    # Check if autolook is already disabled.
-    if not console.user["autolook"]["enabled"]:
-        console.msg("{0}: Autolook is already disabled.".format(NAME))
-        return False
+    # Just check our current pronouns.
+    if len(args) == 0:
+        console.msg("{0}: Your pronouns are currently set to {1}.".format(NAME, console.user["pronouns"]))
+        return True
 
-    # Disable autolook.
-    console.user["autolook"]["enabled"] = False
+    # Make sure we chose an available option.
+    if args[0].lower() in ["f", "female"]:
+        console.user["pronouns"] = "female"
+    elif args[0].lower() in ["m", "male"]:
+        console.user["pronouns"] = "male"
+    elif args[0].lower() in ["n", "neutral"]:
+        console.user["pronouns"] = "neutral"
+    else:
+        console.msg("{0}: Must choose one of: \"female\", \"male\", \"neutral\".".format(NAME))
+        return False
     console.database.upsert_user(console.user)
 
     # Finished.

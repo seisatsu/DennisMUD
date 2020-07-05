@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# disable_chat.py   #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+######################
+# Dennis MUD         #
+# set_autolook.py    #
+# Copyright 2020     #
+# Michael D. Reiley  #
+######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,28 +25,38 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "disable chat"
-CATEGORIES = ["messaging", "settings"]
-USAGE = "disable chat"
-DESCRIPTION = """Disable the general chat. You will not be able to receive or send chat messages.
+NAME = "set autolook"
+CATEGORIES = ["exploration", "settings"]
+USAGE = "set autolook [on|off]"
+DESCRIPTION = """Check, enable, or disable the autolook setting.
 
-You can enable the general chat with the `enable chat` command.
+If enabled, you will automatically look upon entering a room.
+Without an argument, just check the current setting.
 
-Chat messages are separate from private messages and same-room communication."""
+Ex. `set autolook on` to enable autolook."""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=0):
+    if not COMMON.check(NAME, console, args, argmin=0, argmax=1):
         return False
 
-    # Check if chat is already disabled.
-    if not console.user["chat"]["enabled"]:
-        console.msg("{0}: Chat is already disabled.".format(NAME))
-        return False
+    # Just check our current autolook setting.
+    if len(args) == 0:
+        if console.user["autolook"]["enabled"]:
+            console.msg("{0}: Autolook is currently enabled.".format(NAME))
+        else:
+            console.msg("{0}: Autolook is currently disabled.".format(NAME))
+        return True
 
-    # Disable chat.
-    console.user["chat"]["enabled"] = False
+    # Make sure we chose an available option.
+    if args[0].lower() in ["1", "enable", "enabled", "on", "true"]:
+        console.user["autolook"]["enabled"] = True
+    elif args[0].lower() in ["0", "disable", "disabled", "off", "false"]:
+        console.user["autolook"]["enabled"] = False
+    else:
+        console.msg("{0}: Must choose one of: \"on\", \"off\".".format(NAME))
+        return False
     console.database.upsert_user(console.user)
 
     # Finished.

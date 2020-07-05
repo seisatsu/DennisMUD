@@ -108,12 +108,27 @@ def COMMAND(console, args):
                 console.msg(console.user["desc"])
 
             # If we are sitting or laying down, format a message saying so after the description.
-            if console["posture"] and console["posture_item"]:
-                console.msg("\nThey are {0} on {1}.".format(console["posture"],
-                                                            COMMON.format_item(NAME, console["posture_item"])))
-            elif console["posture"]:
-                console.msg("\nThey are {0}.".format(console["posture"]))
-            return True
+            if console.user["pronouns"] == "female":
+                if console["posture"] and console["posture_item"]:
+                    console.msg("\nShe is {0} on {1}.".format(console["posture"],
+                                                              COMMON.format_item(NAME, console["posture_item"])))
+                elif console["posture"]:
+                    console.msg("\nShe is {0}.".format(console["posture"]))
+                return True
+            elif console.user["pronouns"] == "male":
+                if console["posture"] and console["posture_item"]:
+                    console.msg("\nHe is {0} on {1}.".format(console["posture"],
+                                                             COMMON.format_item(NAME, console["posture_item"])))
+                elif console["posture"]:
+                    console.msg("\nHe is {0}.".format(console["posture"]))
+                return True
+            else:
+                if console["posture"] and console["posture_item"]:
+                    console.msg("\nThey are {0} on {1}.".format(console["posture"],
+                                                                COMMON.format_item(NAME, console["posture_item"])))
+                elif console["posture"]:
+                    console.msg("\nThey are {0}.".format(console["posture"]))
+                return True
 
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
@@ -213,11 +228,24 @@ def COMMAND(console, args):
 
             # If they are sitting or laying down, format a message saying so after the description.
             userconsole = console.shell.console_by_username(user["name"])
-            if userconsole["posture"] and userconsole["posture_item"]:
-                console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
-                                                            COMMON.format_item(NAME, userconsole["posture_item"])))
-            elif userconsole["posture"]:
-                console.msg("\nThey are {0}.".format(userconsole["posture"]))
+            if console.user["pronouns"] == "female":
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
+                                                              COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\nShe is {0}.".format(userconsole["posture"]))
+            elif console.user["pronouns"] == "male":
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
+                                                             COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\nHe is {0}.".format(userconsole["posture"]))
+            else:
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
+                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\nThey are {0}.".format(userconsole["posture"]))
             found_something = True
 
         # Maybe it's the nickname of a user.
@@ -231,11 +259,24 @@ def COMMAND(console, args):
 
             # If they are sitting or laying down, format a message saying so after the description.
             userconsole = console.shell.console_by_username(user["name"])
-            if userconsole["posture"] and userconsole["posture_item"]:
-                console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
-                                                            COMMON.format_item(NAME, userconsole["posture_item"])))
-            elif userconsole["posture"]:
-                console.msg("\nThey are {0}.".format(userconsole["posture"]))
+            if console.user["pronouns"] == "female":
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
+                                                              COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\nShe is {0}.".format(userconsole["posture"]))
+            elif console.user["pronouns"] == "male":
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
+                                                             COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\nHe is {0}.".format(userconsole["posture"]))
+            else:
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
+                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\nThey are {0}.".format(userconsole["posture"]))
             found_something = True
 
         # We didn't find anything by that name.

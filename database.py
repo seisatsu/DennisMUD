@@ -32,7 +32,7 @@ from tinydb import TinyDB, Query
 
 from twisted.logger import Logger
 
-DB_VERSION = 3
+DB_VERSION = 4
 
 
 class DatabaseManager:
@@ -455,6 +455,7 @@ class DatabaseManager:
                 "enabled": self.defaults["first_user"]["chat"]["enabled"],
                 "ignored": []
             },
+            "pronouns": "neutral",
             "wizard": True
         }
         self.users.insert(newuser)

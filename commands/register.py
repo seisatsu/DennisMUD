@@ -77,6 +77,7 @@ def COMMAND(console, args):
             "enabled": console.database.defaults["users"]["chat"]["enabled"],
             "ignored": []
         },
+        "pronouns": "neutral",
         "wizard": False
     }
     console.database.upsert_user(newuser)
