@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# grant_exit.py     #
+# transfer_exit.py  #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
@@ -25,16 +25,15 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "grant exit"
+NAME = "transfer exit"
 CATEGORIES = ["exits", "ownership"]
-ALIASES = ["share exit"]
-USAGE = "grant exit <id> <username>"
-DESCRIPTION = """Add user <username> to the owners of the exit <id> in the current room.
+USAGE = "transfer exit <id> <username>"
+DESCRIPTION = """Give primary ownership of the exit <id> to the user <username>.
 
-You must own the exit in order to grant it to another user. You will also retain ownership.
-You can revoke ownership with the `revoke exit` command, provided you are an owner.
+You must be the primary owner of the exit in order to transfer it.
+You will be downgraded to secondary ownership of the exit.
 
-Ex. `grant exit 3 seisatsu`"""
+Ex. `transfer exit 3 seisatsu`"""
 
 
 def COMMAND(console, args):
@@ -48,7 +47,7 @@ def COMMAND(console, args):
         return False
 
     # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True, primary=True)
     if not thisroom:
         return False
 
@@ -57,13 +56,11 @@ def COMMAND(console, args):
     if not targetuser:
         return False
 
-    # Check if the named user is already an owner.
+    # Make the user the primary owner, removing them first if they are a secondary owner.
+    # This will automatically make the current user a secondary owner by pushing them to the second list position.
     if args[1].lower() in thisroom["exits"][exitid]["owners"]:
-        console.msg("{0}: That user is already an owner of this exit.".format(NAME))
-        return False
-
-    # Grant the exit to the user.
-    thisroom["exits"][exitid]["owners"].append(args[1].lower())
+        thisroom["exits"][exitid]["owners"].remove(args[1].lower())
+    thisroom["exits"][exitid]["owners"].insert(0, (args[1].lower()))
     console.database.upsert_room(thisroom)
 
     # Finished.

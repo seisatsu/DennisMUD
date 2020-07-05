@@ -220,7 +220,7 @@ def check_argtypes(NAME, console, args, checks, retargs=None, cast=True, usage=T
     return True
 
 
-def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reason=True):
+def check_exit(NAME, console, exitid, room=None, owner=None, primary=False, orwizard=True, reason=True):
     """Check if an exit exists in a room.
     
     For convenience, also checks the room and returns the room document if the room was found.
@@ -230,6 +230,7 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
     :param exitid: The exit id of the exit to check.
     :param room: The room id or room document of the room to check if set, otherwise check the user's current room.
     :param owner: If True, check the calling user for ownership. If a string, check the named user for ownership.
+    :param primary: Whether to check specifically for primary ownership instead of any ownership. Owner must be True.
     :param orwizard: Whether to treat wizards as having ownership during ownership checks. Defaults to true.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
     
@@ -293,6 +294,12 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
         elif orwizard and console.user["wizard"]:
             pass
 
+        # We are checking for primary ownership and the user is not the primary owner. Fail.
+        elif primary and console.user["name"] not in [thisroom["owners"][0], thisroom["exits"][exitid]["owners"][0]]:
+            if reason:
+                console.msg("{0}: You are not the primary owner of this exit or this room.".format(NAME))
+            return None
+
         # The user does not have permission for this exit or this room. Fail.
         else:
             if reason:
@@ -318,23 +325,30 @@ def check_exit(NAME, console, exitid, room=None, owner=None, orwizard=True, reas
         elif orwizard and targetuser["wizard"]:
             pass
 
+        # We are checking for primary ownership and the user is not the primary owner. Fail.
+        elif primary and targetuser["name"] not in [thisroom["owners"][0], thisroom["exits"][exitid]["owners"][0]]:
+            if reason:
+                console.msg("{0}: That user is not the primary owner of this exit or this room.".format(NAME))
+            return None
+
         # The user does not have permission for this exit or this room. Fail.
         else:
             if reason:
-                console.msg("{0}: You do not own this exit or this room.".format(NAME))
+                console.msg("{0}: That user does not own this exit or this room.".format(NAME))
             return None
 
     # All checks succeeded. Return the room containing the exit as a convenience.
     return thisroom
 
 
-def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, reason=True):
+def check_item(NAME, console, itemid, owner=None, primary=False, holding=False, orwizard=True, reason=True):
     """Check if an item exists. If so, return it.
 
     :param NAME: The NAME field from the command module.
     :param console: The calling user's console.
     :param itemid: The item id of the item to check.
     :param owner: If True, check the calling user for ownership. If a string, check the named user for ownership.
+    :param primary: Whether to check specifically for primary ownership instead of any ownership. Owner must be True.
     :param holding: Whether to check if the calling user is holding the item or is a wizard.
     :param orwizard: Whether to treat wizards as having ownership during ownership checks. Defaults to true.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
@@ -376,6 +390,12 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
         elif orwizard and console.user["wizard"]:
             pass
 
+        # We are checking for primary ownership and the user is not the primary owner. Fail.
+        elif primary and targetitem["owners"][0] != console.user["name"]:
+            if reason:
+                console.msg("{0}: You are not the primary owner of this item.".format(NAME))
+            return None
+
         # The user does not have permission for this item. Fail.
         else:
             if reason:
@@ -401,23 +421,30 @@ def check_item(NAME, console, itemid, owner=None, holding=False, orwizard=True, 
         elif orwizard and targetuser["wizard"]:
             pass
 
+        # We are checking for primary ownership and the user is not the primary owner. Fail.
+        elif primary and targetitem["owners"][0] != targetuser["name"]:
+            if reason:
+                console.msg("{0}: That user is not the primary owner of this item.".format(NAME))
+            return None
+
         # The user does not have permission for this item. Fail.
         else:
             if reason:
-                console.msg("{0}: You do not own this item.".format(NAME))
+                console.msg("{0}: That user does not not own this item.".format(NAME))
             return None
 
     # All checks succeeded. Return the item.
     return targetitem
 
 
-def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=True):
+def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=True, reason=True):
     """Check if a room exists. If so, return it.
 
     :param NAME: The NAME field from the command module.
     :param console: The calling user's console.
     :param roomid: The room id of the room to check if set, otherwise check the user's current room.
     :param owner: If True, check the calling user for ownership. If a string, check the named user for ownership.
+    :param primary: Whether to check specifically for primary ownership instead of any ownership. Owner must be True.
     :param orwizard: Whether to treat wizards as having ownership during ownership checks. Defaults to true.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
 
@@ -455,12 +482,18 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
     # Perform a permission check on the current user.
     if owner is True:
         # Make sure the user owns the room. If so, pass along.
-        if console.user["name"] in targetroom["owners"]:
+        if console.user["name"] in targetroom["owners"] and not primary:
             pass
 
         # Optionally, check if the user is a wizard instead. If so, pass along.
         elif orwizard and console.user["wizard"]:
             pass
+
+        # We are checking for primary ownership and the user is not the primary owner. Fail.
+        elif primary and targetroom["owners"][0] != console.user["name"]:
+            if reason:
+                console.msg("{0}: You are not the primary owner of this room.".format(NAME))
+            return None
 
         # The user does not have permission for this room. Fail.
         else:
@@ -487,10 +520,16 @@ def check_room(NAME, console, roomid=None, owner=None, orwizard=True, reason=Tru
         elif orwizard and targetuser["wizard"]:
             pass
 
+        # We are checking for primary ownership and the user is not the primary owner. Fail.
+        elif primary and targetroom["owners"][0] != targetuser["name"]:
+            if reason:
+                console.msg("{0}: That user is not the primary owner of this room.".format(NAME))
+            return None
+
         # The user does not have permission for this room. Fail.
         else:
             if reason:
-                console.msg("{0}: You do not own this room.".format(NAME))
+                console.msg("{0}: That user does not own this room.".format(NAME))
             return None
 
     # All checks succeeded. Return the room.

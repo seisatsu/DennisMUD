@@ -26,12 +26,13 @@
 # **********
 
 NAME = "revoke exit"
-CATEGORIES = ["exits"]
+CATEGORIES = ["exits", "ownership"]
 ALIASES = ["unshare exit"]
 USAGE = "revoke exit <id> <username>"
 DESCRIPTION = """Remove user <username> from the owners of the exit <id> in the current room.
 
 You must be an owner of the exit in order to revoke ownership from another user.
+You cannot revoke ownership from the primary owner, even if they are you.
 You can grant ownership with the `grant exit` command, provided you are an owner.
 
 Ex. `revoke exit 3 seisatsu`"""
@@ -60,6 +61,11 @@ def COMMAND(console, args):
     # Check if the named user is already not an owner.
     if not args[1].lower() not in thisroom["exits"][exitid]["owners"]:
         console.msg("{0}: That user is already not an owner of this exit".format(NAME))
+        return False
+
+    # Check if the named user is the primary owner.
+    if thisroom["exits"][exitid]["owners"][0] == args[1].lower():
+        console.msg("{0}: You cannot revoke ownership from the primary owner.".format(NAME))
         return False
 
     # Revoke the exit from the user.

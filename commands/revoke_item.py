@@ -26,12 +26,13 @@
 # **********
 
 NAME = "revoke item"
-CATEGORIES = ["items"]
+CATEGORIES = ["items", "ownership"]
 ALIASES = ["unshare item"]
 USAGE = "revoke item <id> <username>"
 DESCRIPTION = """Remove user <username> from the owners of item <id>.
 
 You must be an owner of the item in order to revoke ownership from another user.
+You cannot revoke ownership from the primary owner, even if they are you.
 You can grant ownership with the `grant item` command, provided you are an owner.
 
 Ex. `revoke item 4 seisatsu`"""
@@ -60,6 +61,11 @@ def COMMAND(console, args):
     # Check if the named user is already not an owner.
     if args[1].lower() not in thisitem["owners"]:
         console.msg("{0}: That user is already not an owner of this item.".format(NAME))
+        return False
+
+    # Check if the named user is the primary owner.
+    if thisitem["owners"][0] == args[1].lower():
+        console.msg("{0}: You cannot revoke ownership from the primary owner.".format(NAME))
         return False
 
     # Revoke the item from the user.

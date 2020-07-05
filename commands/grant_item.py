@@ -26,7 +26,7 @@
 # **********
 
 NAME = "grant item"
-CATEGORIES = ["items"]
+CATEGORIES = ["items", "ownership"]
 ALIASES = ["share item"]
 USAGE = "grant item <id> <username>"
 DESCRIPTION = """Add user <username> to the owners of item <id>.

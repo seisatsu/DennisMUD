@@ -26,12 +26,13 @@
 # **********
 
 NAME = "revoke room"
-CATEGORIES = ["rooms"]
+CATEGORIES = ["rooms", "ownership"]
 ALIASES = ["unshare room"]
 USAGE = "revoke room <username>"
 DESCRIPTION = """Remove user <username> from the owners of the current room.
 
 You must be an owner of the room in order to revoke ownership from another user.
+You cannot revoke ownership from the primary owner, even if they are you.
 You can grant ownership with the `grant room` command, provided you are an owner.
 
 Ex. `grant room seisatsu`"""
@@ -55,6 +56,11 @@ def COMMAND(console, args):
     # Check if the named user is already not an owner.
     if args[0].lower() in thisroom["owners"]:
         console.msg("{0}: That user is already not an owner of this room.".format(NAME))
+        return False
+
+    # Check if the named user is the primary owner.
+    if thisroom["owners"][0] == args[1].lower():
+        console.msg("{0}: You cannot revoke ownership from the primary owner.".format(NAME))
         return False
 
     # Revoke the room from the user.

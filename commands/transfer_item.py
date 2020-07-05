@@ -1,6 +1,6 @@
 #####################
 # Dennis MUD        #
-# grant_exit.py     #
+# transfer_item.py  #
 # Copyright 2020    #
 # Michael D. Reiley #
 #####################
@@ -25,16 +25,15 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "grant exit"
-CATEGORIES = ["exits", "ownership"]
-ALIASES = ["share exit"]
-USAGE = "grant exit <id> <username>"
-DESCRIPTION = """Add user <username> to the owners of the exit <id> in the current room.
+NAME = "transfer item"
+CATEGORIES = ["items", "ownership"]
+USAGE = "transfer item <id> <username>"
+DESCRIPTION = """Give primary ownership of the item <id> to the user <username>.
 
-You must own the exit in order to grant it to another user. You will also retain ownership.
-You can revoke ownership with the `revoke exit` command, provided you are an owner.
+You must be the primary owner of the item in order to transfer it.
+You will be downgraded to secondary ownership of the item.
 
-Ex. `grant exit 3 seisatsu`"""
+Ex. `transfer item 4 seisatsu`"""
 
 
 def COMMAND(console, args):
@@ -43,13 +42,13 @@ def COMMAND(console, args):
         return False
 
     # Perform argument type checks and casts.
-    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
-    if exitid is None:
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
-    if not thisroom:
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, primary=True, holding=True)
+    if not thisitem:
         return False
 
     # Make sure the named user exists.
@@ -57,14 +56,12 @@ def COMMAND(console, args):
     if not targetuser:
         return False
 
-    # Check if the named user is already an owner.
-    if args[1].lower() in thisroom["exits"][exitid]["owners"]:
-        console.msg("{0}: That user is already an owner of this exit.".format(NAME))
-        return False
-
-    # Grant the exit to the user.
-    thisroom["exits"][exitid]["owners"].append(args[1].lower())
-    console.database.upsert_room(thisroom)
+    # Make the user the primary owner, removing them first if they are a secondary owner.
+    # This will automatically make the current user a secondary owner by pushing them to the second list position.
+    if args[1].lower() in thisitem["owners"]:
+        thisitem["owners"].remove(args[1].lower())
+    thisitem["owners"].insert(0, args[1].lower())
+    console.database.upsert_item(thisitem)
 
     # Finished.
     console.msg("{0}: Done.".format(NAME))

@@ -26,7 +26,7 @@
 # **********
 
 NAME = "grant room"
-CATEGORIES = ["rooms"]
+CATEGORIES = ["rooms", "ownership"]
 ALIASES = ["share room"]
 USAGE = "grant room <username>"
 DESCRIPTION = """Add user <username> to the owners of the current room.
