@@ -47,7 +47,8 @@ def COMMAND(console, args):
         return False
 
     # Make sure the named user exists, is online, and is in the same room as us.
-    targetuser = COMMON.check_user(NAME, console, args[0].lower(), room=True, online=True, live=True)
+    targetuser = COMMON.check_user(NAME, console, args[0].lower(), room=True, online=True, live=True,
+                                   wizardskip=["room", "online"])
     if not targetuser:
         return False
 

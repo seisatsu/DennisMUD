@@ -52,6 +52,11 @@ def COMMAND(console, args):
     if not thisitem:
         return False
 
+    # Check if the item is already not duplified.
+    if not thisitem["duplified"]:
+        console.msg("{0}: This item is already not duplified.".format(NAME))
+        return False
+
     # Make sure we are holding the item or we are a wizard.
     # If we are a wizard but aren't holding the item, put it in our inventory,
     # Because otherwise it won't have any locations.
@@ -61,12 +66,7 @@ def COMMAND(console, args):
     elif console.user["wizard"] and itemid not in console.user["inventory"]:
         console.user["inventory"].append(itemid)
         console.database.upsert_user(console.user)
-        console.msg("{0} appeared in your inventory.".format(thisitem["name"]))
-
-    # Check if the item is already not duplified.
-    if not thisitem["duplified"]:
-        console.msg("{0}: This item is already not duplified.".format(NAME))
-        return False
+        console.msg("{0} appeared in your inventory.".format(COMMON.format_item(NAME, thisitem["name"], upper=True)))
 
     # Delete the item from all user inventories except ours, and announce its disappearance.
     for user in console.router.users.values():
@@ -75,7 +75,8 @@ def COMMAND(console, args):
             continue
         if itemid in user["console"].user["inventory"]:
             user["console"].user["inventory"].remove(itemid)
-            user["console"].msg("{0} vanished from your inventory.".format(thisitem["name"]))
+            user["console"].msg("{0} vanished from your inventory.".format(
+                COMMON.format_item(NAME, thisitem["name"], upper=True)))
             console.database.upsert_user(user["console"].user)
 
     # Delete the item from all rooms.
@@ -84,5 +85,10 @@ def COMMAND(console, args):
             room["items"].remove(itemid)
             console.database.upsert_room(room)
 
+    # Unduplify the item.
+    thisitem["duplified"] = False
+    console.database.upsert_item(thisitem)
+
     # Finished.
+    console.msg("{0}: Done.".format(NAME))
     return True

@@ -99,8 +99,11 @@ def COMMAND(console, args):
         found_something = False
         found_item = None
 
+        # Save a bit of line space.
+        target = ' '.join(args).lower()
+
         # Looking at ourselves. Show user nickname real name, and description.
-        if len(args) == 1 and args[0].lower() == "self":
+        if target == "self":
             console.msg("{0} ({1})".format(console.user["nick"], console.user["name"]))
 
             # Description exists, so show it.
@@ -142,7 +145,7 @@ def COMMAND(console, args):
             attributes = []
 
             # It was an item in the room. Show the item's name, ID, owners, description, and attributes.
-            if item["name"].lower() == ' '.join(args).lower():
+            if target in [item["name"].lower(), "the " + item["name"].lower()]:
                 # Only enumerate item attributes if we are the item owner or a wizard.
                 if console.user["name"] in item["owners"] or console.user["wizard"]:
                     if item["duplified"]:
@@ -175,8 +178,8 @@ def COMMAND(console, args):
             attributes = []
 
             # It was an item in our inventory. Show the item's name, ID, owners, description, and attributes,
-            # but only if we didn't already see it in the current room.
-            if item["name"].lower() == ' '.join(args).lower() and item["id"] != found_item:
+            # but only if we didn't already see it in the current room. Also check if the user prepended "the ".
+            if target in [item["name"].lower(), "the " + item["name"].lower()] and item["id"] != found_item:
                 # Only enumerate item attributes if we are the item owner or a wizard.
                 if console.user["name"] in item["owners"] or console.user["wizard"]:
                     if item["duplified"]:
@@ -198,7 +201,7 @@ def COMMAND(console, args):
 
         # Maybe it's an exit in the room.
         for ex in range(len(thisroom["exits"])):
-            if thisroom["exits"][ex]["name"].lower() == ' '.join(args).lower():
+            if thisroom["exits"][ex]["name"].lower() == target:
                 # It was an exit in the current room. Show the exit name, destination,
                 # description, ID, owners, and any key information.
                 console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
@@ -218,7 +221,7 @@ def COMMAND(console, args):
                 break
 
         # Maybe it's the username of a user.
-        user = console.database.user_by_name(' '.join(args).lower())
+        user = console.database.user_by_name(target)
         if user and console.database.online(user["name"]):
             console.msg("{0} ({1})".format(user["nick"], user["name"]))
 
@@ -249,7 +252,7 @@ def COMMAND(console, args):
             found_something = True
 
         # Maybe it's the nickname of a user.
-        user = console.database.user_by_nick(' '.join(args).lower())
+        user = console.database.user_by_nick(target)
         if user and console.database.online(user["name"]):
             console.msg("{0} ({1})".format(user["nick"], user["name"]))
 

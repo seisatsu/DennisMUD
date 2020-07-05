@@ -327,7 +327,6 @@ class Shell:
     def msg_user(self, username, message):
         """Send a message to a particular user.
 
-        :param console: The console sending the message.
         :param username: The username of the user to message.
         :param message: The message to send.
 

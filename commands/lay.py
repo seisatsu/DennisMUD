@@ -35,6 +35,7 @@ This will perform an action and modify your description to let other players kno
 You can stand back up by using `stand` or by using `lay` a second time. You may also `sit`.
 If an item is given, you will lay down on that item. Otherwise you will just lay down.
 You cannot lay down on an item that is in your inventory; it must be in the room.
+The modification to your description is affected by your pronouns; see `set pronouns`.
 
 Ex. `lay`
 Ex2. `lay down`

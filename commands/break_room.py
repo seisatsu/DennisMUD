@@ -56,6 +56,31 @@ def COMMAND(console, args):
         console.msg("{0}: You cannot break an occupied room.".format(NAME))
         return False
 
+    # If the room contains items, return them to their primary owners.
+    for itemid in targetroom["items"]:
+        # Lookup the target item and perform item checks.
+        thisitem = COMMON.check_item(NAME, console, itemid)
+        if not thisitem:
+            console.log.error("Item referenced in room does not exist: {room} :: {item}", room=roomid, item=itemid)
+            console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
+            continue
+
+        # Make sure the primary owner exists.
+        targetuser = COMMON.check_user(NAME, console, thisitem["owners"][0], live=True)
+        if not targetuser:
+            console.log.error("Primary owner of item does not exist: {item} :: {user}", item=itemid,
+                              user=thisitem["owners"][0])
+            console.msg("{0}: ERROR: Primary owner of item in this room does not exist: {1} :: {2}".format(
+                NAME, itemid, thisitem["owners"][0]))
+            continue
+
+        # Don't return the item to the primary owner if they already have it. (Could be duplified.)
+        if itemid not in targetuser["inventory"]:
+            targetuser["inventory"].append(itemid)
+            console.shell.msg_user(thisitem["owners"][0], "{0} appeared in your inventory.".format(
+                COMMON.format_item(NAME, thisitem["name"], upper=True)))
+        console.database.upsert_user(targetuser)
+
     # Remove this room from the entrances record of every room it has an exit to.
     for ex in targetroom["exits"]:
         destroom = console.database.room_by_id(ex["dest"])

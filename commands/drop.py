@@ -45,7 +45,7 @@ def COMMAND(console, args):
         return False
 
     # Get item name/id.
-    name = ' '.join(args)
+    name = ' '.join(args).lower()
 
     # Search our inventory for the target item.
     for itemid in console.user["inventory"]:
@@ -54,8 +54,8 @@ def COMMAND(console, args):
         if not thisitem:
             return False
 
-        # If we find the correct item, announce the drop and figure out how to drop it.
-        if thisitem["name"].lower() == name.lower() or str(thisitem["id"]) == name:
+        # Check for name or id match. Also check if the user prepended "the ". Figure out how to drop it.
+        if name in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == name:
             # Only non-owners lose duplified items when dropping them.
             if not thisitem["duplified"] or not console.user["name"] in thisitem["owners"]:
                 console.user["inventory"].remove(thisitem["id"])
@@ -71,8 +71,8 @@ def COMMAND(console, args):
                     console.msg("{0}: This item is already in this room.".format(NAME))
                 else:
                     thisroom["items"].append(thisitem["id"])
-                    console.shell.broadcast_room(console, "{0} dropped {1}.".format(console.user["nick"],
-                                                                                    thisitem["name"]))
+                    console.shell.broadcast_room(console, "{0} dropped {1}.".format(
+                        console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))
 
                 # Update the room document.
                 console.database.upsert_room(thisroom)

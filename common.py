@@ -536,7 +536,8 @@ def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=Tr
     return targetroom
 
 
-def check_user(NAME, console, username, online=False, wizard=None, room=False, live=False, reason=True, already=False):
+def check_user(NAME, console, username, online=False, wizard=None, room=False, live=False, reason=True, already=False,
+               wizardskip=None):
     """Check if a user exists. If so, return it.
 
     :param NAME: The NAME field from the command module.
@@ -548,9 +549,13 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
     :param live: Whether to try to grab the live copy of the user document instead of pulling from the database.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
     :param already: Whether to include the word "already" in the wizard failure explanation.
+    :param wizardskip: List of checks to skip if the calling user is a wizard. One or more of "room", "online".
 
     :return: User document if succeeded, None if failed.
     """
+    if wizardskip is None or not console.user["wizard"]:
+        wizardskip = []
+
     # Make sure roomid is a str. Otherwise report a type mismatch and fail.
     if type(username) is not str:
         console.log.error("Detected username type mismatch in COMMON.check_user from command: {name}", name=NAME)
@@ -575,7 +580,7 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
         return None
 
     # The user isn't online and we want them to be. Fail.
-    elif online and not console.database.online(username):
+    elif online and not console.database.online(username) and "online" not in wizardskip:
         if reason:
             console.msg("{0}: That user is not online.".format(NAME))
         return None
@@ -603,7 +608,7 @@ def check_user(NAME, console, username, online=False, wizard=None, room=False, l
             return None
 
     # Check if the user is in the same room as us.
-    if room:
+    if room and "room" not in wizardskip:
         if targetuser["room"] != console.user["room"]:
             if reason:
                 console.msg("{0}: That user is not in the current room.".format(NAME))
@@ -684,13 +689,19 @@ def format_item(NAME, item, upper=False):
 
     :param NAME: The NAME field from the command module.
     :param item: The name of the item.
-    :param upper: Whether to uppercase "The " when adding it.
+    :param upper: Whether to uppercase "The " when adding it, and uppercase existing "a ", "an ", or "the ".
 
     :return: Formatted item name.
     """
     if item.lower().startswith("a ") or item.lower().startswith("an ") or item.lower().startswith("the "):
+        if upper and item.startswith("a "):
+            item = item.replace("a ", "A ", 1)
+        elif upper and item.startswith("an "):
+            item = item.replace("an ", "An ", 1)
+        elif upper and item.startswith("the "):
+            item = item.replace("the ", "The ", 1)
         return item
-    if upper:
+    elif upper:
         return "The {0}".format(item)
     else:
         return "the {0}".format(item)

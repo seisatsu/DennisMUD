@@ -45,7 +45,7 @@ def COMMAND(console, args):
         return False
 
     # Get item name/id.
-    name = ' '.join(args)
+    name = ' '.join(args).lower()
 
     # Search the current room for the target item.
     for itemid in thisroom["items"]:
@@ -54,8 +54,8 @@ def COMMAND(console, args):
         if not thisitem:
             return False
 
-        # Check for name or id match.
-        if thisitem["name"].lower() == name.lower() or str(thisitem["id"]) == name:
+        # Check for name or id match. Also check if the user prepended "the ".
+        if name in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == name:
             # The item is glued down. Only the owner or a wizard can pick it up.
             if thisitem["glued"] and console.user["name"] not in thisitem["owners"] and not console.user["wizard"]:
                 console.msg("{0}: You cannot get this item.".format(NAME))
@@ -76,7 +76,8 @@ def COMMAND(console, args):
                 console.user["inventory"].append(thisitem["id"])
 
             # Announce that we picked up the item.
-            console.shell.broadcast_room(console, "{0} picked up {1}.".format(console.user["nick"], thisitem["name"]))
+            console.shell.broadcast_room(console, "{0} picked up {1}.".format(
+                console.user["nick"], COMMON.format_item(NAME, thisitem["name"])))
 
             # Update the room and user documents.
             console.database.upsert_room(thisroom)
