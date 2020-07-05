@@ -37,8 +37,10 @@ import database as _database
 import shell as _shell
 
 import json
+import os
 import pdb
 import traceback
+import shutil
 
 from prompt_toolkit import prompt
 from prompt_toolkit import PromptSession
@@ -168,6 +170,19 @@ def main():
                 print("[singleuser#warn] Could not open singleuser log file: {0}".format(config["log"]["file"]))
     log = Log(config["log"]["level"], logfile, config["log"]["wait_on_critical"])
     log.info("Finished initializing logger.")
+
+    # Rotate database backups, if enabled.
+    # Unfortunately this has to be done before loading the database, because Windows.
+    try:
+        if config["database"]["backups"]:
+            backupnumbers = sorted(range(1, config["database"]["backups"]), reverse=True)
+            for bn in backupnumbers:
+                if os.path.exists("{0}.bk{1}".format(config["database"]["filename"], bn)):
+                    shutil.copyfile("{0}.bk{1}".format(config["database"]["filename"], bn),
+                                    "{0}.bk{1}".format(config["database"]["filename"], bn + 1))
+            shutil.copyfile(config["database"]["filename"], "{0}.bk1".format(config["database"]["filename"]))
+    except:
+        log.error("Could not finish rotating backups for database: {0}".format(config["database"]["filename"]))
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")

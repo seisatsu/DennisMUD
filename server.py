@@ -42,6 +42,8 @@ import websocket
 
 import html
 import json
+import os
+import shutil
 import signal
 
 from twisted.internet import reactor, ssl
@@ -319,6 +321,19 @@ def main():
     init_logger(config)
     log = Logger("server")
     log.info("Finished initializing logger.")
+
+    # Rotate database backups, if enabled.
+    # Unfortunately this has to be done before loading the database, because Windows.
+    try:
+        if config["database"]["backups"]:
+            backupnumbers = sorted(range(1, config["database"]["backups"]), reverse=True)
+            for bn in backupnumbers:
+                if os.path.exists("{0}.bk{1}".format(config["database"]["filename"], bn)):
+                    shutil.copyfile("{0}.bk{1}".format(config["database"]["filename"], bn),
+                                    "{0}.bk{1}".format(config["database"]["filename"], bn + 1))
+            shutil.copyfile(config["database"]["filename"], "{0}.bk1".format(config["database"]["filename"]))
+    except:
+        log.error("Could not finish rotating backups for database: {file}", file=config["database"]["filename"])
 
     # Initialize the Database Manager and load the world database.
     log.info("Initializing database manager...")

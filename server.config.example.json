@@ -1,6 +1,7 @@
 {
   "database": {
-    "filename": "world.json"
+    "filename": "world.json",
+    "backups": 3
   },
   "log": {
     "stdout": true,
