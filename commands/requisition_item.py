@@ -25,16 +25,16 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "requisition"
+NAME = "requisition item"
 CATEGORIES = ["items"]
-USAGE = "requisition <item>"
+USAGE = "requisition item <id>"
 DESCRIPTION = """Obtain the item with id <item>, regardless of where it is.
 
 Whether the item is in another room or someone else's inventory, it will be moved to your inventory.
 You can only requisition an item that you own.
 Duplified items will just copy to your inventory if not there already.
 
-Ex. `requisition 14` to move item 14 to your inventory."""
+Ex. `requisition item 14` to move item 14 to your inventory."""
 
 
 def COMMAND(console, args):
@@ -57,6 +57,9 @@ def COMMAND(console, args):
         console.msg("{0}: This item is already in your inventory.")
         return False
 
+    # Announce the requisitioning.
+    console.msg("Requisitioned item: {0} ({1})".format(thisitem["name"], thisitem["id"]))
+
     # Don't remove duplified items.
     if not thisitem["duplified"]:
         # If the item is in a room's item list, remove it and announce its disappearance.
@@ -78,6 +81,5 @@ def COMMAND(console, args):
     # Place the item in our inventory and announce its appearance.
     console.user["inventory"].append(itemid)
     console.database.upsert_user(console.user)
-    console.msg("Requisitioned item: {0} ({1})".format(thisitem["name"], thisitem["id"]))
     console.msg("{0} appeared in your inventory.".format(COMMON.format_item(NAME, thisitem["name"], upper=True)))
     return True

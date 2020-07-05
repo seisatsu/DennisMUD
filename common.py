@@ -231,7 +231,7 @@ def check_exit(NAME, console, exitid, room=None, owner=None, primary=False, orwi
     :param room: The room id or room document of the room to check if set, otherwise check the user's current room.
     :param owner: If True, check the calling user for ownership. If a string, check the named user for ownership.
     :param primary: Whether to check specifically for primary ownership instead of any ownership. Owner must be True.
-    :param orwizard: Whether to treat wizards as having ownership during ownership checks. Defaults to true.
+    :param orwizard: Whether to ignore ownership checks for wizards. Defaults to true.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
     
     :return: Room document if succeeded, None if failed.
@@ -350,7 +350,7 @@ def check_item(NAME, console, itemid, owner=None, primary=False, holding=False, 
     :param owner: If True, check the calling user for ownership. If a string, check the named user for ownership.
     :param primary: Whether to check specifically for primary ownership instead of any ownership. Owner must be True.
     :param holding: Whether to check if the calling user is holding the item or is a wizard.
-    :param orwizard: Whether to treat wizards as having ownership during ownership checks. Defaults to true.
+    :param orwizard: Whether to ignore ownership and holding checks for wizards. Defaults to true.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
 
     :return: Item document if succeeded, None if failed.
@@ -375,9 +375,9 @@ def check_item(NAME, console, itemid, owner=None, primary=False, holding=False, 
     # Check if the calling user is holding the item.
     if holding:
         # They are not holding the item, and they aren't a wizard who can twiddle items remotely. Fail.
-        if itemid not in console.user["inventory"] and not console.user["wizard"]:
+        if itemid not in console.user["inventory"] and (not console.user["wizard"] or not orwizard):
             if reason:
-                console.msg("{0}: You are not holding the item.".format(NAME))
+                console.msg("{0}: You are not holding that item.".format(NAME))
             return None
 
     # Perform a permission check on the current user.
@@ -445,7 +445,7 @@ def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=Tr
     :param roomid: The room id of the room to check if set, otherwise check the user's current room.
     :param owner: If True, check the calling user for ownership. If a string, check the named user for ownership.
     :param primary: Whether to check specifically for primary ownership instead of any ownership. Owner must be True.
-    :param orwizard: Whether to treat wizards as having ownership during ownership checks. Defaults to true.
+    :param orwizard: Whether to ignore ownership checks for wizards. Defaults to true.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
 
     :return: Room document if succeeded, None if failed.
