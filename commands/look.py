@@ -109,14 +109,10 @@ def COMMAND(console, args):
 
             # If we are sitting or laying down, format a message saying so after the description.
             if console["posture"] and console["posture_item"]:
-                if (console["posture_item"].lower().startswith("a ") or
-                        console["posture_item"].lower().startswith("an ") or
-                        console["posture_item"].lower().startswith("the ")):
-                    console.msg("\nThey are {0} on {1}.".format(console["posture"], console["posture_item"]))
-                else:
-                    console.msg("\nThey are {0} on the {1}.".format(console["posture"], console["posture_item"]))
+                console.msg("\nThey are {0} on {1}.".format(console["posture"],
+                                                            COMMON.format_item(NAME, console["posture_item"])))
             elif console["posture"]:
-                console.msg("\nThey are {0}.")
+                console.msg("\nThey are {0}.".format(console["posture"]))
             return True
 
         # It wasn't us, so maybe it's an item in the room.
@@ -218,14 +214,8 @@ def COMMAND(console, args):
             # If they are sitting or laying down, format a message saying so after the description.
             userconsole = console.shell.console_by_username(user["name"])
             if userconsole["posture"] and userconsole["posture_item"]:
-                if (userconsole["posture_item"].lower().startswith("a ") or
-                        userconsole["posture_item"].lower().startswith("an ") or
-                        userconsole["posture_item"].lower().startswith("the ")):
-                    console.msg(
-                        "\nThey are {0} on {1}.".format(userconsole["posture"], userconsole["posture_item"]))
-                else:
-                    console.msg("\nThey are {0} on the {1}.".format(userconsole["posture"],
-                                                                    userconsole["posture_item"]))
+                console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
+                                                            COMMON.format_item(NAME, userconsole["posture_item"])))
             elif userconsole["posture"]:
                 console.msg("\nThey are {0}.".format(userconsole["posture"]))
             found_something = True
@@ -242,14 +232,8 @@ def COMMAND(console, args):
             # If they are sitting or laying down, format a message saying so after the description.
             userconsole = console.shell.console_by_username(user["name"])
             if userconsole["posture"] and userconsole["posture_item"]:
-                if (userconsole["posture_item"].lower().startswith("a ") or
-                        userconsole["posture_item"].lower().startswith("an ") or
-                        userconsole["posture_item"].lower().startswith("the ")):
-                    console.msg(
-                        "\nThey are {0} on {1}.".format(userconsole["posture"], userconsole["posture_item"]))
-                else:
-                    console.msg("\nThey are {0} on the {1}.".format(userconsole["posture"],
-                                                                    userconsole["posture_item"]))
+                console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
+                                                            COMMON.format_item(NAME, userconsole["posture_item"])))
             elif userconsole["posture"]:
                 console.msg("\nThey are {0}.".format(userconsole["posture"]))
             found_something = True

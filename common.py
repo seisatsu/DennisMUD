@@ -536,13 +536,14 @@ def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=Tr
     return targetroom
 
 
-def check_user(NAME, console, username, online=False, wizard=None, live=False, reason=True, already=False):
+def check_user(NAME, console, username, online=False, wizard=None, room=False, live=False, reason=True, already=False):
     """Check if a user exists. If so, return it.
 
     :param NAME: The NAME field from the command module.
     :param console: The calling user's console.
     :param username: The username of the user to check.
     :param online: Whether to check if the user is online.
+    :param room: If set, check if the user is in the current room.
     :param wizard: If True, check if the user is a wizard. If False, check if the user is not a wizard.
     :param live: Whether to try to grab the live copy of the user document instead of pulling from the database.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
@@ -599,6 +600,13 @@ def check_user(NAME, console, username, online=False, wizard=None, live=False, r
                     console.msg("{0}: That user is already a wizard.".format(NAME))
                 else:
                     console.msg("{0}: That user is a wizard.".format(NAME))
+            return None
+
+    # Check if the user is in the same room as us.
+    if room:
+        if targetuser["room"] != console.user["room"]:
+            if reason:
+                console.msg("{0}: That user is not in the current room.".format(NAME))
             return None
 
     # All checks succeeded. Return the user.
@@ -669,3 +677,20 @@ def posture(NAME, console, pname=None, action=None, pitem=None):
     # We didn't find anything to lay on.
     console.msg("{0}: No such item in this room: {1}".format(NAME, pitem))
     return False
+
+
+def format_item(NAME, item, upper=False):
+    """Format an item name that doesn't start with "a ", "an ", or "the " to start with "the ".
+
+    :param NAME: The NAME field from the command module.
+    :param item: The name of the item.
+    :param upper: Whether to uppercase "The " when adding it.
+
+    :return: Formatted item name.
+    """
+    if item.lower().startswith("a ") or item.lower().startswith("an ") or item.lower().startswith("the "):
+        return item
+    if upper:
+        return "The {0}".format(item)
+    else:
+        return "the {0}".format(item)
