@@ -27,6 +27,7 @@
 
 import json
 import os
+import traceback
 
 from tinydb import TinyDB, Query
 
@@ -64,6 +65,7 @@ class DatabaseManager:
         self._filename = filename
         self._log = log or Logger("database")
         self._rooms_cleaned = []
+        self._locked = False
 
         # This will be changed when running an update tool.
         self._UPDATE_FROM_VERSION = DB_VERSION
@@ -80,8 +82,13 @@ class DatabaseManager:
         try:
             with open("defaults.config.json") as f:
                 self.defaults = json.load(f)
-        except:
+        except (OSError, IOError):
             self._log.critical("Could not open defaults config file: defaults.config.json")
+            self._log.critical(traceback.format_exc(1))
+            return False
+        except json.JSONDecodeError:
+            self._log.critical("JSON error from config file: defaults.config.json")
+            self._log.critical(traceback.format_exc(1))
             return False
 
         # Check if a lockfile exists for this database. If so, then fail.
@@ -97,14 +104,16 @@ class DatabaseManager:
                 pass
         except:
             self._log.critical("Could not open database file: {filename}", filename=self._filename)
+            self._log.critical(traceback.format_exc(1))
             return False
 
         # Attempt to create the lockfile. If we can't, then fail.
         try:
             with open(self._filename + ".lock", "a") as f:
-                pass
+                self._locked = True
         except:
             self._log.critical("Could not create lockfile for database: {filename}", filename=self._filename)
+            self._log.critical(traceback.format_exc(1))
             return False
 
         self._log.info("Loading database: {filename}", filename=self._filename)
@@ -114,6 +123,7 @@ class DatabaseManager:
             self.database = TinyDB(self._filename)
         except:
             self._log.critical("Error from TinyDB while loading database: {filename}", filename=self._filename)
+            self._log.critical(traceback.format_exc(1))
             return False
 
         # Load the rooms, users, items, and _info tables.
@@ -466,6 +476,10 @@ class DatabaseManager:
 
         :return: None
         """
+        # We never got around to making a lockfile.
+        if not self._locked:
+            return
+
         # The lockfile should not disappear before shutdown.
         if not os.path.exists(self._filename + ".lock"):
             self._log.warn("Lockfile disappeared while running for database: {filename}",

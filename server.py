@@ -38,6 +38,7 @@ import console
 import database
 import shell
 import telnet
+import traceback
 import websocket
 
 import html
@@ -218,6 +219,7 @@ def init_logger(config):
             # Couldn't open the log file, so warn and fall back to STDOUT.
             if config["log"]["level"] in ("warn", "info", "debug"):
                 print("[server#error] Could not open log file: {0}".format(config["log"]["file"]))
+                print(traceback.print_exc(1))
             config["log"]["file"] = None
             config["log"]["stdout"] = True
 
@@ -310,8 +312,13 @@ def main():
     try:
         with open("server.config.json") as f:
             config = json.load(f)
-    except:
+    except (OSError, IOError):
         print("[server#critical] Could not open server config file: server.config.json")
+        print(traceback.format_exc(1))
+        return 2
+    except json.JSONDecodeError:
+        print("[server#critical] JSON error from server config file: server.config.json")
+        print(traceback.format_exc(1))
         return 2
 
     # Initialize the logger.
@@ -334,6 +341,7 @@ def main():
             shutil.copyfile(config["database"]["filename"], "{0}.bk1".format(config["database"]["filename"]))
     except:
         log.error("Could not finish rotating backups for database: {file}", file=config["database"]["filename"])
+        log.error(traceback.format_exc(1))
 
     # Initialize the Database Manager and load the world database.
     log.info("Initializing database manager...")

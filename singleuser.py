@@ -153,8 +153,13 @@ def main():
     try:
         with open("singleuser.config.json") as f:
             config = json.load(f)
-    except:
+    except (OSError, IOError):
         print("[singleuser#critical] Could not open singleuser config file: singleuser.config.json")
+        print(traceback.format_exc(1))
+        return 2
+    except json.JSONDecodeError:
+        print("[server#critical] JSON error from singleuser config file: singleuser.config.json")
+        print(traceback.format_exc(1))
         return 2
 
     # Try to open the log file for writing, if one is set.
@@ -168,6 +173,7 @@ def main():
         except:
             if config["log"]["level"] in ["debug", "info", "warn"]:
                 print("[singleuser#warn] Could not open singleuser log file: {0}".format(config["log"]["file"]))
+                print(traceback.format_exc(1))
     log = Log(config["log"]["level"], logfile, config["log"]["wait_on_critical"])
     log.info("Finished initializing logger.")
 
@@ -183,6 +189,7 @@ def main():
             shutil.copyfile(config["database"]["filename"], "{0}.bk1".format(config["database"]["filename"]))
     except:
         log.error("Could not finish rotating backups for database: {0}".format(config["database"]["filename"]))
+        log.error(traceback.format_exc(1))
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")
@@ -218,6 +225,8 @@ def main():
     try:
         command_prompt = PromptSession(history=FileHistory(config["prompt"]["history"])).prompt
     except:
+        log.error("Could not open prompt history file: {0}".format(config["prompt"]["history"]))
+        log.error(traceback.format_exc(1))
         command_prompt = prompt
 
     # Stop Dennis. We use this instead of just a variable so that Dennis can be stopped from within a Python file
@@ -266,12 +275,13 @@ def main():
             file = open(filename)
         except:
             log.write("[singleuser#error] load: Failed to load Python file: {0}".format(filename))
+            log.write(traceback.format_exc(1))
             return False
         try:
             exec(file.read(), globals(), mainscope)
         except:
             log.write("[singleuser#error] load: Execution error inside file: {0}".format(filename))
-            log.write(traceback.format_exc())
+            log.write(traceback.format_exc(1))
             return False
         return True
 
