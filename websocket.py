@@ -30,6 +30,7 @@
 import traceback
 
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
+from twisted.internet import reactor
 from twisted.logger import Logger
 
 
@@ -41,6 +42,11 @@ class ServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
         self.factory.register(self)
         self.factory.log.info("Client connected: {peer}", peer=self.peer)
+        self.doPing()
+
+    def doPing(self):
+        self.sendPing()
+        reactor.callLater(10, self.doPing)
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
