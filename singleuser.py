@@ -47,7 +47,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 
 
-VERSION = "Alpha-0.0.1a"
+VERSION = "Alpha-0.0.2"
 
 
 class Router:

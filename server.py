@@ -52,7 +52,7 @@ from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \
     textFileLogObserver, FilteringLogObserver, globalLogBeginner
 
 
-VERSION = "Alpha-0.0.1a"
+VERSION = "Alpha-0.0.2"
 
 
 class Router:
