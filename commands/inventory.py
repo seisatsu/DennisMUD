@@ -39,9 +39,10 @@ def COMMAND(console, args):
 
     # Check if our inventory is empty.
     if not console.user["inventory"]:
-        console.msg(NAME + ": empty")
+        console.msg("{0}: Your inventory is empty.".format(NAME))
 
     # Enumerate our inventory.
+    itemcount = 0
     for itemid in sorted(console.user["inventory"]):
         # Lookup the target item and perform item checks.
         thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
@@ -56,5 +57,9 @@ def COMMAND(console, args):
         # Show the item's name and ID.
         console.msg("{0} ({1})".format(thisitem["name"], itemid))
 
+        # Keep count.
+        itemcount += 1
+
     # Finished.
+    console.msg("{0}: Total items: {1}".format(NAME, itemcount))
     return True

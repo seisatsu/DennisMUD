@@ -70,6 +70,10 @@ def COMMAND(console, args):
             item = console.database.item_by_id(itemid)
             if item:
                 itemlist.append("{0} ({1})".format(item["name"], item["id"]))
+            else:
+                console.log.error("Item referenced in room does not exist: {room} :: {item}", room=console.user["room"],
+                                  item=itemid)
+                console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
         if itemlist:
             console.msg("Items: {0}".format(", ".join(itemlist)))
 

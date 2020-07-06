@@ -32,8 +32,9 @@ DESCRIPTION = """Return an item to the inventory of its primary owner.
 
 You must be holding the item in order to return it.
 If the primary owner already has the item (for example if it's duplified), you will just lose it.
+If you are the primary owner of the item, nothing will happen with it.
 
-Ex. `return item 4` to return item 4 to its primary owner's inventory."""
+Ex. `return item 4` to return item 4."""
 
 
 def COMMAND(console, args):
@@ -65,7 +66,6 @@ def COMMAND(console, args):
 
     # Remove the item from our inventory.
     if itemid in console.user["inventory"]:
-        # Remove the item from our inventory.
         console.user["inventory"].remove(thisitem["id"])
         console.database.upsert_user(console.user)
 

@@ -63,9 +63,10 @@ def COMMAND(console, args):
         return True
 
     # Scan the entrance source rooms listed for this room.
+    entcount = 0
     for ent in sorted(targetroom["entrances"]):
         # Lookup the entrance source room and perform room checks.
-        srcroom = COMMON.check_room(NAME, console, roomid, reason=False)
+        srcroom = COMMON.check_room(NAME, console, ent, reason=False)
         if not srcroom:
             console.log.error("Entrance source room does not exist for target room: {srcroom} -> {targetroom}",
                               srcroom=ent, targetroom=roomid)
@@ -89,5 +90,12 @@ def COMMAND(console, args):
         body = body[:-2]
         console.msg(body)
 
+        # Keep count.
+        entcount += 1
+
     # Finished
+    if not entcount:
+        console.msg("{0}: This room has no entrances.".format(NAME))
+    else:
+        console.msg("{0}: Total entrances: {1}".format(NAME, entcount))
     return True

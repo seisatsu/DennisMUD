@@ -43,16 +43,20 @@ def COMMAND(console, args):
 
     # Iterate through the rooms, checking whether we own each one (or are a wizard),
     # and keeping track of whether we found anything at all.
-    found_something = False
+    roomcount = 0
     for thisroom in allrooms:
         # We either own this room, or we are a wizard. List it out.
         if console.user["name"] in thisroom["owners"] or console.user["wizard"]:
             console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
-            found_something = True
+            roomcount += 1
 
     # We found nothing. At least the first room must exist, so that means we just don't own any rooms.
-    if not found_something:
+    if not roomcount:
         console.msg("{0}: You do not own any rooms.".format(NAME))
+
+    # Report how many we found.
+    else:
+        console.msg("{0}: Total rooms: {1}".format(NAME, roomcount))
 
     # Finished.
     return True

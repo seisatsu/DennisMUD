@@ -42,20 +42,22 @@ def COMMAND(console, args):
     allitems = sorted(console.database.items.all(), key=lambda k: k["id"])
 
     # Iterate through the items, checking whether we own each one (or are a wizard),
-    # and keeping track of whether we found anything at all.
-    found_something = False
+    # and keeping track of how many items we found.
+    itemcount = 0
     for thisitem in allitems:
         # We either own this item, or we are a wizard. List it out.
         if console.user["name"] in thisitem["owners"] or console.user["wizard"]:
             console.msg("{0} ({1})".format(thisitem["name"], thisitem["id"]))
-            found_something = True
+            itemcount += 1
 
     # We found nothing. If we are a wizard, that means no items exist. Otherwise, it means we don't own any.
-    if not found_something:
+    if not itemcount:
         if console.user["wizard"]:
             console.msg("{0}: There are no items.".format(NAME))
         else:
             console.msg("{0}: You do not own any items.".format(NAME))
 
-    # Finished.
+    # Report how many we found.
+    else:
+        console.msg("{0}: Total items: {1}".format(NAME, itemcount))
     return True
