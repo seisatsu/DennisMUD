@@ -214,14 +214,15 @@ class Shell:
         if line:
             console.msg("Unknown command: " + ' '.join(line))
 
-            # Suggest some possible commands that are close to what was typed, if applicable.
-            possible = []
-            for p in self._commands:
-                if p.startswith(' '.join(line)):
-                    possible.append(p)
-            if possible:
-                possible = ', '.join(possible)
-                console.msg("Did you mean: " + possible)
+            # Suggest similar commands.
+            suggestions = []
+            for segment in line:
+                for possible in self._commands.keys():
+                    if possible in segment or segment in possible:
+                        suggestions.append(possible)
+            if suggestions:
+                console.msg("Possibly related commands: {0}".format(', '.join(suggestions)))
+            return False
 
         # We didn't find anything.
         return None
@@ -285,7 +286,22 @@ class Shell:
 
         # Couldn't find anything.
         else:
-            console.msg("help: Unknown command or category: " + line)
+            console.msg("help: Unknown command or category: {0}".format(line))
+
+            # Suggest similar commands and categories.
+            cats = []  # meow
+            suggestions = []
+            for segment in line.split(' '):
+                for possible in self._help.keys():
+                    if possible in segment or segment in possible:
+                        cats.append(possible)
+                for possible in self._commands.keys():
+                    if possible in segment or segment in possible:
+                        suggestions.append(possible)
+            if cats:
+                console.msg("help: Possibly related categories: {0}".format(', '.join(cats)))
+            if suggestions:
+                console.msg("help: Possibly related commands: {0}".format(', '.join(suggestions)))
             return False
 
         # Success.
