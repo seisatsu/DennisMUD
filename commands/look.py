@@ -27,7 +27,7 @@
 
 NAME = "look"
 CATEGORIES = ["exploration"]
-ALIASES = ["look at"]
+ALIASES = ["look at", "l"]
 USAGE = "look [name]"
 DESCRIPTION = """Look at the current room or the named object or user.
 

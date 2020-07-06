@@ -179,17 +179,18 @@ def main():
 
     # Rotate database backups, if enabled.
     # Unfortunately this has to be done before loading the database, because Windows.
-    try:
-        if config["database"]["backups"]:
-            backupnumbers = sorted(range(1, config["database"]["backups"]), reverse=True)
-            for bn in backupnumbers:
-                if os.path.exists("{0}.bk{1}".format(config["database"]["filename"], bn)):
-                    shutil.copyfile("{0}.bk{1}".format(config["database"]["filename"], bn),
-                                    "{0}.bk{1}".format(config["database"]["filename"], bn + 1))
-            shutil.copyfile(config["database"]["filename"], "{0}.bk1".format(config["database"]["filename"]))
-    except:
-        log.error("Could not finish rotating backups for database: {0}".format(config["database"]["filename"]))
-        log.error(traceback.format_exc(1))
+    if os.path.exists(config["database"]["filename"]):
+        try:
+            if config["database"]["backups"]:
+                backupnumbers = sorted(range(1, config["database"]["backups"]), reverse=True)
+                for bn in backupnumbers:
+                    if os.path.exists("{0}.bk{1}".format(config["database"]["filename"], bn)):
+                        shutil.copyfile("{0}.bk{1}".format(config["database"]["filename"], bn),
+                                        "{0}.bk{1}".format(config["database"]["filename"], bn + 1))
+                shutil.copyfile(config["database"]["filename"], "{0}.bk1".format(config["database"]["filename"]))
+        except:
+            log.error("Could not finish rotating backups for database: {0}".format(config["database"]["filename"]))
+            log.error(traceback.format_exc(1))
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")

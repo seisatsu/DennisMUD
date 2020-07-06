@@ -268,7 +268,10 @@ def check_exit(NAME, console, exitid, room=None, owner=None, primary=False, orwi
         if room is None:
             console.log.error("Current room does not exist for user: {user} ({room})", user=console.user["name"],
                               room=console.user["room"])
-            console.msg("{0}: ERROR: The current room does not exist".format(NAME))
+            console.msg("{0}: ERROR: The current room does not exist. Performing emergency maneuver.".format(NAME))
+            console.user["room"] = 0
+            console.database.upsert_user(console.user)
+            console.shell.call(console, "xyzzy", [])
 
         # Always give this error if the room doesn't exist.
         console.log.error("Detected nonexistent room in COMMON.check_exit from command: {name}", name=NAME)
@@ -468,14 +471,16 @@ def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=Tr
     # We couldn't find the room. Fail.
     if not targetroom:
         # What's more, the room we couldn't find was the user's current room. Double Fail.
-        if roomid is None:
+        if roomid == console.user["room"]:
             console.log.error("Current room does not exist for user: {user} ({room})", user=console.user["name"],
                               room=console.user["room"])
-            console.msg("{0}: ERROR: The current room does not exist".format(NAME))
-            return None
+            console.msg("{0}: ERROR: The current room does not exist. Performing emergency maneuver.".format(NAME))
+            console.user["room"] = 0
+            console.database.upsert_user(console.user)
+            console.shell.call(console, "xyzzy", [])
 
         # Optionally throw a failure reason to the player.
-        elif reason:
+        if reason:
             console.msg("{0}: No such room.".format(NAME))
         return None
 

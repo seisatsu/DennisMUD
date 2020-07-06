@@ -215,14 +215,14 @@ class Shell:
             console.msg("Unknown command: " + ' '.join(line))
 
             # Suggest similar commands.
-            suggestions = []
-            for segment in line:
-                for possible in self._commands.keys():
-                    if possible in segment or segment in possible:
-                        suggestions.append(possible)
-            if suggestions:
-                console.msg("Possibly related commands: {0}".format(', '.join(suggestions)))
-            return False
+            if len(line[0]) > 3:
+                suggestions = []
+                for segment in line:
+                    for possible in self._commands.keys():
+                        if possible in segment or segment in possible:
+                            suggestions.append(possible)
+                if suggestions:
+                    console.msg("Possibly related commands: {0}".format(', '.join((sorted(suggestions)))))
 
         # We didn't find anything.
         return None
@@ -289,20 +289,21 @@ class Shell:
             console.msg("help: Unknown command or category: {0}".format(line))
 
             # Suggest similar commands and categories.
-            cats = []  # meow
-            suggestions = []
-            for segment in line.split(' '):
-                for possible in self._help.keys():
-                    if possible in segment or segment in possible:
-                        cats.append(possible)
-                for possible in self._commands.keys():
-                    if possible in segment or segment in possible:
-                        suggestions.append(possible)
-            if cats:
-                console.msg("help: Possibly related categories: {0}".format(', '.join(cats)))
-            if suggestions:
-                console.msg("help: Possibly related commands: {0}".format(', '.join(suggestions)))
-            return False
+            if len(line.split(' ')[0]) > 3:
+                cats = []  # meow
+                suggestions = []
+                for segment in line.split(' '):
+                    for possible in self._help.keys():
+                        if possible in segment or segment in possible:
+                            cats.append(possible)
+                    for possible in self._commands.keys():
+                        if possible in segment or segment in possible:
+                            suggestions.append(possible)
+                if cats:
+                    console.msg("help: Possibly related categories: {0}".format(', '.join(sorted(cats))))
+                if suggestions:
+                    console.msg("help: Possibly related commands: {0}".format(', '.join(sorted(suggestions))))
+                return False
 
         # Success.
         return True
@@ -435,7 +436,8 @@ class Shell:
 
         :return: True if succeeded, False if failed
         """
+        command = command.lower()
         if command in self._disabled_commands and not console.user["wizard"]:
             console.msg("{0}: Command disabled.".format(command))
             return False
-        return self._commands[command.lower()].COMMAND(console, args)
+        return self._commands[command].COMMAND(console, args)

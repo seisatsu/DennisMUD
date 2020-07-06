@@ -56,6 +56,12 @@ def COMMAND(console, args):
         console.msg("{0}: You cannot break an occupied room.".format(NAME))
         return False
 
+    # Send offline users to the first room.
+    for user in console.database.users.all():
+        if user["room"] == roomid:
+            user["room"] = 0
+            console.database.upsert_user(user)
+
     # If the room contains items, return them to their primary owners.
     for itemid in targetroom["items"]:
         # Lookup the target item and perform item checks.
