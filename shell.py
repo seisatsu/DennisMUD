@@ -438,4 +438,4 @@ class Shell:
         if command in self._disabled_commands and not console.user["wizard"]:
             console.msg("{0}: Command disabled.".format(command))
             return False
-        return self._commands[command].COMMAND(console, args)
+        return self._commands[command.lower()].COMMAND(console, args)
