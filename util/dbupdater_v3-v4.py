@@ -42,24 +42,27 @@ except:
     sys.exit(1)
 
 
+UPDATE_TO_VERSION = 4
+
+
 # DatabaseManager will expect a logger, so we'll give it this stump.
 class Log:
     """Stand-in for Twisted's logger.
     """
     def debug(self, msg, **kwargs):
-        print("[cli#debug]", msg.format(**kwargs))
+        print("[dbupdater#debug]", msg.format(**kwargs))
 
     def info(self, msg, **kwargs):
-        print("[cli#info]", msg.format(**kwargs))
+        print("[dbupdater#info]", msg.format(**kwargs))
 
     def warn(self, msg, **kwargs):
-        print("[cli#warn]", msg.format(**kwargs))
+        print("[dbupdater#warn]", msg.format(**kwargs))
 
     def error(self, msg, **kwargs):
-        print("[cli#error]", msg.format(**kwargs))
+        print("[dbupdater#error]", msg.format(**kwargs))
 
     def critical(self, msg, **kwargs):
-        print("[cli#critical]", msg.format(**kwargs))
+        print("[dbupdater#critical]", msg.format(**kwargs))
 
 
 def dbupdate_v3_to_v4(dbman):
@@ -83,7 +86,7 @@ def dbupdate_v3_to_v4(dbman):
 
         # We are finished, so update the database version record.
         info_record = dbman._info.all()[0]
-        info_record["version"] = database.DB_VERSION
+        info_record["version"] = UPDATE_TO_VERSION
         dbman._info.upsert(info_record, q.version == dbman._UPDATE_FROM_VERSION)
 
     # The database is actually empty. Do nothing.
@@ -107,7 +110,7 @@ def main():
         print("Database file does not exist: {0}".format(sys.argv[1]))
         return 2
 
-    # Start up DatabaseManager and tell it we're accepting a v2 database for migration.
+    # Start up DatabaseManager and tell it we're accepting a v3 database for migration to v4.
     dbman = database.DatabaseManager(sys.argv[1], Log())
     dbman._UPDATE_FROM_VERSION = 3
     sres = dbman._startup()

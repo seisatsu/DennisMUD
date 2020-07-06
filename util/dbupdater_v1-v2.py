@@ -42,6 +42,9 @@ except:
     sys.exit(1)
 
 
+UPDATE_TO_VERSION = 2
+
+
 # DatabaseManager will expect a logger, so we'll give it this stump.
 class Log:
     """Stand-in for Twisted's logger.
@@ -99,7 +102,7 @@ def dbupdate_v1_to_v2(dbman):
 
         # We are finished, so update the database version record.
         info_record = dbman._info.all()[0]
-        info_record["version"] = database.DB_VERSION
+        info_record["version"] = UPDATE_TO_VERSION
         dbman._info.upsert(info_record, q.version == dbman._UPDATE_FROM_VERSION)
 
     # The database is actually empty somehow. Do nothing.
