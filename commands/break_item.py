@@ -28,10 +28,11 @@
 NAME = "break item"
 CATEGORIES = ["items"]
 ALIASES = ["delete item", "destroy item", "remove item"]
-USAGE = "break item <item>"
-DESCRIPTION = """Break the item in your inventory with ID <item>.
+USAGE = "break item <item_id>"
+DESCRIPTION = """Break the item in your inventory with ID <item_id>.
 
 You must an owner of the item, and it must be in your inventory.
+Wizards can break any item from anywhere.
 
 Ex. `break item 4` to break the item with ID 4."""
 

@@ -27,7 +27,7 @@
 
 NAME = "duplify item"
 CATEGORIES = ["items"]
-USAGE = "duplify item <item>"
+USAGE = "duplify item <item_id>"
 DESCRIPTION = """Duplify the item with ID <item>, so that any number of people can pick it up.
 
 When a user besides the owner `get`s a duplified item, it doesn't disappear from the room it is in.
@@ -38,6 +38,7 @@ Duplified items exist permanently in the owner's inventory until broken, and can
 This feature is particularly useful for keys.
 You can undo this with the `unduplify item` command.
 You must own the item and it must be in your inventory in order to duplify it.
+Wizards can duplify any item.
 
 Ex. `duplify item 4`"""
 

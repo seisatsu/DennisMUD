@@ -63,6 +63,9 @@ def COMMAND(console, args):
 
     # Get new item name.
     itemname = ' '.join(args[1:])
+    if itemname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Make sure an item by this name does not already exist.
     # Make an exception if that is the item we are renaming. (changing case)

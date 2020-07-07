@@ -31,11 +31,13 @@ USAGE = "ignore user <username>"
 DESCRIPTION = """Ignore general chat messages and private messages from the user <username>.
 
 If you ignore a user, you will not see their messages in chat, or any private messages they attempt to send you.
-An ignored user will not be informed that you have ignored them. Wizards cannot be ignored.
+An ignored user will not be informed that you have ignored them.
 If the ignored user is in the same room as you, you will still hear what they `say`.
 You can unignore an ignored user with the `unignore user` command.
+Wizards cannot be ignored.
 
-Ex. `ignore user seisatsu`"""
+Ex. `ignore user seisatsu` won't do anything because seisatsu is a wizard.
+Ex2. `ignore user loser` will prevent you from receiving messages from loser."""
 
 
 def COMMAND(console, args):
@@ -48,9 +50,14 @@ def COMMAND(console, args):
     if not targetuser:
         return False
 
-    # Check if user is already ignored.
+    # Check if the target user is already ignored.
     if targetuser["name"] in console.user["chat"]["ignored"]:
         console.msg("{0}: You are already ignoring that user.".format(NAME))
+        return False
+
+    # Check if the target user is a wizard.
+    if targetuser["wizard"]:
+        console.msg("{0}: Wizards cannot be ignored.".format(NAME))
         return False
 
     # Ignore the user.

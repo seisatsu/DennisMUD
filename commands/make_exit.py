@@ -61,6 +61,9 @@ def COMMAND(console, args):
 
     # Get exit name.
     exitname = ' '.join(args[1:])
+    if exitname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Lookup the current room and perform room checks.
     thisroom = COMMON.check_room(NAME, console)

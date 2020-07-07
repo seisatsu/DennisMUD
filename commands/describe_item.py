@@ -27,12 +27,13 @@
 
 NAME = "describe item"
 CATEGORIES = ["items"]
-USAGE = "describe item <id> <description>"
-DESCRIPTION = """Set the description of the item <id> which you are holding.
+USAGE = "describe item <item_id> <description>"
+DESCRIPTION = """Set the description of the item <item_id> which you are holding.
 
 A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
 You may have any number of newlines, but you cannot stack more than two together.
 You must own the item and be holding it in order to describe it.
+Wizards can describe any item from anywhere.
 
 Ex. `describe item 4 A small music box made of ivory.`
 Ex2. `describe item 4 A small music box made of ivory.\\\\The bottom edge of the lid is lined with silver trim.`

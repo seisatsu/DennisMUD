@@ -54,6 +54,9 @@ def COMMAND(console, args):
 
     # Get room name.
     roomname = ' '.join(args)
+    if roomname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Get a list of all rooms, sorted in reverse order.
     allrooms = sorted(console.database.rooms.all(), reverse=True, key=lambda k: k["id"])

@@ -28,10 +28,11 @@
 NAME = "break exit"
 CATEGORIES = ["exits"]
 ALIASES = ["delete exit", "destroy exit", "remove exit"]
-USAGE = "break exit <exit>"
-DESCRIPTION = """Break the exit with ID <exit> in the current room.
+USAGE = "break exit <exit_id>"
+DESCRIPTION = """Break the exit with ID <exit_id> in the current room.
 
 You must own the exit or its room in order to break it.
+Wizards can break any exit.
 
 Ex. `break exit 3` to break the exit with ID 3 in the current room."""
 

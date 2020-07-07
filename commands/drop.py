@@ -28,7 +28,9 @@
 NAME = "drop"
 CATEGORIES = ["items"]
 USAGE = "drop <item>"
-DESCRIPTION = """Drop the item called <item> into the current room. Also works by item ID.
+DESCRIPTION = """Drop the item called <item> into the current room. Works by name or ID.
+
+Duplified items will vanish when you drop them, unless you own them.
 
 Ex. `drop crystal ball`
 Ex2. `drop 4`"""

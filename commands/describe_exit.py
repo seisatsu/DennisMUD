@@ -27,12 +27,13 @@
 
 NAME = "describe exit"
 CATEGORIES = ["exits"]
-USAGE = "describe exit <id> <description>"
-DESCRIPTION = """Set the description of the exit <id> in this room.
+USAGE = "describe exit <exit_id> <description>"
+DESCRIPTION = """Set the description of the exit <exit_id> in this room.
 
 A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
 You may have any number of newlines, but you cannot stack more than two together.
 You must own the exit or its room in order to describe it.
+Wizards can describe any exit.
 
 Ex. `describe exit 3 You see a lovely wooden door.`
 Ex2. `describe exit 3 You see a lovely wooden door.\\\\The handle is made of brass.`

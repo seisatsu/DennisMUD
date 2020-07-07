@@ -33,6 +33,7 @@ DESCRIPTION = """Send a message to the general chat.
 
 General chat messages are seen by all online users who have chat enabled and are not ignoring you.
 You must also have chat enabled to send a message.
+Wizards cannot be ignored.
 
 Ex. `chat Hello everyone!`
 Ex2. `#Hello everyone!`"""

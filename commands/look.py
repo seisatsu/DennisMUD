@@ -102,9 +102,13 @@ def COMMAND(console, args):
         # Keep track of whether we found stuff during our search.
         found_something = False
         found_item = None
+        partials = []
 
         # Save a bit of line space.
         target = ' '.join(args).lower()
+        if target == "the":
+            console.msg("{0}: Very funny.".format(NAME))
+            return False
 
         # Looking at ourselves. Show user nickname real name, and description.
         if target == "self":
@@ -148,6 +152,10 @@ def COMMAND(console, args):
                 continue
             attributes = []
 
+            # Record partial matches.
+            if target in item["name"].lower() or target.replace("the ", "", 1) in item["name"].lower():
+                partials.append(item["name"].lower())
+
             # It was an item in the room. Show the item's name, ID, owners, description, and attributes.
             if target in [item["name"].lower(), "the " + item["name"].lower()]:
                 # Only enumerate item attributes if we are the item owner or a wizard.
@@ -181,6 +189,10 @@ def COMMAND(console, args):
                 continue
             attributes = []
 
+            # Record partial matches.
+            if target in item["name"].lower() or target.replace("the ", "", 1) in item["name"].lower():
+                partials.append(item["name"].lower())
+
             # It was an item in our inventory. Show the item's name, ID, owners, description, and attributes,
             # but only if we didn't already see it in the current room. Also check if the user prepended "the ".
             if target in [item["name"].lower(), "the " + item["name"].lower()] and item["id"] != found_item:
@@ -205,9 +217,14 @@ def COMMAND(console, args):
 
         # Maybe it's an exit in the room.
         for ex in range(len(thisroom["exits"])):
-            if thisroom["exits"][ex]["name"].lower() == target:
-                # It was an exit in the current room. Show the exit name, destination,
-                # description, ID, owners, and any key information.
+            # Record partial matches.
+            if target in thisroom["exits"][ex]["name"].lower() or \
+                    target.replace("the ", "", 1) in thisroom["exits"][ex]["name"].lower():
+                partials.append(thisroom["exits"][ex]["name"].lower())
+
+            # It was an exit in the current room. Show the exit name, destination,
+            # description, ID, owners, and any key information.
+            if target in [thisroom["exits"][ex]["name"].lower(), "the " + thisroom["exits"][ex]["name"].lower()]:
                 console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
                 console.msg("Owned by: {0}".format(', '.join(thisroom["exits"][ex]["owners"])))
 
@@ -225,8 +242,14 @@ def COMMAND(console, args):
                 break
 
         # Maybe it's the username of a user.
+        # Record partial matches.
+        for username in thisroom["users"]:
+            if target in username:
+                partials.append(username)
+
+        # Look for an exact username match.
         user = console.database.user_by_name(target)
-        if user and console.database.online(user["name"]):
+        if user and console.database.online(user["name"]) and user["name"] in thisroom["users"]:
             console.msg("{0} ({1})".format(user["nick"], user["name"]))
 
             # Description exists, so show it.
@@ -256,6 +279,14 @@ def COMMAND(console, args):
             found_something = True
 
         # Maybe it's the nickname of a user.
+        # Record partial matches.
+        for username in thisroom["users"]:
+            usertemp = console.database.user_by_nick(username)
+            if usertemp:
+                if target in usertemp["nick"]:
+                    partials.append(usertemp["nick"])
+
+        # Look for an exact nickname match.
         user = console.database.user_by_nick(target)
         if user and console.database.online(user["name"]):
             console.msg("{0} ({1})".format(user["nick"], user["name"]))
@@ -286,9 +317,25 @@ def COMMAND(console, args):
                     console.msg("\nThey are {0}.".format(userconsole["posture"]))
             found_something = True
 
-        # We didn't find anything by that name.
+        # We didn't find anything by that name. See if we found partial matches.
         if not found_something:
-            console.msg("{0}: No such thing: {1}".format(NAME, ' '.join(args)))
+            # We got exactly one partial match. Assume that one.
+            if len(target) >= 3 and len(partials) == 1:
+                return COMMAND(console, partials[0].split(' '))
+
+            # We got up to 5 partial matches. List them.
+            elif partials and len(partials) <= 5:
+                console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
+                return False
+
+            # We got too many matches.
+            elif len(partials) > 5:
+                console.msg("{0}: Too many possible matches.".format(NAME))
+                return False
+
+            # Really nothing.
+            else:
+                console.msg("{0}: No such thing: {1}".format(NAME, ' '.join(args)))
             return False
 
         # Finished.

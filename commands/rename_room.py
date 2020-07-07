@@ -58,6 +58,9 @@ def COMMAND(console, args):
 
     # Get new room name.
     roomname = ' '.join(args)
+    if roomname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Make sure a room by this name does not already exist.
     # Make an exception if that is the room we are renaming. (changing case)

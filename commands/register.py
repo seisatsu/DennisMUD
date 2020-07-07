@@ -56,9 +56,12 @@ def COMMAND(console, args):
         if char not in ALLOWED_CHARACTERS:
             console.msg("{0}: Usernames may contain alphanumerics and underscores only.".format(NAME))
             return False
+    if args[0].lower() == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Make sure the username isn't already taken.
-    if console.database.user_by_name(args[0]):
+    if console.database.user_by_name(args[0].lower()):
         console.msg("{0}: That username is already registered.".format(NAME))
         return False
 

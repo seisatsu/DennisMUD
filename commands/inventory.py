@@ -27,9 +27,9 @@
 
 NAME = "inventory"
 CATEGORIES = ["items"]
-ALIASES = ["inv"]
+ALIASES = ["inv", "i"]
 USAGE = "inventory"
-DESCRIPTION = "List all items in your inventory."
+DESCRIPTION = "List all of the items in your inventory."
 
 
 def COMMAND(console, args):

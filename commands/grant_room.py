@@ -33,6 +33,7 @@ DESCRIPTION = """Add user <username> to the owners of the current room.
 
 You must own the room in order to grant it to another user. You will also retain ownership.
 You can revoke ownership with the `revoke room` command, provided you are an owner.
+Wizards can grant any room to anyone.
 
 Ex. `grant room seisatsu`"""
 

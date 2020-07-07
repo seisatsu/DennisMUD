@@ -63,6 +63,9 @@ def COMMAND(console, args):
 
     # Get new exit name.
     exitname = ' '.join(args[1:])
+    if exitname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Make sure an exit by this name does not already exist in the current room.
     # Make an exception if that is the exit we are renaming. (changing case)

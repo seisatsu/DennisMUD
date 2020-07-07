@@ -54,6 +54,9 @@ def COMMAND(console, args):
 
     # Get item name.
     itemname = ' '.join(args)
+    if itemname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Get a list of all items, sorted in reverse order.
     allitems = sorted(console.database.items.all(), reverse=True, key=lambda k: k["id"])

@@ -28,11 +28,12 @@
 NAME = "grant item"
 CATEGORIES = ["items", "ownership"]
 ALIASES = ["share item"]
-USAGE = "grant item <id> <username>"
-DESCRIPTION = """Add user <username> to the owners of item <id>.
+USAGE = "grant item <item_id> <username>"
+DESCRIPTION = """Add user <username> to the owners of item <item_id>.
 
-You must own the item in order to grant it to another user. You will also retain ownership.
+You must own the item and be holding it in order to grant it to another user. You will also retain ownership.
 You can revoke ownership with the `revoke item` command, provided you are an owner.
+Wizards can grant any item to anyone from anywhere.
 
 Ex. `grant item 4 seisatsu`"""
 

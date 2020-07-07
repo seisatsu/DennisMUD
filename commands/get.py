@@ -28,7 +28,12 @@
 NAME = "get"
 CATEGORIES = ["items"]
 USAGE = "get <item>"
-DESCRIPTION = """Pick up the item called <item> from the current room. Also works by item ID.
+DESCRIPTION = """Pick up the item called <item> from the current room. Works by item name or ID.
+
+The item will be added to your inventory.
+You cannot get items that have been glued, unless you own them.
+Duplified items will be added to your inventory without leaving the room.
+Wizards can pick up any item in the room.
 
 Ex. `get crystal ball`
 Ex2. `get 4`"""

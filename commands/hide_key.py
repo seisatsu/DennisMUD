@@ -27,11 +27,12 @@
 
 NAME = "hide key"
 CATEGORIES = ["exits"]
-USAGE = "hide key <exit>"
-DESCRIPTION = """Prevent looking at the locked <exit> from revealing the name of its key.
+USAGE = "hide key <exit_id>"
+DESCRIPTION = """Prevent looking at the locked <exit_id> from revealing the name of its key.
 
 If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
 You must own the exit or its room to hide the key.
+Wizards can hide the key to any exit.
 
 Ex. `hide key 3`"""
 

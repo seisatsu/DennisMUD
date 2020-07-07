@@ -27,13 +27,14 @@
 
 NAME = "decorate item"
 CATEGORIES = ["items"]
-USAGE = "decorate item <id> <action>"
-DESCRIPTION = """Set a custom <action> to display when a player uses the item <id>.
+USAGE = "decorate item <item_id> <action>"
+DESCRIPTION = """Set a custom <action> to display when a player uses the item <item_id>.
 
 By default, the action text is shown following the player's nickname and one space.
 To place the player's name elsewhere in the text, use the %player% marker.
 You must own the item and be holding it in order to decorate it.
 You can remove the custom action from an item with the `undecorate item` command.
+Wizards can decorate any item from anywhere.
 
 Ex. `decorate item 4 holds the green orb, and it begins to glow.`
 Ex2. `decorate item 4 The green orb glows in %player%'s hand.`"""

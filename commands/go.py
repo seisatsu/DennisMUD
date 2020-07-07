@@ -30,9 +30,11 @@ CATEGORIES = ["exploration"]
 ALIASES = ["exit"]
 SPECIAL_ALIASES = ['>']
 USAGE = "go [exit]"
-DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Also works by exit ID.
+DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Works by exit name or ID.
 
 If no argument is given, list the exits in the current room instead.
+If the exit is locked, you will not be able to enter without a key.
+Wizards can enter any locked exit.
 
 Ex. `go blue door`
 Ex2. `go 2`

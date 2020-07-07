@@ -33,6 +33,7 @@ DESCRIPTION = """Set the description of the room you are in.
 A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
 You may have any number of newlines, but you cannot stack more than two together.
 You must own the room in order to describe it.
+Wizards can describe any room.
 
 Ex. `describe room 5 You are standing in a long, dark hallway.`
 Ex2. `describe room 5 You are standing in a long, dark hallway.\\\\You cannot see the end.`

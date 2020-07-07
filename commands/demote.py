@@ -27,7 +27,7 @@
 
 NAME = "demote"
 CATEGORIES = ["wizard"]
-USAGE = "demote [username]"
+USAGE = "demote <username>"
 DESCRIPTION = """(WIZARDS ONLY) Remove wizard status from the named user.
 
 Ex. `demote seisatsu`"""

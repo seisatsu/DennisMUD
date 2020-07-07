@@ -28,9 +28,10 @@
 NAME = "give"
 CATEGORIES = ["items", "users"]
 USAGE = "give <username> <item>"
-DESCRIPTION = """Give the item called <item> to the user <username>. Also works by item ID.
+DESCRIPTION = """Give the item called <item> to the user <username>. Works by item name or ID.
 
-The item must be in your inventory.
+The item must be in your inventory, and the recipient must be online.
+Wizards can give any item they are holding to any user anywhere, even an offline one.
 
 Ex. `give seisatsu jar of dirt`
 Ex2. `give seisatsu 4`"""

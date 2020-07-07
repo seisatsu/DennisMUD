@@ -53,6 +53,9 @@ def COMMAND(console, args):
 
     # Get new nickname.
     nickname = ' '.join(args)
+    if nickname == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Make sure a user with this nickname does not already exist.
     # Make an exception if that user is us. (changing case)
