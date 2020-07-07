@@ -27,6 +27,7 @@
 
 NAME = "get"
 CATEGORIES = ["items"]
+ALIASES = ["g"]
 USAGE = "get <item>"
 DESCRIPTION = """Pick up the item called <item> from the current room.
 

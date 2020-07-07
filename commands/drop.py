@@ -27,6 +27,7 @@
 
 NAME = "drop"
 CATEGORIES = ["items"]
+ALIASES = ["d"]
 USAGE = "drop <item>"
 DESCRIPTION = """Drop the item called <item> into the current room.
 
