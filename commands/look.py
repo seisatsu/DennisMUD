@@ -164,7 +164,7 @@ def COMMAND(console, args):
                         attributes.append("[duplified]")
                     if item["glued"]:
                         attributes.append("[glued]")
-                    if item["telekey"]:
+                    if item["telekey"] is not None:
                         attributes.append("[telekey:{0}]".format(item["telekey"]))
 
                 # Send the info for this item.

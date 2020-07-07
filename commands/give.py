@@ -28,9 +28,10 @@
 NAME = "give"
 CATEGORIES = ["items", "users"]
 USAGE = "give <username> <item>"
-DESCRIPTION = """Give the item called <item> to the user <username>. Works by item name or ID.
+DESCRIPTION = """Give the item called <item> to the user <username>.
 
-The item must be in your inventory, and the recipient must be online.
+You may use a full or partial item name and username. Also works by item ID.
+The item must be in your inventory, and the recipient must be online and in the same room as you.
 Wizards can give any item they are holding to any user anywhere, even an offline one.
 
 Ex. `give seisatsu jar of dirt`
@@ -58,19 +59,15 @@ def COMMAND(console, args):
                                    wizardskip=["room", "online"])
     if not targetuser:
         # Check for a partial user match, and try running again if there's just one.
-        userpartials = []
-        for user in thisroom["users"]:
-            if args[0].lower() in user:
-                userpartials.append(user)
-        if len(userpartials) == 1:
+        print(args)
+        partial = COMMON.match_partial(NAME, console, args[0].lower(), "user")
+        if partial:
             argstemp = args[1:]
-            argstemp.insert(0, userpartials[0].lower())
+            argstemp.insert(0, partial[0])
+            print(argstemp)
             return COMMAND(console, argstemp)
         console.msg("{0}: No such user in this room.".format(NAME))
         return False
-
-    # Record partial matches.
-    partials = []
 
     # Search our inventory for the target item.
     for itemid in console.user["inventory"]:
@@ -81,10 +78,6 @@ def COMMAND(console, args):
                               item=itemid)
             console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
             continue
-
-        # Check for partial matches.
-        if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
-            partials.append(thisitem["name"].lower())
 
         # If we find the correct item, give it to the named user.
         if target in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == target:
@@ -115,29 +108,15 @@ def COMMAND(console, args):
             # Finished.
             return True
 
-    # We didn't find the requested item.
-    # We got exactly one partial match. Assume that one.
-    if len(target) >= 3 and len(partials) == 1:
-        argstemp = partials[0].split(' ')
+    # We didn't find the requested item. Check for a partial match.
+    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=True)
+    if partial:
+        argstemp = partial
         argstemp.insert(0, args[0].lower())
         return COMMAND(console, argstemp)
-
-    # We got up to 5 partial matches. List them.
-    elif partials and len(partials) <= 5:
-        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
-        return False
-
-    # We got too many matches.
-    elif len(partials) > 5:
-        console.msg("{0}: Too many possible matches.".format(NAME))
-        return False
 
     # Maybe the user accidentally typed "give item <item>".
     if args[0].lower() == "item":
         console.msg("{0}: Maybe you meant \"give {1}\".".format(NAME, ' '.join(args[1:])))
-
-    # Really nothing.
-    else:
-        console.msg("{0}: No such item in your inventory: {1}".format(NAME, ' '.join(args[1:])))
 
     return False

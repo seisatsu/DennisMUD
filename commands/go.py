@@ -30,8 +30,9 @@ CATEGORIES = ["exploration"]
 ALIASES = ["exit", "exit through", "go into", "go through", "leave", "leave through"]
 SPECIAL_ALIASES = ['>']
 USAGE = "go [exit]"
-DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Works by exit name or ID.
+DESCRIPTION = """Take the exit called <exit> to wherever it may lead.
 
+You may use a full or partial item name, or the item ID.
 If no argument is given, list the exits in the current room instead.
 If the exit is locked, you will not be able to enter without a key.
 Wizards can enter any locked exit.
@@ -78,15 +79,9 @@ def COMMAND(console, args):
         console.msg("{0}: Very funny.".format(NAME))
         return False
 
-    # Record partial matches.
-    partials = []
-
     # Iterate through all of the exits in the room, searching for the one that was asked for.
     exits = thisroom["exits"]
     for ex in range(len(exits)):
-        # Check for partial matches.
-        if target in exits[ex]["name"].lower() or target.replace("the ", "", 1) in exits[ex]["name"].lower():
-            partials.append(exits[ex]["name"].lower())
 
         # Check for name or id match.
         if exits[ex]["name"].lower() == target.lower() or str(ex) == target:
@@ -203,22 +198,9 @@ def COMMAND(console, args):
             # Finished.
             return True
 
-    # We didn't find the requested exit.
-    # We got exactly one partial match. Assume that one.
-    if len(target) >= 3 and len(partials) == 1:
-        return COMMAND(console, partials[0].split(' '))
+    # We didn't find the requested exit. Check for a partial match.
+    partial = COMMON.match_partial(NAME, console, target, "exit")
+    if partial:
+        return COMMAND(console, partial)
 
-    # We got up to 5 partial matches. List them.
-    elif partials and len(partials) <= 5:
-        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
-        return False
-
-    # We got too many matches.
-    elif len(partials) > 5:
-        console.msg("{0}: Too many possible matches.".format(NAME))
-        return False
-
-    # Really nothing.
-    else:
-        console.msg("{0}: No such exit: {1}".format(NAME, ' '.join(args)))
     return False

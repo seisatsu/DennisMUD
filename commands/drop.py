@@ -28,9 +28,10 @@
 NAME = "drop"
 CATEGORIES = ["items"]
 USAGE = "drop <item>"
-DESCRIPTION = """Drop the item called <item> into the current room. Works by name or ID.
+DESCRIPTION = """Drop the item called <item> into the current room.
 
-Duplified items will vanish when you drop them, unless you own them.
+You may use a full or partial item name, or the item ID.
+Duplified items will vanish when you drop them, unless you are an owner.
 
 Ex. `drop crystal ball`
 Ex2. `drop 4`"""
@@ -52,9 +53,6 @@ def COMMAND(console, args):
         console.msg("{0}: Very funny.".format(NAME))
         return False
 
-    # Record partial matches.
-    partials = []
-
     # Search our inventory for the target item.
     for itemid in console.user["inventory"]:
         # Lookup the target item and perform item checks.
@@ -64,10 +62,6 @@ def COMMAND(console, args):
                               item=itemid)
             console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
             continue
-
-        # Check for partial matches.
-        if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
-            partials.append(thisitem["name"].lower())
 
         # Check for name or id match. Also check if the user prepended "the ". Figure out how to drop it.
         if target in [thisitem["name"].lower(), "the " + thisitem["name"].lower()] or str(thisitem["id"]) == target:
@@ -98,27 +92,13 @@ def COMMAND(console, args):
             # Finished.
             return True
 
-    # We didn't find the requested item.
-    # We got exactly one partial match. Assume that one.
-    if len(target) >= 3 and len(partials) == 1:
-        return COMMAND(console, partials[0].split(' '))
-
-    # We got up to 5 partial matches. List them.
-    elif partials and len(partials) <= 5:
-        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
-        return False
-
-    # We got too many matches.
-    elif len(partials) > 5:
-        console.msg("{0}: Too many possible matches.".format(NAME))
-        return False
+    # We didn't find the requested item. Check for a partial match.
+    partial = COMMON.match_partial(NAME, console, target, "item", room=False, inventory=True)
+    if partial:
+        return COMMAND(console, partial)
 
     # Maybe the user accidentally typed "drop item <item>".
     if args[0].lower() == "item":
         console.msg("{0}: Maybe you meant \"drop {1}\".".format(NAME, ' '.join(args[1:])))
-
-    # Really nothing.
-    else:
-        console.msg("{0}: No such item in your inventory: {1}".format(NAME, ' '.join(args)))
 
     return False

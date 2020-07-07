@@ -52,7 +52,7 @@ def COMMAND(console, args):
         return False
 
     # Make sure the item is currently paired to a room.
-    if not thisitem["telekey"]:
+    if thisitem["telekey"] is None:
         console.msg("{0}: This item is already not paired to a room.".format(NAME))
         return False
 

@@ -28,7 +28,7 @@
 NAME = "duplify item"
 CATEGORIES = ["items"]
 USAGE = "duplify item <item_id>"
-DESCRIPTION = """Duplify the item with ID <item>, so that any number of people can pick it up.
+DESCRIPTION = """Duplify the item with <item_id>, so that any number of people can pick it up.
 
 When a user besides the owner `get`s a duplified item, it doesn't disappear from the room it is in.
 Any number of users may be holding the duplified item.

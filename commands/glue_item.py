@@ -28,7 +28,7 @@
 NAME = "glue item"
 CATEGORIES = ["items"]
 USAGE = "glue item <item_id>"
-DESCRIPTION = """Glue the item with ID <item_id>, so that once dropped, only owners can pick it up.
+DESCRIPTION = """Glue the item <item_id>, so that once dropped, only owners can pick it up.
 
 You must own the item and it must be in your inventory.
 You can unglue a glued item with the `unglue item` command.

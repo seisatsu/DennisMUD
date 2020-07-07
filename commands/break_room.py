@@ -29,9 +29,10 @@ NAME = "break room"
 CATEGORIES = ["rooms"]
 ALIASES = ["delete room", "destroy room", "remove room"]
 USAGE = "break room <room_id>"
-DESCRIPTION = """Break the room with ID <room_id> if you are its owner.
+DESCRIPTION = """Break the room with ID <room_id>.
 
 You must be an owner of the room, and no one can be in the room, including yourself.
+Offline users will go to room 0 upon login. Items in the room will return to their primary owners.
 Wizards can break any room.
 
 Ex. `break room 5` to break the room with ID 5."""

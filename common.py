@@ -710,3 +710,118 @@ def format_item(NAME, item, upper=False):
         return "The {0}".format(item)
     else:
         return "the {0}".format(item)
+
+
+def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True):
+    """Find exits, items, or users matching a partial string target in the current room or user's inventory.
+
+    :param NAME: The NAME field from the command module.
+    :param console: The calling user's console.
+    :param target: The partial string to search for.
+    :param objtype: One of "exit", "item", "user".
+    :param room: Whether to search the current room when objtype is "item". Defaults to True.
+    :param inventory: Whether to search the user's inventory when objtype is "item". Defaults to True.
+    :param message: Whether to give a standard failure message if no partials were found. Defaults to True.
+
+    :return: Matching name split into segments if one match found, None if several or no matches found.
+    """
+    # Look up the target room.
+    thisroom = console.database.room_by_id(console.user["room"])
+
+    # We couldn't find the current room. Fail.
+    if not thisroom:
+        console.log.error("Current room does not exist for user: {user} ({room})", user=console.user["name"],
+                          room=console.user["room"])
+        console.msg("{0}: ERROR: The current room does not exist. Performing emergency maneuver.".format(NAME))
+        console.user["room"] = 0
+        console.database.upsert_user(console.user)
+        console.shell.call(console, "xyzzy", [])
+
+    if objtype not in ["exit", "item", "user"]:
+        console.log.error("Detected invalid objtype in COMMON.match_partial from command: {name}", name=NAME)
+        console.msg("{0}: ERROR: Internal command error.".format(NAME))
+        return None
+
+    # Record partial matches.
+    partials = []
+
+    # Search for a target exit.
+    if objtype == "exit":
+        exits = thisroom["exits"]
+        for ex in range(len(exits)):
+            # Check for partial matches.
+            if target in exits[ex]["name"].lower() or target.replace("the ", "", 1) in exits[ex]["name"].lower():
+                partials.append(exits[ex]["name"].lower())
+
+    # Search for a target item.
+    elif objtype == "item":
+        # No locations were enabled for the search.
+        if not room and not inventory:
+            console.log.error("No locations chosen for item search in COMMON.match_partial from command: {name}",
+                              name=NAME)
+            console.msg("{0}: ERROR: Internal command error.".format(NAME))
+            return None
+
+        if room:
+            for itemid in thisroom["items"]:
+                # Lookup the target item and perform item checks. We have to do this to get the item names.
+                thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
+                if not thisitem:
+                    console.log.error("Item referenced in room does not exist: {room} :: {item}",
+                                      room=console.user["room"], item=itemid)
+                    console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
+                    continue
+
+                # Check for partial matches.
+                if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
+                    partials.append(thisitem["name"].lower())
+
+        if inventory:
+            for itemid in console.user["inventory"]:
+                # Lookup the target item and perform item checks. We have to do this to get the item names.
+                thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
+                if not thisitem:
+                    console.log.error("Item referenced in room does not exist: {room} :: {item}",
+                                      room=console.user["room"],
+                                      item=itemid)
+                    console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
+                    continue
+
+                # Check for partial matches.
+                if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
+                    partials.append(thisitem["name"].lower())
+
+    # Search for a target user.
+    elif objtype == "user":
+        for user in thisroom["users"]:
+            if target in user:
+                partials.append(user)
+
+    # We found exactly one match from a decent sized target. Return it.
+    if len(target) >= 3 and len(partials) == 1:
+        return partials[0].lower().split(' ')
+
+    # We got up to 5 partial matches. List them.
+    elif partials and len(partials) <= 5:
+        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
+        return None
+
+    # We got too many matches.
+    elif len(partials) > 5:
+        console.msg("{0}: Too many possible matches.".format(NAME))
+        return None
+
+    # Give a failure message.
+    elif message:
+        if objtype == "exit":
+            console.msg("{0}: No such exit: {1}".format(NAME, target))
+        elif objtype == "item":
+            if room and inventory:
+                console.msg("{0}: No such item is here: {1}".format(NAME, target))
+            elif room:
+                console.msg("{0}: No such item in this room: {1}".format(NAME, target))
+            elif inventory:
+                console.msg("{0}: No such item in your inventory: {1}".format(NAME, target))
+        elif objtype == "user":
+            console.msg("{0}: No such user in this room: {1}".format(NAME, target))
+        return None

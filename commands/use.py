@@ -55,9 +55,6 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Record partial matches.
-    partials = []
-
     # Search for the item in our inventory.
     for itemid in console.user["inventory"]:
         thisitem = console.database.item_by_id(itemid)
@@ -67,10 +64,6 @@ def COMMAND(console, args):
                               user=console.user["name"], item=itemid)
             console.msg("{0}: ERROR: Item referenced in your inventory does not exist: {1}".format(NAME, itemid))
             continue
-
-        # Check for partial matches.
-        if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
-            partials.append(thisitem["name"].lower())
 
         # Check for name or id match.
         if thisitem["name"].lower() == target or str(thisitem["id"]) == target:
@@ -87,10 +80,6 @@ def COMMAND(console, args):
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
                 continue
-
-            # Check for partial matches.
-            if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
-                partials.append(thisitem["name"].lower())
 
             # Check for name or id match.
             if thisitem["name"].lower() == target or str(thisitem["id"]) == target:
@@ -117,11 +106,11 @@ def COMMAND(console, args):
 
         # This item has no custom action. Format and broadcast the default item action.
         else:
-            action = "{0} used {1}.".format(console.user["nick"], itemref["name"])
+            action = "{0} used {1}.".format(console.user["nick"], COMMON.format_item(NAME, itemref["name"]))
             console.shell.broadcast_room(console, action)
 
         # The item is a telekey. Prepare for teleportation.
-        if itemref["telekey"]:
+        if itemref["telekey"] is not None:
             # Lookup the destination room and perform room checks.
             destroom = COMMON.check_room(NAME, console, itemref["telekey"])
 
@@ -166,28 +155,14 @@ def COMMAND(console, args):
         # Finished.
         return True
 
-    # We didn't find the requested item.
-    # We got exactly one partial match. Assume that one.
-    if len(target) >= 3 and len(partials) == 1:
-        return COMMAND(console, partials[0].split(' '))
-
-    # We got up to 5 partial matches. List them.
-    elif partials and len(partials) <= 5:
-        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
-        return False
-
-    # We got too many matches.
-    elif len(partials) > 5:
-        console.msg("{0}: Too many possible matches.".format(NAME))
-        return False
+    # We didn't find the requested item. Check for a partial match.
+    partial = COMMON.match_partial(NAME, console, target, "item", room=True, inventory=True)
+    if partial:
+        return COMMAND(console, partial)
 
     # Maybe the user accidentally typed "use item <item>".
     if args[0].lower() == "item":
         console.msg("{0}: Maybe you meant \"use {1}\".".format(NAME, ' '.join(args[1:])))
-
-    # Really nothing.
-    else:
-        console.msg("{0}: No such item is here: {1}".format(NAME, ' '.join(args)))
 
     return False
 
