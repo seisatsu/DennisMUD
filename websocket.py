@@ -66,6 +66,13 @@ class ServerProtocol(WebSocketServerProtocol):
             self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=passcheck)
         else:
             self.factory.log.info("Client {peer} sending message: {payload}", peer=self.peer, payload=payload)
+
+        # Logout on receiving "quit".
+        if payload == b"quit":
+            payload = b"logout"
+            self.factory.router.shell.command(self.factory.router[self.peer]["console"], payload.decode('utf-8'))
+            return
+
         # Error handling and reporting.
         try:
             self.factory.router.shell.command(self.factory.router[self.peer]["console"], payload.decode('utf-8'))
