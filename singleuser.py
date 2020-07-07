@@ -209,10 +209,14 @@ def main():
     shell = command_shell
 
     # Initialize the command console, and log in as the root user. Promote to wizard if it was somehow demoted.
-    # Create the "console" alias for use in Debug Mode.
+    # Create the "console" alias for use in Debug Mode. Also add us to the current room.
     dennis = _console.Console(router, command_shell, "<world>", dbman, log)
     dennis.user = dbman.user_by_name("<world>")
     dbman._users_online.append("<world>")
+    thisroom = dbman.room_by_id(dennis.user["room"])
+    if thisroom and "<world>" not in thisroom["users"]:
+        thisroom["users"].append("<world>")
+        dbman.upsert_room(thisroom)
     if not dennis.user["wizard"]:
         dennis.user["wizard"] = True
         dbman.upsert_user(dennis.user)

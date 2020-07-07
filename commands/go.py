@@ -27,7 +27,7 @@
 
 NAME = "go"
 CATEGORIES = ["exploration"]
-ALIASES = ["exit"]
+ALIASES = ["exit", "exit through", "go into", "go through", "leave", "leave through"]
 SPECIAL_ALIASES = ['>']
 USAGE = "go [exit]"
 DESCRIPTION = """Take the exit called <exit> to wherever it may lead. Works by exit name or ID.
@@ -73,13 +73,20 @@ def COMMAND(console, args):
         return True
 
     # Get exit name/id.
-    name = ' '.join(args)
+    target = ' '.join(args)
+
+    # Record partial matches.
+    partials = []
 
     # Iterate through all of the exits in the room, searching for the one that was asked for.
     exits = thisroom["exits"]
     for ex in range(len(exits)):
+        # Check for partial matches.
+        if target.lower() in exits[ex]["name"].lower():
+            partials.append(exits[ex]["name"].lower())
+
         # Check for name or id match.
-        if exits[ex]["name"].lower() == name.lower() or str(ex) == name:
+        if exits[ex]["name"].lower() == target.lower() or str(ex) == target:
             # Check if the destination room exists, otherwise give an error and fail.
             destroom = COMMON.check_room(NAME, console, roomid=exits[ex]["dest"], reason=False)
             if not destroom:
@@ -194,5 +201,21 @@ def COMMAND(console, args):
             return True
 
     # We didn't find the requested exit.
-    console.msg("{0}: No such exit: {1}".format(NAME, ' '.join(args)))
+    # We got exactly one partial match. Assume that one.
+    if len(target) >= 3 and len(partials) == 1:
+        return COMMAND(console, partials[0].split(' '))
+
+    # We got up to 5 partial matches. List them.
+    elif partials and len(partials) <= 5:
+        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
+        return False
+
+    # We got too many matches.
+    elif len(partials) > 5:
+        console.msg("{0}: Too many possible matches.".format(NAME))
+        return False
+
+    # Really nothing.
+    else:
+        console.msg("{0}: No such exit: {1}".format(NAME, ' '.join(args)))
     return False

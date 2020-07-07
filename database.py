@@ -452,7 +452,7 @@ class DatabaseManager:
         :return: True
         """
         newuser = {
-            "name": self.defaults["first_user"]["name"],
+            "name": "<world>",
             "nick": self.defaults["first_user"]["nick"],
             "desc": self.defaults["first_user"]["desc"],
             "passhash": "0",
