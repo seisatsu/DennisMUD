@@ -27,6 +27,7 @@
 
 NAME = "list users"
 CATEGORIES = ["users"]
+ALIASES = ["who"]
 USAGE = "list users"
 DESCRIPTION = """List all online users in the world.
 
