@@ -219,7 +219,7 @@ class Shell:
                 suggestions = []
                 for segment in line:
                     for possible in self._commands.keys():
-                        if possible in segment.lower() or segment.lower() in possible:
+                        if (possible in segment.lower() or segment.lower() in possible) and len(possible) > 3:
                             suggestions.append(possible)
                 if suggestions:
                     console.msg("Possibly related commands: {0}".format(', '.join((sorted(suggestions)))))
@@ -294,10 +294,10 @@ class Shell:
                 suggestions = []
                 for segment in line.lower().split(' '):
                     for possible in self._help.keys():
-                        if possible in segment or segment in possible:
+                        if (possible in segment or segment in possible) and len(possible) > 3:
                             cats.append(possible)
                     for possible in self._commands.keys():
-                        if possible in segment or segment in possible:
+                        if (possible in segment or segment in possible) and len(possible) > 3:
                             suggestions.append(possible)
                 if cats:
                     console.msg("help: Possibly related categories: {0}".format(', '.join(sorted(cats))))
