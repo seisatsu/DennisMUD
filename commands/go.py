@@ -73,7 +73,10 @@ def COMMAND(console, args):
         return True
 
     # Get exit name/id.
-    target = ' '.join(args)
+    target = ' '.join(args).lower()
+    if target == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Record partial matches.
     partials = []
@@ -82,7 +85,7 @@ def COMMAND(console, args):
     exits = thisroom["exits"]
     for ex in range(len(exits)):
         # Check for partial matches.
-        if target.lower() in exits[ex]["name"].lower():
+        if target in exits[ex]["name"].lower() or target.replace("the ", "", 1) in exits[ex]["name"].lower():
             partials.append(exits[ex]["name"].lower())
 
         # Check for name or id match.

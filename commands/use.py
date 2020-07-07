@@ -28,9 +28,9 @@
 NAME = "use"
 CATEGORIES = ["items"]
 USAGE = "use <item>"
-DESCRIPTION = """Broadcast the custom action, if any, for the <item> in the current room or your inventory.
+DESCRIPTION = """Use the item called <item> in your inventory or the room. Works by item name or ID.
 
-This will hopefully do more some day.
+This will broadcast an action, and might teleport you if the item is a telekey.
 
 Ex. `use 4` to show the custom action for item 4.
 Ex2. `use Crystal Ball` to show the custom action for the item named "Crystal Ball"."""
@@ -42,84 +42,98 @@ def COMMAND(console, args):
         return False
 
     # Get item name or id.
-    itemname = ' '.join(args)
+    target = ' '.join(args).lower()
+    if target == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Reference to whatever item we do or don't find in the room.
-    targetitem = None
+    itemref = None
 
     # Lookup the current room and perform room checks.
     thisroom = COMMON.check_room(NAME, console)
     if not thisroom:
         return False
 
+    # Record partial matches.
+    partials = []
+
     # Search for the item in our inventory.
     for itemid in console.user["inventory"]:
-        testitem = console.database.item_by_id(itemid)
+        thisitem = console.database.item_by_id(itemid)
         # A reference was found to a nonexistent item. Report this and continue searching.
-        if not testitem:
+        if not thisitem:
             console.log.error("Item referenced in user inventory does not exist: {user} :: {item}",
                               user=console.user["name"], item=itemid)
             console.msg("{0}: ERROR: Item referenced in your inventory does not exist: {1}".format(NAME, itemid))
             continue
 
+        # Check for partial matches.
+        if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
+            partials.append(thisitem["name"].lower())
+
         # Check for name or id match.
-        if testitem["name"].lower() == itemname.lower() or str(testitem["id"]) == itemname:
-            targetitem = testitem
+        if thisitem["name"].lower() == target or str(thisitem["id"]) == target:
+            itemref = thisitem
             break
 
     # We didn't find it in our inventory, so search for the item in the current room.
-    if not targetitem:
+    if not itemref:
         for itemid in thisroom["items"]:
-            testitem = console.database.item_by_id(itemid)
+            thisitem = console.database.item_by_id(itemid)
             # A reference was found to a nonexistent item. Report this and continue searching.
-            if not testitem:
+            if not thisitem:
                 console.log.error("Item referenced in room does not exist: {room} :: {item}", room=console.user["room"],
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
                 continue
 
+            # Check for partial matches.
+            if target in thisitem["name"].lower() or target.replace("the ", "", 1) in thisitem["name"].lower():
+                partials.append(thisitem["name"].lower())
+
             # Check for name or id match.
-            if testitem["name"].lower() == itemname.lower() or str(testitem["id"]) == itemname:
-                targetitem = testitem
+            if thisitem["name"].lower() == target or str(thisitem["id"]) == target:
+                itemref = thisitem
                 break
 
     # The item was found. See what it does.
-    if targetitem:
+    if itemref:
         # This item has a custom action.
-        if targetitem["action"]:
+        if itemref["action"]:
             # Format a custom item action containing a player tag.
-            if "%player%" in targetitem["action"]:
-                action = targetitem["action"].replace("%player%", console.user["nick"])
+            if "%player%" in itemref["action"]:
+                action = itemref["action"].replace("%player%", console.user["nick"])
 
             # Format a regular custom item action.
             else:
-                if targetitem["action"].startswith("'s"):
-                    action = "{0}{1}".format(console.user["nick"], targetitem["action"])
+                if itemref["action"].startswith("'s"):
+                    action = "{0}{1}".format(console.user["nick"], itemref["action"])
                 else:
-                    action = "{0} {1}".format(console.user["nick"], targetitem["action"])
+                    action = "{0} {1}".format(console.user["nick"], itemref["action"])
 
             # Broadcast the custom item action.
             console.shell.broadcast_room(console, action)
 
         # This item has no custom action. Format and broadcast the default item action.
         else:
-            action = "{0} used {1}.".format(console.user["nick"], targetitem["name"])
+            action = "{0} used {1}.".format(console.user["nick"], itemref["name"])
             console.shell.broadcast_room(console, action)
 
         # The item is a telekey. Prepare for teleportation.
-        if targetitem["telekey"]:
+        if itemref["telekey"]:
             # Lookup the destination room and perform room checks.
-            destroom = COMMON.check_room(NAME, console, targetitem["telekey"])
+            destroom = COMMON.check_room(NAME, console, itemref["telekey"])
 
             # The telekey is paired to a nonexistent room. Report and ignore it.
             if not destroom:
                 console.msg(
                     "{0}: ERROR: This telekey is paired to a nonexistent room: {1} -> {2}".format(NAME,
-                                                                                                  targetitem["id"],
-                                                                                                  targetitem["telekey"]
+                                                                                                  itemref["id"],
+                                                                                                  itemref["telekey"]
                                                                                                   ))
-                console.log.error("Telekey is paired to a nonexistent room: {item} -> {room}", item=targetitem["id"],
-                                  room=targetitem["telekey"])
+                console.log.error("Telekey is paired to a nonexistent room: {item} -> {room}", item=itemref["id"],
+                                  room=itemref["telekey"])
 
             # Proceed with teleportation.
             else:
@@ -149,10 +163,31 @@ def COMMAND(console, args):
                 # Take a look around.
                 console.shell.command(console, "look", False)
 
-            # Finished.
-            return True
+        # Finished.
+        return True
 
-    # We didn't find anything.
-    else:
-        console.msg("{0}: No such item is here: {1}".format(NAME, itemname))
+    # We didn't find the requested item.
+    # We got exactly one partial match. Assume that one.
+    if len(target) >= 3 and len(partials) == 1:
+        return COMMAND(console, partials[0].split(' '))
+
+    # We got up to 5 partial matches. List them.
+    elif partials and len(partials) <= 5:
+        console.msg("{0}: Did you mean one of: {1}".format(NAME, ', '.join(partials)))
         return False
+
+    # We got too many matches.
+    elif len(partials) > 5:
+        console.msg("{0}: Too many possible matches.".format(NAME))
+        return False
+
+    # Maybe the user accidentally typed "use item <item>".
+    if args[0].lower() == "item":
+        console.msg("{0}: Maybe you meant \"use {1}\".".format(NAME, ' '.join(args[1:])))
+
+    # Really nothing.
+    else:
+        console.msg("{0}: No such item is here: {1}".format(NAME, ' '.join(args)))
+
+    return False
+
