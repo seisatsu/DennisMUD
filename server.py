@@ -34,18 +34,18 @@ if sys.version_info[0] != 3:
     print("Not Starting: Dennis requires Python 3.")
     sys.exit(1)
 
-import console
-import database
-import shell
-import telnet
-import traceback
-import websocket
+from lib import console
+from lib import database
+from lib import shell
+from lib import telnet
+from lib import websocket
 
 import html
 import json
 import os
 import shutil
 import signal
+import traceback
 
 from twisted.internet import reactor, ssl
 from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \

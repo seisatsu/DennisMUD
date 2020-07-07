@@ -32,15 +32,15 @@ if sys.version_info[0] != 3:
     print("Not Starting: Dennis requires Python 3")
     sys.exit(1)
 
-import console as _console
-import database as _database
-import shell as _shell
+from lib import console as _console
+from lib import database as _database
+from lib import shell as _shell
 
 import json
 import os
 import pdb
-import traceback
 import shutil
+import traceback
 
 from prompt_toolkit import prompt
 from prompt_toolkit import PromptSession

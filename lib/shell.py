@@ -32,7 +32,7 @@ import string
 import sys
 
 import builtins
-import common
+from lib import common
 builtins.COMMON = common
 
 from twisted.logger import Logger
