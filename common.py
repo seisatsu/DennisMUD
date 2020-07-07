@@ -684,8 +684,12 @@ def posture(NAME, console, pname=None, action=None, pitem=None):
             # Finished.
             return True
 
-    # We didn't find anything to lay on.
-    console.msg("{0}: No such item in this room: {1}".format(NAME, pitem))
+    # We didn't find anything to lay on. Try searching for partial matches.
+    partial = match_partial(NAME, console, pitem, "item", inventory=False)
+    if partial:
+        return posture(NAME, console, pname, action, ' '.join(partial))
+
+    # Really nothing.
     return False
 
 
@@ -798,7 +802,7 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
                 partials.append(user)
 
     # We found exactly one match from a decent sized target. Return it.
-    if len(target) >= 3 and len(partials) == 1:
+    if len(partials) == 1:
         return partials[0].lower().split(' ')
 
     # We got up to 5 partial matches. List them.
@@ -808,7 +812,7 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
 
     # We got too many matches.
     elif len(partials) > 5:
-        console.msg("{0}: Too many possible matches.".format(NAME))
+        console.msg("{0}: Too many possible matches for {1}.".format(NAME, objtype))
         return None
 
     # Give a failure message.

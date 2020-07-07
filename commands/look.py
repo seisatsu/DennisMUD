@@ -320,7 +320,7 @@ def COMMAND(console, args):
         # We didn't find anything by that name. See if we found partial matches.
         if not found_something:
             # We got exactly one partial match. Assume that one.
-            if len(target) >= 3 and len(partials) == 1:
+            if len(partials) == 1:
                 return COMMAND(console, partials[0].split(' '))
 
             # We got up to 5 partial matches. List them.
