@@ -96,15 +96,15 @@ def COMMAND(console, args):
     newexit = {
         "dest": destroomid,
         "name": exitname,
-        "owners": [console.user["name"]],
         "desc": "",
+        "owners": [console.user["name"]],
+        "key": None,
+        "key_hidden": False,
+        "locked": False,
         "action": {
             "go": "",
             "locked": ""
-        },
-        "key": None,
-        "key_hidden": False,
-        "locked": False
+        }
     }
     thisroom["exits"].append(newexit)
     console.database.upsert_room(thisroom)

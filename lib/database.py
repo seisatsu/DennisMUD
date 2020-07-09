@@ -430,10 +430,10 @@ class DatabaseManager:
         :return: True
         """
         newroom = {
-            "owners": ["<world>"],
             "id": 0,
             "name": self.defaults["first_room"]["name"],
             "desc": self.defaults["first_room"]["desc"],
+            "owners": ["<world>"],
             "users": [self.defaults["first_user"]["name"]],
             "exits": [],
             "entrances": [],
@@ -458,15 +458,15 @@ class DatabaseManager:
             "passhash": "0",
             "room": 0,
             "inventory": [],
+            "pronouns": "neutral",
+            "wizard": True,
             "autolook": {
                 "enabled": self.defaults["first_user"]["autolook"]["enabled"]
             },
             "chat": {
                 "enabled": self.defaults["first_user"]["chat"]["enabled"],
                 "ignored": []
-            },
-            "pronouns": "neutral",
-            "wizard": True
+            }
         }
         self.users.insert(newuser)
         return True

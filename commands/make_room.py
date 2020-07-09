@@ -75,10 +75,10 @@ def COMMAND(console, args):
 
     # Create our new room with an ID one higher than the last room, and save the room.
     newroom = {
-        "owners": [console.user["name"]],
         "id": lastroom + 1,
         "name": roomname,
         "desc": "",
+        "owners": [console.user["name"]],
         "users": [],
         "exits": [],
         "entrances": [],

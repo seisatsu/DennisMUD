@@ -1,4 +1,4 @@
 Common Tasks Library
 ====================
-.. automodule:: common
+.. automodule:: lib.common
    :members:

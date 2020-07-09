@@ -6,7 +6,7 @@
 Dennis MUD User Manual
 ======================
 
-This documentation is unfinished.
+This documentation is unfinished. Dennis MUD is alpha software, and undergoes frequent changes. Please expect and report bugs, and thank you for your interest in this project! Bug reports and feature requests can be made on the GitHub page linked at the bottom.
 
 .. toctree::
    :maxdepth: 2

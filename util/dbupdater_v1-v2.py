@@ -36,7 +36,7 @@ import sys
 from tinydb import Query
 
 try:
-    import database
+    from lib import database
 except:
     print("Can't find DatabaseManager. You should move this script to the Dennis root directory.")
     sys.exit(1)

@@ -73,15 +73,15 @@ def COMMAND(console, args):
         "passhash": hashlib.sha256(args[1].encode()).hexdigest(),
         "room": 0,
         "inventory": [],
+        "pronouns": "neutral",
+        "wizard": False,
         "autolook": {
             "enabled": console.database.defaults["users"]["autolook"]["enabled"]
         },
         "chat": {
             "enabled": console.database.defaults["users"]["chat"]["enabled"],
             "ignored": []
-        },
-        "pronouns": "neutral",
-        "wizard": False
+        }
     }
     console.database.upsert_user(newuser)
 

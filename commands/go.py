@@ -68,7 +68,7 @@ def COMMAND(console, args):
 
         # There were no exits.
         else:
-            console.msg("{0}: No exits in this room.".format(NAME))
+            console.msg("{0}: There are no exits in this room. Use `xyzzy` to return to the first room.".format(NAME))
 
         # Finished.
         return True
