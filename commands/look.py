@@ -84,7 +84,7 @@ def COMMAND(console, args):
         if exitlist:
             console.msg("Exits: {0}".format(", ".join(exitlist)))
         else:
-            console.msg("There are no exits in this room. Use `xyzzy` to return to the first room.")
+            console.msg("No exits in this room. Make one or use `xyzzy` to return to the first room.")
         return True
 
     # There were arguments. Figure out what in the room they might be referring to.
