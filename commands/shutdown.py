@@ -31,13 +31,13 @@ import time
 
 NAME = "shutdown"
 CATEGORIES = ["wizard"]
-USAGE = "shutdown"
-DESCRIPTION = "(WIZARDS ONLY) Shut down the server."
+USAGE = "shutdown [seconds]"
+DESCRIPTION = "(WIZARDS ONLY) Shut down the server, with optional seconds argument."
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=0, wizard=True):
+    if not COMMON.check(NAME, console, args, argmin=0, argmax=1, wizard=True):
         return False
 
     # Make sure we are not already shutting down.
@@ -45,11 +45,19 @@ def COMMAND(console, args):
         console.msg("{0}: Already shutting down.".format(NAME))
         return False
 
+    # Take seconds argument if given. Otherwise use the default.
+    if len(args) == 1:
+        # Perform argument type checks and casts.
+        seconds = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+        if seconds is None:
+            return False
+    else:
+        seconds = console.router._config["shutdown_delay"]
+
     # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.
     if hasattr(console.router, "_reactor"):
-        console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(
-            console.router._config["shutdown_delay"]))
-        console.router._reactor.callLater(console.router._config["shutdown_delay"], console.router._reactor.stop)
+        console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(seconds))
+        console.router._reactor.callLater(seconds, console.router._reactor.stop)
         console.router.shutting_down = True
     else:
         os.kill(os.getpid(), signal.SIGTERM)
