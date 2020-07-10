@@ -801,6 +801,10 @@ def match_partial(NAME, console, target, objtype, room=True, inventory=True, mes
             if target in user:
                 partials.append(user)
 
+    # Eliminate duplicate matches.
+    if partials:
+        partials = list(dict.fromkeys(partials))
+
     # We found exactly one match from a decent sized target. Return it.
     if len(partials) == 1:
         return partials[0].lower().split(' ')
