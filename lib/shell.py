@@ -87,10 +87,12 @@ class Shell:
                 command_path = os.path.join(os.getcwd(), COMMAND_DIR, command)
                 cname = command[:-3].replace('_', ' ')
 
+                # Give an error if another command with the same name is already loaded.
+                self._log.error("A command by this name was loaded twice: {cname}", cname=cname)
+
                 # Different import code recommended for different Python versions.
                 if sys.version_info[1] < 5:
-                    self._commands[cname] = \
-                        importlib.machinery.SourceFileLoader(cname, command_path).load_module()
+                    self._commands[cname] = importlib.machinery.SourceFileLoader(cname, command_path).load_module()
                 else:
                     spec = importlib.util.spec_from_file_location(cname, command_path)
                     mod = importlib.util.module_from_spec(spec)
