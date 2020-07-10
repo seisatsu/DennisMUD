@@ -25,7 +25,7 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "pair key"
+NAME = "pair telekey"
 CATEGORIES = ["rooms", "items"]
 USAGE = "pair telekey <item> <room>"
 DESCRIPTION = """Make the <item> teleport its user to <room> when used.
