@@ -777,6 +777,13 @@ def broadcast_action(NAME, console, action):
             action = action.replace("%themselves%", "herself")
         elif console.user["pronouns"] == "male":
             action = action.replace("%themselves%", "himself")
+    if "%s%" in action:
+        if console.user["pronouns"] == "neutral":
+            action = action.replace("%s%", '')
+        elif console.user["pronouns"] == "female":
+            action = action.replace("%s%", "s")
+        elif console.user["pronouns"] == "male":
+            action = action.replace("%s%", "s")
 
     # Decide whether to message the user or broadcast the action.
     if "%noaction%" in action:
