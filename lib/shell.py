@@ -88,7 +88,8 @@ class Shell:
                 cname = command[:-3].replace('_', ' ')
 
                 # Give an error if another command with the same name is already loaded.
-                self._log.error("A command by this name was loaded twice: {cname}", cname=cname)
+                if cname in self._commands:
+                    self._log.error("A command by this name was loaded twice: {cname}", cname=cname)
 
                 # Different import code recommended for different Python versions.
                 if sys.version_info[1] < 5:
@@ -111,7 +112,7 @@ class Shell:
                     for special_alias in self._commands[cname].SPECIAL_ALIASES:
                         self._special_aliases[special_alias] = cname
 
-        # Check for overlapping command names.
+        # Check for partially overlapping command names.
         found_overlaps = []
         for cname in self._commands:
             for cname2 in self._commands:
