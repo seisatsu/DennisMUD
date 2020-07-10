@@ -28,10 +28,15 @@
 NAME = "decorate lock"
 CATEGORIES = ["exits"]
 USAGE = "decorate lock <exit_id> <action>"
-DESCRIPTION = """Set a custom <action> to display when a player fails to use the locked exit <exit_id>.
+DESCRIPTION = """Set a custom <action> to broadcast when a player fails to use the locked exit <exit_id>.
 
+Everyone in the current room will see the action text when it is broadcast.
 By default, the action text is shown following the player's nickname and one space.
-To place the player's name elsewhere in the text, use the %player% marker.
+If the action starts with 's then the space is removed to allow possessive grammar.
+To place the player's name elsewhere in the text, use the "%player%" marker.
+To just message the player and not include their name, start the text with "%noaction%".
+The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
+The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
 You must own the locked exit or its room in order to decorate it.
 You can remove the custom action from a locked exit with the `undecorate lock` command.
 Wizards can decorate any lock.

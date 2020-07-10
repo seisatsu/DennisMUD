@@ -716,6 +716,78 @@ def format_item(NAME, item, upper=False):
         return "the {0}".format(item)
 
 
+def broadcast_action(NAME, console, action):
+    """Format and broadcast an action, processing any relevant tags.
+
+    :param NAME: The NAME field from the command module.
+    :param console: The calling user's console.
+    :param action: The action text to format and broadcast.
+    """
+
+    # Format the %player% tag.
+    if "%player%" in action:
+        action = action.replace("%player%", console.user["nick"])
+    if action.startswith("'s") and "%noaction%" not in action:
+        action = "{0}{1}".format(console.user["nick"], action)
+    elif "%noaction%" not in action:
+        action = "{0} {1}".format(console.user["nick"], action)
+
+    # Make sure the player has a supported pronoun. Otherwise, set them to neutral.
+    if console.user["pronouns"] not in ["neutral", "female", "male"]:
+        console.log.error("Unsupported pronouns for user, setting to neutral: {username} :: {pronouns}",
+                          username=console.user["name"],
+                          pronouns=console.user["pronouns"])
+        console.msg("{0}: ERROR: Unsupported pronouns, setting to neutral: {1}".format(NAME, console.user["pronouns"]))
+        console.user["pronouns"] = "neutral"
+        console.database.upsert_user(console.user)
+
+    # Format the pronoun tags.
+    if "%they%" in action:
+        if console.user["pronouns"] == "neutral":
+            action = action.replace("%they%", "they")
+        elif console.user["pronouns"] == "female":
+            action = action.replace("%they%", "she")
+        elif console.user["pronouns"] == "male":
+            action = action.replace("%they%", "he")
+    if "%them%" in action:
+        if console.user["pronouns"] == "neutral":
+            action = action.replace("%them%", "them")
+        elif console.user["pronouns"] == "female":
+            action = action.replace("%them%", "her")
+        elif console.user["pronouns"] == "male":
+            action = action.replace("%them%", "him")
+    if "%their%" in action:
+        if console.user["pronouns"] == "neutral":
+            action = action.replace("%their%", "their")
+        elif console.user["pronouns"] == "female":
+            action = action.replace("%their%", "her")
+        elif console.user["pronouns"] == "male":
+            action = action.replace("%their%", "his")
+    if "%theirs%" in action:
+        if console.user["pronouns"] == "neutral":
+            action = action.replace("%theirs%", "theirs")
+        elif console.user["pronouns"] == "female":
+            action = action.replace("%theirs%", "hers")
+        elif console.user["pronouns"] == "male":
+            action = action.replace("%theirs%", "his")
+    if "%themselves%" in action:
+        if console.user["pronouns"] == "neutral":
+            action = action.replace("%themselves%", "themselves")
+        elif console.user["pronouns"] == "female":
+            action = action.replace("%themselves%", "herself")
+        elif console.user["pronouns"] == "male":
+            action = action.replace("%themselves%", "himself")
+
+    # Decide whether to message the user or broadcast the action.
+    if "%noaction%" in action:
+        action = action.replace("%noaction%", '').strip()
+        console.msg(action)
+    else:
+        console.shell.broadcast_room(console, action)
+
+    # Finished.
+    return True
+
 def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True):
     """Find exits, items, or users matching a partial string target in the current room or user's inventory.
 

@@ -91,19 +91,8 @@ def COMMAND(console, args):
     if itemref:
         # This item has a custom action.
         if itemref["action"]:
-            # Format a custom item action containing a player tag.
-            if "%player%" in itemref["action"]:
-                action = itemref["action"].replace("%player%", console.user["nick"])
-
-            # Format a regular custom item action.
-            else:
-                if itemref["action"].startswith("'s"):
-                    action = "{0}{1}".format(console.user["nick"], itemref["action"])
-                else:
-                    action = "{0} {1}".format(console.user["nick"], itemref["action"])
-
-            # Broadcast the custom item action.
-            console.shell.broadcast_room(console, action)
+            # Broadcast a custom item action.
+            COMMON.broadcast_action(NAME, console, itemref["action"])
 
         # This item has no custom action. Format and broadcast the default item action.
         else:

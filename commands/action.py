@@ -49,15 +49,9 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=0):
         return False
 
-    # Construct and broadcast the action text.
+    # Handle the action text.
     action = ' '.join(args)
-    if "%player%" in action:
-        action = action.replace("%player%", console.user["nick"])
-    elif action.startswith("'s"):
-        action = "{0}{1}".format(console.user["nick"], ' '.join(args))
-    else:
-        action = "{0} {1}".format(console.user["nick"], ' '.join(args))
-    console.shell.broadcast_room(console, action)
+    COMMON.broadcast_action(NAME, console, action)
 
     # Finished.
     return True

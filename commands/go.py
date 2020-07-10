@@ -103,16 +103,9 @@ def COMMAND(console, args):
 
                     # This lock has a custom action.
                     if exits[ex]["action"]["locked"]:
-                        # Format a custom lock action containing a player tag.
+                        # Broadcast a custom lock action if one exists.
                         if "%player%" in exits[ex]["action"]["locked"]:
-                            action = exits[ex]["action"]["locked"].replace("%player%", console.user["nick"])
-
-                        # Format a regular custom key action.
-                        else:
-                            if exits[ex]["action"]["locked"].startswith("'s"):
-                                action = "{0}{1}".format(console.user["nick"], exits[ex]["action"]["locked"])
-                            else:
-                                action = "{0} {1}".format(console.user["nick"], exits[ex]["action"]["locked"])
+                            COMMON.broadcast_action(NAME, console, exits[ex]["action"]["locked"])
 
                     # We couldn't take the exit, so fail.
                     return False
@@ -130,19 +123,8 @@ def COMMAND(console, args):
 
                     # This key item has a custom action.
                     if thisitem["action"]:
-                        # Format a custom key action containing a player tag.
-                        if "%player%" in thisitem["action"]:
-                            action = thisitem["action"].replace("%player%", console.user["nick"])
-
-                        # Format a regular custom key action.
-                        else:
-                            if thisitem["action"].startswith("'s"):
-                                action = "{0}{1}".format(console.user["nick"], thisitem["action"])
-                            else:
-                                action = "{0} {1}".format(console.user["nick"], thisitem["action"])
-
-                        # Broadcast the custom key action.
-                        console.shell.broadcast_room(console, action)
+                        # Broadcast a custom key action.
+                        COMMON.broadcast_action(NAME, console, thisitem["action"])
 
                     # Format and broadcast the default key action.
                     else:
@@ -163,16 +145,8 @@ def COMMAND(console, args):
 
             # This exit has a custom action.
             if exits[ex]["action"]["go"]:
-                # Format a custom exit action containing a player tag.
-                if "%player%" in exits[ex]["action"]["go"]:
-                    action = exits[ex]["action"]["go"].replace("%player%", console.user["nick"])
-
-                # Format a regular custom action.
-                else:
-                    action = "{0} {1}".format(console.user["nick"], exits[ex]["action"]["go"])
-
-                # Broadcast the custom exit action.
-                console.shell.broadcast_room(console, action)
+                # Broadcast a custom exit action.
+                COMMON.broadcast_action(NAME, console, exits[ex]["action"]["go"])
 
             # Format and broadcast the default exit action.
             else:
