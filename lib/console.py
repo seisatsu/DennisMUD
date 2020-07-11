@@ -64,6 +64,7 @@ class Console:
         self._help = {}
         self._special_aliases = {}
         self._disabled_commands = []
+        self._login_delay = False
 
     def __contains__(self, item):
         """__contains__
@@ -121,3 +122,8 @@ class Console:
             self.log.info(message)
         self.router.message(self.rname, message, _nbsp)
         return True
+
+    def _reset_login_delay(self):
+        """Set self._login_delay to False.
+        """
+        self._login_delay = False

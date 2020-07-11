@@ -65,6 +65,10 @@ def COMMAND(console, args):
         console.msg("{0}: That username is already registered.".format(NAME))
         return False
 
+    # Generate password hash and six digit recovery code.
+    passhash = hashlib.sha256(args[1].encode()).hexdigest()
+    recovery = str(int(hashlib.sha256(passhash.encode()).hexdigest(), 16))[-6:]
+
     # Create and save a new user.
     newuser = {
         "name": args[0].lower(),
@@ -85,6 +89,9 @@ def COMMAND(console, args):
     }
     console.database.upsert_user(newuser)
 
-    # Confirm the registration.
+    # Confirm the registration, and give recovery code.
     console.msg("Registered user \"{0}\".".format(newuser["name"]))
+    console.msg("Your account recovery code is \"{0}\". Please write it down.".format(recovery))
+    console.msg("If you lose your password, you can use `recover <username> <code> <newpass>` to change it.")
+    console.msg("Otherwise, you will have to contact the administrator of this server.")
     return True

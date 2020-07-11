@@ -47,10 +47,17 @@ def COMMAND(console, args):
         console.msg("{0}: You are already logged in.".format(NAME))
         return False
 
+    # Make sure we aren't getting brute forced.
+    if console._login_delay:
+        console.msg("{0}: Wait a second before trying again.".format(NAME))
+        return False
+
     # Attempt to authenticate with the database.
     thisuser = console.database.login_user(args[0].lower(), hashlib.sha256(args[1].encode()).hexdigest())
     if not thisuser:
         console.msg("{0}: Incorrect username or password.".format(NAME))
+        console._login_delay = True
+        console.router._reactor.callLater(1, console._reset_login_delay)
         return False  # Bad login.
     console.user = thisuser
 

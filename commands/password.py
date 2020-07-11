@@ -47,6 +47,7 @@ def COMMAND(console, args):
     # We only gave one argument or named ourselves, so change our own password.
     if len(args) == 1 or (len(args) == 2 and args[0].lower() == console.user["name"]):
         console.user["passhash"] = hashlib.sha256(args[len(args)-1].encode()).hexdigest()
+        recovery = str(int(hashlib.sha256(console.user["passhash"].encode()).hexdigest(), 16))[-6:]
         console.database.upsert_user(console.user)
 
     # We are a wizard and named another user, so change their password.
@@ -58,6 +59,7 @@ def COMMAND(console, args):
 
         # Change their password.
         targetuser["passhash"] = hashlib.sha256(args[1].encode()).hexdigest()
+        recovery = str(int(hashlib.sha256(targetuser["passhash"].encode()).hexdigest(), 16))[-6:]
         console.database.upsert_user(targetuser)
 
     # We named another user, but we aren't a wizard.
@@ -66,5 +68,6 @@ def COMMAND(console, args):
         return False
 
     # Finished.
-    console.msg("{0}: Done.".format(NAME))
+    console.msg("{0}: The password has been changed.".format(NAME))
+    console.msg("The NEW account recovery code is \"{0}\".".format(recovery))
     return True
