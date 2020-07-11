@@ -34,10 +34,13 @@ DESCRIPTION = """Look at the current room or the named object or user.
 If used by itself without any arguments, this command gives information about the current room.
 Otherwise, you can look at yourself, an item in the room or your inventory, or an exit.
 You can also look at a user by their username or their nickname.
+Look does not work on IDs, a name is required. Partial matches will work.
 
 Ex. `look` to look at the current room.
 Ex2. `look self` to look at yourself.
-Ex3. `look crystal ball` to look at the item "crystal ball"."""
+Ex3. `look at crystal ball` to look at the item "crystal ball".
+Ex4. `l ball` to look at the item "crystal ball".
+Ex5. `examine crys` to look at the item "crystal ball"."""
 
 
 def COMMAND(console, args):

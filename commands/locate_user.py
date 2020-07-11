@@ -28,8 +28,8 @@
 NAME = "locate user"
 CATEGORIES = ["users"]
 ALIASES = ["find user"]
-USAGE = "locate user <name>"
-DESCRIPTION = """Find out what room the user with username <name> is in.
+USAGE = "locate user <username>"
+DESCRIPTION = """Find out what room the user <username> is in.
 
 This only works with usernames, not with nicknames.
 See the `realname` command to derive a user's username from their nickname.

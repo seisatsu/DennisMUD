@@ -27,12 +27,13 @@
 
 NAME = "list entrances"
 CATEGORIES = ["exits", "rooms"]
-USAGE = "list entrances [room]"
+USAGE = "list entrances [room_id]"
 DESCRIPTION = """List the entrances leading to a room.
 
 If a room ID is provided as an optional argument, list the entrances to that room.
 Otherwise, list the entrances to the room you are currently in.
 You must be an owner of the room to list its entrances.
+Wizards can list the entrances to any room.
 
 Ex. `list entrances` to list the entrances to the current room.
 Ex. `list entrances 5` to list the entrances to the room with ID 5."""

@@ -27,6 +27,7 @@
 
 NAME = "logout"
 CATEGORIES = ["users"]
+ALIASES = ["bye", "goodbye"]
 USAGE = "logout"
 DESCRIPTION = "Log out if logged in."
 
