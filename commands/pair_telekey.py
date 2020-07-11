@@ -27,12 +27,13 @@
 
 NAME = "pair telekey"
 CATEGORIES = ["rooms", "items"]
-USAGE = "pair telekey <item> <room>"
-DESCRIPTION = """Make the <item> teleport its user to <room> when used.
+USAGE = "pair telekey <item_id> <room_id>"
+DESCRIPTION = """Make the item <item_id> teleport its user to the room <room_id> when used.
 
 You must own and be holding the item to pair it.
 The destination room must be inbound unsealed, or you must be a room owner.
 Any user who uses the item will teleport to the paired room.
+Wizards may pair any telekey item to any room.
 
 Ex. `pair telekey 3 5` to make item 3 teleport the user to room 5."""
 

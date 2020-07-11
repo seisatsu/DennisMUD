@@ -1,9 +1,9 @@
-######################
-# Dennis MUD         #
-# password.py        #
-# Copyright 2020     #
-# Michael D. Reiley  #
-######################
+#####################
+# Dennis MUD        #
+# password.py       #
+# Copyright 2020    #
+# Michael D. Reiley #
+#####################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,7 +34,7 @@ DESCRIPTION = """Change your password.
 
 You must be logged in. The username argument is optional.
 Only wizards can change the passwords of other users.
-
+ 
 Ex. `password n3wp4ss`
 Ex2. `password seisatsu n3wp4ss`"""
 

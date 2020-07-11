@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # requisition_item.py #
-# Copyright 2020      #
+# Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
 

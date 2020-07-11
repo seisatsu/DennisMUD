@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# announce.py       #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+#######################
+# Dennis MUD          #
+# announce.py         #
+# Copyright 2018-2020 #
+# Michael D. Reiley   #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy

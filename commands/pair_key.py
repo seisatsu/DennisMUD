@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# pair_key.py       #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+#######################
+# Dennis MUD          #
+# pair_key.py         #
+# Copyright 2018-2020 #
+# Michael D. Reiley   #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,11 +27,12 @@
 
 NAME = "pair key"
 CATEGORIES = ["exits", "items"]
-USAGE = "pair key <exit> <item>"
-DESCRIPTION = """Make the locked <exit> in this room passable by anyone holding <item>.
+USAGE = "pair key <exit_id> <item_id>"
+DESCRIPTION = """Make the locked exit <exit_id> in this room passable by anyone holding the item <item_id>.
 
 You must own and be holding the item, and you must also own the exit or its room.
 Any user who holds the item will be able to pass through the locked exit as if it is unlocked.
+Wizards can pair any key item to any exit.
 
 Ex. `pair key 4 3` to make exit 4 unlock with item 3."""
 

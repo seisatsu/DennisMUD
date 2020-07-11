@@ -11,6 +11,8 @@ websocket-client.example.html
 *.lock
 *.pid
 nohup.out
-world.json
+world.json*
+rawtext.json*
+singleuser.history.txt
 Thumbs.db
 .DS_Store
