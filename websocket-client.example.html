@@ -83,16 +83,15 @@
             Have fun!<br/>
             <br/>
         </div>
-        <form class="console">
+        <div style="text-align: center;"><form class="console">
             <input id="input" autofocus="autofocus"/>
-            <input type="submit" value="Send Command"/>
-        </form>
+        </form></div>
         <br/>
     </div>
     <script type="text/javascript">
         var host = "play.dennismud.xyz";
-        var port = 37380;
-        var secure = false;
+        var port = 37381;
+        var secure = true;
 
         if(window.WebSocket){
             window.addEventListener("load", function() {
