@@ -37,18 +37,39 @@ This requires the recovery code you were given when you registered an account.
 If you have lost the code as well, you will need to contact this server's administrator.
 If there are no arguments, and you are logged in, just show the current recovery code.
 Changing the password will also change the recovery code.
+Wizards can retrieve any user's recovery code by providing their username as the only argument.
 
 Ex. `recover seisatsu 847630 myn3wp4ssw0rd`"""
 
 
 def COMMAND(console, args):
-    # Perform initial checks.
-    if len(args) in [1, 2] or (len(args) != 3 and not console.user):
+    # Check for illegal command usages.
+    if len(args) == 2 or (len(args) != 3 and not console.user):
         console.msg("Usage: recover [<username> <code> <newpass>]")
         return False
 
-    # Just return the current recovery code for a logged in user.
-    elif len(args) == 0:
+    # If there is only one argument, we are trying to get the recovery code for a particular user.
+    # Only wizards can get another user's code.
+    elif len(args) == 1 and not console.user["wizard"] and args[0].lower() != console.user["name"]:
+        console.msg("{0}: Only a wizard can retrieve another user's recovery code.".format(NAME))
+        return False
+
+    # If there is one argument and it is our own name, just pretend the command was called with zero arguments.
+    elif len(args) == 1 and args[0].lower() == console.user["name"]:
+        args = []
+        pass
+
+    # We are a wizard, and requesting another user's recovery code.
+    elif len(args) == 1:
+        targetuser = COMMON.check_user(NAME, console, args[0].lower())
+        if not targetuser:
+            return False
+        recovery = str(int(hashlib.sha256(targetuser["passhash"].encode()).hexdigest(), 16))[-6:]
+        console.msg("{0}: Recovery code for user: {1} :: {2}".format(NAME, args[0].lower(), recovery))
+        return True
+
+    # No arguments, so just return the current recovery code for a logged in user.
+    if len(args) == 0:
         if not console.user:
             console.msg("{0}: Must be logged in to retrieve current recovery code.".format(NAME))
             console.msg("Usage: recover [<username> <code> <newpass>]")
