@@ -28,8 +28,8 @@
 NAME = "make item"
 CATEGORIES = ["items"]
 ALIASES = ["create item", "new item"]
-USAGE = "make item <name>"
-DESCRIPTION = """Create a new item called <name> and place it in your inventory.
+USAGE = "make item <item_name>"
+DESCRIPTION = """Create a new item called <item_name> and place it in your inventory.
 
 You will be added as an owner of the new item.
 

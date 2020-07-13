@@ -27,12 +27,13 @@
 
 NAME = "redirect exit"
 CATEGORIES = ["exits"]
-USAGE = "redirect exit <id> <destination>"
-DESCRIPTION = """Set the destination room of the exit <id> in the current room to <destination>.
+USAGE = "redirect exit <exit_id> <destination>"
+DESCRIPTION = """Set the destination room of the exit <exit_id> in the current room to <destination>.
 
 The current room must not be outbound sealed, and the destination room must not be inbound sealed.
 These restrictions do not apply to the owner of the current room and the owner of the destination room, respectively.
 You must own the exit or its room.
+Wizards can redirect any exit to any room.
 
 Ex. `redirect exit 3 27` to redirect exit 3 to room 27."""
 

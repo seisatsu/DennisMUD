@@ -27,10 +27,11 @@
 
 NAME = "rename item"
 CATEGORIES = ["items"]
-USAGE = "rename item <id> <name>"
-DESCRIPTION = """Set the name of the item <id> which you are holding to <name>.
+USAGE = "rename item <item_id> <new_name>"
+DESCRIPTION = """Set the name of the item <item_id> which you are holding to <new_name>.
 
-You must own the item and it must be in your inventory.
+You must own the item and it must be in your inventory in order to rename it.
+Wizards can rename any item from anywhere.
 
 Ex. `rename item 4 Blue Shard`"""
 

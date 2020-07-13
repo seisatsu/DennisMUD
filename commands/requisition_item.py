@@ -27,12 +27,13 @@
 
 NAME = "requisition item"
 CATEGORIES = ["items"]
-USAGE = "requisition item <id>"
-DESCRIPTION = """Obtain the item with id <item>, regardless of where it is.
+USAGE = "requisition item <item_id>"
+DESCRIPTION = """Obtain the item <item_id>, regardless of where it is.
 
 Whether the item is in another room or someone else's inventory, it will be moved to your inventory.
 You can only requisition an item that you own.
 Duplified items will just copy to your inventory if not there already.
+Wizards can requisition any item.
 
 Ex. `requisition item 14` to move item 14 to your inventory."""
 

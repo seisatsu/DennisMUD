@@ -28,8 +28,8 @@
 NAME = "make room"
 CATEGORIES = ["rooms"]
 ALIASES = ["create room", "new room"]
-USAGE = "make room <name>"
-DESCRIPTION = """Create a new room called <name>.
+USAGE = "make room <room_name>"
+DESCRIPTION = """Create a new room called <room_name>.
 
 You will be added as an owner of the new room.
 

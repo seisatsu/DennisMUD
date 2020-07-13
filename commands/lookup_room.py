@@ -27,8 +27,8 @@
 
 NAME = "lookup room"
 CATEGORIES = ["rooms"]
-USAGE = "lookup room <name>"
-DESCRIPTION = """Lookup the ID of the room <name>.
+USAGE = "lookup room <room_name>"
+DESCRIPTION = """Lookup the ID of the room <room_name>.
 
 Ex. `lookup room Small Bedroom`"""
 

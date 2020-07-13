@@ -34,6 +34,7 @@ You must type the full username.
 If you ignore a user, you will not see their messages in chat, or any private messages they attempt to send you.
 An ignored user will not be informed that you have ignored them.
 If the ignored user is in the same room as you, you will still hear what they `say`.
+Users you have ignored also cannot use the `locate user` command to find you.
 You can unignore an ignored user with the `unignore user` command.
 Wizards cannot be ignored.
 

@@ -27,11 +27,12 @@
 
 NAME = "transfer exit"
 CATEGORIES = ["exits", "ownership"]
-USAGE = "transfer exit <id> <username>"
-DESCRIPTION = """Give primary ownership of the exit <id> to the user <username>.
+USAGE = "transfer exit <exit_id> <username>"
+DESCRIPTION = """Give primary ownership of the exit <exit_id> to the user <username>.
 
 You must be the primary owner of the exit in order to transfer it.
 You will be downgraded to secondary ownership of the exit.
+Wizards can transfer any exit.
 
 Ex. `transfer exit 3 seisatsu`"""
 

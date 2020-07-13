@@ -32,7 +32,8 @@ DESCRIPTION = """Return all of the items in the current room to their primary ow
 
 You must own the room.
 If the primary owner already has an item (for example if it's duplified), you will just lose it.
-If you are the primary owner of an item, nothing will happen with it.
+If you are the primary owner of an item, it will return to your inventory.
+Wizards can return the items of any room.
 
 Ex. `return room` to return all items in the current room."""
 
@@ -70,7 +71,6 @@ def COMMAND(console, args):
             continue
 
         # Remove the item from the room
-        print("test2", itemid)
         thisroom["items"].remove(itemid)
         console.database.upsert_room(thisroom)
 

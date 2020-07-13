@@ -28,10 +28,12 @@
 NAME = "teleport"
 CATEGORIES = ["exploration"]
 ALIASES = ["tel", "tp"]
-USAGE = "teleport <room>"
-DESCRIPTION = """Teleport to the room with ID <room>.
+USAGE = "teleport <room_id>"
+DESCRIPTION = """Teleport to the room <room_id>.
 
 Anyone can teleport to room 0, but otherwise you can only teleport to a room that you own.
+Also see the `xyzzy` command for quickly returning to the first room.
+Wizards can teleport to any room.
 
 Ex. `teleport 0` to go to the first room.
 Ex2. `teleport 17` to go to room 17."""

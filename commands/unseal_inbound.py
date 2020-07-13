@@ -31,7 +31,8 @@ USAGE = "unseal inbound"
 DESCRIPTION = """Allow new exits to be made that lead to the current room.
 
 You must own the current room in order to unseal it.
-Undoes inbound sealing the room via the `seal inbound` command."""
+Undoes inbound sealing the room via the `seal inbound` command.
+Wizards can unseal any room."""
 
 
 def COMMAND(console, args):

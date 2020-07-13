@@ -30,9 +30,10 @@ CATEGORIES = ["messaging"]
 ALIASES = ["msg", "tell"]
 SPECIAL_ALIASES = ['.']
 USAGE = "message <username> <message>"
-DESCRIPTION = """Send a message to the user <username>. Does not use nicknames.
+DESCRIPTION = """Send a private message to the user <username>. Does not use nicknames.
 
 If you don't know a player's username, you can look it up using their nickname with the `realname` command.
+To ignore a particular user's private messages, you may use the `ignore user` command.
 
 Ex. `message seisatsu Hello there!`
 Ex2. `msg seisatsu Hello there!`
@@ -54,8 +55,9 @@ def COMMAND(console, args):
         console.msg("{0}: Could not message user.".format(NAME))
         return False
 
-    # Finished. Message the user, and echo the message to ourselves.
+    # Finished. Message the user, and echo the message to ourselves, if it wasn't a self-message.
     console.shell.msg_user(args[0].lower(), "<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
-    console.msg("<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
+    if targetuser["name"] != console.user["name"]:
+        console.msg("<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
     return True
 

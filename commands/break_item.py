@@ -31,7 +31,7 @@ ALIASES = ["delete item", "destroy item", "remove item"]
 USAGE = "break item <item_id>"
 DESCRIPTION = """Break the item in your inventory with ID <item_id>.
 
-You must an owner of the item, and it must be in your inventory.
+You must own the item and it must be in your inventory in order to break it.
 Wizards can break any item from anywhere.
 
 Ex. `break item 4` to break the item with ID 4."""

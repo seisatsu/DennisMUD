@@ -28,12 +28,13 @@
 NAME = "revoke exit"
 CATEGORIES = ["exits", "ownership"]
 ALIASES = ["unshare exit"]
-USAGE = "revoke exit <id> <username>"
-DESCRIPTION = """Remove user <username> from the owners of the exit <id> in the current room.
+USAGE = "revoke exit <exit_id> <username>"
+DESCRIPTION = """Remove the user <username> from the owners list of the exit <exit_id> in the current room.
 
 You must be an owner of the exit in order to revoke ownership from another user.
 You cannot revoke ownership from the primary owner, even if they are you.
 You can grant ownership with the `grant exit` command, provided you are an owner.
+Wizards can revoke ownership of any exit.
 
 Ex. `revoke exit 3 seisatsu`"""
 

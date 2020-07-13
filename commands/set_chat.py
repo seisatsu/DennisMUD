@@ -30,8 +30,10 @@ CATEGORIES = ["messaging", "settings"]
 USAGE = "set chat [on|off]"
 DESCRIPTION = """Check, enable, or disable the general chat setting.
 
-If enabled, you will be able to send and receive chat messages.
+If enabled, you will be able to send and receive general chat messages.
 Chat messages are separate from private messages and same-room communication.
+Everyone signed in with chat enabled will see all chat messages from everywhere.
+To ignore a particular user's chat messages, see the `ignore user` command.
 
 Ex. `set chat on` to enable the general chat."""
 

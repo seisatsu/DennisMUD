@@ -28,11 +28,11 @@
 NAME = "glue item"
 CATEGORIES = ["items"]
 USAGE = "glue item <item_id>"
-DESCRIPTION = """Glue the item <item_id>, so that once dropped, only owners can pick it up.
+DESCRIPTION = """Glue the item <item_id> so that only owners can pick it up.
 
-You must own the item and it must be in your inventory.
+You must own the item and it must be in your inventory in order to glue it.
 You can unglue a glued item with the `unglue item` command.
-Wizards can glue any item, and pick up any glued item.
+Wizards can glue any item from anywhere, and pick up any glued item.
 
 Ex. `glue item 4`"""
 

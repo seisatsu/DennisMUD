@@ -28,8 +28,8 @@
 NAME = "lay"
 CATEGORIES = ["settings", "users"]
 ALIASES = ["lay down", "lay on", "lay down on"]
-USAGE = "lay [item]"
-DESCRIPTION = """Lay down, on the ground or on the named item.
+USAGE = "lay [item_name]"
+DESCRIPTION = """Lay down, on the ground or on the item [item_name].
 
 This will perform an action and modify your description to let other players know you are laying down.
 You can stand back up by using `stand` or by using `lay` a second time. You may also `sit`.

@@ -27,10 +27,11 @@
 
 NAME = "rename exit"
 CATEGORIES = ["exits"]
-USAGE = "rename exit <id> <name>"
-DESCRIPTION = """Set the name of the exit <id> in this room to <name>.
+USAGE = "rename exit <exit_id> <new_name>"
+DESCRIPTION = """Set the name of the exit <exit_id> in this room to <new_name>.
 
 You must own the exit or its room.
+Wizards can rename any exit.
 
 Ex. `rename exit 3 Iron Door`"""
 

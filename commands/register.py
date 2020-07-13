@@ -34,6 +34,8 @@ USAGE = "register <username> <password>"
 DESCRIPTION = """Register a new user with <username> and <password>.
 
 Afterwards, you can join the game with the `login` command.
+This will also provide you with a 6-digit recovery key, which you should write down.
+The recovery key will allow you to change your password with the `recover` command if you lose it.
 
 Ex. `register seisatsu mypassword`"""
 

@@ -27,7 +27,7 @@
 
 NAME = "lock exit"
 CATEGORIES = ["exits"]
-USAGE = "lock exit <id>"
+USAGE = "lock exit <exit_id>"
 DESCRIPTION = """Prevents anyone except the exit owner or a key holder from using the exit <exit_id> in this room.
 
 Any player who is not holding the key to the exit and does not own the exit will be unable to pass.

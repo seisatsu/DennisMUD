@@ -32,7 +32,8 @@ USAGE = "grant exit <exit_id> <username>"
 DESCRIPTION = """Add user <username> to the owners of the exit <exit_id> in the current room.
 
 You must type the full username.
-You must own the exit in order to grant it to another user. You will also retain ownership.
+You must own the exit in order to grant it to another user.
+You will also retain ownership of the exit.
 You can revoke ownership with the `revoke exit` command, provided you are an owner.
 Wizards can grant any exit to anyone.
 

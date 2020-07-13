@@ -56,15 +56,18 @@ def COMMAND(console, args):
         console.msg("{0}: ERROR: Room does not exist for that user.")
         return False
 
-    # If the target user is online, show their location.
+    # If the target user is online, show their location, unless they are ignoring us and we are not a wizard.
     if console.database.online(args[0].lower()):
+        if console.user["name"] in targetuser["chat"]["ignored"] and not console.user["wizard"]:
+            console.msg("{0}: Could not locate user: {1}".format(NAME, targetuser["name"]))
+            return False
         console.msg("{0}: {1} is in room: {2} ({3})".format(NAME, targetuser["name"], userroom["name"], userroom["id"]))
         return True
 
     # If the target user is offline but we are a wizard, show their location anyway.
     elif console.user["wizard"]:
         console.msg("{0}: {1} (offline) is in room: {2} ({3})".format(NAME, targetuser["name"], userroom["name"],
-                                                                     userroom["id"]))
+                                                                      userroom["id"]))
         return True
 
     # User is not online and we are not a wizard. Just say they are offline.

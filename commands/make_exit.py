@@ -28,8 +28,8 @@
 NAME = "make exit"
 CATEGORIES = ["exits"]
 ALIASES = ["create exit", "new exit"]
-USAGE = "make exit <destination> <name>"
-DESCRIPTION = """Create a new exit called <name> in the current room, leading to the room with ID <destination>.
+USAGE = "make exit <destination> <exit_name>"
+DESCRIPTION = """Create a new exit called <exit_name> in the current room, leading to the room with ID <destination>.
 
 The current room must not be outbound sealed, and the destination room must not be inbound sealed.
 These restrictions do not apply to the owner of the current room and the owner of the destination room, respectively.

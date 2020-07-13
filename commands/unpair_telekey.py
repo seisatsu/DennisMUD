@@ -27,11 +27,12 @@
 
 NAME = "unpair telekey"
 CATEGORIES = ["rooms", "items"]
-USAGE = "unpair telekey <item>"
-DESCRIPTION = """Remove the telekey pairing from <item>.
+USAGE = "unpair telekey <item_id>"
+DESCRIPTION = """Remove the telekey pairing from the item <item_id>.
 
 Undoes pairing a telekey item to a room via the `pair telekey` command.
 You must own and be holding the item in order to unpair it from a room.
+Wizards can unpair any telekey pairing.
 
 Ex. `unpair telekey 3` to remove the telekey pairing from item 3."""
 

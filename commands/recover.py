@@ -29,7 +29,7 @@ import hashlib
 
 NAME = "recover"
 CATEGORIES = ["users"]
-USAGE = "recover [<username> <code> <newpass>]"
+USAGE = "recover [<username> [<code> <newpass>]]"
 DESCRIPTION = """Use your recovery code to change your password, or see the current code.
 
 If you get locked out of your account, you can change your password without logging in.

@@ -32,7 +32,7 @@ import time
 NAME = "shutdown"
 CATEGORIES = ["wizard"]
 USAGE = "shutdown [seconds]"
-DESCRIPTION = "(WIZARDS ONLY) Shut down the server, with optional seconds argument."
+DESCRIPTION = "(WIZARDS ONLY) Shut down the server, with an optional seconds argument."
 
 
 def COMMAND(console, args):

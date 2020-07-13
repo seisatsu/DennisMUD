@@ -27,11 +27,12 @@
 
 NAME = "unlock exit"
 CATEGORIES = ["exits"]
-USAGE = "unlock exit <id>"
-DESCRIPTION = """Allows anyone to use the exit <id> in this room.
+USAGE = "unlock exit <exit_id>"
+DESCRIPTION = """Allows anyone to use the exit <exit_id> in this room.
 
 Undoes locking an exit via the `lock exit` command.
 You must own the exit or its room in order to unlock it.
+Wizards can unlock any exit.
 
 Ex. `unlock exit 3`"""
 

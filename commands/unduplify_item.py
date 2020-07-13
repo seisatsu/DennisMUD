@@ -27,12 +27,13 @@
 
 NAME = "unduplify item"
 CATEGORIES = ["items"]
-USAGE = "unduplify item <item>"
-DESCRIPTION = """Unduplify the item with ID <item>, so that only one user may be holding it.
+USAGE = "unduplify item <item_id>"
+DESCRIPTION = """Unduplify the item <item_id>, so that it can only be in one place at a time.
 
 This undoes duplifying an item via the `duplify item` command.
 You must own the item and it must be in your inventory in order to unduplify it.
 All copies of the item in other users' inventories will disappear.
+Wizards can unduplify any item from anywhere, and it will appear in their inventory if not there already.
 
 Ex. `duplify item 4`"""
 

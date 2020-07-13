@@ -27,8 +27,8 @@
 
 NAME = "set pronouns"
 CATEGORIES = ["settings", "users"]
-USAGE = "set pronouns [female|male|neutral]"
-DESCRIPTION = """Check or set your pronouns for formatting posturing text.
+USAGE = "set pronouns [neutral|female|male]"
+DESCRIPTION = """Check or set your pronouns for formatting action and posturing text.
 
 The default setting is neutral. Without an argument, just check the current setting.
 

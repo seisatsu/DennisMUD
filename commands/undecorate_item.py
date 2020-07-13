@@ -27,10 +27,11 @@
 
 NAME = "undecorate item"
 CATEGORIES = ["items"]
-USAGE = "undecorate item <id>"
-DESCRIPTION = """Remove the custom action displayed when a player uses the item <id>.
+USAGE = "undecorate item <item_id>"
+DESCRIPTION = """Remove the custom action displayed when a player uses the item <item_id>.
 
-You must own the item and be holding it in order to undecorate it.
+You must own the item and it must be in your inventory in order to undecorate it.
+Wizards can undecorate any item from anywhere.
 
 Ex. `undecorate item 4`"""
 

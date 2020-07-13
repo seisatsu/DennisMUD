@@ -32,7 +32,8 @@ USAGE = "grant item <item_id> <username>"
 DESCRIPTION = """Add the user <username> to the owners of item <item_id>.
 
 You must type the full username.
-You must own the item and be holding it in order to grant it to another user. You will also retain ownership.
+You must own the item and it must be in your inventory in order to grant it to another user.
+You will also retain ownership of the item.
 You can revoke ownership with the `revoke item` command, provided you are an owner.
 Wizards can grant any item to anyone from anywhere.
 

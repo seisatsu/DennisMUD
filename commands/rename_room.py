@@ -27,10 +27,11 @@
 
 NAME = "rename room"
 CATEGORIES = ["rooms"]
-USAGE = "rename room <name>"
-DESCRIPTION = """Set the name of the room you are in to <name>.
+USAGE = "rename room <new_name>"
+DESCRIPTION = """Set the name of the current room to <new_name>.
 
-You must own the room in order to rename it.
+You must own the current room in order to rename it.
+Wizards can rename any room.
 
 Ex. `rename room Small Bedroom`"""
 

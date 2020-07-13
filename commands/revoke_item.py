@@ -28,12 +28,13 @@
 NAME = "revoke item"
 CATEGORIES = ["items", "ownership"]
 ALIASES = ["unshare item"]
-USAGE = "revoke item <id> <username>"
-DESCRIPTION = """Remove user <username> from the owners of item <id>.
+USAGE = "revoke item <item_id> <username>"
+DESCRIPTION = """Remove the user <username> from the owners list of item <item_id>.
 
 You must be an owner of the item in order to revoke ownership from another user.
 You cannot revoke ownership from the primary owner, even if they are you.
 You can grant ownership with the `grant item` command, provided you are an owner.
+Wizards can revoke ownership of any item from anywhere.
 
 Ex. `revoke item 4 seisatsu`"""
 

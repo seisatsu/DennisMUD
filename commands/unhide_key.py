@@ -27,11 +27,12 @@
 
 NAME = "unhide key"
 CATEGORIES = ["exits"]
-USAGE = "unhide key <exit>"
-DESCRIPTION = """Allow looking at the locked <exit> to reveal the name of its key.
+USAGE = "unhide key <exit_id>"
+DESCRIPTION = """Allow looking at the locked exit <exit_id> to reveal the name of its key.
 
 If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
 You must own the exit or its room to unhide the key.
+Wizards can unhide the key for any exit.
 
 Ex. `unhide key 3`"""
 

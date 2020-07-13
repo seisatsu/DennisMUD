@@ -27,8 +27,8 @@
 
 NAME = "return item"
 CATEGORIES = ["items", "ownership"]
-USAGE = "return item <id>"
-DESCRIPTION = """Return an item to the inventory of its primary owner.
+USAGE = "return item <item_id>"
+DESCRIPTION = """Return the item <item_id> to the inventory of its primary owner.
 
 You must be holding the item in order to return it.
 If the primary owner already has the item (for example if it's duplified), you will just lose it.

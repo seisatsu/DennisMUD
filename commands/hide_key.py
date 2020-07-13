@@ -32,7 +32,7 @@ DESCRIPTION = """Prevent looking at the locked exit <exit_id> from revealing the
 
 If the key for an exit is not hidden, looking at the exit will tell the player the name of the item which unlocks it.
 You must own the exit or its room to hide the key.
-Wizards can hide the key to any exit.
+Wizards can hide the key to any exit, and can also see hidden key names.
 
 Ex. `hide key 3`"""
 

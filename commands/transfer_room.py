@@ -32,6 +32,7 @@ DESCRIPTION = """Give primary ownership of the current room to the user <usernam
 
 You must be the primary owner of the room in order to transfer it.
 You will be downgraded to secondary ownership of the room.
+Wizards can transfer any room.
 
 Ex. `transfer room seisatsu`"""
 

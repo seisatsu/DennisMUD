@@ -38,7 +38,7 @@ To just message the player and not include their name, start the text with "%noa
 The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
 The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
 The "%s%" tag will be removed for neutral pronouns, and otherwise replaced with the letter "s".
-You must own the item and be holding it in order to decorate it.
+You must own the item and it must be in your inventory in order to decorate it.
 You can remove the custom action from an item with the `undecorate item` command.
 Wizards can decorate any item from anywhere.
 

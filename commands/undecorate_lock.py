@@ -27,10 +27,11 @@
 
 NAME = "undecorate lock"
 CATEGORIES = ["exits"]
-USAGE = "undecorate lock <id>"
-DESCRIPTION = """Remove the custom action displayed when a player fails to use the locked exit <id>.
+USAGE = "undecorate lock <exit_id>"
+DESCRIPTION = """Remove the custom action displayed when a player fails to use the locked exit <exit_id>.
 
 You must own the locked exit or its room in order to undecorate it.
+Wizards can undecorate any locked exit.
 
 Ex. `undecorate lock 3`"""
 

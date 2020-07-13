@@ -32,7 +32,7 @@ DESCRIPTION = """Set the description of the item <item_id> which you are holding
 
 A double backslash inserts a newline. Two sets of double backslashes make a paragraph break.
 You may have any number of newlines, but you cannot stack more than two together.
-You must own the item and be holding it in order to describe it.
+You must own the item and it must be in your inventory in order to describe it.
 Wizards can describe any item from anywhere.
 
 Ex. `describe item 4 A small music box made of ivory.`

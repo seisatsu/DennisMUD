@@ -27,8 +27,8 @@
 
 NAME = "lookup item"
 CATEGORIES = ["items"]
-USAGE = "lookup item <name>"
-DESCRIPTION = """Lookup the ID of the item <name>.
+USAGE = "lookup item <item_name>"
+DESCRIPTION = """Lookup the ID of the item <item_name>.
 
 Ex. `lookup item crystal ball`"""
 

@@ -29,11 +29,12 @@ NAME = "revoke room"
 CATEGORIES = ["rooms", "ownership"]
 ALIASES = ["unshare room"]
 USAGE = "revoke room <username>"
-DESCRIPTION = """Remove user <username> from the owners of the current room.
+DESCRIPTION = """Remove the user <username> from the owners list of the current room.
 
 You must be an owner of the room in order to revoke ownership from another user.
 You cannot revoke ownership from the primary owner, even if they are you.
 You can grant ownership with the `grant room` command, provided you are an owner.
+Wizards can revoke ownership of any room.
 
 Ex. `grant room seisatsu`"""
 

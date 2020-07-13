@@ -27,11 +27,12 @@
 
 NAME = "transfer item"
 CATEGORIES = ["items", "ownership"]
-USAGE = "transfer item <id> <username>"
-DESCRIPTION = """Give primary ownership of the item <id> to the user <username>.
+USAGE = "transfer item <item_id> <username>"
+DESCRIPTION = """Give primary ownership of the item <item_id> to the user <username>.
 
-You must be the primary owner of the item in order to transfer it.
+You must be the primary owner of the item and it must be in your inventory in order to transfer it.
 You will be downgraded to secondary ownership of the item.
+Wizards can transfer any item from anywhere.
 
 Ex. `transfer item 4 seisatsu`"""
 
