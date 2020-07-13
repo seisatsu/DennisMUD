@@ -36,10 +36,12 @@ from lib import console as _console
 from lib import database as _database
 from lib import shell as _shell
 
+import datetime
 import json
 import os
 import pdb
 import shutil
+import time
 import traceback
 
 from prompt_toolkit import prompt
@@ -94,42 +96,42 @@ class Log:
         """Write a debug level message to the console and/or the log file.
         """
         if self._loglevel in ["debug"]:
-            print("[singleuser#debug]", msg.format(**kwargs))
+            print(self.timestamp(), "[singleuser#debug]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[singleuser#debug] " + msg.format(**kwargs) + "\n")
+                self._logfile.write(self.timestamp() + " [singleuser#debug] " + msg.format(**kwargs) + "\n")
 
     def info(self, msg, **kwargs):
         """Write an info level message to the console and/or the log file.
         """
         if self._loglevel in ["debug", "info"]:
-            print("[singleuser#info]", msg.format(**kwargs))
+            print(self.timestamp(), "[singleuser#info]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[singleuser#info] " + msg.format(**kwargs) + "\n")
+                self._logfile.write(self.timestamp() + " [singleuser#info] " + msg.format(**kwargs) + "\n")
 
     def warn(self, msg, **kwargs):
         """Write a warn level message to the console and/or the log file.
         """
         if self._loglevel in ["debug", "info", "warn"]:
-            print("[singleuser#warn]", msg.format(**kwargs))
+            print(self.timestamp(), "[singleuser#warn]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[singleuser#warn] " + msg.format(**kwargs) + "\n")
+                self._logfile.write(self.timestamp() + " [singleuser#warn] " + msg.format(**kwargs) + "\n")
 
     def error(self, msg, **kwargs):
         """Write an error level message to the console and/or the log file.
         """
         if self._loglevel in ["debug", "info", "warn", "error"]:
-            print("[singleuser#error]", msg.format(**kwargs))
+            print(self.timestamp(), "[singleuser#error]", msg.format(**kwargs))
             if self._logfile:
-                self._logfile.write("[singleuser#error] " + msg.format(**kwargs) + "\n")
+                self._logfile.write(self.timestamp() + " [singleuser#error] " + msg.format(**kwargs) + "\n")
 
     def critical(self, msg, **kwargs):
         """Write a critical level message to the console and/or the log file.
 
         All log levels include critical, so these messages cannot be disabled.
         """
-        print("[singleuser#critical]", msg.format(**kwargs))
+        print(self.timestamp(), "[singleuser#critical]", msg.format(**kwargs))
         if self._logfile:
-            self._logfile.write("[singleuser#critical] " + msg.format(**kwargs) + "\n")
+            self._logfile.write(self.timestamp() + " [singleuser#critical] " + msg.format(**kwargs) + "\n")
 
         # Be nice to Windows users who ran the program by double-clicking. :)
         if self._waitoncritical:
@@ -140,6 +142,15 @@ class Log:
         """
         print(msg)
         self._logfile.write(str(msg) + "\n")
+
+    def timestamp(self):
+        """Return a timestamp that looks like a Twisted Logger timestamp.
+
+        :return: Timestamp string.
+        """
+        is_dst = time.daylight and time.localtime().tm_isdst > 0
+        utc_offset = - (time.altzone if is_dst else time.timezone)
+        return "{0}{1}".format(datetime.datetime.now().replace(microsecond=0).isoformat(), str(int(utc_offset / 3.6)))
 
 
 def main():
