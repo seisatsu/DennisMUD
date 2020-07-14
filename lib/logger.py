@@ -29,7 +29,7 @@ import datetime
 import time
 import traceback
 
-# Variables shared between all Log instances.
+# Variables shared between all Logger instances.
 _LOGFILE = None
 _LOGLEVEL = None
 _STDOUT = None
@@ -40,9 +40,8 @@ def init(config):
     """Initialize the Logger system.
     
     This must be run before creating any Logger instances.
+    It sets up global variables that are shared between all Loggers.
     """
-    # Try to open the log file for writing, if one is set.
-    # Otherwise don't use one.
     global _LOGFILE, _LOGLEVEL, _STDOUT, _WAITONCRITICAL
 
     # Note that we are initializing the logger.
@@ -58,7 +57,7 @@ def init(config):
         config["log"]["level"] = "debug"
     _LOGLEVEL = config["log"]["level"]
 
-    # For the server, give an error if no logging option is selected.
+    # For the server, give an error if no logging option is selected, and default to stdout.
     # On singleuser, stdout is always enabled.
     if "stdout" in config["log"]:
         if not config["log"]["stdout"] and not config["log"]["file"]:
@@ -71,7 +70,7 @@ def init(config):
     else:
         _STDOUT = True
 
-    # Try to open the log file. If this fails, give an error and fall back to stdout.
+    # Try to open the log file. If this fails, give an error and default to stdout.
     if config["log"]["file"]:
         try:
             _LOGFILE = open(config["log"]["file"], 'a')
@@ -89,7 +88,7 @@ def init(config):
         if _STDOUT:
             print(timestamp(), "[logger#info] Finished initializing logger.")
         if _LOGFILE:
-            _LOGFILE.write(timestamp() + "[logger#info] Finished initializing logger.\n")
+            _LOGFILE.write(timestamp() + " [logger#info] Finished initializing logger.\n")
 
 
 def timestamp():
@@ -100,7 +99,7 @@ def timestamp():
     # Thanks to https://stackoverflow.com/questions/3168096/getting-computers-utc-offset-in-python
     is_dst = time.daylight and time.localtime().tm_isdst > 0
     utc_offset = - (time.altzone if is_dst else time.timezone)
-    return "{0}{1}".format(datetime.datetime.now().replace(microsecond=0).isoformat(), str(int(utc_offset / 3.6)))
+    return "{0}{1}".format(datetime.datetime.now().isoformat(), str(int(utc_offset / 3.6)))
 
 
 class Logger:
@@ -170,4 +169,4 @@ class Logger:
         """
         print(msg)
         if _LOGFILE:
-            _LOGFILE.write(str(msg) + "\n")
+            _LOGFILE.write("{0} {1}\n".format(timestamp(), msg))
