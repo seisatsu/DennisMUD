@@ -34,6 +34,7 @@ if sys.version_info[0] != 3:
     print("Not Starting: Dennis requires Python 3.")
     sys.exit(1)
 
+from lib import config as _config
 from lib import console
 from lib import database
 from lib import logger
@@ -202,7 +203,7 @@ class Router:
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
-def init_services(config, dbman, router, log):
+def init_services(config, router, log):
     """Initialize the Telnet and/or WebSocket Services
     """
     # We will exit if no services are enabled.
@@ -249,21 +250,11 @@ def init_services(config, dbman, router, log):
 def main():
     """Startup tasks, mainloop entry, and shutdown tasks.
     """
-    print("Welcome to Dennis MUD {0}, Multi-Player Server.".format(VERSION))
-    print("Starting up...")
+    # Load the configuration.
+    config = _config.ConfigManager(single=False)
 
-    # Try to read the server config file.
-    try:
-        with open("server.config.json") as f:
-            config = json.load(f)
-    except (OSError, IOError):
-        print("[server#critical] Could not open server config file: server.config.json")
-        print(traceback.format_exc(1))
-        return 2
-    except json.JSONDecodeError:
-        print("[server#critical] JSON error from server config file: server.config.json")
-        print(traceback.format_exc(1))
-        return 2
+    print("Welcome to {0}, Multi-Player Server.".format(_config.VERSION))
+    print("Starting up...")
 
     # Initialize the logger.
     logger.init(config)
@@ -286,7 +277,7 @@ def main():
 
     # Initialize the Database Manager and load the world database.
     log.info("Initializing database manager...")
-    dbman = database.DatabaseManager(config["database"]["filename"])
+    dbman = database.DatabaseManager(config["database"]["filename"], config.defaults)
     _dbres = dbman._startup()
     if not _dbres:
         # On failure, only remove the lockfile if its existence wasn't the cause.
@@ -304,7 +295,7 @@ def main():
 
     # Start the services.
     log.info("Initializing services...")
-    if not init_services(config, dbman, router, log):
+    if not init_services(config, router, log):
         dbman._unlock()
         return 4
     log.info("Finished initializing services.")

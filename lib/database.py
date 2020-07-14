@@ -48,17 +48,18 @@ class DatabaseManager:
     :ivar items: The table of all items in the database.
     :ivar defaults: The JSON database defaults configuration.
     """
-    def __init__(self, filename, log=None):
+    def __init__(self, filename, defaults, log=None):
         """Database Manager Initializer
 
         :param filename: The relative or absolute filename of the TinyDB database file.
+        :param defaults: The defaults config dict or pseudo-dict.
         :param log: Alternative logging facility, if set. Otherwise use our standard Logger.
         """
         self.database = None
         self.rooms = None
         self.users = None
         self.items = None
-        self.defaults = None
+        self.defaults = defaults
 
         self._info = None
         self._users_online = []
@@ -78,19 +79,6 @@ class DatabaseManager:
 
         :return: True if succeeded, False if failed, None if failed due to existing lockfile.
         """
-        # Try to load the defaults config file. If we can't, then fail.
-        try:
-            with open("defaults.config.json") as f:
-                self.defaults = json.load(f)
-        except (OSError, IOError):
-            self._log.critical("Could not open defaults config file: defaults.config.json")
-            self._log.critical(traceback.format_exc(1))
-            return False
-        except json.JSONDecodeError:
-            self._log.critical("JSON error from config file: defaults.config.json")
-            self._log.critical(traceback.format_exc(1))
-            return False
-
         # Check if a lockfile exists for this database. If so, then fail.
         if os.path.exists(self._filename + ".lock"):
             self._log.critical("Lockfile exists for database: {filename}", filename=self._filename)

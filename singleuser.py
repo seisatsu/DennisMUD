@@ -32,6 +32,7 @@ if sys.version_info[0] != 3:
     print("Not Starting: Dennis requires Python 3")
     sys.exit(1)
 
+from lib import config as _config
 from lib import logger
 from lib import console as _console
 from lib import database as _database
@@ -46,9 +47,6 @@ import traceback
 from prompt_toolkit import prompt
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
-
-
-VERSION = "v0.0.2a-alpha"
 
 
 class Router:
@@ -75,24 +73,14 @@ class Router:
 
 
 def main():
-    print("Welcome to Dennis MUD {0}, Single User Mode.".format(VERSION))
-    print("Starting up...")
-
     # When this is False, Dennis will shut down.
     _running = True
 
-    # Try to open the singleuser config file.
-    try:
-        with open("singleuser.config.json") as f:
-            config = json.load(f)
-    except (OSError, IOError):
-        print("[singleuser#critical] Could not open singleuser config file: singleuser.config.json")
-        print(traceback.format_exc(1))
-        return 2
-    except json.JSONDecodeError:
-        print("[server#critical] JSON error from singleuser config file: singleuser.config.json")
-        print(traceback.format_exc(1))
-        return 2
+    # Load the configuration.
+    config = _config.ConfigManager(single=True)
+
+    print("Welcome to {0}, Single User Mode.".format(_config.VERSION))
+    print("Starting up...")
 
     # Initialize the logger.
     logger.init(config)
@@ -115,7 +103,7 @@ def main():
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")
-    dbman = _database.DatabaseManager(config["database"]["filename"])
+    dbman = _database.DatabaseManager(config["database"]["filename"], config.defaults)
     if not dbman._startup():
         return 3
     log.info("Finished initializing database manager.")
