@@ -36,6 +36,7 @@ if sys.version_info[0] != 3:
 
 from lib import console
 from lib import database
+from lib import logger
 from lib import shell
 from lib import telnet
 from lib import websocket
@@ -48,8 +49,6 @@ import signal
 import traceback
 
 from twisted.internet import reactor, ssl
-from twisted.logger import Logger, LogLevel, LogLevelFilterPredicate, \
-    textFileLogObserver, FilteringLogObserver, globalLogBeginner
 
 
 VERSION = "v0.0.2a-alpha"
@@ -203,61 +202,6 @@ class Router:
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
-def init_logger(config):
-    """Initialize the Twisted Logger
-    """
-    # Read log options from the server config. At least one logging method is required.
-    if not config["log"]["stdout"] and not config["log"]["file"]:
-        # No logging target is set, so force stdout.
-        print("[server#error] No logging target in config, defaulting to stdout.")
-        config["log"]["stdout"] = True
-    elif config["log"]["file"]:
-        # Try to open the log file.
-        try:
-            logfile = open(config["log"]["file"], 'a')
-        except:
-            # Couldn't open the log file, so warn and fall back to STDOUT.
-            if config["log"]["level"] in ("warn", "info", "debug"):
-                print("[server#error] Could not open log file: {0}".format(config["log"]["file"]))
-                print(traceback.print_exc(1))
-            config["log"]["file"] = None
-            config["log"]["stdout"] = True
-
-    # Make sure the chosen log level is valid. Otherwise force the highest log level.
-    if config["log"]["level"] not in ("critical", "error", "warn", "info", "debug"):
-        print("[server#error] Invalid log level in config, defaulting to \"debug\".")
-        config["log"]["level"] = "debug"
-
-    # Configure the Twisted Logger targets.
-    # (Thanks to https://stackoverflow.com/a/46651223/213445 and https://stackoverflow.com/a/49111089/213445)
-    # This part took a while to figure out, so I'm documenting it here in detail.
-    # The variable "logtargets" is a list of FilteringLogObserver instances.
-    # Each FilteringLogObserver wraps a textFileLogObserver, and imposes a LogLevelFilterPredicate.
-    # The textFileLogObserver writes to STDOUT or the file we opened earlier. So, there can be one or two of them.
-    # The LogLevelFilterPredicate conveys a maximum LogLevel to FilteringLogObserver through the "predicates" argument.
-    # The "predicates" argument to FilteringLogObserver must be iterable, so we wrap LogLevelFilterPredicate in a list.
-    # At the end, we pass our "logtargets" list to globalLogBeginner.beginLoggingTo.
-    # All future Twisted Logger instances will point to both of our log targets.
-    # We can have multiple instances of Logger, one for each subsystem of Dennis,
-    # and for each one we give it a single argument, which is the namespace for log lines from that subsystem.
-    logtargets = []
-    if config["log"]["stdout"]:
-        logtargets.append(
-            FilteringLogObserver(
-                textFileLogObserver(sys.stdout),
-                predicates=[LogLevelFilterPredicate(getattr(LogLevel, config["log"]["level"]))]
-            )
-        )
-    if config["log"]["file"]:
-        logtargets.append(
-            FilteringLogObserver(
-                textFileLogObserver(logfile),
-                predicates=[LogLevelFilterPredicate(getattr(LogLevel, config["log"]["level"]))]
-            )
-        )
-    globalLogBeginner.beginLoggingTo(logtargets)
-
-
 def init_services(config, dbman, router, log):
     """Initialize the Telnet and/or WebSocket Services
     """
@@ -322,12 +266,8 @@ def main():
         return 2
 
     # Initialize the logger.
-    stdout = sys.stdout
-    if config["log"]["level"] in ("info", "debug"):
-        print("[server#info] Initializing logger...")
-    init_logger(config)
-    log = Logger("server")
-    log.info("Finished initializing logger.")
+    logger.init(config)
+    log = logger.Logger("server")
 
     # Rotate database backups, if enabled.
     # Unfortunately this has to be done before loading the database, because Windows.
@@ -386,7 +326,6 @@ def main():
 
     # Shutting down.
     dbman._unlock()
-    sys.stdout = stdout
     print("End Program.")
     return 0
 

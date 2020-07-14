@@ -32,16 +32,15 @@ if sys.version_info[0] != 3:
     print("Not Starting: Dennis requires Python 3")
     sys.exit(1)
 
+from lib import logger
 from lib import console as _console
 from lib import database as _database
 from lib import shell as _shell
 
-import datetime
 import json
 import os
 import pdb
 import shutil
-import time
 import traceback
 
 from prompt_toolkit import prompt
@@ -75,84 +74,6 @@ class Router:
             self.log.write(msg)
 
 
-class Log:
-    """Stand-in for Twisted's logger.
-
-    Logs to STDOUT, and optionally to a file.
-    Filters out unwanted messages using a log level setting.
-    """
-    def __init__(self, loglevel, logfile, waitoncritical):
-        """Single User Mode Log Initializer
-
-        :param loglevel: The log level to use. One of: debug, info, warn, error, critical, in descending verbosity.
-        :param logfile: The open file to log to.
-        :param waitoncritical: Whether to wait for the enter key before exiting on a critical error. Nice for Windows.
-        """
-        self._loglevel = loglevel
-        self._logfile = logfile
-        self._waitoncritical = waitoncritical
-
-    def debug(self, msg, **kwargs):
-        """Write a debug level message to the console and/or the log file.
-        """
-        if self._loglevel in ["debug"]:
-            print(self.timestamp(), "[singleuser#debug]", msg.format(**kwargs))
-            if self._logfile:
-                self._logfile.write(self.timestamp() + " [singleuser#debug] " + msg.format(**kwargs) + "\n")
-
-    def info(self, msg, **kwargs):
-        """Write an info level message to the console and/or the log file.
-        """
-        if self._loglevel in ["debug", "info"]:
-            print(self.timestamp(), "[singleuser#info]", msg.format(**kwargs))
-            if self._logfile:
-                self._logfile.write(self.timestamp() + " [singleuser#info] " + msg.format(**kwargs) + "\n")
-
-    def warn(self, msg, **kwargs):
-        """Write a warn level message to the console and/or the log file.
-        """
-        if self._loglevel in ["debug", "info", "warn"]:
-            print(self.timestamp(), "[singleuser#warn]", msg.format(**kwargs))
-            if self._logfile:
-                self._logfile.write(self.timestamp() + " [singleuser#warn] " + msg.format(**kwargs) + "\n")
-
-    def error(self, msg, **kwargs):
-        """Write an error level message to the console and/or the log file.
-        """
-        if self._loglevel in ["debug", "info", "warn", "error"]:
-            print(self.timestamp(), "[singleuser#error]", msg.format(**kwargs))
-            if self._logfile:
-                self._logfile.write(self.timestamp() + " [singleuser#error] " + msg.format(**kwargs) + "\n")
-
-    def critical(self, msg, **kwargs):
-        """Write a critical level message to the console and/or the log file.
-
-        All log levels include critical, so these messages cannot be disabled.
-        """
-        print(self.timestamp(), "[singleuser#critical]", msg.format(**kwargs))
-        if self._logfile:
-            self._logfile.write(self.timestamp() + " [singleuser#critical] " + msg.format(**kwargs) + "\n")
-
-        # Be nice to Windows users who ran the program by double-clicking. :)
-        if self._waitoncritical:
-            input("Press Enter Key to Continue...")
-
-    def write(self, msg):
-        """Write an untagged message to the console and/or the log file, regardless of log level.
-        """
-        print(msg)
-        self._logfile.write(str(msg) + "\n")
-
-    def timestamp(self):
-        """Return a timestamp that looks like a Twisted Logger timestamp.
-
-        :return: Timestamp string.
-        """
-        is_dst = time.daylight and time.localtime().tm_isdst > 0
-        utc_offset = - (time.altzone if is_dst else time.timezone)
-        return "{0}{1}".format(datetime.datetime.now().replace(microsecond=0).isoformat(), str(int(utc_offset / 3.6)))
-
-
 def main():
     print("Welcome to Dennis MUD {0}, Single User Mode.".format(VERSION))
     print("Starting up...")
@@ -173,20 +94,9 @@ def main():
         print(traceback.format_exc(1))
         return 2
 
-    # Try to open the log file for writing, if one is set.
-    # Otherwise don't use one.
-    if config["log"]["level"] in ["debug", "info"]:
-        print("[singleuser#info] Initializing logger...")
-    logfile = None
-    if config["log"]["file"]:
-        try:
-            logfile = open(config["log"]["file"], 'a')
-        except:
-            if config["log"]["level"] in ["debug", "info", "warn"]:
-                print("[singleuser#warn] Could not open singleuser log file: {0}".format(config["log"]["file"]))
-                print(traceback.format_exc(1))
-    log = Log(config["log"]["level"], logfile, config["log"]["wait_on_critical"])
-    log.info("Finished initializing logger.")
+    # Initialize the logger.
+    logger.init(config)
+    log = logger.Logger("singleuser")
 
     # Rotate database backups, if enabled.
     # Unfortunately this has to be done before loading the database, because Windows.
@@ -205,7 +115,7 @@ def main():
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")
-    dbman = _database.DatabaseManager(config["database"]["filename"], log)
+    dbman = _database.DatabaseManager(config["database"]["filename"])
     if not dbman._startup():
         return 3
     log.info("Finished initializing database manager.")

@@ -29,10 +29,10 @@
 
 import traceback
 
+from lib.logger import Logger
+
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
 from twisted.internet import reactor
-from twisted.logger import Logger
-
 
 class ServerProtocol(WebSocketServerProtocol):
 

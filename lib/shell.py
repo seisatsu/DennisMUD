@@ -31,11 +31,11 @@ import os
 import string
 import sys
 
+from lib.logger import Logger
+
 import builtins
 from lib import common
 builtins.COMMON = common
-
-from twisted.logger import Logger
 
 # The directory where command modules are stored, relative to this directory.
 COMMAND_DIR = "commands/"

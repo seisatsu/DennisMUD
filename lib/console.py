@@ -25,7 +25,7 @@
 # IN THE SOFTWARE.
 # **********
 
-from twisted.logger import Logger
+from lib.logger import Logger
 
 
 class Console:

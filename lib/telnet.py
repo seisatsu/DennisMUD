@@ -29,9 +29,10 @@
 
 import traceback
 
+from lib.logger import Logger
+
 from twisted.internet import protocol
 from twisted.protocols.basic import LineReceiver
-from twisted.logger import Logger
 
 # Read the motd file.
 try:

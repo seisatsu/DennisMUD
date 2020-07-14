@@ -29,9 +29,9 @@ import json
 import os
 import traceback
 
-from tinydb import TinyDB, Query
+from lib.logger import Logger
 
-from twisted.logger import Logger
+from tinydb import TinyDB, Query
 
 DB_VERSION = 4
 
@@ -52,7 +52,7 @@ class DatabaseManager:
         """Database Manager Initializer
 
         :param filename: The relative or absolute filename of the TinyDB database file.
-        :param log: Alternative logging facility, if set. Otherwise use the Twisted logger.
+        :param log: Alternative logging facility, if set. Otherwise use our standard Logger.
         """
         self.database = None
         self.rooms = None
