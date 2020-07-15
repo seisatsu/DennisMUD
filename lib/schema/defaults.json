@@ -1,0 +1,147 @@
+{
+  "type": "object",
+  "properties": {
+    "first_room": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "sealed": {
+          "type": "object",
+          "properties": {
+            "inbound": {
+              "type": "boolean"
+            },
+            "outbound": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "inbound", "outbound"
+          ]
+        }
+      },
+      "required": [
+        "name", "desc", "sealed"
+      ]
+    },
+    "first_user": {
+      "type": "object",
+      "properties": {
+        "nick": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "autolook": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        },
+        "chat": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        }
+      },
+      "required": [
+        "nick", "desc", "autolook", "chat"
+      ]
+    },
+    "items": {
+      "type": "object",
+      "properties": {
+        "glued": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "glued"
+      ]
+    },
+    "rooms": {
+      "type": "object",
+      "properties": {
+        "sealed": {
+          "type": "object",
+          "properties": {
+            "inbound": {
+              "type": "boolean"
+            },
+            "outbound": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "inbound", "outbound"
+          ]
+        }
+      },
+      "required": [
+        "sealed"
+      ]
+    },
+    "users": {
+      "type": "object",
+      "properties": {
+        "autolook": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        },
+        "chat": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        }
+      },
+      "required": [
+        "autolook", "chat"
+      ]
+    },
+    "help": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "columns"
+      ]
+    }
+  },
+  "required": [
+    "first_room", "first_user", "items", "rooms", "users", "help"
+  ]
+}

@@ -31,6 +31,8 @@
 
 import argparse
 import json
+import jsonschema
+import os
 import sys
 import traceback
 
@@ -187,19 +189,42 @@ class ConfigManager:
             print(COPYRIGHT)
             sys.exit(0)
 
-        # Load the defaults configuration file, otherwise fail.
+        # Load the configuration schemas, otherwise fail.
+        schemadir = os.getcwd() + "/lib/schema/"
+        schema = {}
+        try:
+            with open("{0}{1}".format(schemadir, "defaults.json")) as schemafile:
+                schema["defaults"] = json.load(schemafile)
+        except (OSError, IOError):
+            print("{0} [config#critical] Could not open defaults schema file: {1}".format(
+                timestamp(), "{0}{1}".format(schemadir, "defaults.json")))
+            print(traceback.format_exc(1))
+            sys.exit(2)
+        except json.JSONDecodeError:
+            print("{0} [config#critical] JSON error from defaults schema file: {1}".format(
+                timestamp(), "{0}{1}".format(schemadir, "defaults.json")))
+            print(traceback.format_exc(1))
+            sys.exit(2)
+
+        # Load the defaults configuration file and validate against the schema, otherwise fail.
         try:
             with open(self._cmdline_args.defaultsfile[0], 'r') as defaultsfile:
                 self.defaults = ConfigBaseKey(json.load(defaultsfile))
+                jsonschema.validate(self.defaults.config, schema["defaults"])
                 self.config["defaults"] = self.defaults
         except (OSError, IOError):
             print("{0} [config#critical] Could not open defaults config file: {1}".format(
-                timestamp(), self._cmdline_args.defaultsfile))
+                timestamp(), self._cmdline_args.defaultsfile[0]))
             print(traceback.format_exc(1))
             sys.exit(2)
         except json.JSONDecodeError:
             print("{0} [config#critical] JSON error from defaults config file: {1}".format(
-                timestamp(), self._cmdline_args.defaultsfile))
+                timestamp(), self._cmdline_args.defaultsfile[0]))
+            print(traceback.format_exc(1))
+            sys.exit(2)
+        except jsonschema.ValidationError:
+            print("{0} [config#critical] JSONSchema validation error from defaults config file: {1}".format(
+                timestamp(), self._cmdline_args.defaultsfile[0]))
             print(traceback.format_exc(1))
             sys.exit(2)
 
