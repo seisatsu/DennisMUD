@@ -38,7 +38,7 @@ import traceback
 
 from lib.logger import timestamp
 
-VERSION = "Dennis MUD v0.0.2a-Alpha"
+VERSION = "Dennis MUD v0.0.3-Alpha"
 COPYRIGHT = "Copyright 2018-2020 Michael D. Reiley"
 
 

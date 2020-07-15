@@ -16,3 +16,4 @@ rawtext.json*
 singleuser.history.txt
 Thumbs.db
 .DS_Store
+backup/
