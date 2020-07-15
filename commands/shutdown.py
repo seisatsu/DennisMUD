@@ -52,7 +52,7 @@ def COMMAND(console, args):
         if seconds is None:
             return False
     else:
-        seconds = console.router._config["shutdown_delay"]
+        seconds = CONFIG["shutdown_delay"]
 
     # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.
     if hasattr(console.router, "_reactor"):

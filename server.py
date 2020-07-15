@@ -42,8 +42,8 @@ from lib import shell
 from lib import telnet
 from lib import websocket
 
+import builtins
 import html
-import json
 import os
 import shutil
 import signal
@@ -252,6 +252,7 @@ def main():
     """
     # Load the configuration.
     config = _config.ConfigManager(single=False)
+    builtins.CONFIG = config
 
     print("Welcome to {0}, Multi-Player Server.".format(_config.VERSION))
     print("Starting up...")

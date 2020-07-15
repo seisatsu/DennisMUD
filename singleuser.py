@@ -38,7 +38,7 @@ from lib import console as _console
 from lib import database as _database
 from lib import shell as _shell
 
-import json
+import builtins
 import os
 import pdb
 import shutil
@@ -78,6 +78,7 @@ def main():
 
     # Load the configuration.
     config = _config.ConfigManager(single=True)
+    builtins.CONFIG = config
 
     print("Welcome to {0}, Single User Mode.".format(_config.VERSION))
     print("Starting up...")
