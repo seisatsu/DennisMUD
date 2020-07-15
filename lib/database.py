@@ -422,7 +422,7 @@ class DatabaseManager:
             "name": self.defaults["first_room"]["name"],
             "desc": self.defaults["first_room"]["desc"],
             "owners": ["<world>"],
-            "users": [self.defaults["first_user"]["name"]],
+            "users": [],
             "exits": [],
             "entrances": [],
             "items": [],
