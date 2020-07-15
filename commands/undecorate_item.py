@@ -26,7 +26,7 @@
 # **********
 
 NAME = "undecorate item"
-CATEGORIES = ["items"]
+CATEGORIES = ["actions", "items"]
 USAGE = "undecorate item <item_id>"
 DESCRIPTION = """Remove the custom action displayed when a player uses the item <item_id>.
 

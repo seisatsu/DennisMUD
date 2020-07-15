@@ -26,7 +26,7 @@
 # **********
 
 NAME = "undecorate exit"
-CATEGORIES = ["exits"]
+CATEGORIES = ["actions", "exits"]
 USAGE = "undecorate exit <exit_id>"
 DESCRIPTION = """Remove the custom action displayed when a player uses the exit <exit_id>.
 

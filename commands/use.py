@@ -26,7 +26,7 @@
 # **********
 
 NAME = "use"
-CATEGORIES = ["items"]
+CATEGORIES = ["actions", "items"]
 ALIASES = ["u"]
 USAGE = "use <item>"
 DESCRIPTION = """Use the item called <item> in your inventory or the room. Works by item name or ID.

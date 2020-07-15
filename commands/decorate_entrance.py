@@ -26,7 +26,7 @@
 # **********
 
 NAME = "decorate entrance"
-CATEGORIES = ["exits"]
+CATEGORIES = ["actions", "exits"]
 USAGE = "decorate entrance <exit_id> <action>"
 DESCRIPTION = """Set a custom <action> to broadcast when a player enters the next room through the exit <exit_id>.
 

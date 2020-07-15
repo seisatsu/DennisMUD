@@ -26,7 +26,7 @@
 # **********
 
 NAME = "decorate exit"
-CATEGORIES = ["exits"]
+CATEGORIES = ["actions", "exits"]
 USAGE = "decorate exit <exit_id> <action>"
 DESCRIPTION = """Set a custom <action> to broadcast when a player uses the exit <exit_id> in the current room.
 

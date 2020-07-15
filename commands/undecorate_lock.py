@@ -26,7 +26,7 @@
 # **********
 
 NAME = "undecorate lock"
-CATEGORIES = ["exits"]
+CATEGORIES = ["actions", "exits"]
 USAGE = "undecorate lock <exit_id>"
 DESCRIPTION = """Remove the custom action displayed when a player fails to use the locked exit <exit_id>.
 

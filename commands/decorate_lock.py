@@ -26,7 +26,7 @@
 # **********
 
 NAME = "decorate lock"
-CATEGORIES = ["exits"]
+CATEGORIES = ["actions", "exits"]
 USAGE = "decorate lock <exit_id> <action>"
 DESCRIPTION = """Set a custom <action> to broadcast when a player fails to use the locked exit <exit_id>.
 

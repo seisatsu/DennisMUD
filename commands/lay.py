@@ -26,7 +26,7 @@
 # **********
 
 NAME = "lay"
-CATEGORIES = ["settings", "users"]
+CATEGORIES = ["actions", "settings", "users"]
 ALIASES = ["lay down", "lay on", "lay down on"]
 USAGE = "lay [item_name]"
 DESCRIPTION = """Lay down, on the ground or on the item [item_name].

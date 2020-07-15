@@ -26,7 +26,7 @@
 # **********
 
 NAME = "action"
-CATEGORIES = ["messaging"]
+CATEGORIES = ["actions", "messaging"]
 ALIASES = ["emote", "me"]
 SPECIAL_ALIASES = [':']
 USAGE = "action <message>"

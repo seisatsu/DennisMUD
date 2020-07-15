@@ -26,7 +26,7 @@
 # **********
 
 NAME = "undecorate entrance"
-CATEGORIES = ["exits"]
+CATEGORIES = ["actions", "exits"]
 USAGE = "undecorate entrance <exit_id>"
 DESCRIPTION = """Remove the custom action displayed when a player enters the next room through <exit_id>.
 

@@ -26,7 +26,7 @@
 # **********
 
 NAME = "sit"
-CATEGORIES = ["settings", "users"]
+CATEGORIES = ["actions", "settings", "users"]
 ALIASES = ["sit down", "sit on", "sit down on"]
 USAGE = "sit [item_name]"
 DESCRIPTION = """Sit down, on the ground or on the item [item_name].

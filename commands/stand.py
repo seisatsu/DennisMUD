@@ -26,7 +26,7 @@
 # **********
 
 NAME = "stand"
-CATEGORIES = ["settings", "users"]
+CATEGORIES = ["actions", "settings", "users"]
 ALIASES = ["stand up"]
 USAGE = "stand"
 DESCRIPTION = """Stand up if currently in another posture.

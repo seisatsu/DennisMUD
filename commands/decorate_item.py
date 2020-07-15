@@ -26,7 +26,7 @@
 # **********
 
 NAME = "decorate item"
-CATEGORIES = ["items"]
+CATEGORIES = ["actions", "items"]
 USAGE = "decorate item <item_id> <action>"
 DESCRIPTION = """Set a custom <action> to broadcast when a player uses the item <item_id>.
 
