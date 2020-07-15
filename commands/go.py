@@ -32,7 +32,7 @@ SPECIAL_ALIASES = ['>']
 USAGE = "go [exit]"
 DESCRIPTION = """Take the exit called <exit> to wherever it may lead.
 
-You may use a full or partial item name, or the item ID.
+You may use a full or partial exit name, or the exit ID.
 If no argument is given, list the exits in the current room instead.
 If the exit is locked, you will not be able to enter without a key.
 Wizards can enter any locked exit.
