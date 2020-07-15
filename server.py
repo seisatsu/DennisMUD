@@ -305,7 +305,10 @@ def main():
     # To shut down quickly but cleanly, send the TERM signal.
     def shutdown(signal_received, frame):
         if not router.shutting_down:
-            command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(config["shutdown_delay"]))
+            if config["shutdown_delay"]:
+                command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(config["shutdown_delay"]))
+            else:
+                command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN>>>")
             reactor.callLater(config["shutdown_delay"], reactor.stop)
             router.shutting_down = True
     signal.signal(signal.SIGINT, shutdown)

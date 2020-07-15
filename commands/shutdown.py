@@ -56,7 +56,10 @@ def COMMAND(console, args):
 
     # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.
     if hasattr(console.router, "_reactor"):
-        console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(seconds))
+        if seconds:
+            console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(seconds))
+        else:
+            console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN>>>")
         console.router._reactor.callLater(seconds, console.router._reactor.stop)
         console.router.shutting_down = True
     else:

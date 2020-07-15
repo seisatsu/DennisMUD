@@ -181,7 +181,7 @@ class ConfigManager:
         """Prepare the configuration for use.
 
         Combine the command line arguments and the configuration files into the ConfigBaseClass pseudo-dictionaries,
-        favoring command line arguments.
+        favoring command line arguments. Also validate the configuration files using JSON schemas.
         """
         # If --version was used, print the version string and exit.
         if self._cmdline_args.version:
@@ -221,6 +221,22 @@ class ConfigManager:
             except json.JSONDecodeError:
                 print("{0} [config#critical] JSON error from singleuser schema file: {1}".format(
                     timestamp(), "{0}{1}".format(schemadir, "singleuser.json")))
+                print(traceback.format_exc(1))
+                sys.exit(2)
+
+        # If server mode, load the server configuration schema, otherwise fail.
+        else:
+            try:
+                with open("{0}{1}".format(schemadir, "server.json")) as schemafile:
+                    schema["server"] = json.load(schemafile)
+            except (OSError, IOError):
+                print("{0} [config#critical] Could not open server schema file: {1}".format(
+                    timestamp(), "{0}{1}".format(schemadir, "server.json")))
+                print(traceback.format_exc(1))
+                sys.exit(2)
+            except json.JSONDecodeError:
+                print("{0} [config#critical] JSON error from server schema file: {1}".format(
+                    timestamp(), "{0}{1}".format(schemadir, "server.json")))
                 print(traceback.format_exc(1))
                 sys.exit(2)
 
@@ -273,14 +289,20 @@ class ConfigManager:
             try:
                 with open(self._cmdline_args.serverfile[0], 'r') as serverfile:
                     self.config = ConfigBaseKey(json.load(serverfile))
+                    jsonschema.validate(self.config.config, schema["server"])
             except (OSError, IOError):
                 print("{0} [config#critical] Could not open server config file: {1}".format(
-                    timestamp(), self._cmdline_args.serverfile))
+                    timestamp(), self._cmdline_args.serverfile[0]))
                 print(traceback.format_exc(1))
                 sys.exit(2)
             except json.JSONDecodeError:
                 print("{0} [config#critical] JSON error from server config file: {1}".format(
-                    timestamp(), self._cmdline_args.serverfile))
+                    timestamp(), self._cmdline_args.serverfile[0]))
+                print(traceback.format_exc(1))
+                sys.exit(2)
+            except jsonschema.ValidationError:
+                print("{0} [config#critical] JSON schema validation error from server config file: {1}".format(
+                    timestamp(), self._cmdline_args.serverfile[0]))
                 print(traceback.format_exc(1))
                 sys.exit(2)
 
