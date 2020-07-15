@@ -1,0 +1,52 @@
+{
+  "type": "object",
+  "properties": {
+    "database": {
+      "type": "object",
+      "properties": {
+        "filename": {
+          "type": "string"
+        },
+        "backups": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "filename", "backups"
+      ]
+    },
+    "log": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string",
+          "pattern": "^(debug|info|warning|error|critical)$"
+        },
+        "wait_on_critical": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "file", "level", "wait_on_critical"
+      ]
+    },
+    "prompt": {
+      "type": "object",
+      "properties": {
+        "history": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "history"
+      ]
+    }
+  },
+  "required": [
+    "database", "log", "prompt"
+  ]
+}
