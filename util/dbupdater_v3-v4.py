@@ -28,7 +28,7 @@
 # This is the Dennis 2D Database Updater for v3 -> v4 migration.
 # To use it, copy it into your main Dennis directory and run it
 # with the database filename as its only argument. This updater
-# adds entrance records to rooms.
+# adds a neutral pronouns field to all users.
 
 from os import path
 import sys

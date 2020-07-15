@@ -1,9 +1,9 @@
-#######################
-# Dennis MUD          #
-# pair_key.py         #
-# Copyright 2018-2020 #
-# Michael D. Reiley   #
-#######################
+##########################
+# Dennis MUD             #
+# undecorate_entrance.py #
+# Copyright 2020         #
+# Michael D. Reiley      #
+##########################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,53 +25,42 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "pair key"
-CATEGORIES = ["exits", "items"]
-USAGE = "pair key <exit_id> <item_id>"
-DESCRIPTION = """Make the locked exit <exit_id> in this room passable by anyone holding the item <item_id>.
+NAME = "undecorate entrance"
+CATEGORIES = ["exits"]
+USAGE = "undecorate entrance <exit_id>"
+DESCRIPTION = """Remove the custom action displayed when a player enters the next room through <exit_id>.
 
-You must own and be holding the item, and you must also own the exit or its room.
-Any user who holds the item will be able to pass through the locked exit as if it is unlocked.
-Wizards can pair any key item to any exit.
+You must own the exit or its room in order to undecorate its entrance.
+Wizards can undecorate any entrance.
 
-Ex. `pair key 4 3` to make exit 4 unlock with item 3."""
+Ex. `undecorate entrance 3`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=2):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
     # Perform argument type checks and casts.
-    ids = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
-    if ids is None:
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
-    exitid, itemid = ids
 
     # Lookup the current room, and perform exit checks.
     thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
     if not thisroom:
         return False
 
-    # Lookup the target item and perform item checks.
-    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
-    if not thisitem:
+    # Check if the entrance is already undecorated.
+    if not thisroom["exits"][exitid]["action"]["entrance"]:
+        console.msg("{0}: This entrance already has no custom action.".format(NAME))
         return False
 
-    # Make sure the exit is locked.
-    if not thisroom["exits"][exitid]["locked"]:
-        console.msg("{0}: Only locked exits can have keys.".format(NAME))
-        return False
-
-    # Make sure the exit is not already paired to a key.
-    if thisroom["exits"][exitid]["key"]:
-        console.msg("{0}: This exit is already paired to a key.".format(NAME))
-        return False
-
-    # Pair the key.
-    thisroom["exits"][exitid]["key"] = itemid
+    # Undecorate the entrance.
+    thisroom["exits"][exitid]["action"]["entrance"] = ""
     console.database.upsert_room(thisroom)
 
     # Finished.
     console.msg("{0}: Done.".format(NAME))
     return True
+

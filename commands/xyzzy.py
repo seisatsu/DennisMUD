@@ -67,7 +67,7 @@ def COMMAND(console, args):
     console.user["room"] = destroom["id"]
 
     # Broadcast our arrival to the destination room, but not to ourselves.
-    console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
+    console.shell.broadcast_room(console, "{0} appeared.".format(console.user["nick"]),
                                  exclude=console.user["name"])
 
     # Save the origin room, the destination room, and our user document.

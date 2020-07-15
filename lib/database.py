@@ -33,7 +33,7 @@ from lib.logger import Logger
 
 from tinydb import TinyDB, Query
 
-DB_VERSION = 4
+DB_VERSION = 5
 
 
 class DatabaseManager:

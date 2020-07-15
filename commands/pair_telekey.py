@@ -44,9 +44,10 @@ def COMMAND(console, args):
         return False
 
     # Perform argument type checks and casts.
-    itemid, roomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
-    if itemid is None or roomid is None:
+    ids = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
+    if ids is None:
         return False
+    itemid, roomid = ids
 
     # Lookup the target item and perform item checks.
     thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)

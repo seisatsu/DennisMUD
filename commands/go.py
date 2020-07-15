@@ -153,10 +153,18 @@ def COMMAND(console, args):
                 console.shell.broadcast_room(console, "{0} left the room through {1}.".format(
                     console.user["nick"], exits[ex]["name"]))
 
-            # Finish entering the new room and announce our presence, except to ourselves.
+            # Set our current room to the new room.
             console.user["room"] = destroom["id"]
-            console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
-                                         exclude=console.user["name"])
+
+            # This entrance has a custom action.
+            if exits[ex]["action"]["entrance"]:
+                # Broadcast a custom entrance action.
+                COMMON.broadcast_action(NAME, console, exits[ex]["action"]["entrance"])
+
+            # Format and broadcast the default entrance action, except to ourselves.
+            else:
+                console.shell.broadcast_room(console, "{0} entered the room.".format(console.user["nick"]),
+                                             exclude=console.user["name"])
 
             # Save this room, the destination room, and the current user.
             console.database.upsert_room(thisroom)

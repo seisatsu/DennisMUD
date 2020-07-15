@@ -725,11 +725,13 @@ def broadcast_action(NAME, console, action):
     """
 
     # Format the %player% tag.
+    playertags = False
     if "%player%" in action:
         action = action.replace("%player%", console.user["nick"])
+        playertags = True
     if action.startswith("'s") and "%noaction%" not in action:
         action = "{0}{1}".format(console.user["nick"], action)
-    elif "%noaction%" not in action:
+    elif not playertags and "%noaction%" not in action:
         action = "{0} {1}".format(console.user["nick"], action)
 
     # Make sure the player has a supported pronoun. Otherwise, set them to neutral.
@@ -794,6 +796,7 @@ def broadcast_action(NAME, console, action):
 
     # Finished.
     return True
+
 
 def match_partial(NAME, console, target, objtype, room=True, inventory=True, message=True):
     """Find exits, items, or users matching a partial string target in the current room or user's inventory.

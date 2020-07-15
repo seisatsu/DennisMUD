@@ -44,9 +44,10 @@ def COMMAND(console, args):
         return False
 
     # Perform argument type checks and casts.
-    exitid, destroomid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
-    if exitid is None or destroomid is None:
+    ids = COMMON.check_argtypes(NAME, console, args, checks=[[0, int], [1, int]], retargs=[0, 1])
+    if ids is None:
         return False
+    exitid, destroomid = ids
 
     # Lookup the current room, and perform exit checks.
     thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)

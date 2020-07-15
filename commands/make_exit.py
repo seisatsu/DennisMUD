@@ -104,7 +104,8 @@ def COMMAND(console, args):
         "locked": False,
         "action": {
             "go": "",
-            "locked": ""
+            "locked": "",
+            "entrance": ""
         }
     }
     thisroom["exits"].append(newexit)
