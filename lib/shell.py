@@ -266,24 +266,23 @@ class Shell:
         elif line in self._commands.keys():
             # Return a help message for the named command.
             usage = "Usage: " + self._commands[line].USAGE
-            desc = "Description: " + self._commands[line].DESCRIPTION
+            desc = "Description: " + self._commands[line].DESCRIPTION + '\n'
 
             # Enumerate the aliases and list them at the end of the description.
             alias_list = ""
             if hasattr(self._commands[line], "ALIASES"):
-                alias_list += (', '.join(self._commands[line].ALIASES))
+                alias_list = (', '.join(self._commands[line].ALIASES))
+                desc += "\nCommand Aliases: " + alias_list
             if hasattr(self._commands[line], "SPECIAL_ALIASES"):
-                if alias_list:
-                    alias_list += ', '
-                alias_list += (', '.join(self._commands[line].SPECIAL_ALIASES))
-            if alias_list:
-                desc += "\n\nCommand Aliases: " + alias_list
-            console.msg(usage)
-            console.msg(desc)
+                alias_list = (', '.join(self._commands[line].SPECIAL_ALIASES))
+                desc += "\nSpecial Aliases: " + alias_list
 
             # If this is the help command with no arguments, show available categories as well.
             if line == "help":
-                console.msg("\nAvailable Categories: " + ', '.join(sorted(self._help.keys())))
+                desc += ("\n\nAvailable Categories: " + ', '.join(sorted(self._help.keys())))
+
+            console.msg(usage)
+            console.msg(desc)
 
         # Couldn't find anything.
         else:
