@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# help.py             #
+# version.py          #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -25,17 +25,23 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "help"
-CATEGORIES = ["info"]
-ALIASES = ["h"]
-SPECIAL_ALIASES = ['?']
-USAGE = "help <command/category>"
-DESCRIPTION = """Show the help for a command, or list the commands in a category.
+from lib.config import VERSION, COPYRIGHT
 
-Ex. `help make room` to show the help message for `make room`.
-Ex2. `help exploration` to list the commands in the exploration category."""
+NAME = "version"
+CATEGORIES = ["info"]
+ALIASES = ["about"]
+USAGE = "version"
+DESCRIPTION = """Show the version info for Dennis MUD."""
 
 
 def COMMAND(console, args):
-    # Pass the arguments back to the command shell's help command.
-    return console.shell.help(console, ' '.join(args))
+    # Perform initial checks.
+    if not COMMON.check(NAME, console, args, argc=0, online=False):
+        return False
+
+    # Show the version info.
+    console.msg(VERSION + (", Single User Mode" if console.router.single_user else ", Multi-Player Server"))
+    console.msg(COPYRIGHT)
+
+    # Finished.
+    return True

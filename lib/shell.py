@@ -250,12 +250,6 @@ class Shell:
         if line in self._help.keys() and line in self._commands.keys():
             self._log.warn("Command name overlaps with category name: {line}", line=line)
 
-        # Return a help message for the help command, and list available categories.
-        if line == "help":
-            console.msg("Usage: help <command/category>")
-            console.msg("Description: Print the help for a command, or list the commands in a category.")
-            console.msg("Available Categories: " + ', '.join(sorted(self._help.keys())))
-
         # Return a formatted help message for the named category.
         # Thanks to:
         # https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
@@ -286,6 +280,10 @@ class Shell:
                 desc += "\n\nCommand Aliases: " + alias_list
             console.msg(usage)
             console.msg(desc)
+
+            # If this is the help command with no arguments, show available categories as well.
+            if line == "help":
+                console.msg("\nAvailable Categories: " + ', '.join(sorted(self._help.keys())))
 
         # Couldn't find anything.
         else:
