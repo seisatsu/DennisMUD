@@ -42,6 +42,7 @@ class ServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
         self.factory.register(self)
         self.factory.log.info("Client connected: {peer}", peer=self.peer)
+        self.factory.connected = True
         self.doPing()
 
     def doPing(self):
@@ -50,7 +51,11 @@ class ServerProtocol(WebSocketServerProtocol):
 
     def connectionLost(self, reason):
         self.factory.unregister(self)
-        self.factory.log.info("Client disconnected: {peer}", peer=self.peer)
+        if self.factory.connected:
+            self.factory.log.info("Client disconnected: {peer}", peer=self.peer)
+            self.factory.connected = False
+        else:
+            self.factory.log.info("Client failed to connect: {peer}", peer=self.peer)
 
     def onMessage(self, payload, isBinary):
         # Don't log passwords.
@@ -88,6 +93,7 @@ class ServerFactory(WebSocketServerFactory):
         self.router.websocket_factory = self
         super(ServerFactory, self).__init__(*args)
         self.clients = []
+        self.connected = False
         self.log = Logger("websocket")
 
     def register(self, client):
