@@ -49,7 +49,9 @@ import shutil
 import signal
 import traceback
 
+from datetime import datetime
 from twisted.internet import reactor, ssl
+from OpenSSL import crypto as openssl
 
 
 VERSION = "v0.0.2a-alpha"
@@ -219,6 +221,22 @@ def init_services(config, router, log):
     if config["websocket"]["enabled"]:
         if config["websocket"]["secure"]:
             # Use secure websockets. Requires the key and certificate.
+            # First we test the expiration date of the cert.
+            # Thanks to https://kyle.io/2016/01/checking-a-ssl-certificates-expiry-date-with-python
+            try:
+                with open(config["websocket"]["cert"], "r") as f:
+                    cert = openssl.load_certificate(openssl.FILETYPE_PEM, f.read().encode())
+                    if datetime.strptime(cert.get_notAfter().decode("ascii"), "%Y%m%d%H%M%SZ") < datetime.now():
+                        log.critical("Expired ssl certificate: {filename}", filename=config["websocket"]["cert"])
+                        return False
+
+            # Could not open the certificate.
+            except:
+                log.critical("Could not open ssl certificate: {filename}", filename=config["websocket"]["cert"])
+                log.critical(traceback.format_exc(1))
+                return False
+
+            # Initialize secure websockets.
             websocket_factory = websocket.ServerFactory(router, "wss://" + config["websocket"]["host"] + ":" +
                                                         str(config["websocket"]["port"]))
             ssl_factory = ssl.DefaultOpenSSLContextFactory(config["websocket"]["key"], config["websocket"]["cert"])
