@@ -139,6 +139,11 @@ def COMMAND(console, args):
                 console.database.upsert_room(destroom)
                 console.database.upsert_user(console.user)
 
+                # Update console's exit list.
+                console.exits = []
+                for exi in range(len(destroom["exits"])):
+                    console.exits.append(destroom["exits"][exi]["name"])
+
                 # Take a look around.
                 console.shell.command(console, "look", False)
 

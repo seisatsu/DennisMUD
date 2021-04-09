@@ -42,6 +42,7 @@ class Console:
     :ivar shell: The Shell instance, which handles commands and help, and communication with the router.
     :ivar database: The DatabaseManager instance.
     :ivar log: The Logger for this console.
+    :ivar exits: The list of exit names in the current room, if any.
     """
     def __init__(self, router, shell, rname, database, log=None):
         """Console Initializer
@@ -59,6 +60,7 @@ class Console:
         self.rname = rname
         self.database = database
         self.log = log or Logger("console:{0}".format(rname))
+        self.exits = []
 
         self._commands = {}
         self._help = {}

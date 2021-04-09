@@ -177,6 +177,11 @@ def COMMAND(console, args):
             else:
                 console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
 
+            # Update console's exit list.
+            console.exits = []
+            for exi in range(len(destroom["exits"])):
+                console.exits.append(destroom["exits"][exi]["name"])
+
             # Finished.
             return True
 

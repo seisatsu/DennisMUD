@@ -71,6 +71,11 @@ def COMMAND(console, args):
         thisroom["users"].append(console.user["name"])
         console.database.upsert_room(thisroom)
 
+    # Update console's exit list.
+    console.exits = []
+    for exi in range(len(thisroom["exits"])):
+        console.exits.append(thisroom["exits"][exi]["name"])
+
     # Show the log in message, broadcast our presence, and look at the room.
     console.msg("You are logged in as \"{0}\".".format(console.user["name"]))
     console.msg('=' * 20)

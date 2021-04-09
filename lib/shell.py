@@ -202,6 +202,8 @@ class Shell:
                         console.msg("> " + ' '.join(line))
                         console.msg('='*20)
                     return self.call(console, ' '.join(line).lower(), [])
+
+                # Keep searching.
                 continue
 
             # Only part of the line is a command. Call that segment and pass the rest as arguments.
@@ -213,7 +215,12 @@ class Shell:
                         console.msg('=' * 20)
                 return self.call(console, ' '.join(line[:-splitpos]), line[-splitpos:])
 
-        # We're still here and haven't found a command in this line. Must be gibberish.
+        # We haven't found a command. Maybe it's an exit name.
+        partial = COMMON.match_partial("console", console, ' '.join(line).lower(), "exit", message=False)
+        if partial:
+            return self.call(console, "go", partial)
+
+        # We're still here and haven't found a command or exit in this line. Must be gibberish.
         if line:
             console.msg("Unknown command: " + ' '.join(line))
 
