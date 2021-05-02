@@ -122,4 +122,5 @@ class ServerFactory(protocol.Factory):
             if c['client-peer'] == peer:
                 client = c['client']
         if client:
-            client.sendLine(payload)
+            # Telnet wants a CRLF instead of just an LF. Some clients require this to display properly.
+            client.sendLine(payload.decode('utf-8').replace('\n', '\r\n').encode('utf-8'))
