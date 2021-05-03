@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # use.py              #
-# Copyright 2018-2020 #
+# Copyright 2018-2021 #
 # Michael D. Reiley   #
 #######################
 
