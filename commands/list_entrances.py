@@ -41,7 +41,7 @@ Ex. `list entrances 5` to list the entrances to the room with ID 5."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=1):
+    if not COMMON.check(NAME, console, args, argmax=1):
         return False
 
     # Select the given room or the current room.

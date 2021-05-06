@@ -34,6 +34,7 @@ from lib.logger import Logger
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
 from twisted.internet import reactor
 
+
 class ServerProtocol(WebSocketServerProtocol):
 
     def onConnect(self, request):
