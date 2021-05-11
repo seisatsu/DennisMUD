@@ -46,6 +46,11 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
+    # Make sure this room has any exits.
+    if not thisroom["exits"]:
+        console.msg("{0}: This room has no exits.".format(NAME))
+        return False
+
     # Delete each exit in the room, handling destination entrances if necessary.
     # We delete the exits from a copy of the exit list and then merge it in at the end.
     # This prevents the exit IDs from changing while we are processing the list.
@@ -70,9 +75,10 @@ def COMMAND(console, args):
                 destroom["entrances"].remove(thisroom["id"])
                 console.database.upsert_room(destroom)
 
-    # Finished.
+    # Update the exit list in the current room, and report.
+    excount = len(thisroom["exits"])
     thisroom["exits"] = newexitlist
     console.database.upsert_room(thisroom)
-    console.msg("{0}: Done.".format(NAME))
+    console.msg("{0}: Deleted {1} exits.".format(NAME, excount))
     return True
 
