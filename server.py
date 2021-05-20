@@ -54,9 +54,6 @@ from twisted.internet import reactor, ssl
 from OpenSSL import crypto as openssl
 
 
-VERSION = "v0.0.2a-alpha"
-
-
 class Router:
     """Router
 
