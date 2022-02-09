@@ -85,7 +85,10 @@ def COMMAND(console, args):
             "enabled": console.database.defaults["users"]["autolook"]["enabled"]
         },
         "builder": {
-            "enabled": console.database.defaults["users"]["builder"]["enabled"]
+            "enabled": console.database.defaults["users"]["builder"]["disabled"]
+        },
+        "cecho": {
+            "enabled": console.database.defaults["users"]["cecho"]["enabled"]
         },
         "chat": {
             "enabled": console.database.defaults["users"]["chat"]["enabled"],

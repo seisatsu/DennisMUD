@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+from color import *
+
 NAME = "say"
 CATEGORIES = ["messaging"]
 SPECIAL_ALIASES = ['\"']
@@ -43,7 +45,9 @@ def COMMAND(console, args):
         return False
 
     # Broadcast our message to the current room.
-    console.shell.broadcast_room(console, "<{0}>: {1}".format(console.user["nick"], ' '.join(args)))
+    if args[-1][-1]=="?": console.shell.broadcast_room(console, CBCYAN+"{0} asks, '{1}'".format(console.user["nick"], ' '.join(args))+CRES)
+    elif args[-1][-1]=="!": console.shell.broadcast_room(console, CBCYAN+"{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args))+CRES)
+    else: console.shell.broadcast_room(console, CBCYAN+"{0} says, '{1}'".format(console.user["nick"], ' '.join(args))+CRES)
 
     # Finished.
     return True
