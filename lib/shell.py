@@ -198,7 +198,7 @@ class Shell:
             if splitpos == 0:
                 # Call with no arguments.
                 if ' '.join(line).lower() in self._commands.keys():
-                    if show_command:
+                    if show_command and console.user["cecho"]["enabled"]:
                         console.msg("> " + ' '.join(line))
                         console.msg('='*20)
                     return self.call(console, ' '.join(line).lower(), [])
@@ -210,7 +210,7 @@ class Shell:
             if ' '.join(line[:-splitpos]).lower() in self._commands.keys():
                 # Log and echo commands to the console that don't involve passwords.
                 if line[0] not in ["register", "login", "password"]:
-                    if show_command:
+                    if show_command and console.user["cecho"]["enabled"]:
                         console.msg("> " + ' '.join(line))
                         console.msg('=' * 20)
                 return self.call(console, ' '.join(line[:-splitpos]), line[-splitpos:])
