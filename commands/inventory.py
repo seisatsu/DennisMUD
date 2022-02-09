@@ -55,7 +55,8 @@ def COMMAND(console, args):
             continue
 
         # Show the item's name and ID.
-        console.msg("{0} ({1})".format(thisitem["name"], itemid))
+        if console.user["builder"]["enabled"]: console.msg("{0} ({1})".format(thisitem["name"], itemid))
+        else: console.msg("{0}".format(thisitem["name"]))
 
         # Keep count.
         itemcount += 1

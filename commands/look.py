@@ -25,6 +25,27 @@
 # IN THE SOFTWARE.
 # **********
 
+#ANSI COLORS
+CRES=chr(27)+"[0m"
+CBOLD=chr(27)+"[1m"
+CBLACK=chr(27)+"[38;5;0m"
+CRED=chr(27)+"[38;5;1m"
+CGRN=chr(27)+"[38;5;2m"
+CYELLO=chr(27)+"[38;5;3m"
+CBLUE=chr(27)+"[38;5;4m"
+CMAG=chr(27)+"[38;5;5m"
+CCYAN=chr(27)+"[38;5;6m"
+CWHITE=chr(27)+"[38;5;7m"
+CBBLACK=chr(27)+"[38;5;8m"
+CBRED=chr(27)+"[38;5;9m"
+CBGRN=chr(27)+"[38;5;10m"
+CBYELLO=chr(27)+"[38;5;11m"
+CBBLUE=chr(27)+"[38;5;12m"
+CBMAG=chr(27)+"[38;5;13m"
+CBCYAN=chr(27)+"[38;5;14m"
+CBWHITE=chr(27)+"[38;5;15m"
+#END OF COLORS
+
 NAME = "look"
 CATEGORIES = ["exploration"]
 ALIASES = ["look at", "l", "examine", "x"]
@@ -56,8 +77,9 @@ def COMMAND(console, args):
     # There were no arguments, so just look at the current room.
     if len(args) == 0:
         # Show the room name, ID, owners, and description.
-        console.msg("{0} ({1})".format(thisroom["name"], thisroom["id"]))
-        console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
+        if console.user["builder"]["enabled"]: console.msg(CCYAN+"{0} ({1})".format(thisroom["name"], thisroom["id"])+CRES)
+        else: console.msg(CCYAN+thisroom["name"]+CRES)
+        if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
 
@@ -65,27 +87,29 @@ def COMMAND(console, args):
         userlist = []
         for user in thisroom["users"]:
             userlist.append(console.database.user_by_name(user)["nick"])
-        console.msg("Occupants: {0}".format(", ".join(userlist)))
+        console.msg(CYELLO+"Occupants: "+CBOLD+"{0}".format(", ".join(userlist))+CRES)
 
         # Build and show the item list.
         itemlist = []
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
             if item:
-                itemlist.append("{0} ({1})".format(item["name"], item["id"]))
+                if console.user["builder"]["enabled"]: itemlist.append("{0} ({1})".format(item["name"], item["id"]))
+                else: itemlist.append("{0}".format(item["name"]))
             else:
                 console.log.error("Item referenced in room does not exist: {room} :: {item}", room=console.user["room"],
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
         if itemlist:
-            console.msg("Items: {0}".format(", ".join(itemlist)))
+            console.msg(CMAG+"Items: "+CBOLD+"{0}".format(", ".join(itemlist))+CRES)
 
         # Build and show the exit list.
         exitlist = []
         for ex in range(len(thisroom["exits"])):
-            exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+            if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+            else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
         if exitlist:
-            console.msg("Exits: {0}".format(", ".join(exitlist)))
+            console.msg(CGRN+"Exits: "+CBOLD+"{0}".format(", ".join(exitlist))+CRES)
         else:
             console.msg("No exits in this room. Make one or use `xyzzy` to return to the first room.")
         return True
@@ -173,8 +197,9 @@ def COMMAND(console, args):
                         attributes.append("[telekey:{0}]".format(item["telekey"]))
 
                 # Send the info for this item.
-                console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
-                console.msg("Owned by: {0}".format(', '.join(item["owners"])))
+                if console.user["builder"]["enabled"]: console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
+                else: console.msg("{0} {1}".format(item["name"], ' '.join(attributes)))
+                if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
                 if item["desc"]:
@@ -211,8 +236,9 @@ def COMMAND(console, args):
                         attributes.append("[telekey:{0}]".format(item["telekey"]))
 
                 # Send the info for this item.
-                console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
-                console.msg("Owned by: {0}".format(', '.join(item["owners"])))
+                if console.user["builder"]["enabled"]: console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
+                else:  console.msg("{0} {1}".format(item["name"], ' '.join(attributes)))
+                if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
                 if item["desc"]:
@@ -230,8 +256,9 @@ def COMMAND(console, args):
             # It was an exit in the current room. Show the exit name, destination,
             # description, ID, owners, and any key information.
             if target in [thisroom["exits"][ex]["name"].lower(), "the " + thisroom["exits"][ex]["name"].lower()]:
-                console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
-                console.msg("Owned by: {0}".format(', '.join(thisroom["exits"][ex]["owners"])))
+                if console.user["builder"]["enabled"]: console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
+                else: console.msg("{0} -> {1}".format(thisroom["exits"][ex]["name"], thisroom["exits"][ex]["dest"]))
+                if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["exits"][ex]["owners"])))
 
                 # Description exists, so show it.
                 if thisroom["exits"][ex]["desc"]:
@@ -282,45 +309,46 @@ def COMMAND(console, args):
                 elif userconsole["posture"]:
                     console.msg("\nThey are {0}.".format(userconsole["posture"]))
             found_something = True
+        
+        if not found_something:
+            # Maybe it's the nickname of a user.
+            # Record partial matches.
+            for username in thisroom["users"]:
+                usertemp = console.database.user_by_nick(username)
+                if usertemp:
+                    if target in usertemp["nick"]:
+                        partials.append(usertemp["nick"])
 
-        # Maybe it's the nickname of a user.
-        # Record partial matches.
-        for username in thisroom["users"]:
-            usertemp = console.database.user_by_nick(username)
-            if usertemp:
-                if target in usertemp["nick"]:
-                    partials.append(usertemp["nick"])
+            # Look for an exact nickname match.
+            user = console.database.user_by_nick(target)
+            if user and console.database.online(user["name"]):
+                console.msg("{0} ({1})".format(user["nick"], user["name"]))
 
-        # Look for an exact nickname match.
-        user = console.database.user_by_nick(target)
-        if user and console.database.online(user["name"]):
-            console.msg("{0} ({1})".format(user["nick"], user["name"]))
+                # Description exists, so show it.
+                if user["desc"]:
+                    console.msg(user["desc"])  # Print user description.
 
-            # Description exists, so show it.
-            if user["desc"]:
-                console.msg(user["desc"])  # Print user description.
-
-            # If they are sitting or laying down, format a message saying so after the description.
-            userconsole = console.shell.console_by_username(user["name"])
-            if console.user["pronouns"] == "female":
-                if userconsole["posture"] and userconsole["posture_item"]:
-                    console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
-                                                              COMMON.format_item(NAME, userconsole["posture_item"])))
-                elif userconsole["posture"]:
-                    console.msg("\nShe is {0}.".format(userconsole["posture"]))
-            elif console.user["pronouns"] == "male":
-                if userconsole["posture"] and userconsole["posture_item"]:
-                    console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
-                                                             COMMON.format_item(NAME, userconsole["posture_item"])))
-                elif userconsole["posture"]:
-                    console.msg("\nHe is {0}.".format(userconsole["posture"]))
-            else:
-                if userconsole["posture"] and userconsole["posture_item"]:
-                    console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
-                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
-                elif userconsole["posture"]:
-                    console.msg("\nThey are {0}.".format(userconsole["posture"]))
-            found_something = True
+                # If they are sitting or laying down, format a message saying so after the description.
+                userconsole = console.shell.console_by_username(user["name"])
+                if console.user["pronouns"] == "female":
+                    if userconsole["posture"] and userconsole["posture_item"]:
+                        console.msg("\nShe is {0} on {1}.".format(userconsole["posture"],
+                                                                  COMMON.format_item(NAME, userconsole["posture_item"])))
+                    elif userconsole["posture"]:
+                        console.msg("\nShe is {0}.".format(userconsole["posture"]))
+                elif console.user["pronouns"] == "male":
+                    if userconsole["posture"] and userconsole["posture_item"]:
+                        console.msg("\nHe is {0} on {1}.".format(userconsole["posture"],
+                                                                 COMMON.format_item(NAME, userconsole["posture_item"])))
+                    elif userconsole["posture"]:
+                        console.msg("\nHe is {0}.".format(userconsole["posture"]))
+                else:
+                    if userconsole["posture"] and userconsole["posture_item"]:
+                        console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
+                                                                    COMMON.format_item(NAME, userconsole["posture_item"])))
+                    elif userconsole["posture"]:
+                        console.msg("\nThey are {0}.".format(userconsole["posture"]))
+                found_something = True
 
         # We didn't find anything by that name. See if we found partial matches.
         if not found_something:
