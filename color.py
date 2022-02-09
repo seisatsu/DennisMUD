@@ -1,0 +1,21 @@
+
+#ANSI COLORS
+CRES=chr(27)+"[0m"
+CBOLD=chr(27)+"[1m"
+CBLACK=chr(27)+"[38;5;0m"
+CRED=chr(27)+"[38;5;1m"
+CGRN=chr(27)+"[38;5;2m"
+CYELLO=chr(27)+"[38;5;3m"
+CBLUE=chr(27)+"[38;5;4m"
+CMAG=chr(27)+"[38;5;5m"
+CCYAN=chr(27)+"[38;5;6m"
+CWHITE=chr(27)+"[38;5;7m"
+CBBLACK=chr(27)+"[38;5;8m"
+CBRED=chr(27)+"[38;5;9m"
+CBGRN=chr(27)+"[38;5;10m"
+CBYELLO=chr(27)+"[38;5;11m"
+CBBLUE=chr(27)+"[38;5;12m"
+CBMAG=chr(27)+"[38;5;13m"
+CBCYAN=chr(27)+"[38;5;14m"
+CBWHITE=chr(27)+"[38;5;15m"
+#END OF COLORS
