@@ -454,6 +454,12 @@ class DatabaseManager:
             "chat": {
                 "enabled": self.defaults["first_user"]["chat"]["enabled"],
                 "ignored": []
+            },
+            "builder": {
+                "enabled": self.defaults["first_user"]["builder"]["enabled"]
+            },
+            "cecho": {
+                "enabled": self.defaults["first_user"]["cecho"]["enabled"]
             }
         }
         self.users.insert(newuser)
