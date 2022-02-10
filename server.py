@@ -41,6 +41,7 @@ from lib import logger
 from lib import shell
 from lib import telnet
 from lib import websocket
+from lib import mccp
 
 import builtins
 import html
@@ -53,6 +54,8 @@ from datetime import datetime
 from twisted.internet import reactor, ssl
 from OpenSSL import crypto as openssl
 
+import zlib
+IAC = chr(255)
 
 class Router:
     """Router
