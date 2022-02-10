@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+from color import *
+
 NAME = "message"
 CATEGORIES = ["messaging"]
 ALIASES = ["msg", "tell"]
@@ -56,8 +58,8 @@ def COMMAND(console, args):
         return False
 
     # Finished. Message the user, and echo the message to ourselves, if it wasn't a self-message.
-    console.shell.msg_user(args[0].lower(), "<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
+    console.shell.msg_user(args[0].lower(), CBYELLO+"{0} messages: {1}".format(console.user["name"], ' '.join(args[1:]))+CRES)
     if targetuser["name"] != console.user["name"]:
-        console.msg("<<{0}>>: {1}".format(console.user["name"], ' '.join(args[1:])))
+        console.msg(CBYELLO+"{0} messages: {1}".format(console.user["name"], ' '.join(args[1:]))+CRES)
     return True
 

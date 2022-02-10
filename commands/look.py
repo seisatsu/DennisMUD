@@ -67,7 +67,7 @@ def COMMAND(console, args):
         userlist = []
         for user in thisroom["users"]:
             userlist.append(console.database.user_by_name(user)["nick"])
-        console.msg(CYELLO+"Occupants: "+CBOLD+"{0}".format(", ".join(userlist))+CRES)
+        console.msg(CYELLO+"\nOccupants: "+CBOLD+"{0}".format(", ".join(userlist))+CRES)
 
         # Build and show the item list.
         itemlist = []
