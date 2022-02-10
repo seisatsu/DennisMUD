@@ -43,7 +43,7 @@ def COMMAND(console, args):
         return False
 
     # Make sure we are not already logged in.
-    if console.user:
+    if console.user or console.database.online(args[0]):
         console.msg("{0}: You are already logged in.".format(NAME))
         return False
 
