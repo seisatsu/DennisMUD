@@ -1,5 +1,5 @@
 
-#ANSI COLORS
+#ANSI COLORS FOR XTERM
 CRES=chr(27)+"[0m"
 CBOLD=chr(27)+"[1m"
 CBLACK=chr(27)+"[38;5;0m"
@@ -19,3 +19,26 @@ CBMAG=chr(27)+"[38;5;13m"
 CBCYAN=chr(27)+"[38;5;14m"
 CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
+
+'''
+#ANSI COLORS FOR WEBSOCKET
+CRES="</p>"
+CBOLD="<p style='weight:bold'>"
+CBLACK="<p style='color:black'>"
+CRED="<p style='color:red'>"
+CGRN="<p style='color:green'>"
+CYELLO="<p style='color:yellow'>"
+CBLUE="<p style='color:blue'>"
+CMAG="<p style='color:magenta'>"
+CCYAN="<p style='color:cyan'>"
+CWHITE="<p style='color:white'>"
+CBBLACK="<p style='color:black'>"
+CBRED="<p style='color:red'>"
+CBGRN="<p style='color:green'>"
+CBYELLO="<p style='color:yellow'>"
+CBBLUE="<p style='color:blue'>"
+CBMAG="<p style='color:magenta'>"
+CBCYAN="<p style='color:cyan'>"
+CBWHITE="<p style='color:white'>"
+#END OF COLORS
+'''
