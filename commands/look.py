@@ -236,13 +236,15 @@ def COMMAND(console, args):
             # It was an exit in the current room. Show the exit name, destination,
             # description, ID, owners, and any key information.
             if target in [thisroom["exits"][ex]["name"].lower(), "the " + thisroom["exits"][ex]["name"].lower()]:
-                if console.user["builder"]["enabled"]: console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
-                else: console.msg("{0} -> {1}".format(thisroom["exits"][ex]["name"], thisroom["exits"][ex]["dest"]))
-                if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["exits"][ex]["owners"])))
+                if console.user["builder"]["enabled"]: 
+                    console.msg("{0} ({1}) -> {2}".format(thisroom["exits"][ex]["name"], ex, thisroom["exits"][ex]["dest"]))
+                    console.msg("Owned by: {0}".format(', '.join(thisroom["exits"][ex]["owners"])))
 
                 # Description exists, so show it.
                 if thisroom["exits"][ex]["desc"]:
                     console.msg(thisroom["exits"][ex]["desc"])
+                else:
+                    console.msg("Nothing unusual about that exit.")
 
                 # Key info is visible or we own the exit or are a wizard, so show it.
                 if thisroom["exits"][ex]["key"] and (console.user["name"] in thisroom["exits"][ex]["owners"]
