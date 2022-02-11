@@ -46,12 +46,12 @@ Ex6. `%player%'s face turns bright red."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=0):
+    if not COMMON.check(NAME, console, args, argmin=1):
         return False
 
     # Handle the action text.
     action = ' '.join(args)
-    COMMON.broadcast_action(NAME, console, action)
+    COMMON.broadcast_action(NAME, console, action) 
 
     # Finished.
     return True
