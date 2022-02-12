@@ -24,7 +24,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # **********
-from color import *
+from lib.color import *
 
 NAME = "look"
 CATEGORIES = ["exploration"]

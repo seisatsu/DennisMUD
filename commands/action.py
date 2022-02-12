@@ -51,6 +51,7 @@ def COMMAND(console, args):
 
     # Handle the action text.
     action = ' '.join(args)
+    if args[-1].isalpha(): args[-1]=args[-1]+"."
     COMMON.broadcast_action(NAME, console, action) 
 
     # Finished.

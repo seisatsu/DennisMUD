@@ -25,7 +25,7 @@
 # IN THE SOFTWARE.
 # **********
 
-from color import *
+from lib.color import *
 
 NAME = "say"
 CATEGORIES = ["messaging"]
