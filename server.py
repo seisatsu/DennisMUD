@@ -42,6 +42,7 @@ from lib import shell
 from lib import telnet
 from lib import websocket
 from lib import mccp
+from lib.color import *
 
 import builtins
 import html
@@ -325,7 +326,7 @@ def main():
     def shutdown(signal_received, frame):
         if not router.shutting_down:
             if config["shutdown_delay"]:
-                command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(config["shutdown_delay"]))
+                command_shell.broadcast(CBRED+"<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(config["shutdown_delay"])+CRES)
             else:
                 command_shell.broadcast("<<<DENNIS IS SHUTTING DOWN>>>")
             reactor.callLater(config["shutdown_delay"], reactor.stop)
