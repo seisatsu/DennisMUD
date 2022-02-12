@@ -106,7 +106,6 @@ def COMMAND(console, args):
                         # Broadcast a custom lock action if one exists.
                         if "%player%" in exits[ex]["action"]["locked"]:
                             COMMON.broadcast_action(NAME, console, exits[ex]["action"]["locked"])
-
                     # We couldn't take the exit, so fail.
                     return False
 
@@ -128,7 +127,7 @@ def COMMAND(console, args):
 
                     # Format and broadcast the default key action.
                     else:
-                        action = "{0} used {1}".format(console.user["nick"], thisitem["name"])
+                        action = "{0} used {1}.".format(console.user["nick"], thisitem["name"])
                         console.shell.broadcast_room(console, action)
 
             # Stand up if we aren't already.

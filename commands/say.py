@@ -45,9 +45,14 @@ def COMMAND(console, args):
         return False
 
     # Broadcast our message to the current room.
-    if args[-1][-1]=="?": console.shell.broadcast_room(console, CBCYAN+"{0} asks, '{1}'".format(console.user["nick"], ' '.join(args))+CRES)
-    elif args[-1][-1]=="!": console.shell.broadcast_room(console, CBCYAN+"{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args))+CRES)
-    else: console.shell.broadcast_room(console, CBCYAN+"{0} says, '{1}'".format(console.user["nick"], ' '.join(args))+CRES)
+    args[0]=args[0].capitalize()
+    if args[-1][-1]=="?": console.shell.broadcast_room(console, CBCYAN+"{0} asks, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
+    elif args[-1].count("!")>1: console.shell.broadcast_room(console, CBCYAN+"{0} yells, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
+    elif args[-1][-1]=="!": console.shell.broadcast_room(console, CBCYAN+"{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
+    else:
+        #Talk nice. 
+        if args[-1][-1]!=".": args[-1]=args[-1]+"."
+        console.shell.broadcast_room(console, CBCYAN+"{0} says, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
 
     # Finished.
     return True
