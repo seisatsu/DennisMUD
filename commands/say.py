@@ -29,7 +29,7 @@ from lib.color import *
 
 NAME = "say"
 CATEGORIES = ["messaging"]
-SPECIAL_ALIASES = ['\"']
+SPECIAL_ALIASES = ['\"',"\'"]
 USAGE = "say <message>"
 DESCRIPTION = """Send a message to everyone in the current room.
 
@@ -46,13 +46,13 @@ def COMMAND(console, args):
 
     # Broadcast our message to the current room.
     args[0]=args[0].capitalize()
-    if args[-1][-1]=="?": console.shell.broadcast_room(console, CBCYAN+"{0} asks, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
-    elif args[-1].count("!")>1: console.shell.broadcast_room(console, CBCYAN+"{0} yells, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
-    elif args[-1][-1]=="!": console.shell.broadcast_room(console, CBCYAN+"{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
+    if args[-1][-1]=="?": console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} asks, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
+    elif args[-1].count("!")>1: console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} yells, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
+    elif args[-1][-1]=="!": console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
     else:
         #Talk nice. 
         if args[-1][-1]!=".": args[-1]=args[-1]+"."
-        console.shell.broadcast_room(console, CBCYAN+"{0} says, '{1}'".format(console.user["nick"], ' '.join(args)+CRES))
+        console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} says, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
 
     # Finished.
     return True

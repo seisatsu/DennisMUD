@@ -29,6 +29,7 @@ import hashlib
 
 NAME = "login"
 CATEGORIES = ["users"]
+ALIASES = ["log in"]
 USAGE = "login <username> <password>"
 DESCRIPTION = """Log in as the user <username> if not currently logged in, using <password>.
 

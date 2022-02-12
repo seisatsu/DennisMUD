@@ -57,8 +57,8 @@ def COMMAND(console, args):
     # There were no arguments, so just look at the current room.
     if len(args) == 0:
         # Show the room name, ID, owners, and description.
-        if console.user["builder"]["enabled"]: console.msg(CCYAN+"{0} ({1})".format(thisroom["name"], thisroom["id"])+CRES)
-        else: console.msg(CCYAN+thisroom["name"]+CRES)
+        if console.user["builder"]["enabled"]: console.msg("{0} ({1})".format(mcolo(CCYAN,thisroom["name"],console.user["colors"]["enabled"]), thisroom["id"]))
+        else: console.msg(mcolo(CCYAN,thisroom["name"],console.user["colors"]["enabled"]))
         if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
@@ -67,7 +67,7 @@ def COMMAND(console, args):
         userlist = []
         for user in thisroom["users"]:
             userlist.append(console.database.user_by_name(user)["nick"])
-        console.msg(CYELLO+"\nOccupants: "+CBOLD+"{0}".format(", ".join(userlist))+CRES)
+        console.msg(mcolo(CYELLO,"\nOccupants: {0}".format(", ".join(userlist)),console.user["colors"]["enabled"]))
 
         # Build and show the item list.
         itemlist = []
@@ -81,7 +81,7 @@ def COMMAND(console, args):
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
         if itemlist:
-            console.msg(CMAG+"Items: "+CBOLD+"{0}".format(", ".join(itemlist))+CRES)
+            console.msg(mcolo(CMAG,"Items: {0}".format(", ".join(itemlist)),console.user["colors"]["enabled"]))
 
         # Build and show the exit list.
         exitlist = []
@@ -89,7 +89,7 @@ def COMMAND(console, args):
             if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
             else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
         if exitlist:
-            console.msg(CGRN+"Exits: "+CBOLD+"{0}".format(", ".join(exitlist))+CRES)
+            console.msg(mcolo(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
         else:
             console.msg("No exits in this room. Make one or use `xyzzy` to return to the first room.")
         return True
@@ -142,13 +142,19 @@ def COMMAND(console, args):
                 elif console["posture"]:
                     console.msg("\nHe is {0}.".format(console["posture"]))
                 return True
-            else:
+            elif console.user["pronouns"] == "neutral":
                 if console["posture"] and console["posture_item"]:
                     console.msg("\nThey are {0} on {1}.".format(console["posture"],
                                                                 COMMON.format_item(NAME, console["posture_item"])))
                 elif console["posture"]:
                     console.msg("\nThey are {0}.".format(console["posture"]))
                 return True
+            else:
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\n{0} is {1} on {2}.".format(user["pronouns"].capitalize(),userconsole["posture"],
+                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\n{0} is {1}.".format(user["pronouns"].capitalize(),userconsole["posture"]))
 
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:

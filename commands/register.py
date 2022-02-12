@@ -91,6 +91,9 @@ def COMMAND(console, args):
         "cecho": {
             "enabled": console.database.defaults["users"]["cecho"]["enabled"]
         },
+        "colors": {
+            "enabled": console.database.defaults["users"]["colors"]["enabled"]
+        },
         "chat": {
             "enabled": console.database.defaults["users"]["chat"]["enabled"],
             "ignored": []
