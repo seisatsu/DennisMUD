@@ -32,6 +32,7 @@ import string
 import sys
 
 from lib.logger import Logger
+from lib.color import *
 
 import builtins
 from lib import common
@@ -355,7 +356,7 @@ class Shell:
         # Success.
         return True
 
-    def msg_user(self, username, message):
+    def msg_user(self, username, message, mtype=None):
         """Send a message to a particular user.
 
         :param username: The username of the user to message.
@@ -370,21 +371,22 @@ class Shell:
                 return True
         return False
 
-    def broadcast(self, message, exclude=None):
+    def broadcast(self, message, exclude=None, mtype=None):
         """Broadcast Message
 
         Send a message to all users connected to consoles.
 
         :param message: The message to send.
         :param exclude: If set, username to exclude from broadcast.
+        :param mtype: Message type. Announce, chat, say, message.
 
         :return: True
         """
         self._log.info(message)
-        self.router.broadcast_all(message, exclude)
+        self.router.broadcast_all(message, exclude, mtype)
         return True
 
-    def broadcast_room(self, console, message, exclude=None):
+    def broadcast_room(self, console, message, exclude=None, mtype=None):
         """Broadcast Message to Room
 
         Send a message to all users who are in the same room as the user connected to this console.
@@ -392,11 +394,12 @@ class Shell:
         :param console: The console sending the message.
         :param message: The message to send.
         :param exclude: If set, username to exclude from broadcast.
+        :param mtype: Message type. Announce, chat, say, message.
 
         :return: True
         """
         self._log.info(message)
-        self.router.broadcast_room(console.user["room"], message, exclude)
+        self.router.broadcast_room(console.user["room"], message, exclude, mtype)
         return True
 
     def user_by_name(self, username):

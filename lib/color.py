@@ -20,9 +20,17 @@ CBCYAN=chr(27)+"[38;5;14m"
 CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
 
-def mcolo(col,msg,ucolo):
-    if ucolo == True: msg=col+msg+CRES
-    return msg
+def mcolor(col,msg,ucolo=None):
+    if ucolo==True:
+        #We are checking user settings.
+        return col+msg+CRES
+    elif ucolo==False:
+        return msg
+    elif ucolo==None:
+        #User settings is not our business.
+        return col+msg+CRES
+    else:
+        return msg
 
 """
 #ANSI COLORS FOR WEBSOCKET
