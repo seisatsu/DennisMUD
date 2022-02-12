@@ -20,6 +20,10 @@ CBCYAN=chr(27)+"[38;5;14m"
 CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
 
+def mcolo(col,msg,ucolo):
+    if ucolo == True: msg=col+msg+CRES
+    return msg
+
 """
 #ANSI COLORS FOR WEBSOCKET
 #probably should be parsed by the client from xterm colors

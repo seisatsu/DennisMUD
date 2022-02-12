@@ -461,6 +461,9 @@ class DatabaseManager:
             },
             "cecho": {
                 "enabled": self.defaults["first_user"]["cecho"]["enabled"]
+            },
+            "colors": {
+                "enabled": self.defaults["first_user"]["colors"]["enabled"]
             }
         }
         self.users.insert(newuser)
