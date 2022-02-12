@@ -176,16 +176,17 @@ class Router:
         :return: True
         """
         #Default color for any message.
-        acolo=CWHITE
+        acolo="default"
         for u in self.users:
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
-            if mtype=="announce": acolo=CBWHITE
             if self.users[u]["service"] == "telnet":
+                if mtype=="announce": acolo = CBWHITE
                 self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
             if self.users[u]["service"] == "websocket":
+                if mtype=="announce": acolo = CBWHITE
                 self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
 
     def broadcast_room(self, room, msg, exclude=None, mtype=None):
@@ -201,17 +202,18 @@ class Router:
         :return: True
         """
         #Default color for any message.
-        acolo=CWHITE
+        acolo="default"
         for u in self.users:
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
             if self.users[u]["console"].user["room"] == room:
-                if mtype=="say": acolo = CBCYAN
                 if self.users[u]["service"] == "telnet":
+                    if mtype=="say": acolo = CBCYAN
                     self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
                 if self.users[u]["service"] == "websocket":
+                    if mtype=="say": acolo = CBCYAN
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
 
 
