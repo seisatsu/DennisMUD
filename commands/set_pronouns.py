@@ -26,7 +26,7 @@
 # **********
 
 NAME = "set pronouns"
-CATEGORIES = ["actions", "settings", "users"]
+CATEGORIES = ["exploration", "settings", "users"]
 USAGE = "set pronouns [neutral|female|male] (or [subjective objective])"
 DESCRIPTION = """Check or set your pronouns for formatting action and posturing text.
 

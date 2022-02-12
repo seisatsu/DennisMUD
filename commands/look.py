@@ -74,8 +74,12 @@ def COMMAND(console, args):
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
             if item:
-                if console.user["builder"]["enabled"]: itemlist.append("{0} ({1})".format(item["name"], item["id"]))
-                else: itemlist.append("{0}".format(item["name"]))
+                if item["hidden"] == False:
+                    if console.user["builder"]["enabled"]: itemlist.append("{0} ({1})".format(item["name"], item["id"]))
+                    else: itemlist.append("{0}".format(item["name"]))
+                elif console.user["wizard"]:
+                    if console.user["builder"]["enabled"]: itemlist.append("{0} ({1}) (Hidden)".format(item["name"], item["id"]))
+                    else: itemlist.append("{0} (Hidden)".format(item["name"]))
             else:
                 console.log.error("Item referenced in room does not exist: {room} :: {item}", room=console.user["room"],
                                   item=itemid)

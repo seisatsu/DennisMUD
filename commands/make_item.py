@@ -81,6 +81,7 @@ def COMMAND(console, args):
         "action": "",
         "owners": [console.user["name"]],
         "glued": console.database.defaults["items"]["glued"],
+        "hidden": console.database.defaults["items"]["hidden"],
         "duplified": False,
         "telekey": None
     }

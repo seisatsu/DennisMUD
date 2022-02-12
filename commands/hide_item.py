@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# announce.py         #
+# hide_item.py        #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -25,23 +25,42 @@
 # IN THE SOFTWARE.
 # **********
 
-from lib.color import *
+NAME = "hide item"
+CATEGORIES = ["items"]
+USAGE = "hide item <item_id>"
+DESCRIPTION = """Hide the item <item_id> so it blends into the room.
 
-NAME = "announce"
-CATEGORIES = ["wizard"]
-USAGE = "announce <message>"
-DESCRIPTION = """(WIZARDS ONLY) Broadcast a message to all online users.
+You must own the item and it must be in your inventory in order to hide it.
+You can unhide a hided item with taking it up and dropping it again.
+Wizards can see any hidden items.
 
-Ex. `announce This is an announcement.`"""
+Ex. `hide item 4`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=0, wizard=True):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
-    # Broadcast our message to all users.
-    console.shell.broadcast(mcolo(CBWHITE,"(Announcement) {0}: {1}".format(console.user["nick"], ' '.join(args))))
+    # Perform argument type checks and casts.
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
+        return False
+
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
+    if not thisitem:
+        return False
+
+    # Check if the item is already hided.
+    if thisitem["hidden"]:
+        console.msg("{0}: This item is already hidden.".format(NAME))
+        return False
+
+    # hide the item.
+    thisitem["hidden"] = True
+    console.database.upsert_item(thisitem)
 
     # Finished.
+    console.msg("{0}: Done.".format(NAME))
     return True
