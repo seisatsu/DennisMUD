@@ -27,7 +27,7 @@
 
 NAME = "set pronouns"
 CATEGORIES = ["actions", "settings", "users"]
-USAGE = "set pronouns [neutral|female|male|custom-customs]"
+USAGE = "set pronouns [neutral|female|male] (or [subjective objective])"
 DESCRIPTION = """Check or set your pronouns for formatting action and posturing text.
 
 The default setting is neutral. Without an argument, just check the current setting.
@@ -37,12 +37,12 @@ Ex. `set pronouns female` to set female pronouns."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=0, argmax=3):
+    if not COMMON.check(NAME, console, args, argmin=0, argmax=2):
         return False
 
     # Just check our current pronouns.
     if len(args) == 0:
-        console.msg("{0}: Your pronouns are currently set to {1}.".format(NAME, console.user["pronouns"]))
+        console.msg("{0}: Your pronouns are currently set to {1}/{2}.".format(NAME, console.user["pronouns"],console.user["pronouno"]))
         return True
 
     # Make sure we chose an available option.
@@ -52,10 +52,10 @@ def COMMAND(console, args):
         console.user["pronouns"] = "male"
     elif args[0].lower() in ["n", "neutral"]:
         console.user["pronouns"] = "neutral"
-    elif len(args)==3:
+    elif len(args)==2:
         console.user["pronouns"] = args[0].lower()
         console.user["pronouno"] = args[1].lower()
-        console.user["pronounp"] = args[2].lower()
+        #console.user["pronounp"] = args[2].lower()
     else:
         console.msg("{0}: Custom pronouns must be given in the format of Subjective Objective Possesive".format(NAME))
         return False
