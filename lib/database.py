@@ -448,7 +448,6 @@ class DatabaseManager:
             "inventory": [],
             "pronouns": "neutral",
             "pronouno": "neutral",
-            "pronounp": "neutral",
             "wizard": True,
             "autolook": {
                 "enabled": self.defaults["first_user"]["autolook"]["enabled"]

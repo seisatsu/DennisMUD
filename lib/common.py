@@ -772,7 +772,7 @@ def broadcast_action(NAME, console, action):
         elif console.user["pronouns"] == "male":
             action = action.replace("%their%", "his")
         else:
-            action = action.replace("%their%", console.user["pronounp"])
+            action = action.replace("%their%", console.user["pronouno"])
     if "%theirs%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%theirs%", "theirs")
@@ -781,7 +781,7 @@ def broadcast_action(NAME, console, action):
         elif console.user["pronouns"] == "male":
             action = action.replace("%theirs%", "his")
         else:
-            action = action.replace("%theirs%", console.user["pronounp"]+"s")
+            action = action.replace("%theirs%", console.user["pronouno"]+"s")
     if "%themselves%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%themselves%", "themselves")
@@ -790,7 +790,7 @@ def broadcast_action(NAME, console, action):
         elif console.user["pronouns"] == "male":
             action = action.replace("%themselves%", "himself")
         else:
-            action = action.replace("%themselves%", console.user["pronounp"]+"self")
+            action = action.replace("%themselves%", console.user["pronouno"]+"self")
     if "%s%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%s%", '')
