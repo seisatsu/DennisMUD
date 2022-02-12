@@ -80,6 +80,8 @@ def COMMAND(console, args):
         "room": 0,
         "inventory": [],
         "pronouns": "neutral",
+        "pronouno": "neutral",
+        "pronounp": "neutral",
         "wizard": False,
         "autolook": {
             "enabled": console.database.defaults["users"]["autolook"]["enabled"]

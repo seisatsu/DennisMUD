@@ -27,7 +27,7 @@
 
 NAME = "set pronouns"
 CATEGORIES = ["actions", "settings", "users"]
-USAGE = "set pronouns [neutral|female|male]"
+USAGE = "set pronouns [neutral|female|male|custom-customs]"
 DESCRIPTION = """Check or set your pronouns for formatting action and posturing text.
 
 The default setting is neutral. Without an argument, just check the current setting.
@@ -37,7 +37,7 @@ Ex. `set pronouns female` to set female pronouns."""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=0, argmax=1):
+    if not COMMON.check(NAME, console, args, argmin=0, argmax=3):
         return False
 
     # Just check our current pronouns.
@@ -52,8 +52,12 @@ def COMMAND(console, args):
         console.user["pronouns"] = "male"
     elif args[0].lower() in ["n", "neutral"]:
         console.user["pronouns"] = "neutral"
+    elif len(args)==3:
+        console.user["pronouns"] = args[0].lower()
+        console.user["pronouno"] = args[1].lower()
+        console.user["pronounp"] = args[2].lower()
     else:
-        console.msg("{0}: Must choose one of: \"female\", \"male\", \"neutral\".".format(NAME))
+        console.msg("{0}: Custom pronouns must be given in the format of Subjective Objective Possesive".format(NAME))
         return False
     console.database.upsert_user(console.user)
 

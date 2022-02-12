@@ -284,12 +284,18 @@ def COMMAND(console, args):
                                                              COMMON.format_item(NAME, userconsole["posture_item"])))
                 elif userconsole["posture"]:
                     console.msg("\nHe is {0}.".format(userconsole["posture"]))
-            else:
+            elif console.user["pronouns"] == "neutral":
                 if userconsole["posture"] and userconsole["posture_item"]:
                     console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
-                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
+                                                             COMMON.format_item(NAME, userconsole["posture_item"])))
                 elif userconsole["posture"]:
                     console.msg("\nThey are {0}.".format(userconsole["posture"]))
+            else:
+                if userconsole["posture"] and userconsole["posture_item"]:
+                    console.msg("\n{0} is {1} on {2}.".format(console.user["pronouns"].capitalize(),userconsole["posture"],
+                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
+                elif userconsole["posture"]:
+                    console.msg("\n{0} is {1}.".format(console.user["pronouns"].capitalize(),userconsole["posture"]))
             found_something = True
         
         if not found_something:
@@ -324,12 +330,18 @@ def COMMAND(console, args):
                                                                  COMMON.format_item(NAME, userconsole["posture_item"])))
                     elif userconsole["posture"]:
                         console.msg("\nHe is {0}.".format(userconsole["posture"]))
-                else:
+                elif console.user["pronouns"] == "neutral":
                     if userconsole["posture"] and userconsole["posture_item"]:
                         console.msg("\nThey are {0} on {1}.".format(userconsole["posture"],
-                                                                    COMMON.format_item(NAME, userconsole["posture_item"])))
+                                                                 COMMON.format_item(NAME, userconsole["posture_item"])))
                     elif userconsole["posture"]:
                         console.msg("\nThey are {0}.".format(userconsole["posture"]))
+                else:
+                    if userconsole["posture"] and userconsole["posture_item"]:
+                        console.msg("\n{0} is {1} on {2}.".format(console.user["pronouns"].capitalize(),userconsole["posture"],
+                                                                    COMMON.format_item(NAME, userconsole["posture_item"])))
+                    elif userconsole["posture"]:
+                        console.msg("\n{0} is {1}.".format(console.user["pronouns"].capitalize(),userconsole["posture"]))
                 found_something = True
 
         # We didn't find anything by that name. See if we found partial matches.
