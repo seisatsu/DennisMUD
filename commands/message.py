@@ -58,8 +58,8 @@ def COMMAND(console, args):
         return False
 
     # Finished. Message the user, and echo the message to ourselves, if it wasn't a self-message.
-    console.shell.msg_user(args[0].lower(), CBYELLO+"{0} messages: {1}".format(console.user["name"], ' '.join(args[1:]))+CRES)
+    console.shell.msg_user(args[0].lower(), mcolor(CBYELLO,"{0} messages: {1}".format(console.user["name"], ' '.join(args[1:])),targetuser["colors"]["enabled"]))
     if targetuser["name"] != console.user["name"]:
-        console.msg(CBYELLO+"{0} messages: {1}".format(console.user["name"], ' '.join(args[1:]))+CRES)
+        console.msg(mcolor(CBYELLO,"{0} messages: {1}".format(console.user["name"], ' '.join(args[1:])),console.user["colors"]["enabled"]))
     return True
 

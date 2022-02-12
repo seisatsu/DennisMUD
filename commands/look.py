@@ -57,8 +57,8 @@ def COMMAND(console, args):
     # There were no arguments, so just look at the current room.
     if len(args) == 0:
         # Show the room name, ID, owners, and description.
-        if console.user["builder"]["enabled"]: console.msg("{0} ({1})".format(mcolo(CCYAN,thisroom["name"],console.user["colors"]["enabled"]), thisroom["id"]))
-        else: console.msg(mcolo(CCYAN,thisroom["name"],console.user["colors"]["enabled"]))
+        if console.user["builder"]["enabled"]: console.msg("{0} ({1})".format(mcolor(CCYAN,thisroom["name"],console.user["colors"]["enabled"]), thisroom["id"]))
+        else: console.msg(mcolor(CCYAN,thisroom["name"],console.user["colors"]["enabled"]))
         if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(thisroom["owners"])))
         if thisroom["desc"]:
             console.msg(thisroom["desc"])
@@ -67,7 +67,7 @@ def COMMAND(console, args):
         userlist = []
         for user in thisroom["users"]:
             userlist.append(console.database.user_by_name(user)["nick"])
-        console.msg(mcolo(CYELLO,"\nOccupants: {0}".format(", ".join(userlist)),console.user["colors"]["enabled"]))
+        console.msg(mcolor(CYELLO,"\nOccupants: {0}".format(", ".join(userlist)),console.user["colors"]["enabled"]))
 
         # Build and show the item list.
         itemlist = []
@@ -85,7 +85,7 @@ def COMMAND(console, args):
                                   item=itemid)
                 console.msg("{0}: ERROR: Item referenced in this room does not exist: {1}".format(NAME, itemid))
         if itemlist:
-            console.msg(mcolo(CMAG,"Items: {0}".format(", ".join(itemlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CMAG,"Items: {0}".format(", ".join(itemlist)),console.user["colors"]["enabled"]))
 
         # Build and show the exit list.
         exitlist = []
@@ -93,7 +93,7 @@ def COMMAND(console, args):
             if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
             else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
         if exitlist:
-            console.msg(mcolo(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
+            console.msg(mcolor(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
         else:
             console.msg("No exits in this room. Make one or use `xyzzy` to return to the first room.")
         return True

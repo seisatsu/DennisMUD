@@ -46,13 +46,13 @@ def COMMAND(console, args):
 
     # Broadcast our message to the current room.
     args[0]=args[0].capitalize()
-    if args[-1][-1]=="?": console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} asks, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
-    elif args[-1].count("!")>1: console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} yells, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
-    elif args[-1][-1]=="!": console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
+    if args[-1][-1]=="?": console.shell.broadcast_room(console, "{0} asks, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
+    elif args[-1].count("!")>1: console.shell.broadcast_room(console, "{0} yells, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
+    elif args[-1][-1]=="!": console.shell.broadcast_room(console, "{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
     else:
         #Talk nice. 
         if args[-1][-1]!=".": args[-1]=args[-1]+"."
-        console.shell.broadcast_room(console, mcolo(CBCYAN,"{0} says, '{1}'".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
+        console.shell.broadcast_room(console, "{0} says, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
 
     # Finished.
     return True
