@@ -24,7 +24,8 @@
     }
   },
   "items": {
-    "glued": false
+    "glued": false,
+    "hidden": false
   },
   "rooms": {
     "sealed": {
