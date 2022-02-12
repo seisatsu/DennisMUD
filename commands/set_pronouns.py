@@ -30,7 +30,7 @@ CATEGORIES = ["actions", "settings", "users"]
 USAGE = "set pronouns [neutral|female|male] (or [subjective objective])"
 DESCRIPTION = """Check or set your pronouns for formatting action and posturing text.
 
-The default setting is neutral. Without an argument, just check the current setting.
+The default setting is neutral. Without an argument, just check the current setting. Custom pronouns must be given in a subjective objective format.
 
 Ex. `set pronouns female` to set female pronouns."""
 
@@ -57,7 +57,7 @@ def COMMAND(console, args):
         console.user["pronouno"] = args[1].lower()
         #console.user["pronounp"] = args[2].lower()
     else:
-        console.msg("{0}: Custom pronouns must be given in the format of Subjective Objective Possesive".format(NAME))
+        console.msg("{0}: Custom pronouns must be given in the format of Subjective Objective.".format(NAME))
         return False
     console.database.upsert_user(console.user)
 
