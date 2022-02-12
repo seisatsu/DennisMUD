@@ -21,6 +21,8 @@ CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
 
 def mcolor(col,msg,ucolo=None):
+    #Leaving the default color as it is.
+    if col=="default": return msg
     if ucolo==True:
         #We are checking user settings.
         return col+msg+CRES
@@ -32,26 +34,26 @@ def mcolor(col,msg,ucolo=None):
     else:
         return msg
 
-"""
+
 #ANSI COLORS FOR WEBSOCKET
 #probably should be parsed by the client from xterm colors
-CRES="</p>"
-CBOLD="<p style='weight:bold'>"
-CBLACK="<p style='color:black'>"
-CRED="<p style='color:red'>"
-CGRN="<p style='color:green'>"
-CYELLO="<p style='color:yellow'>"
-CBLUE="<p style='color:blue'>"
-CMAG="<p style='color:magenta'>"
-CCYAN="<p style='color:cyan'>"
-CWHITE="<p style='color:white'>"
-CBBLACK="<p style='color:black'>"
-CBRED="<p style='color:red'>"
-CBGRN="<p style='color:green'>"
-CBYELLO="<p style='color:yellow'>"
-CBBLUE="<p style='color:blue'>"
-CBMAG="<p style='color:magenta'>"
-CBCYAN="<p style='color:cyan'>"
-CBWHITE="<p style='color:white'>"
+#As I have no means of testing the websocket stuff, I'll leave it for now.
+hCRES="</p>"
+hCBOLD="<p style='weight:bold'>"
+hCBLACK="<p style='color:black'>"
+hCRED="<p style='color:red'>"
+hCGRN="<p style='color:green'>"
+hCYELLO="<p style='color:yellow'>"
+hCBLUE="<p style='color:blue'>"
+hCMAG="<p style='color:magenta'>"
+hCCYAN="<p style='color:cyan'>"
+hCWHITE="<p style='color:white'>"
+hCBBLACK="<p style='color:black'>"
+hCBRED="<p style='color:red'>"
+hCBGRN="<p style='color:green'>"
+hCBYELLO="<p style='color:yellow'>"
+hCBBLUE="<p style='color:blue'>"
+hCBMAG="<p style='color:magenta'>"
+hCBCYAN="<p style='color:cyan'>"
+hCBWHITE="<p style='color:white'>"
 #END OF COLORS
-"""
