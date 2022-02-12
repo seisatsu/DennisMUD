@@ -155,6 +155,7 @@ class Router:
         :param peer: Internal peer name.
         :param msg: Message to send.
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
+        :param mtype: Message type. Announce, chat, say, message.
 
         :return: True
         """
@@ -163,27 +164,31 @@ class Router:
         if self.users[peer]["service"] == "websocket":
             self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
 
-    def broadcast_all(self, msg, exclude=None):
+    def broadcast_all(self, msg, exclude=None, mtype=None):
         """Broadcast All
 
         Broadcast a message to all logged in users.
 
         :param msg: Message to send.
         :param exclude: If set, username to exclude from broadcast.
+        :param mtype: Message type. Announce, chat, say, message.
 
         :return: True
         """
+        #Default color for any message.
+        acolo=CWHITE
         for u in self.users:
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
+            if mtype=="announce": acolo=CBWHITE
             if self.users[u]["service"] == "telnet":
-                self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
+                self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
             if self.users[u]["service"] == "websocket":
-                self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
+                self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
 
-    def broadcast_room(self, room, msg, exclude=None):
+    def broadcast_room(self, room, msg, exclude=None, mtype=None):
         """Broadcast Room
 
         Broadcast a message to all logged in users in the given room.
@@ -191,19 +196,23 @@ class Router:
         :param room: Room ID.
         :param msg: Message to send.
         :param exclude: If set, username to exclude from broadcast.
+        :param mtype: Message type. Announce, chat, say, message.
 
         :return: True
         """
+        #Default color for any message.
+        acolo=CWHITE
         for u in self.users:
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
             if self.users[u]["console"].user["room"] == room:
+                if mtype=="say": acolo = CBCYAN
                 if self.users[u]["service"] == "telnet":
-                    self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
+                    self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
                 if self.users[u]["service"] == "websocket":
-                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
+                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
 
 
 def init_services(config, router, log):
