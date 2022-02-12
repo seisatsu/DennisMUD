@@ -457,7 +457,7 @@ class DatabaseManager:
                 "ignored": []
             },
             "builder": {
-                "enabled": self.defaults["first_user"]["builder"]["disabled"]
+                "enabled": self.defaults["first_user"]["builder"]["enabled"]
             },
             "cecho": {
                 "enabled": self.defaults["first_user"]["cecho"]["enabled"]
