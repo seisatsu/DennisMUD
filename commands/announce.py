@@ -41,7 +41,7 @@ def COMMAND(console, args):
         return False
 
     # Broadcast our message to all users.
-    console.shell.broadcast(mcolo(CBWHITE,"(Announcement) {0}: {1}".format(console.user["nick"], ' '.join(args))))
+    console.shell.broadcast(mcolo(CBWHITE,"(Announcement) {0}: {1}".format(console.user["nick"], ' '.join(args)),console.user["colors"]["enabled"]))
 
     # Finished.
     return True

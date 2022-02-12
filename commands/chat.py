@@ -54,7 +54,7 @@ def COMMAND(console, args):
     for u in console.router.users:
         if console.router.users[u]["console"].user and console.router.users[u]["console"].user["chat"]["enabled"]:
             if not console.user["name"] in console.router.users[u]["console"].user["chat"]["ignored"]:
-                console.router.users[u]["console"].msg(mcolo(CWHITE,"(Chat) " + console.user["name"] + ": " + ' '.join(args)))
+                console.router.users[u]["console"].msg(mcolo(CWHITE,"(Chat) " + console.user["name"] + ": " + ' '.join(args),console.user["colors"]["enabled"]))
 
     # Finished.
     return True
