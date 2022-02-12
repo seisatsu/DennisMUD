@@ -20,8 +20,9 @@ CBCYAN=chr(27)+"[38;5;14m"
 CBWHITE=chr(27)+"[38;5;15m"
 #END OF COLORS
 
-'''
+"""
 #ANSI COLORS FOR WEBSOCKET
+#probably should be parsed by the client from xterm colors
 CRES="</p>"
 CBOLD="<p style='weight:bold'>"
 CBLACK="<p style='color:black'>"
@@ -41,4 +42,4 @@ CBMAG="<p style='color:magenta'>"
 CBCYAN="<p style='color:cyan'>"
 CBWHITE="<p style='color:white'>"
 #END OF COLORS
-'''
+"""
