@@ -447,6 +447,8 @@ class DatabaseManager:
             "room": 0,
             "inventory": [],
             "pronouns": "neutral",
+            "pronouno": "neutral",
+            "pronounp": "neutral",
             "wizard": True,
             "autolook": {
                 "enabled": self.defaults["first_user"]["autolook"]["enabled"]
@@ -456,7 +458,7 @@ class DatabaseManager:
                 "ignored": []
             },
             "builder": {
-                "enabled": self.defaults["first_user"]["builder"]["enabled"]
+                "enabled": self.defaults["first_user"]["builder"]["disabled"]
             },
             "cecho": {
                 "enabled": self.defaults["first_user"]["cecho"]["enabled"]
