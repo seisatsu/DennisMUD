@@ -57,7 +57,9 @@ JSON Structure::
         "passhash":     <str>,      # SHA256 Hash of Password
         "room":         <int>,      # Current Room
         "inventory":    <list:int>, # List of Inventory Item IDs
-        "pronouns":     <str>,      # Pronouns; One of: "female", "male", "neutral"
+        "pronouns":     <str>,      # Pronouns; One of: "female", "male", "neutral", or subjective case of custom.
+        "pronouno":     <str>,      # Objective case of a custom pronoun.
+        "pronounp":     <str>,      # Posessive case of a custom pronoun.
         "wizard":       <str>,      # Whether the User is a Wizard/Admin
         "autolook": {
             "enabled":  <bool>      # Whether Autolook is Enabled
