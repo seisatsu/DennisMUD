@@ -25,6 +25,8 @@
 # IN THE SOFTWARE.
 # **********
 
+import random
+
 NAME = "go"
 CATEGORIES = ["exploration"]
 ALIASES = ["exit", "exit through", "go into", "go through", "leave", "leave through"]
@@ -43,7 +45,6 @@ Ex3. `exit blue door`
 Ex4. `>blue door`
 Ex5. `go` to list exits."""
 
-
 def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args):
@@ -60,7 +61,8 @@ def COMMAND(console, args):
 
         # Append each exit name and ID to the list.
         for ex in range(len(thisroom["exits"])):
-            exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+                exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+
 
         # If any exits were found, show the list.
         if exitlist:
@@ -85,6 +87,12 @@ def COMMAND(console, args):
 
         # Check for name or id match.
         if exits[ex]["name"].lower() == target.lower() or str(ex) == target:
+
+            # Check if its hidden or we are not wizards.
+            if exits[ex]["hidden"]==True and console.user["wizard"]==False:
+                console.msg("go: No such exit: {0}".format(' '.join(args[0:])))
+                return False
+
             # Check if the destination room exists, otherwise give an error and fail.
             destroom = COMMON.check_room(NAME, console, roomid=exits[ex]["dest"], reason=False)
             if not destroom:
@@ -140,6 +148,16 @@ def COMMAND(console, args):
 
             # Add us to the destination room.
             if console.user["name"] not in destroom["users"]:
+                
+                # First person entering that room, check for random exits.
+                if len(destroom["users"])==0:
+                    dexits = destroom["exits"]
+                    for dex in range(len(dexits)):
+                        # Check for randomized chance
+                        if dexits[dex]["chance"]:
+                            if random.randint(1,dexits[dex]["chance"])==1: dexits[dex]["hidden"]=False
+                            else: dexits[dex]["hidden"]=True
+
                 destroom["users"].append(console.user["name"])
 
             # This exit has a custom action.

@@ -90,8 +90,9 @@ def COMMAND(console, args):
         # Build and show the exit list.
         exitlist = []
         for ex in range(len(thisroom["exits"])):
-            if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
-            else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
+            if thisroom["exits"][ex]["hidden"]==False or console.user["wizard"]==True:
+                if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+                else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
         if exitlist:
             console.msg(mcolor(CGRN,"Exits: {0}".format(", ".join(exitlist)),console.user["colors"]["enabled"]))
         else:

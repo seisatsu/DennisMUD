@@ -102,6 +102,8 @@ def COMMAND(console, args):
         "key": None,
         "key_hidden": False,
         "locked": False,
+        "hidden": False,
+        "chance": 1,
         "action": {
             "go": "",
             "locked": "",
