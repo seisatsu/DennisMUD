@@ -87,6 +87,7 @@ def COMMAND(console, args):
             # If the item is not in our inventory, get it.
             if not thisitem["id"] in console.user["inventory"]:
                 thisitem["hidden"]=False
+                thisitem["chance"]=1
                 console.user["inventory"].append(thisitem["id"])
 
             # Announce that we picked up the item.

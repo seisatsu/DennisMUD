@@ -160,6 +160,17 @@ def COMMAND(console, args):
                             if random.randint(1,dexits[dex]["chance"])==1: dexits[dex]["hidden"]=False
                             else: dexits[dex]["hidden"]=True
 
+                    # Random items check.
+                    ditems = destroom["items"]
+                    print(ditems)
+                    for dit in ditems:
+                        dit = console.database.item_by_id(dit)
+                        # Check for randomized chance
+                        print(dit["chance"])
+                        if dit["chance"]:
+                            if random.randint(1,dit["chance"])==1: dit["hidden"]=False
+                            else: dit["hidden"]=True
+
                 destroom["users"].append(console.user["name"])
 
             # This exit has a custom action.
