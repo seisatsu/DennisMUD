@@ -61,7 +61,9 @@ def COMMAND(console, args):
 
         # Append each exit name and ID to the list.
         for ex in range(len(thisroom["exits"])):
-                exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+                if thisroom["exits"][ex]["hidden"]==False or console.user["wizard"]==True:
+                    if console.user["builder"]["enabled"]: exitlist.append("{0} ({1})".format(thisroom["exits"][ex]["name"], ex))
+                    else: exitlist.append("{0}".format(thisroom["exits"][ex]["name"]))
 
 
         # If any exits were found, show the list.
