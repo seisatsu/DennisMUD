@@ -159,7 +159,7 @@ def COMMAND(console, args):
                                                                 COMMON.format_item(NAME, console["posture_item"])))
                 elif console["posture"]:
                     console.msg("\n{0} is {1}.".format(console.user["pronouns"].capitalize(),console["posture"]))
-
+            found_something=True
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)
