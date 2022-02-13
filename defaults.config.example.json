@@ -21,6 +21,9 @@
     },
     "cecho": {
       "enabled": true
+    },
+    "colors": {
+      "enabled": false
     }
   },
   "items": {
