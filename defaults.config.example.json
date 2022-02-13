@@ -28,7 +28,8 @@
   },
   "items": {
     "glued": false,
-    "hidden": false
+    "hidden": false,
+    "chance": 1
   },
   "rooms": {
     "sealed": {
