@@ -154,11 +154,11 @@ def COMMAND(console, args):
                     console.msg("\nThey are {0}.".format(console["posture"]))
                 return True
             else:
-                if userconsole["posture"] and userconsole["posture_item"]:
-                    console.msg("\n{0} is {1} on {2}.".format(user["pronouns"].capitalize(),userconsole["posture"],
-                                                                COMMON.format_item(NAME, userconsole["posture_item"])))
-                elif userconsole["posture"]:
-                    console.msg("\n{0} is {1}.".format(user["pronouns"].capitalize(),userconsole["posture"]))
+                if console["posture"] and console["posture_item"]:
+                    console.msg("\n{0} is {1} on {2}.".format(console.user["pronouns"].capitalize(),console["posture"],
+                                                                COMMON.format_item(NAME, console["posture_item"])))
+                elif console["posture"]:
+                    console.msg("\n{0} is {1}.".format(console.user["pronouns"].capitalize(),console["posture"]))
 
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
