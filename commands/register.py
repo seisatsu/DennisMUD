@@ -81,6 +81,7 @@ def COMMAND(console, args):
         "inventory": [],
         "pronouns": "neutral",
         "pronouno": "neutral",
+        "lang": "common",
         "wizard": False,
         "autolook": {
             "enabled": console.database.defaults["users"]["autolook"]["enabled"]

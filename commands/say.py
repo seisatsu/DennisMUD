@@ -26,6 +26,7 @@
 # **********
 
 from lib.color import *
+from lib.vigenere import *
 
 NAME = "say"
 CATEGORIES = ["messaging"]
@@ -46,13 +47,25 @@ def COMMAND(console, args):
 
     # Broadcast our message to the current room.
     args[0]=args[0].capitalize()
-    if args[-1][-1]=="?": console.shell.broadcast_room(console, "{0} asks, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
-    elif args[-1].count("!")>1: console.shell.broadcast_room(console, "{0} yells, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
-    elif args[-1][-1]=="!": console.shell.broadcast_room(console, "{0} exclaims, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
+    nick=console.database.user_by_name(console.user["name"])["nick"]
+    mylang=console.database.user_by_name(console.user["name"])["lang"]
+    emsg=encvigenere(' '.join(args),mylang)
+    if args[-1][-1]=="?": 
+        msg = "{0} asks, '{1}'".format(nick, ' '.join(args))
+        emsg = "{0} asks, '{1}'".format(nick, emsg)
+    elif args[-1].count("!")>1: 
+        msg = "{0} yells, '{1}'".format(nick, ' '.join(args))
+        emsg = "{0} yells, '{1}'".format(nick, emsg)
+    elif args[-1][-1]=="!": 
+        msg = "{0} exclaims, '{1}'".format(nick, ' '.join(args))
+        emsg = "{0} exclaims, '{1}'".format(nick, emsg)
     else:
         #Talk nice. 
-        if args[-1][-1]!=".": args[-1]=args[-1]+"."
-        console.shell.broadcast_room(console, "{0} says, '{1}'".format(console.user["nick"], ' '.join(args)),mtype="say")
-
+        if args[-1][-1]!=".": 
+            args[-1]=args[-1]+"."
+            emsg=emsg+"."
+        msg ="{0} says, '{1}'".format(nick, ' '.join(args))
+        emsg ="{0} says, '{1}'".format(nick, emsg)
+    console.shell.broadcast_room(console, msg,mtype="say",enmsg=emsg,tlang=mylang)
     # Finished.
     return True
