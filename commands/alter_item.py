@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# hide_item.py        #
+# alter_item.py    #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -25,23 +25,28 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "hide item"
+NAME = "alter item"
 CATEGORIES = ["items"]
-USAGE = "hide item <item_id>"
-DESCRIPTION = """Hide the item <item_id> so it blends into the room.
+USAGE = "alter item <item_id> <item_type>"
+DESCRIPTION = """Set the type of the item with <item_id>.
 
-You must own the item and it must be in your inventory in order to hide it.
-You can unhide a hided item with taking it up and dropping it again.
-Wizards can see any hidden items.
+Currently supported item types are:
+- simple
+- book
 
-Ex. `hide item 4`"""
+If the item type is not default then it's a special item like a book 
+for learning languages. They don't necessarily need to look and used like a book.
+Wizards can alter any item from anywhere.
+
+Ex. `alter item 4 book`
+Ex2. `alter item 4 simple"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=1):
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
-
+    types=["simple","book"]
     # Perform argument type checks and casts.
     itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
     if itemid is None:
@@ -52,14 +57,13 @@ def COMMAND(console, args):
     if not thisitem:
         return False
 
-    # Check if the item is already hided.
-    if thisitem["hidden"] or thisitem["truehide"]:
-        console.msg("{0}: This item is already hidden.".format(NAME))
+    # alter the item.
+    if args[1] not in types:
         return False
-
-    # hide the item.
-    thisitem["hidden"] = True
-    thisitem["truehide"] = True
+    if args[1]=="simple":
+        thisitem["lang"] = None
+    elif args[1]=="book":
+        thisitem["lang"] = console.user["lang"]
     console.database.upsert_item(thisitem)
 
     # Finished.

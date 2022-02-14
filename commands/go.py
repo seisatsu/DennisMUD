@@ -162,12 +162,10 @@ def COMMAND(console, args):
 
                     # Random items check.
                     ditems = destroom["items"]
-                    print(ditems)
                     for dit in ditems:
                         dit = console.database.item_by_id(dit)
                         # Check for randomized chance
-                        print(dit["chance"])
-                        if dit["chance"]:
+                        if dit["chance"] and dit["truehide"]==False:
                             if random.randint(1,dit["chance"])==1: dit["hidden"]=False
                             else: dit["hidden"]=True
 
