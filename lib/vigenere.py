@@ -43,9 +43,7 @@ def cipherText(string, key):
      
 # Driver code
 def encvigenere(string, keyword):
-    print(string)
     wordlist=list(string.split(' '))
-    print(wordlist)
     for word in range(len(wordlist)):
         key = generateKey(wordlist[word], keyword)
         if word == 0: wordlist[word]= cipherText(wordlist[word],key).capitalize()
