@@ -34,26 +34,3 @@ def mcolor(col,msg,ucolo=None):
     else:
         return msg
 
-
-#ANSI COLORS FOR WEBSOCKET
-#probably should be parsed by the client from xterm colors
-#As I have no means of testing the websocket stuff, I'll leave it for now.
-hCRES="</p>"
-hCBOLD="<p style='weight:bold'>"
-hCBLACK="<p style='color:black'>"
-hCRED="<p style='color:red'>"
-hCGRN="<p style='color:green'>"
-hCYELLO="<p style='color:yellow'>"
-hCBLUE="<p style='color:blue'>"
-hCMAG="<p style='color:magenta'>"
-hCCYAN="<p style='color:cyan'>"
-hCWHITE="<p style='color:white'>"
-hCBBLACK="<p style='color:black'>"
-hCBRED="<p style='color:red'>"
-hCBGRN="<p style='color:green'>"
-hCBYELLO="<p style='color:yellow'>"
-hCBBLUE="<p style='color:blue'>"
-hCBMAG="<p style='color:magenta'>"
-hCBCYAN="<p style='color:cyan'>"
-hCBWHITE="<p style='color:white'>"
-#END OF COLORS
