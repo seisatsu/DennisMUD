@@ -209,7 +209,8 @@ class Router:
             if self.users[u]["console"].user["name"] == exclude:
                 continue
             if self.users[u]["console"].user["room"] == room:
-                if mtype=="say" and self.users[u]["console"].user["lang"] != tlang: amsg=enmsg
+                mylang=self.users[u]["console"].database.user_by_name(self.users[u]["console"].user["name"])["lang"]
+                if mtype=="say" and mylang != tlang: amsg=enmsg
                 else: amsg=msg
                 if self.users[u]["service"] == "telnet":
                     if mtype=="say": acolo = CBCYAN
