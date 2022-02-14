@@ -52,7 +52,8 @@
     },
     "colors": {
       "enabled": false
-    }
+    },
+    "lang": "common"
   },
   "help": {
     "columns": 6

@@ -189,7 +189,7 @@ class Router:
                 if mtype=="announce": acolo = CBWHITE
                 self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
 
-    def broadcast_room(self, room, msg, exclude=None, mtype=None):
+    def broadcast_room(self, room, msg, exclude=None, mtype=None, enmsg=None,tlang=None):
         """Broadcast Room
 
         Broadcast a message to all logged in users in the given room.
@@ -202,19 +202,21 @@ class Router:
         :return: True
         """
         #Default color for any message.
-        acolo="default"
+        acolo="default" 
         for u in self.users:
             if not self.users[u]["console"].user:
                 continue
             if self.users[u]["console"].user["name"] == exclude:
                 continue
             if self.users[u]["console"].user["room"] == room:
+                if mtype=="say" and self.users[u]["console"].user["lang"] != tlang: amsg=enmsg
+                else: amsg=msg
                 if self.users[u]["service"] == "telnet":
                     if mtype=="say": acolo = CBCYAN
-                    self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
+                    self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
                 if self.users[u]["service"] == "websocket":
                     if mtype=="say": acolo = CBCYAN
-                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
+                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
 
 
 def init_services(config, router, log):
