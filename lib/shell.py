@@ -386,7 +386,7 @@ class Shell:
         self.router.broadcast_all(message, exclude, mtype)
         return True
 
-    def broadcast_room(self, console, message, exclude=None, mtype=None):
+    def broadcast_room(self, console, message, exclude=None, mtype=None, enmsg=None, tlang=None):
         """Broadcast Message to Room
 
         Send a message to all users who are in the same room as the user connected to this console.
@@ -399,7 +399,7 @@ class Shell:
         :return: True
         """
         self._log.info(message)
-        self.router.broadcast_room(console.user["room"], message, exclude, mtype)
+        self.router.broadcast_room(console.user["room"], message, exclude, mtype, enmsg, tlang)
         return True
 
     def user_by_name(self, username):
