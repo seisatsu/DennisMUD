@@ -41,7 +41,7 @@ def COMMAND(console, args):
 
     # Lookup target user.
     targetuser = COMMON.check_user(NAME, console, args[0].lower())
-    if not targetuser or args[0].isalpha()==False:
+    if not targetuser:
         return False
 
     if len(args)==1:
