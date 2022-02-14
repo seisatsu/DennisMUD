@@ -36,23 +36,23 @@ Ex. `language seisatsu unknown`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=2, argmax=2, wizard=True):
+    if not COMMON.check(NAME, console, args, argmin=1, argmax=2, wizard=True):
         return False
 
     # Lookup target user.
     targetuser = COMMON.check_user(NAME, console, args[0].lower())
-    if not targetuser or args[1].isalpha()==False:
+    if not targetuser or args[0].isalpha()==False:
         return False
 
+    if len(args)==1:
+        console.msg("{0}: Language of {1} is {2}.".format(NAME,args[0],targetuser["lang"]))
+        return True
+            
     # Make sure the name is not an integer, as this would be confusing.
     # We actually want an exception to be raised here.
-    try:
-        int(args[1])
-        console.msg("{0}: The language cannot be an integer.".format(NAME))
+    if args[1].isalpha()==False:
+        console.msg("{0}: The language name can be of letters only.".format(NAME))
         return False
-    except ValueError:
-        # Not an integer.
-        pass
 
     # Get new nickname.
     langname = args[1]
