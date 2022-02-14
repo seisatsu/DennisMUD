@@ -32,6 +32,7 @@ DESCRIPTION = """Check, enable, or disable colors.
 
 If enabled, you will automatically get colors from the server.
 Without an argument, just check the current setting.
+Colors are currently not supported in browsers.
 
 Ex. `set colors on` to enable ANSI colors."""
 
