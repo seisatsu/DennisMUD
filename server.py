@@ -162,7 +162,10 @@ class Router:
         if self.users[peer]["service"] == "telnet":
             self.telnet_factory.communicate(peer, msg.encode())
         if self.users[peer]["service"] == "websocket":
-            self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
+            try:
+                self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
+            except:
+                print("Tried to send message to a closed websocket client.")
 
     def broadcast_all(self, msg, exclude=None, mtype=None):
         """Broadcast All
@@ -187,7 +190,10 @@ class Router:
                 self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
             if self.users[u]["service"] == "websocket":
                 if mtype=="announce": acolo = CBWHITE
-                self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
+                try: 
+                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,msg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
+                except:
+                    print("Tried to send message to a closed websocket client.")
 
     def broadcast_room(self, room, msg, exclude=None, mtype=None, enmsg=None,tlang=None):
         """Broadcast Room
@@ -217,8 +223,10 @@ class Router:
                     self.telnet_factory.communicate(self.users[u]["console"].rname, mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"]).encode())
                 if self.users[u]["service"] == "websocket":
                     if mtype=="say": acolo = CBCYAN
-                    self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
-
+                    try:
+                        self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(mcolor(acolo,amsg,ucolo=self.users[u]["console"].user["colors"]["enabled"])).encode("utf-8"))
+                    except:
+                        print("Tried to send message to a closed websocket client.")
 
 def init_services(config, router, log):
     """Initialize the Telnet and/or WebSocket Services
