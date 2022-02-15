@@ -182,8 +182,14 @@ def COMMAND(console, args):
                 if console.user["name"] in item["owners"] or console.user["wizard"]:
                     if item["duplified"]:
                         attributes.append("[duplified]")
+                    if item["container"]["enabled"]:
+                        attributes.append("[container]")
                     if item["glued"]:
                         attributes.append("[glued]")
+                    if item["truehide"]:
+                        attributes.append("[hidden]")
+                    if item["lang"]:
+                        attributes.append("[language book]")
                     if item["telekey"] is not None:
                         attributes.append("[telekey:{0}]".format(item["telekey"]))
 
@@ -195,6 +201,17 @@ def COMMAND(console, args):
                 # Description exists, so show it.
                 if item["desc"]:
                     console.msg(item["desc"])
+
+                # List content if it's a container
+                if item["container"]["enabled"]:
+                    citemlist=[]
+                    for c in range(len(item["container"]["inventory"])):
+                        citem=console.database.item_by_id(item["container"]["inventory"][c])
+                        citemlist.append(citem["name"])
+                    if len(citemlist)>0:
+                        console.msg("Contains the following items: {0}".format(', '.join(citemlist)))
+                    else:
+                        console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
                 found_something = True
                 found_item = itemid
                 break
@@ -223,6 +240,12 @@ def COMMAND(console, args):
                         attributes.append("[duplified]")
                     if item["glued"]:
                         attributes.append("[glued]")
+                    if item["truehide"]:
+                        attributes.append("[hidden]")
+                    if item["lang"]:
+                        attributes.append("[language book]")
+                    if item["container"]["enabled"]:
+                        attributes.append("[container]")
                     if item["telekey"]:
                         attributes.append("[telekey:{0}]".format(item["telekey"]))
 
@@ -234,6 +257,18 @@ def COMMAND(console, args):
                 # Description exists, so show it.
                 if item["desc"]:
                     console.msg(item["desc"])  # Print item description.
+
+                # List content if it's a container
+                if item["container"]["enabled"]:
+                    citemlist=[]
+                    for c in range(len(item["container"]["inventory"])):
+                        citem=console.database.item_by_id(item["container"]["inventory"][c])
+                        citemlist.append(citem["name"])
+                    if len(citemlist)>0:
+                        console.msg("Contains the following items: {0}".format(', '.join(citemlist)))
+                    else:
+                        console.msg("{0} seems to be empty.".format(item["name"].capitalize()))
+
                 found_something = True
                 break
 

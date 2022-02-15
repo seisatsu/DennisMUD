@@ -86,6 +86,10 @@ def COMMAND(console, args):
         "truehide": False,
         "chance": 1,
         "duplified": False,
+        "container": {
+            "enabled": False,
+            "inventory": []
+        },
         "telekey": None
     }
 

@@ -36,7 +36,7 @@ Currently supported item types are:
 
 If the item type is not default then it's a special item like a book 
 for learning languages. They don't necessarily need to look and used like a book.
-Wizards can alter any item from anywhere.
+Wizards can alter any item from anywhere. The item type simple basically resets the other types.
 
 Ex. `alter item 4 book`
 Ex2. `alter item 4 simple"""
@@ -46,7 +46,7 @@ def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=2):
         return False
-    types=["simple","book"]
+    types=["simple","book", "container"]
     # Perform argument type checks and casts.
     itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
     if itemid is None:
@@ -59,13 +59,24 @@ def COMMAND(console, args):
 
     # alter the item.
     if args[1] not in types:
+        console.msg("Not a valid item type. Currently items can be one of these: {0}".format(' '.join(types)))
         return False
     if args[1]=="simple":
         thisitem["lang"] = None
+        if(len(thisitem["container"]["inventory"]))>0:
+            console.msg("Can't make it a non-container, please empty the item first.")
+            return False
+        else: thisitem["container"]["enabled"] = False
     elif args[1]=="book":
         thisitem["lang"] = console.user["lang"]
+    elif args[1]=="container":
+        if "into" in thisitem["name"] or "from" in thisitem["name"]:
+            console.msg("Containers can't have the word INTO or FROM in their name. Please rename the item before making it a container.")
+            return False
+        thisitem["container"]["enabled"] = True
+        thisitem["container"]["inventory"] = []
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: Done.".format(NAME))
+    console.msg("{0}: Done. Item {1} is now a {2} item.".format(NAME,args[0],args[1]))
     return True
