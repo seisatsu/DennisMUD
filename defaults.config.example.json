@@ -24,13 +24,17 @@
     },
     "colors": {
       "enabled": false
-    }
+    },
+    "lang": "common"
   },
   "items": {
     "glued": false,
     "hidden": false,
     "truehide": false,
-    "chance": 1
+    "chance": 1,
+    "container": {
+      "enabled": false      
+    }
   },
   "rooms": {
     "sealed": {
