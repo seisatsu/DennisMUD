@@ -50,10 +50,10 @@
       "enabled": true
     },
     "builder": {
-      "enabled": true
+      "enabled": false
     },
     "cecho": {
-      "enabled": true
+      "enabled": false
     },
     "colors": {
       "enabled": false

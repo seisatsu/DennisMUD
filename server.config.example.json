@@ -14,12 +14,12 @@
   },
   "websocket": {
     "enabled": true,
-    "host": "dennis.seisat.su",
+    "host": "yourhost.tld",
     "port": 37380,
     "secure": false,
     "key": "ssl/dennis.key",
     "cert": "ssl/dennis.cert"
   },
   "disabled": ["purge_exits", "purge_entrances"],
-  "shutdown_delay": 10
+  "shutdown_delay": 30
 }
