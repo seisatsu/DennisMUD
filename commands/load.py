@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# put_into.py             #
+# put_into.py         #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -44,12 +44,6 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=3):
         return False
 
-    # Get item name/id.
-    target = ' '.join(args[1:]).lower()
-    if target == "the":
-        console.msg("{0}: Very funny.".format(NAME))
-        return False
-
     # Iterate through the args to split it into two
     thisitemname=[]
     thiscontainername=[]
@@ -61,6 +55,13 @@ def COMMAND(console, args):
         elif sw==1: thiscontainername.append(ar)
     thisitemname=' '.join(thisitemname)
     thiscontainername=' '.join(thiscontainername)
+
+
+    # Get item name/id.
+    target = thisitemname.lower()
+    if target == "the":
+        console.msg("{0}: Very funny.".format(NAME))
+        return False
 
     # Search our inventory for the target item.
     for containerid in console.user["inventory"]:

@@ -46,7 +46,7 @@ def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=2):
         return False
-    types=["simple","book", "container"]
+    types=["simple", "book", "container"]
     # Perform argument type checks and casts.
     itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
     if itemid is None:
@@ -59,7 +59,7 @@ def COMMAND(console, args):
 
     # alter the item.
     if args[1] not in types:
-        console.msg("Not a valid item type. Currently items can be one of these: {0}".format(' '.join(types)))
+        console.msg("Not a valid item type. Currently items can be one of these: {0}".format(', '.join(types)))
         return False
     if args[1]=="simple":
         thisitem["lang"] = None
@@ -78,5 +78,5 @@ def COMMAND(console, args):
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: Done. Item {1} is now a {2} item.".format(NAME,args[0],args[1]))
+    console.msg("{0}: Done. {1} is now a {2} item.".format(NAME,args[0].capitalize(),args[1]))
     return True

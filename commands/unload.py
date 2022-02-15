@@ -27,7 +27,6 @@
 
 NAME = "unload"
 CATEGORIES = ["items"]
-ALIASES = [""]
 USAGE = "unload <item> from <container>"
 DESCRIPTION = """unload the item called <item> from the <container>.
 

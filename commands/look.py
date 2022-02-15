@@ -77,7 +77,7 @@ def COMMAND(console, args):
                 if item["hidden"] == False:
                     if console.user["builder"]["enabled"]: itemlist.append("{0} ({1})".format(item["name"], item["id"]))
                     else: itemlist.append("{0}".format(item["name"]))
-                elif console.user["wizard"]:
+                elif (console.user["wizard"] and item["hidden"] == True):
                     if console.user["builder"]["enabled"]: itemlist.append("{0} ({1}) (Hidden)".format(item["name"], item["id"]))
                     else: itemlist.append("{0} (Hidden)".format(item["name"]))
             else:
@@ -195,7 +195,7 @@ def COMMAND(console, args):
 
                 # Send the info for this item.
                 if console.user["builder"]["enabled"]: console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
-                else: console.msg("{0} {1}".format(item["name"], ' '.join(attributes)))
+                else: console.msg("{0}".format(item["name"]))
                 if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
@@ -251,7 +251,7 @@ def COMMAND(console, args):
 
                 # Send the info for this item.
                 if console.user["builder"]["enabled"]: console.msg("{0} ({1}) {2}".format(item["name"], item["id"], ' '.join(attributes)))
-                else:  console.msg("{0} {1}".format(item["name"], ' '.join(attributes)))
+                else:  console.msg("{0}".format(item["name"]))
                 if console.user["builder"]["enabled"]: console.msg("Owned by: {0}".format(', '.join(item["owners"])))
 
                 # Description exists, so show it.
@@ -297,7 +297,8 @@ def COMMAND(console, args):
                                                      or console.user["wizard"]
                                                      or not thisroom["exits"][ex]["key_hidden"]):
                     item = console.database.item_by_id(thisroom["exits"][ex]["key"])
-                    console.msg("Unlocked with: {0} ({1})".format(item["name"], item["id"]))
+                    if console.user["builder"]["enabled"]: console.msg("Unlocked with: {0} ({1})".format(item["name"], item["id"]))
+                    else: console.msg("Unlocked with: {0}".format(item["name"]))
                 found_something = True
                 break
 

@@ -1,6 +1,6 @@
 #######################
 # Dennis MUD          #
-# lost_exit.py        #
+# remake_exit.py      #
 # Copyright 2018-2020 #
 # Michael D. Reiley   #
 #######################
@@ -25,23 +25,21 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "lock exit"
+NAME = "remake exit"
 CATEGORIES = ["exits"]
-ALIASES=["close exit"]
-USAGE = "lock exit <exit_id>"
-DESCRIPTION = """Prevents anyone except the exit owner or a key holder from using the exit <exit_id> in this room.
+USAGE = "remake exit <exit_id>"
+DESCRIPTION = """Resets the exit <exit_id> in this room.
 
-Any player who is not holding the key to the exit and does not own the exit will be unable to pass.
-You must own the exit or its room in order to lock it.
-You can unlock a locked exit with the `unlock exit` command.
-Wizards can lock any exit.
+Destination, name and owner list are untouched.
+You must own the exit or its room.
+Wizards can remake any exit.
 
-Ex. `lock exit 3`"""
+Ex. `remake exit 3`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=1):
+    if not COMMON.check(NAME, console, args, argmin=1, argmax=1):
         return False
 
     # Perform argument type checks and casts.
@@ -54,15 +52,19 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Check if the exit is already locked.
-    if thisroom["exits"][exitid]["locked"]:
-        console.msg("{0}: This exit is already locked.".format(NAME))
-        return False
-
-    # Lock the exit.
-    thisroom["exits"][exitid]["locked"] = True
+    # remake the exit.
+    thisroom["exits"][exitid]["desc"] = ""
+    thisroom["exits"][exitid]["key"] = None
+    thisroom["exits"][exitid]["key_hidden"] = True
+    thisroom["exits"][exitid]["locked"] = False
+    thisroom["exits"][exitid]["hidden"] = False
+    thisroom["exits"][exitid]["chance"] = 1
+    thisroom["exits"][exitid]["action"]["go"] = ""
+    thisroom["exits"][exitid]["action"]["locked"] = ""
+    thisroom["exits"][exitid]["action"]["entrance"] = ""
     console.database.upsert_room(thisroom)
 
     # Finished.
     console.msg("{0}: Done.".format(NAME))
     return True
+

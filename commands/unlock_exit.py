@@ -27,6 +27,7 @@
 
 NAME = "unlock exit"
 CATEGORIES = ["exits"]
+ALIASES=["open exit"]
 USAGE = "unlock exit <exit_id>"
 DESCRIPTION = """Allows anyone to use the exit <exit_id> in this room.
 

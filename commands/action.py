@@ -51,7 +51,8 @@ def COMMAND(console, args):
 
     # Handle the action text.
     action = ' '.join(args)
-    if args[-1].isalpha(): action=action+"."
+    # Adding a dot if there is none.
+    if args[-1][-1].isalpha(): action=action+"."
     COMMON.broadcast_action(NAME, console, action) 
 
     # Finished.
