@@ -32,7 +32,7 @@ from tinydb.table import Document
 
 
 def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True, wizard=False,
-          usage=True, reason=True):
+          usage=True, reason=True, spiritcost=None, spiritenabled=None):
     """Perform simple checks.
 
     :param NAME: The NAME field from the command module.
@@ -45,6 +45,8 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
     :param wizard: Whether to check if the user is a wizard.
     :param usage: Whether to show usage for the command if the check fails. Defaults to True.
     :param reason: Whether to show a common failure explanation if the check fails. Defaults to True.
+    :param spiritcost: Check for the available spirit to use a command.
+    :param spiritenabled: Check for the global server config if spirit cost is enabled or not.
 
     :return: True if succeeded, False if failed.
     """
@@ -116,7 +118,16 @@ def check(NAME, console, args, argc=None, argmin=None, argmax=None, online=True,
             if reason:
                 console.msg("{0}: You do not have permission to use this command.".format(NAME))
             return False
-
+        
+    if spiritcost and spiritenabled and not console.user["wizard"]:
+        if console.user["spirit"]<spiritcost:
+            if reason:
+                console.msg("You are too tired for that.")
+            return False
+        else:
+            console.user["spirit"]-=spiritcost
+            console.database.upsert_user(console.user)
+            
     # All checks succeeded.
     return True
 

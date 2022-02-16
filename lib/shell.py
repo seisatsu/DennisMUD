@@ -291,6 +291,8 @@ class Shell:
             if hasattr(self._commands[line], "SPECIAL_ALIASES"):
                 alias_list = (', '.join(self._commands[line].SPECIAL_ALIASES))
                 desc += "\nSpecial Aliases: " + alias_list
+            if hasattr(self._commands[line], "CATEGORIES"):
+                desc += "\nCategories: " + ', '.join(self._commands[line].CATEGORIES)
 
             # If this is the help command with no arguments, show available categories as well.
             if line == "help":
@@ -400,6 +402,31 @@ class Shell:
         """
         self._log.info(message)
         self.router.broadcast_room(console.user["room"], message, exclude, mtype, enmsg, tlang)
+        return True
+    
+    def updatespirit(self):
+        for u in self.router.users:
+            if self.router.users[u]["console"].user and not self.router.users[u]["console"].user["wizard"]:
+                try:
+                    if self.router.users[u]["console"].user["spirit"]<100:
+                        cursed = False
+                        # Iterate through inventory to see if they are cursed.
+                        for it in self.router.users[u]["console"].user["inventory"]:
+                            it2 = self.router.users[u]["console"].database.item_by_id(it)
+                            if it2["cursed"]["enabled"]: cursed = True
+                        if cursed == False:
+                            self.router.users[u]["console"].user["spirit"]+=CONFIG["spiritrate"]
+                            self.router.users[u]["console"].msg("You regain some spirit.")
+                        else:
+                            pass
+                            #self.router.users[u]["console"].msg("Something keeps you from gaining spirit.")
+                    else: 
+                        self.router.users[u]["console"].user["spirit"]=100
+                    self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
+                except:
+                    self.router.users[u]["console"].user["spirit"]=0
+                    self.router.users[u]["console"].msg("You start to gain some spirit.")
+                    self.router.users[u]["console"].database.upsert_user(self.router.users[u]["console"].user) 
         return True
 
     def user_by_name(self, username):
