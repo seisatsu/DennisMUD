@@ -53,6 +53,9 @@ def COMMAND(console, args):
         return False
 
     # remake the item.
+    if len(thisitem["container"]["inventory"])>0:
+        console.msg("{0} is not empty, please empty it before remaking.".format(thisitem["name"]))
+        return False
     thisitem["desc"] = ""
     thisitem["action"] = ""
     thisitem["lang"] = None

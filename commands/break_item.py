@@ -72,6 +72,7 @@ def COMMAND(console, args):
     # If the item is duplified or we are a wizard, check all rooms for the presence of the item, and delete.
     if thisitem["duplified"] or console.user["wizard"]:
         for room in console.database.rooms.all():
+            print(room["name"])
             if itemid in room["items"]:
                 room["items"].remove(itemid)
                 console.database.upsert_room(room)

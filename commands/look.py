@@ -126,11 +126,16 @@ def COMMAND(console, args):
 
         # Looking at ourselves. Show user nickname real name, and description.
         if target == "self":
+            found_something=True
             console.msg("{0} ({1})".format(console.user["nick"], console.user["name"]))
 
             # Description exists, so show it.
             if console.user["desc"]:
                 console.msg(console.user["desc"])
+
+            # Some message about our spirit. Currently just the number.
+            if console.user["spirit"] and not console.user["wizard"]: 
+                console.msg("Your current spirit seems to be at {0}%.".format(str(console.user["spirit"])))
 
             # If we are sitting or laying down, format a message saying so after the description.
             if console.user["pronouns"] == "female":
@@ -160,7 +165,8 @@ def COMMAND(console, args):
                                                                 COMMON.format_item(NAME, console["posture_item"])))
                 elif console["posture"]:
                     console.msg("\n{0} is {1}.".format(console.user["pronouns"].capitalize(),console["posture"]))
-            found_something=True
+                return True
+            
         # It wasn't us, so maybe it's an item in the room.
         for itemid in thisroom["items"]:
             item = console.database.item_by_id(itemid)

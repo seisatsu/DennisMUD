@@ -48,10 +48,13 @@ def COMMAND(console, args):
     # Make sure we chose an available option.
     if args[0].lower() in ["f", "female"]:
         console.user["pronouns"] = "female"
+        console.user["pronouno"] = "female"
     elif args[0].lower() in ["m", "male"]:
         console.user["pronouns"] = "male"
+        console.user["pronouno"] = "male"
     elif args[0].lower() in ["n", "neutral"]:
         console.user["pronouns"] = "neutral"
+        console.user["pronouno"] = "neutral"
     elif len(args)==2:
         console.user["pronouns"] = args[0].lower()
         console.user["pronouno"] = args[1].lower()

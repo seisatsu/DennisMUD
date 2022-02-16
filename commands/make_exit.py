@@ -27,6 +27,7 @@
 
 NAME = "make exit"
 CATEGORIES = ["exits"]
+SCOST = 25
 ALIASES = ["create exit", "new exit"]
 USAGE = "make exit <destination> <exit_name>"
 DESCRIPTION = """Create a new exit called <exit_name> in the current room, leading to the room with ID <destination>.
@@ -41,7 +42,7 @@ Ex. `make exit 12 Iron Door` to make an exit in the current room called "Iron Do
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=2):
+    if not COMMON.check(NAME, console, args, argmin=2, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
         return False
 
     # Perform argument type checks and casts.

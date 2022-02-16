@@ -27,6 +27,7 @@
 
 NAME = "make item"
 CATEGORIES = ["items"]
+SCOST = 25
 ALIASES = ["create item", "new item"]
 USAGE = "make item <item_name>"
 DESCRIPTION = """Create a new item called <item_name> and place it in your inventory.
@@ -38,7 +39,7 @@ Ex. `make item Crystal Ball`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argmin=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
         return False
 
     # Make sure the item name is not an integer, as this would be confusing.

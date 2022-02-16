@@ -78,6 +78,7 @@ def COMMAND(console, args):
         "desc": "",
         "passhash": hashlib.sha256(args[1].encode()).hexdigest(),
         "room": 0,
+        "spirit": 0,
         "inventory": [],
         "pronouns": "neutral",
         "pronouno": "neutral",

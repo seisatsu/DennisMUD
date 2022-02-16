@@ -27,6 +27,7 @@
 
 NAME = "make room"
 CATEGORIES = ["rooms"]
+SCOST = 50
 ALIASES = ["create room", "new room"]
 USAGE = "make room <room_name>"
 DESCRIPTION = """Create a new room called <room_name>.
@@ -38,7 +39,7 @@ Ex. `make room Small Bedroom`"""
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=1):
+    if not COMMON.check(NAME, console, args, argmin=1, spiritcost=SCOST, spiritenabled=CONFIG["spiritenabled"]):
         return False
 
     # Make sure the room name is not an integer, as this would be confusing.
