@@ -31,6 +31,9 @@
     "glued": false,
     "hidden": false,
     "truehide": false,
+    "cursed": {
+      "enabled": false      
+    },
     "chance": 1,
     "container": {
       "enabled": false      
