@@ -33,6 +33,8 @@ DESCRIPTION = """Set the type of the item with <item_id>.
 Currently supported item types are:
 - simple
 - book
+- container
+- cursed
 
 If the item type is not default then it's a special item like a book 
 for learning languages. They don't necessarily need to look and used like a book.
@@ -46,7 +48,7 @@ def COMMAND(console, args):
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=2):
         return False
-    types=["simple", "book", "container"]
+    types=["simple", "book", "container", "cursed"]
     # Perform argument type checks and casts.
     itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
     if itemid is None:
@@ -69,6 +71,11 @@ def COMMAND(console, args):
         else: thisitem["container"]["enabled"] = False
     elif args[1]=="book":
         thisitem["lang"] = console.user["lang"]
+    elif args[1]=="cursed":
+        if thisitem["cursed"]["enabled"]:
+           thisitem["cursed"]["enabled"] = False
+        else:    
+            thisitem["cursed"]["enabled"] = True
     elif args[1]=="container":
         if "into" in thisitem["name"] or "from" in thisitem["name"]:
             console.msg("Containers can't have the word INTO or FROM in their name. Please rename the item before making it a container.")

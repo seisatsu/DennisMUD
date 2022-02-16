@@ -91,6 +91,9 @@ def COMMAND(console, args):
             "enabled": False,
             "inventory": []
         },
+        "cursed": {
+            "enabled": False
+        },
         "telekey": None
     }
 

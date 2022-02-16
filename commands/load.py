@@ -78,6 +78,9 @@ def COMMAND(console, args):
             # Found the container, but do they have the item too?
             for itemid in console.user["inventory"]:
                 # Lookup the target item and perform item checks.
+                if itemid==containerid:
+                    console.msg("Don't do that.")
+                    return False
                 thisitem = COMMON.check_item(NAME, console, itemid, reason=False)
                 # Lookup the current container.
                 if not thisitem:
