@@ -21,5 +21,8 @@
     "cert": "ssl/dennis.cert"
   },
   "disabled": ["purge_exits", "purge_entrances"],
-  "shutdown_delay": 30
+  "shutdown_delay": 30,
+  "spiritenabled": false,
+  "spiritrate": 1,
+  "timegap": 60
 }

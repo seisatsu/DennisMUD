@@ -52,7 +52,7 @@ import signal
 import traceback
 
 from datetime import datetime
-from twisted.internet import reactor, ssl
+from twisted.internet import reactor, ssl, task
 from OpenSSL import crypto as openssl
 
 import zlib
@@ -354,6 +354,17 @@ def main():
             reactor.callLater(config["shutdown_delay"], reactor.stop)
             router.shutting_down = True
     signal.signal(signal.SIGINT, shutdown)
+
+    # Time passing for ticks.
+    def timeflow():
+        #command_shell.broadcast("Time is passing.")
+        log.info("Time is passing.")
+        command_shell.updatespirit()
+        #for u in router.users:
+        #    print("Time is passing for {0} too.".format(router.users[u]["console"].user["name"]))
+
+    l = task.LoopingCall(timeflow)
+    l.start(config["timegap"]) # call when specified in seconds
 
     # Start the Twisted Reactor.
     log.info("Finished startup tasks.")
