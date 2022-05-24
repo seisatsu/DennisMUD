@@ -55,7 +55,7 @@ def COMMAND(console, args):
 
     # Do nothing if we are already holding the item.
     if itemid in console.user["inventory"]:
-        console.msg("{0}: This item is already in your inventory.")
+        console.msg("{0}: This item is already in your inventory.".format(thisitem["name"]))
         return False
 
     # Announce the requisitioning.

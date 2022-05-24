@@ -118,47 +118,67 @@ class Logger:
     def debug(self, msg, **kwargs):
         """Write a debug level message to the console and/or the log file.
         """
+        try:
+            msg = msg.format(**kwargs)
+        except IndexError:
+            pass
         if _LOGLEVEL in ["debug"]:
             if _STDOUT:
-                print("{0} [{1}#debug] {2}".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                print("{0} [{1}#debug] {2}".format(timestamp(), self._namespace, msg))
             if _LOGFILE:
-                _LOGFILE.write("{0} [{1}#debug] {2}\n".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                _LOGFILE.write("{0} [{1}#debug] {2}\n".format(timestamp(), self._namespace, msg))
 
     def info(self, msg, **kwargs):
         """Write an info level message to the console and/or the log file.
         """
         if _LOGLEVEL in ["debug", "info"]:
+            try:
+                msg = msg.format(**kwargs)
+            except IndexError:
+                pass
             if _STDOUT:
-                print("{0} [{1}#info] {2}".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                print("{0} [{1}#info] {2}".format(timestamp(), self._namespace, msg))
             if _LOGFILE:
-                _LOGFILE.write("{0} [{1}#info] {2}\n".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                _LOGFILE.write("{0} [{1}#info] {2}\n".format(timestamp(), self._namespace, msg))
 
     def warn(self, msg, **kwargs):
         """Write a warn level message to the console and/or the log file.
         """
         if _LOGLEVEL in ["debug", "info", "warn"]:
+            try:
+                msg = msg.format(**kwargs)
+            except IndexError:
+                pass
             if _STDOUT:
-                print("{0} [{1}#warn] {2}".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                print("{0} [{1}#warn] {2}".format(timestamp(), self._namespace, msg))
             if _LOGFILE:
-                _LOGFILE.write("{0} [{1}#warn] {2}\n".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                _LOGFILE.write("{0} [{1}#warn] {2}\n".format(timestamp(), self._namespace, msg))
 
     def error(self, msg, **kwargs):
         """Write an error level message to the console and/or the log file.
         """
         if _LOGLEVEL in ["debug", "info", "warn", "error"]:
+            try:
+                msg = msg.format(**kwargs)
+            except IndexError:
+                pass
             if _STDOUT:
-                print("{0} [{1}#error] {2}".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                print("{0} [{1}#error] {2}".format(timestamp(), self._namespace, msg))
             if _LOGFILE:
-                _LOGFILE.write("{0} [{1}#error] {2}\n".format(timestamp(), self._namespace, msg.format(**kwargs)))
+                _LOGFILE.write("{0} [{1}#error] {2}\n".format(timestamp(), self._namespace, msg))
 
     def critical(self, msg, **kwargs):
         """Write a critical level message to the console and/or the log file.
 
         All log levels include critical, so these messages cannot be disabled.
         """
-        print("{0} [{1}#critical] {2}".format(timestamp(), self._namespace, msg.format(**kwargs)))
+        try:
+            msg = msg.format(**kwargs)
+        except IndexError:
+            pass
+        print("{0} [{1}#critical] {2}".format(timestamp(), self._namespace, msg))
         if _LOGFILE:
-            _LOGFILE.write("{0} [{1}#critical] {2}\n".format(timestamp(), self._namespace, msg.format(**kwargs)))
+            _LOGFILE.write("{0} [{1}#critical] {2}\n".format(timestamp(), self._namespace, msg))
 
         # Be nice to Windows users who ran the program by double-clicking. :)
         if _WAITONCRITICAL:
