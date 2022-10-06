@@ -33,6 +33,12 @@ DESCRIPTION = """Create a new item called <item_name> and place it in your inven
 
 You will be added as an owner of the new item.
 
+After making an item, you probably want to add a description that players will see when looking at it.
+See the `describe item` command.
+
+You may also want to change the action text that players will see when using the item.
+See the `actionate item` command.
+
 Ex. `make item Crystal Ball`"""
 
 

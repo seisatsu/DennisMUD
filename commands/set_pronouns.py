@@ -33,9 +33,7 @@ DESCRIPTION = """Check or set your pronouns for formatting action and posturing 
 The default setting is neutral. Without an argument, just check the current setting.
 You can either choose from the predefined neutral, female, and male pronoun settings, or define your own.
 
-To define your own pronouns, use `set pronouns custom <args>`, where <args> is the list of
-which words will replace the markers %they%, %them%, %their%, %theirs%, and %themselves%,
-in that order.
+To define your own pronouns, use `set pronouns custom <args>`, where <args> is the list of which words will replace the markers %they%, %them%, %their%, %theirs%, and %themselves%, in that order.
 
 Ex. `set pronouns female` to set female pronouns.
 Ex. `set pronouns custom xe xem xir xirs xirself` to set custom xe/xem/xir pronouns."""

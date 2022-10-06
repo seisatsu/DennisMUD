@@ -33,6 +33,15 @@ DESCRIPTION = """Create a new room called <room_name>.
 
 You will be added as an owner of the new room.
 
+After making a room, you will need to make an exit to another room that leads to your new room, in order to make it accessible.
+See the `make exit` command.
+
+You also probably want to add a description that players will see when looking at your room.
+See the `describe room` command.
+
+You may also want to change the text that is broadcast when a player enters your room.
+See the `actionate entrance` command.
+
 Ex. `make room Small Bedroom`"""
 
 

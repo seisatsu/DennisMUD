@@ -36,6 +36,12 @@ These restrictions do not apply to the owner of the current room and the owner o
 You will be added as an owner of the new exit.
 Wizards can create an exit to anywhere in any room.
 
+After making an exit, you probably want to add a description that players will see when looking at it.
+See the `describe exit` command.
+
+You may also want to change the text that is broadcast when a player leaves through your exit.
+See the `actionate exit` command.
+
 Ex. `make exit 12 Iron Door` to make an exit in the current room called "Iron Door" leading to room 12."""
 
 
