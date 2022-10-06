@@ -27,33 +27,46 @@
 
 NAME = "set pronouns"
 CATEGORIES = ["actions", "settings", "users"]
-USAGE = "set pronouns [neutral|female|male]"
+USAGE = "set pronouns [neutral|female|male]|[custom <they> <them> <their> <theirs> <themselves>]"
 DESCRIPTION = """Check or set your pronouns for formatting action and posturing text.
 
 The default setting is neutral. Without an argument, just check the current setting.
+You can either choose from the predefined neutral, female, and male pronoun settings, or define your own.
 
-Ex. `set pronouns female` to set female pronouns."""
+To define your own pronouns, use `set pronouns custom <args>`, where <args> is the list of
+which words will replace the markers %they%, %them%, %their%, %theirs%, and %themselves%,
+in that order.
+
+Ex. `set pronouns female` to set female pronouns.
+Ex. `set pronouns custom xe xem xir xirs xirself` to set custom xe/xem/xir pronouns."""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=0, argmax=1):
+    if not COMMON.check(NAME, console, args, argmin=0, argmax=6):
         return False
 
     # Just check our current pronouns.
     if len(args) == 0:
         console.msg("{0}: Your pronouns are currently set to {1}.".format(NAME, console.user["pronouns"]))
         return True
-
-    # Make sure we chose an available option.
+    
+    # Make sure we have a correct number of arguments otherwise.
+    if (len(args) > 1 and args[0] not in ["c", "custom"]) or (len(args) != 6 and args[0] in ["c", "custom"]):
+        console.msg("Usage: {0}".format(console.shell._commands[NAME].USAGE))
+        return False
+    
+    # Make sure we chose an available option, and update the user's pronouns setting.
     if args[0].lower() in ["f", "female"]:
         console.user["pronouns"] = "female"
     elif args[0].lower() in ["m", "male"]:
         console.user["pronouns"] = "male"
     elif args[0].lower() in ["n", "neutral"]:
         console.user["pronouns"] = "neutral"
+    elif args[0].lower() in ["c", "custom"]:
+        console.user["pronouns"] = args[1:]
     else:
-        console.msg("{0}: Must choose one of: \"female\", \"male\", \"neutral\".".format(NAME))
+        console.msg("{0}: Must choose one of: \"female\", \"male\", \"neutral\", \"common\".".format(NAME))
         return False
     console.database.upsert_user(console.user)
 

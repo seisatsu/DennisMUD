@@ -734,8 +734,8 @@ def broadcast_action(NAME, console, action):
     elif not playertags and "%noaction%" not in action:
         action = "{0} {1}".format(console.user["nick"], action)
 
-    # Make sure the player has a supported pronoun. Otherwise, set them to neutral.
-    if console.user["pronouns"] not in ["neutral", "female", "male"]:
+    # Make sure the player has a supported pronoun setting. Otherwise, set them to neutral.
+    if console.user["pronouns"] not in ["neutral", "female", "male"] and type(console.user["pronouns"]) is not list:
         console.log.error("Unsupported pronouns for user, setting to neutral: {username} :: {pronouns}",
                           username=console.user["name"],
                           pronouns=console.user["pronouns"])
@@ -751,6 +751,8 @@ def broadcast_action(NAME, console, action):
             action = action.replace("%they%", "she")
         elif console.user["pronouns"] == "male":
             action = action.replace("%they%", "he")
+        elif type(console.user["pronouns"]) is list:
+            action = action.replace("%they%", console.user["pronouns"][0])
     if "%them%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%them%", "them")
@@ -758,6 +760,8 @@ def broadcast_action(NAME, console, action):
             action = action.replace("%them%", "her")
         elif console.user["pronouns"] == "male":
             action = action.replace("%them%", "him")
+        elif type(console.user["pronouns"]) is list:
+            action = action.replace("%them%", console.user["pronouns"][1])
     if "%their%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%their%", "their")
@@ -765,6 +769,8 @@ def broadcast_action(NAME, console, action):
             action = action.replace("%their%", "her")
         elif console.user["pronouns"] == "male":
             action = action.replace("%their%", "his")
+        elif type(console.user["pronouns"]) is list:
+            action = action.replace("%their%", console.user["pronouns"][2])
     if "%theirs%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%theirs%", "theirs")
@@ -772,6 +778,8 @@ def broadcast_action(NAME, console, action):
             action = action.replace("%theirs%", "hers")
         elif console.user["pronouns"] == "male":
             action = action.replace("%theirs%", "his")
+        elif type(console.user["pronouns"]) is list:
+            action = action.replace("%theirs%", console.user["pronouns"][3])
     if "%themselves%" in action:
         if console.user["pronouns"] == "neutral":
             action = action.replace("%themselves%", "themselves")
@@ -779,13 +787,16 @@ def broadcast_action(NAME, console, action):
             action = action.replace("%themselves%", "herself")
         elif console.user["pronouns"] == "male":
             action = action.replace("%themselves%", "himself")
-    if "%s%" in action:
-        if console.user["pronouns"] == "neutral":
-            action = action.replace("%s%", '')
-        elif console.user["pronouns"] == "female":
-            action = action.replace("%s%", "s")
-        elif console.user["pronouns"] == "male":
-            action = action.replace("%s%", "s")
+        elif type(console.user["pronouns"]) is list:
+            action = action.replace("%themselves%", console.user["pronouns"][4])
+    ### I can't remember what this is useful for.
+    #if "%s%" in action:
+    #    if console.user["pronouns"] == "neutral":
+    #        action = action.replace("%s%", '')
+    #    elif console.user["pronouns"] == "female":
+    #        action = action.replace("%s%", "s")
+    #   elif console.user["pronouns"] == "male":
+    #       action = action.replace("%s%", "s")
 
     # Decide whether to message the user or broadcast the action.
     if "%noaction%" in action:
