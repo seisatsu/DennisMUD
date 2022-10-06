@@ -116,7 +116,7 @@ def COMMAND(console, args):
             return False
 
         # Looking at ourselves. Show user nickname real name, and description.
-        if target == "self":
+        if target == "self" or target == "myself":
             console.msg("{0} ({1})".format(console.user["nick"], console.user["name"]))
 
             # Description exists, so show it.
