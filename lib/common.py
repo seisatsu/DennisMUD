@@ -440,7 +440,7 @@ def check_item(NAME, console, itemid, owner=None, primary=False, holding=False, 
     return targetitem
 
 
-def check_room(NAME, console, roomid=None, owner=None, primary=None, orwizard=True, reason=True):
+def check_room(NAME, console, roomid=None, owner=None, primary=False, orwizard=True, reason=True):
     """Check if a room exists. If so, return it.
 
     :param NAME: The NAME field from the command module.
