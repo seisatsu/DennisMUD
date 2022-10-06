@@ -1,9 +1,9 @@
-########################
-# Dennis MUD           #
-# decorate_entrance.py #
-# Copyright 2020       #
-# Sei Satzparad        #
-########################
+###########################
+# Dennis MUD              #
+# unactionate_entrance.py #
+# Copyright 2020          #
+# Sei Satzparad           #
+###########################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,30 +25,21 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "decorate entrance"
+NAME = "unactionate entrance"
 CATEGORIES = ["actions", "exits"]
-USAGE = "decorate entrance <exit_id> <action>"
-DESCRIPTION = """Set a custom <action> to broadcast when a player enters the next room through the exit <exit_id>.
+ALIASES = ["undecorate entrance"]
+USAGE = "unactionate entrance <exit_id>"
+DESCRIPTION = """Remove the custom action displayed when a player enters the next room through <exit_id>.
 
-Everyone in the destination room will see the action text when it is broadcast.
-By default, the action text is shown following the player's nickname and one space.
-If the action starts with 's then the space is removed to allow possessive grammar.
-To place the player's name elsewhere in the text, use the "%player%" marker.
-To just message the player and not include their name, start the text with "%noaction%".
-The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
-The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
-The "%s%" tag will be removed for neutral pronouns, and otherwise replaced with the letter "s".
-You must own the exit or its room in order to decorate its entrance.
-You can remove the custom action from an entrance with the `undecorate entrance` command.
-Wizards can decorate any exit.
+You must own the exit or its room in order to unactionate its entrance.
+Wizards can unactionate any entrance.
 
-Ex. `decorate entrance 3 fell in through the ceiling.`
-Ex2. `decorate entrance 3 The ceiling spits out %player%.`"""
+Ex. `unactionate entrance 3`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=2):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
     # Perform argument type checks and casts.
@@ -61,10 +52,16 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Decorate the entrance.
-    thisroom["exits"][exitid]["action"]["entrance"] = ' '.join(args[1:])
+    # Check if the entrance is already unactionated.
+    if not thisroom["exits"][exitid]["action"]["entrance"]:
+        console.msg("{0}: This entrance already has no custom action.".format(NAME))
+        return False
+
+    # Unactionate the entrance.
+    thisroom["exits"][exitid]["action"]["entrance"] = ""
     console.database.upsert_room(thisroom)
 
     # Finished.
     console.msg("{0}: Done.".format(NAME))
     return True
+

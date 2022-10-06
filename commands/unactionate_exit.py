@@ -1,9 +1,9 @@
-##########################
-# Dennis MUD             #
-# undecorate_entrance.py #
-# Copyright 2020         #
-# Sei Satzparad          #
-##########################
+#######################
+# Dennis MUD          #
+# unactionate_exit.py #
+# Copyright 2018-2022 #
+# Sei Satzparad       #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,15 +25,16 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "undecorate entrance"
+NAME = "unactionate exit"
 CATEGORIES = ["actions", "exits"]
-USAGE = "undecorate entrance <exit_id>"
-DESCRIPTION = """Remove the custom action displayed when a player enters the next room through <exit_id>.
+ALIASES = ["undecorate exit"]
+USAGE = "unactionate exit <exit_id>"
+DESCRIPTION = """Remove the custom action displayed when a player uses the exit <exit_id>.
 
-You must own the exit or its room in order to undecorate its entrance.
-Wizards can undecorate any entrance.
+You must own the exit or its room in order to unactionate it.
+Wizards can unactionate any exit.
 
-Ex. `undecorate entrance 3`"""
+Ex. `unactionate exit 3`"""
 
 
 def COMMAND(console, args):
@@ -51,13 +52,13 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Check if the entrance is already undecorated.
-    if not thisroom["exits"][exitid]["action"]["entrance"]:
-        console.msg("{0}: This entrance already has no custom action.".format(NAME))
+    # Check if the exit is already unactionated.
+    if not thisroom["exits"][exitid]["action"]["go"]:
+        console.msg("{0}: This exit already has no custom action.".format(NAME))
         return False
 
-    # Undecorate the entrance.
-    thisroom["exits"][exitid]["action"]["entrance"] = ""
+    # Unactionate the exit.
+    thisroom["exits"][exitid]["action"]["go"] = ""
     console.database.upsert_room(thisroom)
 
     # Finished.

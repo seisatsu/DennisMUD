@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
-# undecorate_exit.py  #
-# Copyright 2018-2020 #
+# unactionate_item.py #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -25,15 +25,16 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "undecorate exit"
-CATEGORIES = ["actions", "exits"]
-USAGE = "undecorate exit <exit_id>"
-DESCRIPTION = """Remove the custom action displayed when a player uses the exit <exit_id>.
+NAME = "unactionate item"
+CATEGORIES = ["actions", "items"]
+ALIASES = ["undecorate item"]
+USAGE = "unactionate item <item_id>"
+DESCRIPTION = """Remove the custom action displayed when a player uses the item <item_id>.
 
-You must own the exit or its room in order to undecorate it.
-Wizards can undecorate any exit.
+You must own the item and it must be in your inventory in order to unactionate it.
+Wizards can unactionate any item from anywhere.
 
-Ex. `undecorate exit 3`"""
+Ex. `unactionate item 4`"""
 
 
 def COMMAND(console, args):
@@ -42,25 +43,24 @@ def COMMAND(console, args):
         return False
 
     # Perform argument type checks and casts.
-    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
-    if exitid is None:
+    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if itemid is None:
         return False
 
-    # Lookup the current room, and perform exit checks.
-    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
-    if not thisroom:
+    # Lookup the target item and perform item checks.
+    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
+    if not thisitem:
         return False
 
-    # Check if the exit is already undecorated.
-    if not thisroom["exits"][exitid]["action"]["go"]:
-        console.msg("{0}: This exit already has no custom action.".format(NAME))
+    # Check if the item is already unactionated.
+    if not thisitem["action"]:
+        console.msg("{0}: This item already has no custom action.".format(NAME))
         return False
 
-    # Undecorate the exit.
-    thisroom["exits"][exitid]["action"]["go"] = ""
-    console.database.upsert_room(thisroom)
+    # Unactionate the item.
+    thisitem["action"] = ""
+    console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg("{0}: Done.".format(NAME))
+    console.msg(NAME + ": done")
     return True
-

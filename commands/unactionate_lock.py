@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
-# decorate_lock.py    #
-# Copyright 2018-2020 #
+# unactionate_lock.py #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -25,30 +25,21 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "decorate lock"
+NAME = "unactionate lock"
 CATEGORIES = ["actions", "exits"]
-USAGE = "decorate lock <exit_id> <action>"
-DESCRIPTION = """Set a custom <action> to broadcast when a player fails to use the locked exit <exit_id>.
+ALIASES = ["undecorate lock"]
+USAGE = "unactionate lock <exit_id>"
+DESCRIPTION = """Remove the custom action displayed when a player fails to use the locked exit <exit_id>.
 
-Everyone in the current room will see the action text when it is broadcast.
-By default, the action text is shown following the player's nickname and one space.
-If the action starts with 's then the space is removed to allow possessive grammar.
-To place the player's name elsewhere in the text, use the "%player%" marker.
-To just message the player and not include their name, start the text with "%noaction%".
-The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
-The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
-The "%s%" tag will be removed for neutral pronouns, and otherwise replaced with the letter "s".
-You must own the locked exit or its room in order to decorate it.
-You can remove the custom action from a locked exit with the `undecorate lock` command.
-Wizards can decorate any lock.
+You must own the locked exit or its room in order to unactionate it.
+Wizards can unactionate any locked exit.
 
-Ex. `decorate lock 3 can't seem to get the door open.`
-Ex2. `decorate lock 3 The door refuses %player%'s attempt to open it.`"""
+Ex. `unactionate lock 3`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argmin=2):
+    if not COMMON.check(NAME, console, args, argc=1):
         return False
 
     # Perform argument type checks and casts.
@@ -61,8 +52,13 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Decorate the lock.
-    thisroom["exits"][exitid]["action"]["locked"] = ' '.join(args[1:])
+    # Check if the lock is already unactionated.
+    if not thisroom["exits"][exitid]["action"]["locked"]:
+        console.msg("{0}: This lock already has no custom action.".format(NAME))
+        return False
+
+    # Unactionate the lock.
+    thisroom["exits"][exitid]["action"]["locked"] = ""
     console.database.upsert_room(thisroom)
 
     # Finished.

@@ -1,9 +1,9 @@
-#######################
-# Dennis MUD          #
-# decorate_exit.py    #
-# Copyright 2018-2020 #
-# Sei Satzparad       #
-#######################
+#########################
+# Dennis MUD            #
+# actionate_entrance.py #
+# Copyright 2020-2022   #
+# Sei Satzparad         #
+#########################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,25 +25,25 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "decorate exit"
+NAME = "actionate entrance"
 CATEGORIES = ["actions", "exits"]
-USAGE = "decorate exit <exit_id> <action>"
-DESCRIPTION = """Set a custom <action> to broadcast when a player uses the exit <exit_id> in the current room.
+ALIASES = ["decorate entrance"]
+USAGE = "actionate entrance <exit_id> <action>"
+DESCRIPTION = """Set a custom <action> to broadcast when a player enters the next room through the exit <exit_id>.
 
-Everyone in the current room will see the action text when it is broadcast.
+Everyone in the destination room will see the action text when it is broadcast.
 By default, the action text is shown following the player's nickname and one space.
 If the action starts with 's then the space is removed to allow possessive grammar.
 To place the player's name elsewhere in the text, use the "%player%" marker.
 To just message the player and not include their name, start the text with "%noaction%".
 The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
 The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
-The "%s%" tag will be removed for neutral pronouns, and otherwise replaced with the letter "s".
-You must own the exit or its room in order to decorate it.
-You can remove the custom action from an exit with the `undecorate exit` command.
-Wizards can decorate any exit.
+You must own the exit or its room in order to actionate its entrance.
+You can remove the custom action from an entrance with the `unactionate entrance` command.
+Wizards can actionate any exit.
 
-Ex. `decorate exit 3 falls through the floor.`
-Ex2. `decorate exit 3 The floor opens up under %player%'s feet.`"""
+Ex. `actionate entrance 3 fell in through the ceiling.`
+Ex2. `actionate entrance 3 The ceiling spits out %player%.`"""
 
 
 def COMMAND(console, args):
@@ -61,8 +61,8 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Decorate the exit.
-    thisroom["exits"][exitid]["action"]["go"] = ' '.join(args[1:])
+    # Actionate the entrance.
+    thisroom["exits"][exitid]["action"]["entrance"] = ' '.join(args[1:])
     console.database.upsert_room(thisroom)
 
     # Finished.

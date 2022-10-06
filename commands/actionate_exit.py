@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
-# decorate_item.py    #
-# Copyright 2018-2020 #
+# actionate_exit.py   #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -25,10 +25,11 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "decorate item"
-CATEGORIES = ["actions", "items"]
-USAGE = "decorate item <item_id> <action>"
-DESCRIPTION = """Set a custom <action> to broadcast when a player uses the item <item_id>.
+NAME = "actionate exit"
+CATEGORIES = ["actions", "exits"]
+ALIASES = ["decorate exit"]
+USAGE = "actionate exit <exit_id> <action>"
+DESCRIPTION = """Set a custom <action> to broadcast when a player uses the exit <exit_id> in the current room.
 
 Everyone in the current room will see the action text when it is broadcast.
 By default, the action text is shown following the player's nickname and one space.
@@ -37,13 +38,12 @@ To place the player's name elsewhere in the text, use the "%player%" marker.
 To just message the player and not include their name, start the text with "%noaction%".
 The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
 The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
-The "%s%" tag will be removed for neutral pronouns, and otherwise replaced with the letter "s".
-You must own the item and it must be in your inventory in order to decorate it.
-You can remove the custom action from an item with the `undecorate item` command.
-Wizards can decorate any item from anywhere.
+You must own the exit or its room in order to actionate it.
+You can remove the custom action from an exit with the `unactionate exit` command.
+Wizards can actionate any exit.
 
-Ex. `decorate item 4 holds the green orb, and it begins to glow.`
-Ex2. `decorate item 4 The green orb glows in %player%'s hand.`"""
+Ex. `actionate exit 3 falls through the floor.`
+Ex2. `actionate exit 3 The floor opens up under %player%'s feet.`"""
 
 
 def COMMAND(console, args):
@@ -52,18 +52,18 @@ def COMMAND(console, args):
         return False
 
     # Perform argument type checks and casts.
-    itemid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
-    if itemid is None:
+    exitid = COMMON.check_argtypes(NAME, console, args, checks=[[0, int]], retargs=0)
+    if exitid is None:
         return False
 
-    # Lookup the target item and perform item checks.
-    thisitem = COMMON.check_item(NAME, console, itemid, owner=True, holding=True)
-    if not thisitem:
+    # Lookup the current room, and perform exit checks.
+    thisroom = COMMON.check_exit(NAME, console, exitid, owner=True)
+    if not thisroom:
         return False
 
-    # Decorate the item.
-    thisitem["action"] = ' '.join(args[1:])
-    console.database.upsert_item(thisitem)
+    # Actionate the exit.
+    thisroom["exits"][exitid]["action"]["go"] = ' '.join(args[1:])
+    console.database.upsert_room(thisroom)
 
     # Finished.
     console.msg("{0}: Done.".format(NAME))

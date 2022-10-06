@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
-# undecorate_lock.py  #
-# Copyright 2018-2020 #
+# actionate_lock.py   #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -25,20 +25,30 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "undecorate lock"
+NAME = "actionate lock"
 CATEGORIES = ["actions", "exits"]
-USAGE = "undecorate lock <exit_id>"
-DESCRIPTION = """Remove the custom action displayed when a player fails to use the locked exit <exit_id>.
+ALIASES = ["decorate lock"]
+USAGE = "actionate lock <exit_id> <action>"
+DESCRIPTION = """Set a custom <action> to broadcast when a player fails to use the locked exit <exit_id>.
 
-You must own the locked exit or its room in order to undecorate it.
-Wizards can undecorate any locked exit.
+Everyone in the current room will see the action text when it is broadcast.
+By default, the action text is shown following the player's nickname and one space.
+If the action starts with 's then the space is removed to allow possessive grammar.
+To place the player's name elsewhere in the text, use the "%player%" marker.
+To just message the player and not include their name, start the text with "%noaction%".
+The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
+The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
+You must own the locked exit or its room in order to actionate it.
+You can remove the custom action from a locked exit with the `unactionate lock` command.
+Wizards can actionate any lock.
 
-Ex. `undecorate lock 3`"""
+Ex. `actionate lock 3 can't seem to get the door open.`
+Ex2. `actionate lock 3 The door refuses %player%'s attempt to open it.`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=1):
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
     # Perform argument type checks and casts.
@@ -51,13 +61,8 @@ def COMMAND(console, args):
     if not thisroom:
         return False
 
-    # Check if the lock is already undecorated.
-    if not thisroom["exits"][exitid]["action"]["locked"]:
-        console.msg("{0}: This lock already has no custom action.".format(NAME))
-        return False
-
-    # Undecorate the lock.
-    thisroom["exits"][exitid]["action"]["locked"] = ""
+    # Actionate the lock.
+    thisroom["exits"][exitid]["action"]["locked"] = ' '.join(args[1:])
     console.database.upsert_room(thisroom)
 
     # Finished.

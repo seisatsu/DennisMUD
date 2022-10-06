@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
-# undecorate_item.py  #
-# Copyright 2018-2020 #
+# actionate_item.py   #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -25,20 +25,30 @@
 # IN THE SOFTWARE.
 # **********
 
-NAME = "undecorate item"
+NAME = "actionate item"
 CATEGORIES = ["actions", "items"]
-USAGE = "undecorate item <item_id>"
-DESCRIPTION = """Remove the custom action displayed when a player uses the item <item_id>.
+ALIASES = ["decorate item"]
+USAGE = "actionate item <item_id> <action>"
+DESCRIPTION = """Set a custom <action> to broadcast when a player uses the item <item_id>.
 
-You must own the item and it must be in your inventory in order to undecorate it.
-Wizards can undecorate any item from anywhere.
+Everyone in the current room will see the action text when it is broadcast.
+By default, the action text is shown following the player's nickname and one space.
+If the action starts with 's then the space is removed to allow possessive grammar.
+To place the player's name elsewhere in the text, use the "%player%" marker.
+To just message the player and not include their name, start the text with "%noaction%".
+The tags "%they%", "%them%", "%their%", "%theirs%", and "%themselves%" will substitute pronouns.
+The pronouns substituted will depend on the player's pronoun setting. See `set pronouns`.
+You must own the item and it must be in your inventory in order to actionate it.
+You can remove the custom action from an item with the `unactionate item` command.
+Wizards can actionate any item from anywhere.
 
-Ex. `undecorate item 4`"""
+Ex. `actionate item 4 holds the green orb, and it begins to glow.`
+Ex2. `actionate item 4 The green orb glows in %player%'s hand.`"""
 
 
 def COMMAND(console, args):
     # Perform initial checks.
-    if not COMMON.check(NAME, console, args, argc=1):
+    if not COMMON.check(NAME, console, args, argmin=2):
         return False
 
     # Perform argument type checks and casts.
@@ -51,15 +61,10 @@ def COMMAND(console, args):
     if not thisitem:
         return False
 
-    # Check if the item is already undecorated.
-    if not thisitem["action"]:
-        console.msg("{0}: This item already has no custom action.".format(NAME))
-        return False
-
-    # Undecorate the item.
-    thisitem["action"] = ""
+    # Actionate the item.
+    thisitem["action"] = ' '.join(args[1:])
     console.database.upsert_item(thisitem)
 
     # Finished.
-    console.msg(NAME + ": done")
+    console.msg("{0}: Done.".format(NAME))
     return True
