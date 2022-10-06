@@ -2,7 +2,7 @@
 # Dennis MUD        #
 # pair_telekey.py   #
 # Copyright 2020    #
-# Michael D. Reiley #
+# Sei Satzparad     #
 #####################
 
 # **********

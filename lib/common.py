@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# common.py         #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+#######################
+# Dennis MUD          #
+# common.py           #
+# Copyright 2020-2022 #
+# Sei Satzparad       #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy

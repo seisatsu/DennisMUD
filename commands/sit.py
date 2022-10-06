@@ -2,7 +2,7 @@
 # Dennis MUD        #
 # sit.py            #
 # Copyright 2020    #
-# Michael D. Reiley #
+# Sei Satzparad     #
 #####################
 
 # **********

@@ -1,8 +1,8 @@
 #######################
 # Dennis MUD          #
 # requisition_item.py #
-# Copyright 2018-2020 #
-# Michael D. Reiley   #
+# Copyright 2018-2022 #
+# Sei Satzparad       #
 #######################
 
 # **********

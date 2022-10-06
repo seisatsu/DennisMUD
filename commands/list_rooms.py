@@ -2,7 +2,7 @@
 # Dennis MUD          #
 # list_rooms.py       #
 # Copyright 2018-2020 #
-# Michael D. Reiley   #
+# Sei Satzparad       #
 #######################
 
 # **********

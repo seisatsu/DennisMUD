@@ -2,7 +2,7 @@
 # Dennis MUD        #
 # transfer_room.py  #
 # Copyright 2020    #
-# Michael D. Reiley #
+# Sei Satzparad     #
 #####################
 
 # **********

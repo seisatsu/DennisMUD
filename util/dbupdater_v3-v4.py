@@ -2,7 +2,7 @@
 # Dennis MUD         #
 # dbupdater_v3-v4.py #
 # Copyright 2020     #
-# Michael D. Reiley  #
+# Sei Satzparad      #
 ######################
 
 # **********

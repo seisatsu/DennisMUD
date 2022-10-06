@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# list_entrances.py #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+#######################
+# Dennis MUD          #
+# list_entrances.py   #
+# Copyright 2020-2021 #
+# Sei Satzparad       #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy

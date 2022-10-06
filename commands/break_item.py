@@ -2,7 +2,7 @@
 # Dennis MUD          #
 # break_item.py       #
 # Copyright 2018-2020 #
-# Michael D. Reiley   #
+# Sei Satzparad       #
 #######################
 
 # **********

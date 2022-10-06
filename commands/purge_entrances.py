@@ -2,7 +2,7 @@
 # Dennis MUD         #
 # purge_entrances.py #
 # Copyright 2021     #
-# Michael D. Reiley  #
+# Sei Satzparad      #
 ######################
 
 # **********

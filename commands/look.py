@@ -1,8 +1,8 @@
 #######################
 # Dennis MUD          #
-# lock.py             #
-# Copyright 2018-2020 #
-# Michael D. Reiley   #
+# look.py             #
+# Copyright 2018-2022 #
+# Sei Satzparad       #
 #######################
 
 # **********

@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# logger.py         #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+#######################
+# Dennis MUD          #
+# logger.py           #
+# Copyright 2020-2022 #
+# Sei Satzparad       #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy

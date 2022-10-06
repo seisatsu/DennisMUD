@@ -2,7 +2,7 @@
 # Dennis MUD          #
 # xyzzy.py            #
 # Copyright 2019-2021 #
-# Michael D. Reiley   #
+# Sei Satzparad       #
 #######################
 
 # **********

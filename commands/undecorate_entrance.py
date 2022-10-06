@@ -2,7 +2,7 @@
 # Dennis MUD             #
 # undecorate_entrance.py #
 # Copyright 2020         #
-# Michael D. Reiley      #
+# Sei Satzparad          #
 ##########################
 
 # **********

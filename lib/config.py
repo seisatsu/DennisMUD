@@ -1,9 +1,9 @@
-#####################
-# Dennis MUD        #
-# config.py         #
-# Copyright 2020    #
-# Michael D. Reiley #
-#####################
+##################
+# Dennis MUD     #
+# config.py      #
+# Copyright 2020 #
+# Sei Satzparad  #
+##################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,7 +26,7 @@
 # **********
 
 # This code adapted from Driftwood 2D Game Dev. Suite,
-# Copyright 2014-2017 Michael D. Reiley and Paul Merrill.
+# Copyright 2014-2017 Sei Satzparad     and Paul Merrill.
 # https://github.com/Driftwood2D/Driftwood
 
 import argparse
@@ -39,7 +39,7 @@ import traceback
 from lib.logger import timestamp
 
 VERSION = "Dennis MUD v0.0.3-Alpha"
-COPYRIGHT = "Copyright 2018-2020 Michael D. Reiley"
+COPYRIGHT = "Copyright 2018-2020 Sei Satzparad    "
 
 
 class ConfigManager:

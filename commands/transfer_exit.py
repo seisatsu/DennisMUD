@@ -2,7 +2,7 @@
 # Dennis MUD        #
 # transfer_exit.py  #
 # Copyright 2020    #
-# Michael D. Reiley #
+# Sei Satzparad     #
 #####################
 
 # **********

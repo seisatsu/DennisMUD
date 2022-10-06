@@ -19,8 +19,8 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Dennis MUD'
-copyright = '2020, Michael D. Reiley'
-author = 'Michael D. Reiley'
+copyright = '2022, Sei Satzparad'
+author = 'Sei Satzparad'
 
 # The full version, including alpha/beta/rc tags
 release = 'PreAlpha'
