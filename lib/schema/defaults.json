@@ -122,6 +122,18 @@
           "required": [
             "enabled"
           ]
+        },
+        "pronouns": {
+          "type": "object",
+          "properties": {
+            "maxlength": {
+              "type": "integer",
+              "minimum": 10
+            }
+          },
+          "required": [
+            "maxlength"
+          ]
         }
       },
       "required": [
