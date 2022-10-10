@@ -329,6 +329,12 @@ def main():
             router.shutting_down = True
     signal.signal(signal.SIGINT, shutdown)
 
+    # Graceful immediate shutdown on SIGQUIT (ctrl-\).
+    # Unlike SIGINT, this skips the shutdown timer and stops right away.
+    def shutdown_now(signal_received, frame):
+        reactor.stop()
+    signal.signal(signal.SIGQUIT, shutdown_now)
+
     # Start the Twisted Reactor.
     log.info("Finished startup tasks.")
     router._reactor = reactor
