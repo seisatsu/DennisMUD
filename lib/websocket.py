@@ -32,6 +32,7 @@ import traceback
 from lib.logger import Logger
 
 from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol
+from autobahn.exception import Disconnected
 from twisted.internet import reactor
 
 
@@ -117,5 +118,9 @@ class ServerFactory(WebSocketServerFactory):
             if _nbsp:
                 message = message.replace(" ", "&nbsp;")
             message = message.encode('utf-8')
-            client.sendMessage(message)
-
+            
+            # Don't crash out if the client is disconnected.
+            try:
+                client.sendMessage(message)
+            except(Disconnected):
+                pass
