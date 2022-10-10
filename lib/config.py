@@ -109,7 +109,7 @@ class ConfigManager:
                 sys.argv.remove(item)
                 assignment = item[1:].split('=')
                 # There should only be one = sign in an engine variable assignment. Fail.
-                if len(assignment) is not 2:
+                if len(assignment) != 2:
                     print("{0} [config#critical] Invalid variable assignment on command line: {1}".format(
                         timestamp(), item))
                     sys.exit(2)
