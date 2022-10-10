@@ -40,6 +40,8 @@ Ex. `set pronouns custom xe xem xir xirs xirself` to set custom xe/xem/xir prono
 
 
 def COMMAND(console, args):
+    max_length = console.database.defaults["users"]["pronouns"]["maxlength"]
+
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=0, argmax=6):
         return False
@@ -62,6 +64,10 @@ def COMMAND(console, args):
     elif args[0].lower() in ["n", "neutral"]:
         console.user["pronouns"] = "neutral"
     elif args[0].lower() in ["c", "custom"]:
+        for pronoun in args[1:]:
+            if len(pronoun) > max_length:
+                console.msg("{0}: Custom pronouns cannot be longer than {1} characters.".format(NAME, max_length))
+                return False
         console.user["pronouns"] = args[1:]
     else:
         console.msg("{0}: Must choose one of: \"female\", \"male\", \"neutral\", \"common\".".format(NAME))

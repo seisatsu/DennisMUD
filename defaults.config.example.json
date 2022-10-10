@@ -32,6 +32,9 @@
     },
     "chat": {
       "enabled": true
+    },
+    "pronouns": {
+      "maxlength": 16
     }
   },
   "help": {
