@@ -35,6 +35,9 @@ You may have any number of newlines, but you cannot stack more than two together
 You must own the exit or its room in order to describe it.
 Wizards can describe any exit.
 
+You may also want to change the text that is broadcast when a player leaves through your exit.
+See the `actionate exit` command.
+
 Ex. `describe exit 3 You see a lovely wooden door.`
 Ex2. `describe exit 3 You see a lovely wooden door.\\\\The handle is made of brass.`
 Ex3. `describe exit 3 You see a lovely wooden door.\\\\\\\\The handle is made of brass.`"""

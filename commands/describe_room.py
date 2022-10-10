@@ -35,6 +35,9 @@ You may have any number of newlines, but you cannot stack more than two together
 You must own the room in order to describe it.
 Wizards can describe any room.
 
+You may also want to change the text that is broadcast when a player enters your room.
+See the `actionate entrance` command.
+
 Ex. `describe room 5 You are standing in a long, dark hallway.`
 Ex2. `describe room 5 You are standing in a long, dark hallway.\\\\You cannot see the end.`
 Ex3. `describe room 5 You are standing in a long, dark hallway.\\\\\\\\You cannot see the end.`"""

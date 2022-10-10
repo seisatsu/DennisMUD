@@ -35,6 +35,9 @@ You may have any number of newlines, but you cannot stack more than two together
 You must own the item and it must be in your inventory in order to describe it.
 Wizards can describe any item from anywhere.
 
+You may also want to change the action text that players will see when using the item.
+See the `actionate item` command.
+
 Ex. `describe item 4 A small music box made of ivory.`
 Ex2. `describe item 4 A small music box made of ivory.\\\\The bottom edge of the lid is lined with silver trim.`
 Ex3. `describe item 4 A small music box made of ivory.\\\\\\\\The bottom edge of the lid is lined with silver trim.`"""
