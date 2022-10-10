@@ -40,8 +40,8 @@ def COMMAND(console, args):
     if not COMMON.check(NAME, console, args, argmin=0, argmax=1, wizard=True):
         return False
 
-    # Make sure we are not already shutting down.
-    if console.router.shutting_down:
+    # In multi-user mode, make sure we are not already shutting down.
+    if hasattr(console.router, "_reactor") and console.router.shutting_down:
         console.msg("{0}: Already shutting down.".format(NAME))
         return False
 
@@ -54,7 +54,7 @@ def COMMAND(console, args):
     else:
         seconds = CONFIG["shutdown_delay"]
 
-    # Gracefully shut down in multi-user mode, or else send ourselves the TERM signal.
+    # Gracefully shut down.
     if hasattr(console.router, "_reactor"):
         if seconds:
             console.shell.broadcast("<<<DENNIS IS SHUTTING DOWN IN {0} SECONDS>>>".format(seconds))
@@ -63,4 +63,4 @@ def COMMAND(console, args):
         console.router._reactor.callLater(seconds, console.router._reactor.stop)
         console.router.shutting_down = True
     else:
-        os.kill(os.getpid(), signal.SIGTERM)
+        console.router._running = False

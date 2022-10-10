@@ -60,6 +60,9 @@ class Router:
         self.single_user = True
         self.log = log
 
+        # When this is False, Dennis will shut down.
+        self._running = True
+
     def message(self, peer, msg, _nbsp=None):
         pass
 
@@ -251,6 +254,10 @@ def main():
         except EOFError:
             pdb.set_trace()
             continue
+
+        # Shut down if the Router received a shutdown signal from elsewhere.
+        if not router._running:
+            _running = False
 
     # Just before shutdown.
     dbman._unlock()
