@@ -176,7 +176,7 @@ class Router:
                 continue
             if self.users[u]["service"] == "telnet":
                 self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
-            if self.users[u]["service"] == "websocket":
+            elif self.users[u]["service"] == "websocket":
                 self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
     def broadcast_room(self, room, msg, exclude=None):
@@ -198,7 +198,7 @@ class Router:
             if self.users[u]["console"].user["room"] == room:
                 if self.users[u]["service"] == "telnet":
                     self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
-                if self.users[u]["service"] == "websocket":
+                elif self.users[u]["service"] == "websocket":
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
