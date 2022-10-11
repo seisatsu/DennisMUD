@@ -35,6 +35,9 @@
     },
     "pronouns": {
       "maxlength": 16
+    },
+    "username": {
+      "maxlength": 16
     }
   },
   "help": {

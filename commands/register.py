@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # register.py         #
-# Copyright 2018-2020 #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -44,6 +44,8 @@ ALLOWED_CHARACTERS = string.ascii_letters + string.digits + '_'
 
 
 def COMMAND(console, args):
+    max_length = console.database.defaults["users"]["username"]["maxlength"]
+
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argc=2, online=False):
         return False
@@ -51,6 +53,11 @@ def COMMAND(console, args):
     # Make sure we are not already logged in.
     if console.user:
         console.msg("{0}: You must logout first to register a new user.".format(NAME))
+        return False
+
+    # Check length.
+    if len(args[0]) > max_length:
+        console.msg("{0}: Usernames cannot be longer than {1} characters.".format(NAME, max_length))
         return False
 
     # Check allowed characters.
