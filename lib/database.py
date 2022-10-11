@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # database.py         #
-# Copyright 2018-2020 #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -48,7 +48,7 @@ class DatabaseManager:
     :ivar items: The table of all items in the database.
     :ivar defaults: The JSON database defaults configuration.
     """
-    def __init__(self, filename, defaults, log=None):
+    def __init__(self, filename, defaults, ignorelockfile=False, log=None):
         """Database Manager Initializer
 
         :param filename: The relative or absolute filename of the TinyDB database file.
@@ -60,6 +60,7 @@ class DatabaseManager:
         self.users = None
         self.items = None
         self.defaults = defaults
+        self.ignorelockfile = ignorelockfile
 
         self._info = None
         self._users_online = []
@@ -79,8 +80,8 @@ class DatabaseManager:
 
         :return: True if succeeded, False if failed, None if failed due to existing lockfile.
         """
-        # Check if a lockfile exists for this database. If so, then fail.
-        if os.path.exists(self._filename + ".lock"):
+        # Check if a lockfile exists for this database. If so, then fail, unless we are ignoring lockfiles.
+        if os.path.exists(self._filename + ".lock") and not self.ignorelockfile:
             self._log.critical("Lockfile exists for database: {filename}", filename=self._filename)
             self._log.critical(
                 "If you are sure the database isn't in use, delete this file: {filename}.lock", filename=self._filename)

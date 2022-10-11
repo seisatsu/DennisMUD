@@ -109,7 +109,7 @@ def main():
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")
-    dbman = _database.DatabaseManager(config["database"]["filename"], config.defaults)
+    dbman = _database.DatabaseManager(config["database"]["filename"], config.defaults, ignorelockfile=config["ignorelockfile"])
     if not dbman._startup():
         return 3
     log.info("Finished initializing database manager.")

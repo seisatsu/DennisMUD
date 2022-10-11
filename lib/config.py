@@ -1,9 +1,9 @@
-##################
-# Dennis MUD     #
-# config.py      #
-# Copyright 2020 #
-# Sei Satzparad  #
-##################
+#######################
+# Dennis MUD          #
+# config.py           #
+# Copyright 2020-2022 #
+# Sei Satzparad       #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -138,6 +138,8 @@ class ConfigManager:
                             help="log level to use")
         parser.add_argument("--help-columns", nargs=1, dest="helpcolumns", type=int, metavar="<number>",
                             help="number of columns to use for formatting help lists")
+        parser.add_argument('--ignore-lockfile', dest="ignorelockfile", action='store_true',
+                            help="start even if a lockfile exists for the chosen world")
 
         # These arguments are available in Single User Mode.
         if self._single:
@@ -317,6 +319,10 @@ class ConfigManager:
             self.config["log"]["level"] = self._cmdline_args.loglevel[0]
         if self._cmdline_args.helpcolumns:
             self.config["defaults"]["help"]["columns"] = self._cmdline_args.helpcolumns[0]
+        if self._cmdline_args.ignorelockfile:
+            self.config["ignorelockfile"] = True
+        else:
+            self.config["ignorelockfile"] = False
 
         # Parse command line options that are available in single user mode.
         if self._single:

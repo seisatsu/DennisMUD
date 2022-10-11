@@ -293,7 +293,7 @@ def main():
 
     # Initialize the Database Manager and load the world database.
     log.info("Initializing database manager...")
-    dbman = database.DatabaseManager(config["database"]["filename"], config.defaults)
+    dbman = database.DatabaseManager(config["database"]["filename"], config.defaults, ignorelockfile=config["ignorelockfile"])
     _dbres = dbman._startup()
     if not _dbres:
         # On failure, only remove the lockfile if its existence wasn't the cause.
