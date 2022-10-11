@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # singleuser.py       #
-# Copyright 2018-2020 #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -26,6 +26,8 @@
 # **********
 
 import sys
+
+from bdb import BdbQuit
 
 # Check Python version.
 if sys.version_info[0] != 3:
@@ -272,5 +274,9 @@ def main():
 # * 1: Wrong Python version.
 # * 2: Could not read main configuration file.
 # * 3: Could not initialize DatabaseManager.
+# * 5: Quit from inside debug session. (unclean exit)
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except BdbQuit:
+        sys.exit(5)
