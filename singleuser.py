@@ -78,9 +78,6 @@ class Router:
 
 
 def main():
-    # When this is False, Dennis will shut down.
-    _running = True
-
     # Load the configuration.
     config = _config.ConfigManager(single=True)
     builtins.CONFIG = config
@@ -149,12 +146,10 @@ def main():
         log.error(traceback.format_exc(1))
         command_prompt = prompt
 
-    # Stop Dennis. We use this instead of just a variable so that Dennis can be stopped from within a Python file
-    # executed by load() in debug mode.
+    # Cause Dennis to shut down.
     def shutdown():
         """Stop Dennis."""
-        nonlocal _running
-        _running = False
+        console.router._running = False
 
     # Insert a simplified wrapper around dennis.shell.call() here so that it can access the current console
     # without us having to pass it as an argument.
@@ -230,7 +225,7 @@ def main():
     #
     # * You can return from Debug Mode to normal operation by entering "continue".
     # # # # # # # # # #
-    while _running:
+    while router._running:
         try:
             cmd = command_prompt("> ")
             if cmd == "quit":
@@ -256,10 +251,6 @@ def main():
         except EOFError:
             pdb.set_trace()
             continue
-
-        # Shut down if the Router received a shutdown signal from elsewhere.
-        if not router._running:
-            _running = False
 
     # Just before shutdown.
     dbman._unlock()
