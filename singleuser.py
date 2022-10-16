@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # singleuser.py       #
-# Copyright 2018-2020 #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -26,6 +26,8 @@
 # **********
 
 import sys
+
+from bdb import BdbQuit
 
 # Check Python version.
 if sys.version_info[0] != 3:
@@ -60,6 +62,9 @@ class Router:
         self.single_user = True
         self.log = log
 
+        # When this is False, Dennis will shut down.
+        self._running = True
+
     def message(self, peer, msg, _nbsp=None):
         pass
 
@@ -73,9 +78,6 @@ class Router:
 
 
 def main():
-    # When this is False, Dennis will shut down.
-    _running = True
-
     # Load the configuration.
     config = _config.ConfigManager(single=True)
     builtins.CONFIG = config
@@ -104,7 +106,7 @@ def main():
 
     # Initialize the database manager, and create the "database" alias for use in Debug Mode.
     log.info("Initializing database manager...")
-    dbman = _database.DatabaseManager(config["database"]["filename"], config.defaults)
+    dbman = _database.DatabaseManager(config["database"]["filename"], config.defaults, ignorelockfile=config["ignorelockfile"])
     if not dbman._startup():
         return 3
     log.info("Finished initializing database manager.")
@@ -144,12 +146,10 @@ def main():
         log.error(traceback.format_exc(1))
         command_prompt = prompt
 
-    # Stop Dennis. We use this instead of just a variable so that Dennis can be stopped from within a Python file
-    # executed by load() in debug mode.
+    # Cause Dennis to shut down.
     def shutdown():
         """Stop Dennis."""
-        nonlocal _running
-        _running = False
+        console.router._running = False
 
     # Insert a simplified wrapper around dennis.shell.call() here so that it can access the current console
     # without us having to pass it as an argument.
@@ -225,7 +225,7 @@ def main():
     #
     # * You can return from Debug Mode to normal operation by entering "continue".
     # # # # # # # # # #
-    while _running:
+    while router._running:
         try:
             cmd = command_prompt("> ")
             if cmd == "quit":
@@ -265,5 +265,9 @@ def main():
 # * 1: Wrong Python version.
 # * 2: Could not read main configuration file.
 # * 3: Could not initialize DatabaseManager.
+# * 5: Quit from inside debug session. (unclean exit)
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except BdbQuit:
+        sys.exit(5)

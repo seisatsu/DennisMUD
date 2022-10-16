@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # break_room.py       #
-# Copyright 2018-2020 #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -33,7 +33,7 @@ DESCRIPTION = """Break the room with ID <room_id>.
 
 You must be an owner of the room, and no one can be in the room, including yourself.
 Offline users will go to room 0 upon login. Items in the room will return to their primary owners.
-Wizards can break any room.
+Wizards can break any room, except for room 0 which is unbreakable.
 
 Ex. `break room 5` to break the room with ID 5."""
 
@@ -56,6 +56,11 @@ def COMMAND(console, args):
     # Make sure the room is empty.
     if targetroom["users"]:
         console.msg("{0}: You cannot break an occupied room.".format(NAME))
+        return False
+
+    # Make sure this room isn't the nexus.
+    if roomid == 0:
+        console.msg("{0}: You cannot break the nexus.".format(NAME))
         return False
 
     # Send offline users to the first room.
@@ -83,10 +88,13 @@ def COMMAND(console, args):
             continue
 
         # Don't return the item to the primary owner if they already have it. (Could be duplified.)
-        if itemid not in targetuser["inventory"]:
-            targetuser["inventory"].append(itemid)
-            console.shell.msg_user(thisitem["owners"][0], "{0} appeared in your inventory.".format(
-                COMMON.format_item(NAME, thisitem["name"], upper=True)))
+        if itemid in targetuser["inventory"]:
+            continue
+
+        # Return the item.
+        targetuser["inventory"].append(itemid)
+        console.shell.msg_user(thisitem["owners"][0], "{0} appeared in your inventory.".format(
+            COMMON.format_item(NAME, thisitem["name"], upper=True)))
         console.database.upsert_user(targetuser)
 
     # Remove this room from the entrances record of every room it has an exit to.

@@ -1,7 +1,7 @@
 #######################
 # Dennis MUD          #
 # server.py           #
-# Copyright 2018-2021 #
+# Copyright 2018-2022 #
 # Sei Satzparad       #
 #######################
 
@@ -176,7 +176,7 @@ class Router:
                 continue
             if self.users[u]["service"] == "telnet":
                 self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
-            if self.users[u]["service"] == "websocket":
+            elif self.users[u]["service"] == "websocket":
                 self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
     def broadcast_room(self, room, msg, exclude=None):
@@ -198,7 +198,7 @@ class Router:
             if self.users[u]["console"].user["room"] == room:
                 if self.users[u]["service"] == "telnet":
                     self.telnet_factory.communicate(self.users[u]["console"].rname, msg.encode())
-                if self.users[u]["service"] == "websocket":
+                elif self.users[u]["service"] == "websocket":
                     self.websocket_factory.communicate(self.users[u]["console"].rname, html.escape(msg).encode("utf-8"))
 
 
@@ -293,7 +293,7 @@ def main():
 
     # Initialize the Database Manager and load the world database.
     log.info("Initializing database manager...")
-    dbman = database.DatabaseManager(config["database"]["filename"], config.defaults)
+    dbman = database.DatabaseManager(config["database"]["filename"], config.defaults, ignorelockfile=config["ignorelockfile"])
     _dbres = dbman._startup()
     if not _dbres:
         # On failure, only remove the lockfile if its existence wasn't the cause.
@@ -328,6 +328,12 @@ def main():
             reactor.callLater(config["shutdown_delay"], reactor.stop)
             router.shutting_down = True
     signal.signal(signal.SIGINT, shutdown)
+
+    # Graceful immediate shutdown on SIGQUIT (ctrl-\).
+    # Unlike SIGINT, this skips the shutdown timer and stops right away.
+    def shutdown_now(signal_received, frame):
+        reactor.stop()
+    signal.signal(signal.SIGQUIT, shutdown_now)
 
     # Start the Twisted Reactor.
     log.info("Finished startup tasks.")

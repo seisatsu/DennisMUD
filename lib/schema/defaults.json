@@ -134,10 +134,22 @@
           "required": [
             "maxlength"
           ]
+        },
+        "pronouns": {
+          "type": "object",
+          "properties": {
+            "maxlength": {
+              "type": "integer",
+              "minimum": 10
+            }
+          },
+          "required": [
+            "maxlength"
+          ]
         }
       },
       "required": [
-        "autolook", "chat"
+        "autolook", "chat", "pronouns", "username"
       ]
     },
     "help": {

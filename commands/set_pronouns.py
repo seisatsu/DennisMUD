@@ -40,7 +40,7 @@ Ex. `set pronouns custom xe xem xir xirs xirself` to set custom xe/xem/xir prono
 
 
 def COMMAND(console, args):
-    max_length = self.console.database.defaults["users"]["pronouns"]["maxlength"]
+    max_length = console.database.defaults["users"]["pronouns"]["maxlength"]
 
     # Perform initial checks.
     if not COMMON.check(NAME, console, args, argmin=0, argmax=6):

@@ -1,9 +1,9 @@
-######################
-# Dennis MUD         #
-# dbupdater_v1-v2.py #
-# Copyright 2020     #
-# Sei Satzparad      #
-######################
+#######################
+# Dennis MUD          #
+# dbupdater_v1-v2.py  #
+# Copyright 2020-2022 #
+# Sei Satzparad       #
+#######################
 
 # **********
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -127,7 +127,7 @@ def main():
         return 1
 
     # Start up DatabaseManager and tell it we're accepting a v1 database for migration.
-    dbman = database.DatabaseManager(sys.argv[1], Log())
+    dbman = database.DatabaseManager(sys.argv[1], log=Log())
     dbman._UPDATE_FROM_VERSION = 1
     sres = dbman._startup()
     if not sres:

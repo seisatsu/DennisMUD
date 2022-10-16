@@ -17,5 +17,9 @@ singleuser.history.txt
 Thumbs.db
 .DS_Store
 .gitconfig
+.replit
+replit.nix
 goorm.manifest
 backup/
+venv/
+
