@@ -341,6 +341,7 @@ def main():
     def shutdown_now(signal_received, frame):
         reactor.stop()
     signal.signal(signal.SIGQUIT, shutdown_now)
+    signal.signal(signal.SIGTERM, shutdown_now)
 
     # Start the Twisted Reactor.
     log.info("Finished startup tasks.")
