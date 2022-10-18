@@ -152,12 +152,19 @@ class Router:
         :param msg: Message to send.
         :param _nbsp: Will insert non-breakable spaces for formatting on the websocket frontend.
 
-        :return: True
+        :return: True if succeeded, False if no such user.
         """
+        if peer not in self.users:
+            return False
+        if not self.users[peer]["console"].user:
+            return False
+      
         if self.users[peer]["service"] == "telnet":
             self.telnet_factory.communicate(peer, msg.encode())
         if self.users[peer]["service"] == "websocket":
             self.websocket_factory.communicate(peer, html.escape(msg).encode("utf-8"), _nbsp)
+
+        return True
 
     def broadcast_all(self, msg, exclude=None):
         """Broadcast All
