@@ -66,7 +66,6 @@ class DatabaseManager:
         self._users_online = []
         self._filename = filename
         self._log = log or Logger("database")
-        self._rooms_cleaned = []
         self._locked = False
 
         # This will be changed when running an update tool.
@@ -280,17 +279,14 @@ class DatabaseManager:
         # For each user in the room, check if they are online. If not, remove them. This used to be done for every room
         # at startup, and took a long time. It is much faster to do it as needed, though not doing it at startup leaves
         # quasi-online ghost users in the record of each room until it is loaded. This doesn't actually matter though.
-        # After we do this once, we take note so we don't have to do it again during this server session.
-        if roomid not in self._rooms_cleaned:
-            for username in thisroom["users"]:
-                user = self.user_by_name(username)
-                if user and username not in self._users_online:
-                    thisroom["users"].remove(username)
+        for username in thisroom["users"]:
+            user = self.user_by_name(username)
+            if user and username not in self._users_online:
+                thisroom["users"].remove(username)
 
-            # Save the room after cleaning out the offline users, and then grab it again.
-            self.upsert_room(thisroom)
-            self._rooms_cleaned.append(roomid)
-            thisroom = self.rooms.search(q.id == roomid)[0]
+        # Save the room after cleaning out the offline users, and then grab it again.
+        self.upsert_room(thisroom)
+        thisroom = self.rooms.search(q.id == roomid)[0]
 
         # Return the cleaned room document.
         return thisroom
