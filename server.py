@@ -156,9 +156,7 @@ class Router:
         """
         if peer not in self.users:
             return False
-        if not self.users[peer]["console"].user:
-            return False
-      
+
         if self.users[peer]["service"] == "telnet":
             self.telnet_factory.communicate(peer, msg.encode())
         if self.users[peer]["service"] == "websocket":
